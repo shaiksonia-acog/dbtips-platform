@@ -137,7 +137,7 @@ const indicationPipeline = ({ indications }) => {
           return `${pmids} ${whyStopped}`;
         },
       },
-      { field: "DrugNames" },
+      { field: "Drug" },
       { field: "Phase" },
       { field: "Status" },
       { field: "MoleculeTypes", headerName: "Modality" },
