@@ -980,11 +980,11 @@ async def get_target_pipeline_all(
             if (
                 endpoint in cached_responses_disease
                 and "target_pipeline" in cached_responses_disease[endpoint]
-                and cached_responses_disease[endpoint]["target_pipeline"]  # Ensure target_pipeline is not empty
+                # and cached_responses_disease[endpoint]["target_pipeline"]  # Ensure target_pipeline is not empty
             ):
                 disease_data = [
                     entry for entry in cached_responses_disease[endpoint]["target_pipeline"]
-                    if entry.get("Disease") and entry["Disease"].strip().lower().replace(" ", "_") == disease
+                    # if entry.get("Disease") and entry["Disease"].strip().lower().replace(" ", "_") == disease
                 ]
                 cached_data.extend(disease_data)
                 cached_diseases.add(disease)
@@ -998,11 +998,11 @@ async def get_target_pipeline_all(
         if (
             endpoint in cached_responses_target
             and "target_pipeline" in cached_responses_target[endpoint]
-            and cached_responses_target[endpoint]["target_pipeline"]  # Ensure target_pipeline is not empty
+            # and cached_responses_target[endpoint]["target_pipeline"]  # Ensure target_pipeline is not empty
         ):
             filtered_target_data = [
                 entry for entry in cached_responses_target[endpoint]["target_pipeline"]
-                if not diseases or (entry.get("Disease") and entry["Disease"].strip().lower().replace(" ", "_") in diseases)
+                # if not diseases or (entry.get("Disease") and entry["Disease"].strip().lower().replace(" ", "_") in diseases)
             ]
             cached_data.extend(filtered_target_data)
             cached_diseases.update({
@@ -1029,54 +1029,70 @@ async def get_target_pipeline_all(
             print(f"Empty or invalid data in file: {target_file_path}")
 
     # If all diseases are cached in the filesystem, return the response
-    if diseases and len(cached_diseases) == len(diseases):
-        response = {"target_pipeline": remove_duplicates(cached_data)}
-        print("Returning cached response from filesystem")
-        await set_cached_response(redis, key, response)  # Update Redis for faster access next time
-        return response
+    # if diseases and len(cached_diseases) == len(diseases):
+    #     response = {"target_pipeline": remove_duplicates(cached_data)}
+    #     print("Returning cached response from filesystem")
+    #     await set_cached_response(redis, key, response)  # Update Redis for faster access next time
+    #     return response
+
+    if len(diseases):
+        filtered_diseases = [d for d in diseases if d not in cached_diseases]
+        if len(filtered_diseases) == 0:
+            response = {"target_pipeline": remove_duplicates(cached_data)}
+            print("Returning cached response from filesystem")
+            # await set_cached_response(redis, key, response)  # Update Redis for faster access next time
+            return response
+    else:
+        if len(cached_data) > 0:
+            response = {"target_pipeline": remove_duplicates(cached_data)}
+            print("Returning cached response from filesystem")
+            # await set_cached_response(redis, key, response)  # Update Redis for faster access next time
+            return response
+
 
     # Step 2: Check Redis (after filesystem)
-    redis_cached_response = await get_cached_response(redis, key)
-    if redis_cached_response:
-        print("Returning Redis cached response")
+    # redis_cached_response = await get_cached_response(redis, key)
+    # if redis_cached_response:
+    #     print("Returning Redis cached response")
 
-        # Ensure Redis response is not empty
-        if redis_cached_response.get("target_pipeline"):
-            # Save Redis data to filesystem to keep caches in sync
-            if diseases:
-                for disease in diseases:
-                    disease_file_path = os.path.join(target_disease_cache_dir, f"{target}-{disease}.json")
-                    disease_data = [
-                        entry for entry in redis_cached_response["target_pipeline"]
-                        if entry.get("Disease") and entry["Disease"].strip().lower().replace(" ", "_") == disease
-                    ]
-                    cached_responses_disease = load_response_from_file(disease_file_path) if os.path.exists(disease_file_path) else {}
-                    if endpoint in cached_responses_disease and "target_pipeline" in cached_responses_disease[endpoint]:
-                        cached_responses_disease[endpoint]["target_pipeline"].extend(disease_data)
-                    else:
-                        cached_responses_disease[endpoint] = {"target_pipeline": disease_data}
-                    save_response_to_file(disease_file_path, cached_responses_disease)
-                    print(f"Saved Redis data to file: {disease_file_path}")
+    #     # Ensure Redis response is not empty
+    #     if redis_cached_response.get("target_pipeline"):
+    #         # Save Redis data to filesystem to keep caches in sync
+    #         if diseases:
+    #             for disease in diseases:
+    #                 disease_file_path = os.path.join(target_disease_cache_dir, f"{target}-{disease}.json")
+    #                 disease_data = [
+    #                     entry for entry in redis_cached_response["target_pipeline"]
+    #                     if entry.get("Disease") and entry["Disease"].strip().lower().replace(" ", "_") == disease
+    #                 ]
+    #                 cached_responses_disease = load_response_from_file(disease_file_path) if os.path.exists(disease_file_path) else {}
+    #                 if endpoint in cached_responses_disease and "target_pipeline" in cached_responses_disease[endpoint]:
+    #                     cached_responses_disease[endpoint]["target_pipeline"].extend(disease_data)
+    #                 else:
+    #                     cached_responses_disease[endpoint] = {"target_pipeline": disease_data}
+    #                 save_response_to_file(disease_file_path, cached_responses_disease)
+    #                 print(f"Saved Redis data to file: {disease_file_path}")
 
-            # Save to target.json
-            cached_responses_target = load_response_from_file(target_file_path) if os.path.exists(target_file_path) else {}
-            if endpoint in cached_responses_target and "target_pipeline" in cached_responses_target[endpoint]:
-                cached_responses_target[endpoint]["target_pipeline"].extend(redis_cached_response["target_pipeline"])
-            else:
-                cached_responses_target[endpoint] = {"target_pipeline": redis_cached_response["target_pipeline"]}
-            save_response_to_file(target_file_path, cached_responses_target)
-            print(f"Saved Redis data to file: {target_file_path}")
+    #         # Save to target.json
+    #         cached_responses_target = load_response_from_file(target_file_path) if os.path.exists(target_file_path) else {}
+    #         if endpoint in cached_responses_target and "target_pipeline" in cached_responses_target[endpoint]:
+    #             cached_responses_target[endpoint]["target_pipeline"].extend(redis_cached_response["target_pipeline"])
+    #         else:
+    #             cached_responses_target[endpoint] = {"target_pipeline": redis_cached_response["target_pipeline"]}
+    #         save_response_to_file(target_file_path, cached_responses_target)
+    #         print(f"Saved Redis data to file: {target_file_path}")
 
-            return redis_cached_response
-        else:
-            print("Redis response is empty, fetching fresh data.")
+    #         return redis_cached_response
+    #     else:
+    #         print("Redis response is empty, fetching fresh data.")
 
     # Step 3: Fetch fresh data if not cached or cached data is empty
-    all_entries = []
-    analyzer = TargetAnalyzer(target)
+    
 
     try:
         response = {}
+        all_entries = []
+        analyzer = TargetAnalyzer(target)
         if build_cache == True:
             # Check for rate limiting
             if is_rate_limited():
@@ -1098,27 +1114,30 @@ async def get_target_pipeline_all(
             all_entries.extend(strapi_entries)
 
             # Enrich combined list (NCT titles, PMIDs, outcome statuses)
-            for entry in all_entries:
-                ids = [u.split("/")[-1] for u in entry.get("Source URLs", [])]
-                entry["NctIdTitleMapping"] = fetch_nct_titles(ids)
+            if len(all_entries) > 0:
+                for entry in all_entries:
+                    ids = [u.split("/")[-1] for u in entry.get("Source URLs", [])]
+                    entry["NctIdTitleMapping"] = fetch_nct_titles(ids)
 
-            pmid_map = get_disease_pmid_nct_mapping([d.replace("_", " ") for d in diseases])
-            all_entries = get_pmids_for_nct_ids_target_pipeline(all_entries, pmid_map)
-            all_entries = add_outcome_status_target_pipeline(all_entries)
-            # print("all entries in pipeline: ", all_entries)
-            # Deduplicate entries
-            all_entries = remove_duplicates(all_entries)
-            # print("all_entries after duplicates: ", all_entries)
-            # Build available diseases
-            available = sorted({
-                e["Disease"].strip().replace("_", " ").lower()
-                for e in all_entries if e.get("Disease")
-            })
-            # print("available: ", available)
-            # Combine cached and fresh data
-            all_entries.extend(cached_data)
-            all_entries = remove_duplicates(all_entries)
-
+                pmid_map = get_disease_pmid_nct_mapping([d.replace("_", " ") for d in diseases])
+                all_entries = get_pmids_for_nct_ids_target_pipeline(all_entries, pmid_map)
+                all_entries = add_outcome_status_target_pipeline(all_entries)
+                # print("all entries in pipeline: ", all_entries)
+                # Deduplicate entries
+                all_entries = remove_duplicates(all_entries)
+                # print("all_entries after duplicates: ", all_entries)
+                # Build available diseases
+                available = sorted({
+                    e["Disease"].strip().replace("_", " ").lower()
+                    for e in all_entries if e.get("Disease")
+                })
+                # print("available: ", available)
+                # Combine cached and fresh data
+                all_entries.extend(cached_data)
+                all_entries = remove_duplicates(all_entries)
+            else:
+                print("No entries found in Open Targets or Strapi for the target.")
+                available = []        
             # Step 4: Save fresh data to filesystem
             # Save to target.json
             cached_responses_target = load_response_from_file(target_file_path) if os.path.exists(target_file_path) else {}
