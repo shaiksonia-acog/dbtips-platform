@@ -1646,3 +1646,19 @@ def fetch_patient_stories_from_source(disease: str):
         return response.json()
     else:
         return []
+
+#kol-videos endpoint helper function
+def fetch_kol_videos_from_source(disease: str):
+    """
+    Fetch KOL Videos from internally hosted service
+    """
+    headers = {"Content-Type": "application/json"}
+    
+    params = {"search_name": disease}
+    url = f"{PATIENT_STORIES_URL}/fetch_kol_interviews"  
+    response = requests.post(url, params=params, headers=headers, auth=HTTPBasicAuth(username, password))
+    
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return []

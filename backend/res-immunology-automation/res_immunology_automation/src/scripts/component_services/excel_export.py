@@ -726,6 +726,57 @@ def tsv_to_json(tsv_files: List[str|None], disease_list: List[str]):
     return result
 
 
+def process_kol_videos(data):
+    template_path = "../excel_export_templates/KOL-Template.xltx"
+    output_path = "KOL_Latest.xlsx"
+    workbook = load_workbook(template_path)
+    workbook.template = False
+    ws = workbook["KOL"]
+    for row in ws.iter_rows(min_row=2):
+        for cell in row:
+            cell.value = None
+    row = 2
+
+    for disease, disease_data in data.items():
+        for study in disease_data:
+            view_count_str = study.get("view_count", "")
+            try:
+                view_count = int(view_count_str)
+            except ValueError:
+                view_count = None
+            row_data = [
+                disease,
+                study.get("kol_name", ""),
+                study.get("affiliation", ""),
+                study.get("expertise", ""),
+                study.get("title", ""),
+                study.get("opinion", ""),
+                study.get("channel_name", ""),
+                view_count,
+                study.get("published_date", ""),
+                study.get("publications", ""),
+            ]
+
+            # Write values to the sheet
+            for col, value in enumerate(row_data, start=1):
+                ws.cell(row=row, column=col, value=value)
+
+            # Add hyperlink to the video
+            ws.cell(row=row, column=5).hyperlink = study["video"]
+            ws.cell(row=row, column=5).style = "Hyperlink"
+
+            # Add hyperlink to publications
+            ws.cell(row=row, column=10).value = "View publications"
+            ws.cell(row=row, column=10).hyperlink = study["publications"]
+            ws.cell(row=row, column=10).style = "Hyperlink"
+
+            row += 1
+    try:
+        workbook.save(output_path)
+        return output_path
+    except Exception as e:  
+        raise Exception(f"Error: Failed to save the file. {e}")
+
 def process_gwas_excel( data, association_data):
     # Load workbook and disable template mode
     template_path = "../excel_export_templates/GWAS-template-v1.xltx"
