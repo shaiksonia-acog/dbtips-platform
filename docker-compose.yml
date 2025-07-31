@@ -8,18 +8,23 @@ services:
         - VITE_API_URI=${VITE_API_URI}
         - VITE_TARGET_DOSSIER_URI=${VITE_TARGET_DOSSIER_URI}
     restart: always
+    labels:
+      - "description=DBTips Dossier Frontend"
+      - "user=${USER}"  # Changed from ${username} to ${USER}
 
   backend:
     container_name: 'dbtips-merge-backend'
     build:
       context: backend
       dockerfile: Dockerfile
-    restart:
-      always
-      # ports:
-      #- "8000:8000"
-    # labels:
-    #   - "security=none"
+    restart: always
+    # ports:
+    #- "8000:8000"
+    labels:
+      - "description=DBTips Dossier Backend"
+      - "user=${USER}"  # Changed from ${username} to ${USER}
+      - "port=8000"     # Added explicit port since it's non-standard
+      # - "security=none"  # Uncommented if you want no authentication
     environment:
       - UVICORN_HOST=0.0.0.0
       - UVICORN_PORT=8000
@@ -47,7 +52,6 @@ services:
       - NCBI_API_KEY=${NCBI_API_KEY}
       - OPEN_CITATIONS_API=${OPEN_CITATIONS_API}
       - PATIENT_STORIES_URL=${PATIENT_STORIES_URL}
-
     volumes:
       - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json:/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json
       - ./backend/data:/app/database
@@ -57,7 +61,6 @@ services:
         condition: service_started
       postgres:
         condition: service_healthy
-
 
   backend-llm:
     container_name: 'dbtips-merge-backend-llm'
@@ -80,6 +83,9 @@ services:
       - username=${username}
       - password=${password}
       - PATIENT_STORIES_URL=${PATIENT_STORIES_URL}
+    labels:
+      - "description=DBTips Dossier Backend LLM"
+      - "user=${USER}"  # Changed from ${username} to ${USER}
 
   redis-llm:
     image: redis:latest
@@ -87,6 +93,9 @@ services:
     restart: always
     volumes:
       - ./disease-dossier-backend-llm/backend-llm/redis/redis-data:/data
+    labels:
+      - "exclude=true"  # Keep this excluded - it's an internal service
+      - "user=${USER}"  # Changed from ${username} to ${USER}
 
   redis:
     container_name: 'dbtips-merge-dossier-redis'
@@ -98,34 +107,43 @@ services:
     restart: always
     volumes:
       - ./backend/redis/redis-data:/data
+    labels:
+      - "exclude=true"  # Keep this excluded - it's an internal service
+      - "user=${USER}"  # Changed from ${username} to ${USER}
 
   postgres:
     container_name: 'dbtips-merge-postgres'
-    image: postgres:13 # Use the desired version of PostgreSQL
+    image: postgres:13
     restart: always
     environment:
-      POSTGRES_DB: ${POSTGRES_DB} # Database name
-      POSTGRES_USER: ${POSTGRES_USER} # Database user
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # Database password
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -h postgres']
       interval: 5s
       timeout: 5s
       retries: 5
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data # Persist the data
+      - ./postgres_data:/var/lib/postgresql/data
+    labels:
+      - "exclude=true"  # Keep this excluded - database should NOT be exposed
+      - "user=${USER}"  # Changed from ${username} to ${USER}
 
   pgadmin:
     container_name: 'dbtips-merge-pgadmin'
     image: dpage/pgadmin4:latest
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL} # Default login email
-      PGADMIN_DEFAULT_PASSWORD:
-        ${PGADMIN_PASSWORD} # Default login password
-        #ports:
-        # - "5050:80"  # Expose pgAdmin web interface on port 5050
-        #volumes:
-      #- ./pgadmin:/var/lib/pgadmin  # Persist pgAdmin configuration data
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+      # ports:
+      # - "5050:80"
+      # volumes:
+      # - ./pgadmin:/var/lib/pgadmin
     depends_on:
       - postgres
+    labels:
+      - "description=DBTips Dossier pgAdmin for PostgreSQL Management"
+      - "user=${USER}"  # Changed from ${username} to ${USER}
+      - "port=80"       # Added explicit port for pgAdmin

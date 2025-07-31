@@ -63,7 +63,7 @@ from component_services.market_intelligence_service import extract_nct_ids, fetc
     get_pmids_for_nct_ids_target_pipeline,add_outcome_status_target_pipeline, \
     remove_duplicates,remove_duplicates_from_indication_pipeline,get_outcome_status_openai, \
     fetch_drug_warning_data, resolve_chembl_id_from_name, get_patient_advocacy_group_by_disease, \
-    get_target_pipeline_strapi_all,fetch_patient_stories_from_source
+    get_target_pipeline_strapi_all,fetch_patient_stories_from_source,fetch_kol_videos_from_source
 
     # get_target_pipeline_strapi
 from component_services.evidence_services import build_query, get_geo_data_for_diseases,fetch_mouse_models,\
@@ -83,7 +83,7 @@ from component_services.excel_export import process_data_and_return_file_rna,pro
     process_mouse_studies,process_patent_data,process_model_studies,process_target_pipeline, \
     process_cover_letter_list_excel, tsv_to_json, process_gwas_excel, process_gtr_excel, \
     process_kol_excel,process_pag_excel, process_site_investigators_excel,process_literature_excel, \
-    process_patientStories_excel,process_target_literature_excel
+    process_patientStories_excel,process_target_literature_excel,process_kol_videos
 from fastapi.responses import FileResponse
 from cache_results import cache_all_data
 from component_services.genomics_services import fetch_pgs_data
@@ -981,9 +981,11 @@ async def get_target_pipeline_all(
                 endpoint in cached_responses_disease
                 and "target_pipeline" in cached_responses_disease[endpoint]
                 # and cached_responses_disease[endpoint]["target_pipeline"]  # Ensure target_pipeline is not empty
+                # and cached_responses_disease[endpoint]["target_pipeline"]  # Ensure target_pipeline is not empty
             ):
                 disease_data = [
                     entry for entry in cached_responses_disease[endpoint]["target_pipeline"]
+                    # if entry.get("Disease") and entry["Disease"].strip().lower().replace(" ", "_") == disease
                     # if entry.get("Disease") and entry["Disease"].strip().lower().replace(" ", "_") == disease
                 ]
                 cached_data.extend(disease_data)
@@ -999,9 +1001,11 @@ async def get_target_pipeline_all(
             endpoint in cached_responses_target
             and "target_pipeline" in cached_responses_target[endpoint]
             # and cached_responses_target[endpoint]["target_pipeline"]  # Ensure target_pipeline is not empty
+            # and cached_responses_target[endpoint]["target_pipeline"]  # Ensure target_pipeline is not empty
         ):
             filtered_target_data = [
                 entry for entry in cached_responses_target[endpoint]["target_pipeline"]
+                # if not diseases or (entry.get("Disease") and entry["Disease"].strip().lower().replace(" ", "_") in diseases)
                 # if not diseases or (entry.get("Disease") and entry["Disease"].strip().lower().replace(" ", "_") in diseases)
             ]
             cached_data.extend(filtered_target_data)
@@ -1052,11 +1056,32 @@ async def get_target_pipeline_all(
             return response
 
 
+
     # Step 2: Check Redis (after filesystem)
     # redis_cached_response = await get_cached_response(redis, key)
     # if redis_cached_response:
     #     print("Returning Redis cached response")
+    # redis_cached_response = await get_cached_response(redis, key)
+    # if redis_cached_response:
+    #     print("Returning Redis cached response")
 
+    #     # Ensure Redis response is not empty
+    #     if redis_cached_response.get("target_pipeline"):
+    #         # Save Redis data to filesystem to keep caches in sync
+    #         if diseases:
+    #             for disease in diseases:
+    #                 disease_file_path = os.path.join(target_disease_cache_dir, f"{target}-{disease}.json")
+    #                 disease_data = [
+    #                     entry for entry in redis_cached_response["target_pipeline"]
+    #                     if entry.get("Disease") and entry["Disease"].strip().lower().replace(" ", "_") == disease
+    #                 ]
+    #                 cached_responses_disease = load_response_from_file(disease_file_path) if os.path.exists(disease_file_path) else {}
+    #                 if endpoint in cached_responses_disease and "target_pipeline" in cached_responses_disease[endpoint]:
+    #                     cached_responses_disease[endpoint]["target_pipeline"].extend(disease_data)
+    #                 else:
+    #                     cached_responses_disease[endpoint] = {"target_pipeline": disease_data}
+    #                 save_response_to_file(disease_file_path, cached_responses_disease)
+    #                 print(f"Saved Redis data to file: {disease_file_path}")
     #     # Ensure Redis response is not empty
     #     if redis_cached_response.get("target_pipeline"):
     #         # Save Redis data to filesystem to keep caches in sync
@@ -1083,16 +1108,30 @@ async def get_target_pipeline_all(
     #             cached_responses_target[endpoint] = {"target_pipeline": redis_cached_response["target_pipeline"]}
     #         save_response_to_file(target_file_path, cached_responses_target)
     #         print(f"Saved Redis data to file: {target_file_path}")
+    #         # Save to target.json
+    #         cached_responses_target = load_response_from_file(target_file_path) if os.path.exists(target_file_path) else {}
+    #         if endpoint in cached_responses_target and "target_pipeline" in cached_responses_target[endpoint]:
+    #             cached_responses_target[endpoint]["target_pipeline"].extend(redis_cached_response["target_pipeline"])
+    #         else:
+    #             cached_responses_target[endpoint] = {"target_pipeline": redis_cached_response["target_pipeline"]}
+    #         save_response_to_file(target_file_path, cached_responses_target)
+    #         print(f"Saved Redis data to file: {target_file_path}")
 
+    #         return redis_cached_response
+    #     else:
+    #         print("Redis response is empty, fetching fresh data.")
     #         return redis_cached_response
     #     else:
     #         print("Redis response is empty, fetching fresh data.")
 
     # Step 3: Fetch fresh data if not cached or cached data is empty
     
+    
 
     try:
         response = {}
+        all_entries = []
+        analyzer = TargetAnalyzer(target)
         all_entries = []
         analyzer = TargetAnalyzer(target)
         if build_cache == True:
@@ -1120,7 +1159,30 @@ async def get_target_pipeline_all(
                 for entry in all_entries:
                     ids = [u.split("/")[-1] for u in entry.get("Source URLs", [])]
                     entry["NctIdTitleMapping"] = fetch_nct_titles(ids)
+            if len(all_entries) > 0:
+                for entry in all_entries:
+                    ids = [u.split("/")[-1] for u in entry.get("Source URLs", [])]
+                    entry["NctIdTitleMapping"] = fetch_nct_titles(ids)
 
+                pmid_map = get_disease_pmid_nct_mapping([d.replace("_", " ") for d in diseases])
+                all_entries = get_pmids_for_nct_ids_target_pipeline(all_entries, pmid_map)
+                all_entries = add_outcome_status_target_pipeline(all_entries)
+                # print("all entries in pipeline: ", all_entries)
+                # Deduplicate entries
+                all_entries = remove_duplicates(all_entries)
+                # print("all_entries after duplicates: ", all_entries)
+                # Build available diseases
+                available = sorted({
+                    e["Disease"].strip().replace("_", " ").lower()
+                    for e in all_entries if e.get("Disease")
+                })
+                # print("available: ", available)
+                # Combine cached and fresh data
+                all_entries.extend(cached_data)
+                all_entries = remove_duplicates(all_entries)
+            else:
+                print("No entries found in Open Targets or Strapi for the target.")
+                available = []        
                 pmid_map = get_disease_pmid_nct_mapping([d.replace("_", " ") for d in diseases])
                 all_entries = get_pmids_for_nct_ids_target_pipeline(all_entries, pmid_map)
                 all_entries = add_outcome_status_target_pipeline(all_entries)
@@ -1555,6 +1617,116 @@ async def get_kol(request: DiseasesRequest, redis: Redis = Depends(get_redis),
         await set_cached_response(redis, key, final_response)
         return final_response
     except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/market-intelligence/kol-videos/", tags=["Market Intelligence"])
+async def get_kol_videos(request: DiseasesRequest, redis: Redis = Depends(get_redis),
+                        db: Session = Depends(get_db)):
+    """
+    Get KOL (Key Opinion Leader) videos for specified diseases.
+    Accepts a list of diseases and returns cached or fresh KOL video data.
+    """
+    diseases: List[str] = request.diseases
+    diseases = [s.strip().lower().replace(' ', '_') for s in diseases]
+    diseases_str = "-".join(diseases)
+
+    # Generate a cache key for the request using endpoint and disease list
+    key: str = f"/market-intelligence/kol-videos/:{diseases_str}"
+    endpoint: str = "/market-intelligence/kol-videos/"
+
+    # Directory to store the cached JSON file
+    cache_dir: str = "cached_data_json/disease"
+    os.makedirs(cache_dir, exist_ok=True)  # Ensure the directory exists
+
+    cached_diseases: Set[str] = set()
+    cached_data: Dict = {}
+    
+    # Check for cached data in database/files for each disease
+    for disease in diseases:
+        disease_record = db.query(Disease).filter_by(id=f"{disease}").first()
+        
+        # Check if the cached JSON file exists
+        if disease_record is not None:
+            cached_file_path: str = disease_record.file_path
+            print(f"Loading cached response from file: {cached_file_path}")
+            
+            try:
+                cached_responses: Dict = load_response_from_file(cached_file_path)
+                
+                # Check if the endpoint response exists in the cached data
+                if f"{endpoint}" in cached_responses:
+                    cached_diseases.add(disease)
+                    print(f"Returning cached response from file: {cached_file_path}")
+                    cached_data[disease.replace("_", " ")] = cached_responses[f"{endpoint}"]
+            except (json.JSONDecodeError, FileNotFoundError):
+                print(f"Cached file {cached_file_path} is corrupted or not found, will fetch fresh data")
+
+    # Filter diseases whose response is not present in the json file
+    filtered_diseases = [disease for disease in diseases if disease not in cached_diseases]
+
+    if len(filtered_diseases) == 0:  # all diseases already present in the json file
+        print("All diseases already present in cached json files, returning cached response")
+        await set_cached_response(redis, key, cached_data)
+        return cached_data
+
+    print("Filtered diseases: ", filtered_diseases)
+    
+    # Check if cached response exists in Redis
+    cached_response_redis: dict = await get_cached_response(redis, key)
+    if cached_response_redis:
+        print("Returning cached response from Redis")
+        return cached_response_redis
+
+    try:
+        # Process each filtered disease
+        for disease in filtered_diseases:
+            disease: str = disease.strip().lower().replace(" ", "_")
+            disease_record = db.query(Disease).filter_by(id=f"{disease}").first()
+            file_path: str = os.path.join(cache_dir, f"{disease}.json")
+
+            # Load existing cached responses or create empty dict
+            if disease_record is not None:
+                cached_file_path: str = disease_record.file_path
+                try:
+                    cached_responses = load_response_from_file(cached_file_path)
+                except (json.JSONDecodeError, FileNotFoundError):
+                    print(f"Cached file {cached_file_path} is corrupted, creating new structure")
+                    cached_responses = {}
+            else:
+                cached_responses = {}
+
+            # Fetch KOL videos data from source
+            print(f"Fetching KOL videos for disease: {disease}")
+            kol_videos_data = fetch_kol_videos_from_source(disease.replace('_', ' '))
+            
+            # Update cached responses with new data
+            cached_responses[f"{endpoint}"] = kol_videos_data
+
+            # Save to file and update database
+            if disease_record is None:
+                # Create new disease record
+                save_response_to_file(file_path, cached_responses)
+                new_record = Disease(id=f"{disease}", file_path=file_path)
+                db.add(new_record)
+                db.commit()
+                db.refresh(new_record)
+                print(f"Record with ID {disease} added to the disease table.")
+            else:
+                # Update existing file
+                save_response_to_file(cached_file_path, cached_responses)
+                print(f"Updated cached file: {cached_file_path}")
+
+            # Add to cached_data for response
+            cached_data[disease.replace("_", " ")] = kol_videos_data
+
+        # Cache the complete response in Redis
+        await set_cached_response(redis, key, cached_data)
+        print("Successfully processed and cached KOL videos data for all diseases")
+        return cached_data
+        
+    except Exception as e:
+        print(f"Error processing KOL videos: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -3855,7 +4027,16 @@ async def get_excel_export(request: ExcelExportRequest):
             json_data=response.json()
             file_path=process_kol_excel(json_data)
             return FileResponse(file_path, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename="gwas_excel.xlsx") 
- 
+        
+        elif endpoint == "/market-intelligence/kol-videos/":
+            request_data = DiseasesRequest(diseases=filtered_diseases)
+            # Make the POST request to the internal API endpoint
+            response = client.post("/market-intelligence/kol-videos/", json=request_data.dict())
+            if response.status_code != 200:
+                raise HTTPException(status_code=response.status_code, detail=response.json())
+            json_data=response.json()
+            file_path=process_kol_videos(json_data)
+
         elif endpoint == "/market-intelligence/kol/":
             request_data=DiseasesRequest(diseases=filtered_diseases)
             response =client.post("/market-intelligence/kol/",json=request_data.dict())
