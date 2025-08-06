@@ -1,0 +1,89 @@
+from openai import OpenAI
+import json
+import os
+
+LLM = os.getenv('LLM_MODEL','gpt-4o-mini')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+def openai_client(input: str):
+    client = OpenAI(api_key=OPENAI_API_KEY)
+    table_schema_prompt = f"""
+    You are an expert in HTML table analysis and schema extraction. Given an HTML snippet containing one or more tables, your task is to accurately extract the schema of each table. Tables may include:
+        - Nested or hierarchical column headers (using colspan)
+        - Grouped or sectioned rows (using rowspan)
+        - Flat or deeply nested tables
+        - Multiline headers or complex formatting
+
+    Your output should be a structured JSON schema representing only the structure of each table — not the data.
+
+    Extraction Requirements:
+    1.Columns:
+        - Extract all top-level column headers
+        - Capture header nesting hierarchy using "children" fields when headers span multiple sub-columns.
+        - Flatten merged cells in headers into a logical tree structure.
+
+    2.Rows (Row Hierarchy):
+        - Identify grouping of rows based on repeating or merged values in row header columns.
+        - For each grouping key (usually the first few columns), include:
+            - All unique values in that column
+            - How many rows each value spans (row_count)
+            - Whether that value uses an explicit rowspan in HTML (uses_rowspan: true or false)
+
+    3.Merged Cell Handling:
+        - Accurately resolve rowspan and colspan to reflect the actual visual/logical structure.
+        - Do not include visual formatting (alignment, bold, etc.).
+
+    4.Multiple Tables:
+        - If multiple tables are present, extract each as a separate schema object with its:
+            - Title (if available)
+            - Caption or description (if present near the table)
+
+    5.No Data Extraction:
+        - Do not extract or return any actual data values from the table body.
+        - Focus only on structure and logical organization.
+
+    Here's the HTML Snippet: {input}
+
+
+    Output Format:
+        json```
+        {{
+        "title": "<Table Title or Number>",
+        "description": "<Optional caption or description>",
+        "columns": [
+            {{ "name": "Column A" }},
+            {{
+            "name": "Grouped Column B",
+            "children": [
+                {{ "name": "Subcolumn B1" }},
+                {{ "name": "Subcolumn B2" }}
+            ]
+            }},
+            ...
+        ],
+        "row_hierarchy": {{
+            "<Row Grouping Column>": {{
+            "<Value1>": {{ "row_count": N , "uses_rowspan": true|false }},
+            "<Value2>": {{ "row_count": M , "uses_rowspan": true|false}}
+            }}
+        }}
+        }}
+        ```
+    """
+
+    response = client.chat.completions.create(
+    model=LLM,
+    messages=[
+        {"role": "system", "content": "You are an expert in analyzing and classifying scientific research."},
+        {"role": "user", "content": table_schema_prompt}
+    ],
+    max_tokens=4096,
+    temperature=0.2
+    )
+
+    response_content = response.choices[0].message.content
+    if "json" in response_content:
+        print("recieved markdown response")
+        response_content = response_content.strip("```").replace("json", "", 1).strip()
+    
+    table_schemas = json.loads(response_content)
+    return table_schemas

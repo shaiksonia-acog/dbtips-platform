@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Sequence, String,Integer, DateTime, PrimaryKeyConstraint
+from sqlalchemy import Column, Sequence, String,Integer, DateTime, PrimaryKeyConstraint, Text
 from .database import Base
 
 
@@ -63,3 +63,65 @@ class Admin(Base):
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     username = Column(String, unique=True, nullable=False)  # Unique and required
     password = Column(String, nullable=False)  # Required
+
+class DiseaseArticle(Base):
+    __tablename__ = 'disease_articles'
+
+    Disease = Column(String, nullable=False)
+    Target = Column(String)
+    PMID = Column(String, nullable=False)
+    PMCID = Column(String)
+    Title = Column(Text)
+    url = Column(String)
+    raw_full_text = Column(Text)
+
+    __table_args__ = (
+        PrimaryKeyConstraint('Disease', 'PMID'),
+    )
+
+class DiseaseImageAnalysis(Base):
+    __tablename__ = 'disease_image_analysis'
+
+    index = Column(Integer, primary_key=True, autoincrement=True)
+    PMID = Column(String, nullable=False)
+    Disease = Column(String, nullable=False)
+    Target = Column(String)
+    url = Column(String)
+    PMCID = Column(String)
+    image_url = Column(String)
+    image_caption = Column(Text)
+    Genes = Column(Text)
+    insights = Column(Text)
+    drugs = Column(Text)
+    keywords = Column(Text)
+    process = Column(Text)
+    error_message = Column(Text)
+    status = Column(String)
+
+class DiseaseTablesAnalysis(Base):
+    __tablename__ = 'disease_tables_analysis'
+
+    index = Column(Integer, primary_key=True, autoincrement=True)
+    PMID = Column(String, nullable=False)
+    Disease = Column(String, nullable=False)
+    Target = Column(String)
+    url = Column(String)
+    PMCID = Column(String)
+    table_description = Column(String)
+    table_schema = Column(Text)  # renamed from "table/suppl schema schema" to valid identifier
+    Analysis = Column(Text)
+    Keywords = Column(Text)
+
+class DiseaseSupplementaryMaterialsAnalysis(Base):
+    __tablename__ = 'disease_supplmentary_materials_analysis'
+
+    index = Column(Integer, primary_key=True, autoincrement=True)
+    PMID = Column(String, nullable=False)
+    Disease = Column(String, nullable=False)
+    Target = Column(String)
+    url = Column(String)
+    PMCID = Column(String)
+    description = Column(String)
+    file_names = Column(Text)  # renamed from "table/suppl schema schema" to valid identifier
+    Analysis = Column(Text)
+    Keywords = Column(Text)
