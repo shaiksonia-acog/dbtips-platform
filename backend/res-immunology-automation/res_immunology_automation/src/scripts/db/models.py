@@ -64,14 +64,14 @@ class Admin(Base):
     username = Column(String, unique=True, nullable=False)  # Unique and required
     password = Column(String, nullable=False)  # Required
 
-class DiseaseArticle(Base):
-    __tablename__ = 'disease_articles'
+class ArticlesMetadata(Base):
+    __tablename__ = 'articles_metadata'
 
-    Disease = Column(String, nullable=False)
-    Target = Column(String)
-    PMID = Column(String, nullable=False)
-    PMCID = Column(String)
-    Title = Column(Text)
+    disease = Column(String, default="no-disease")
+    target = Column(String, default="no-target")
+    pmid = Column(String, nullable=False)
+    pmcid = Column(String, nullable=False)
+    title = Column(Text)
     url = Column(String)
     raw_full_text = Column(Text)
 
@@ -79,15 +79,15 @@ class DiseaseArticle(Base):
         PrimaryKeyConstraint('Disease', 'PMID'),
     )
 
-class DiseaseImageAnalysis(Base):
-    __tablename__ = 'disease_image_analysis'
+class LiteratureImagesAnalysis(Base):
+    __tablename__ = 'literature_images_analysis'
 
     index = Column(Integer, primary_key=True, autoincrement=True)
-    PMID = Column(String, nullable=False)
-    Disease = Column(String, nullable=False)
-    Target = Column(String)
+    pmid = Column(String, nullable=False)
+    disease = Column(String, nullable=False, "no-disease")
+    target = Column(String, nullable=False, default="no-target")
     url = Column(String)
-    PMCID = Column(String)
+    pmcid = Column(String)
     image_url = Column(String)
     image_caption = Column(Text)
     Genes = Column(Text)
@@ -98,30 +98,30 @@ class DiseaseImageAnalysis(Base):
     error_message = Column(Text)
     status = Column(String)
 
-class DiseaseTablesAnalysis(Base):
-    __tablename__ = 'disease_tables_analysis'
+class LiteratureTablesAnalysis(Base):
+    __tablename__ = 'literature_tables_analysis'
 
     index = Column(Integer, primary_key=True, autoincrement=True)
-    PMID = Column(String, nullable=False)
-    Disease = Column(String, nullable=False)
-    Target = Column(String)
+    pmid = Column(String, nullable=False)
+    disease = Column(String, nullable=False, "no-disease" )
+    target = Column(String, nullable=False, default="no-target")
     url = Column(String)
-    PMCID = Column(String)
+    pmcid = Column(String, nullable=False)
     table_description = Column(String)
     table_schema = Column(Text)  # renamed from "table/suppl schema schema" to valid identifier
-    Analysis = Column(Text)
-    Keywords = Column(Text)
+    analysis = Column(Text)
+    keywords = Column(Text)
 
-class DiseaseSupplementaryMaterialsAnalysis(Base):
-    __tablename__ = 'disease_supplmentary_materials_analysis'
+class LiteratureSupplementaryMaterialsAnalysis(Base):
+    __tablename__ = 'literature_supplmentary_materials_analysis'
 
     index = Column(Integer, primary_key=True, autoincrement=True)
-    PMID = Column(String, nullable=False)
-    Disease = Column(String, nullable=False)
-    Target = Column(String)
+    pmid = Column(String, nullable=False)
+    disease = Column(String, nullable=False, "no-disease" )
+    target = Column(String, nullable=False, default="no-target")
     url = Column(String)
-    PMCID = Column(String)
+    pmcid = Column(String, nullable=False)
     description = Column(String)
     file_names = Column(Text)  # renamed from "table/suppl schema schema" to valid identifier
-    Analysis = Column(Text)
-    Keywords = Column(Text)
+    analysis = Column(Text)
+    keywords = Column(Text)
