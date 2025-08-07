@@ -76,7 +76,7 @@ class ArticlesMetadata(Base):
     raw_full_text = Column(Text)
 
     __table_args__ = (
-        PrimaryKeyConstraint('Disease', 'PMID'),
+        PrimaryKeyConstraint('disease', 'pmid'),
     )
 
 class LiteratureImagesAnalysis(Base):
@@ -84,7 +84,7 @@ class LiteratureImagesAnalysis(Base):
 
     index = Column(Integer, primary_key=True, autoincrement=True)
     pmid = Column(String, nullable=False)
-    disease = Column(String, nullable=False, "no-disease")
+    disease = Column(String, nullable=False, default="no-disease")
     target = Column(String, nullable=False, default="no-target")
     url = Column(String)
     pmcid = Column(String)
@@ -103,7 +103,7 @@ class LiteratureTablesAnalysis(Base):
 
     index = Column(Integer, primary_key=True, autoincrement=True)
     pmid = Column(String, nullable=False)
-    disease = Column(String, nullable=False, "no-disease" )
+    disease = Column(String, nullable=False, default="no-disease" )
     target = Column(String, nullable=False, default="no-target")
     url = Column(String)
     pmcid = Column(String, nullable=False)
@@ -117,7 +117,7 @@ class LiteratureSupplementaryMaterialsAnalysis(Base):
 
     index = Column(Integer, primary_key=True, autoincrement=True)
     pmid = Column(String, nullable=False)
-    disease = Column(String, nullable=False, "no-disease" )
+    disease = Column(String, nullable=False, default="no-disease" )
     target = Column(String, nullable=False, default="no-target")
     url = Column(String)
     pmcid = Column(String, nullable=False)
