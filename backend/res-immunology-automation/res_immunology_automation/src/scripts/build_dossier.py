@@ -12,7 +12,10 @@ from api import get_evidence_literature_semaphore, get_mouse_studies, \
                 get_targetability, get_gene_essentiality_map, get_tractability, \
                 get_paralogs, get_target_pipeline_all_semaphore, get_evidence_target_literature, \
                 search_patents, get_complete_indication_pipeline, get_disease_gtr_data_semaphore, \
-                pgs_catalog_data             
+                pgs_catalog_data
+
+
+                
 import logging
 import time
 import asyncio
@@ -277,6 +280,7 @@ async def run_endpoints(job_data):
             get_key_influencers, 
             get_rna_sequence_semaphore,
             get_diseases_profiles_llm,
+            # get_complete_indication_pipeline,
             pgs_catalog_data,
             get_disease_gtr_data_semaphore
         ]
@@ -300,6 +304,7 @@ async def run_endpoints(job_data):
         ]
 
         target_disease_endpoints = [
+            # get_target_pipeline_semaphore,
             get_target_pipeline_all_semaphore,
             get_evidence_target_literature,
             search_patents
