@@ -224,10 +224,25 @@ def send_graphql_request(query: str, variables: Dict[str, Any]) -> Dict[str, Any
     return response.json()
 
 
-def save_response_to_file(file_path: str, response: Dict):
-    """ Save response to a file in JSON format """
-    with open(file_path, 'w') as file:
-        json.dump(response, file)
+def save_response_to_file(file_path: str, data: Dict[str, Any]) -> None:
+    """
+    Save data to JSON file
+    
+    Args:
+        file_path: Path to save JSON file
+        data: Data to save
+    """
+    try:
+        # Ensure directory exists
+        Path(file_path).parent.mkdir(parents=True, exist_ok=True)
+        
+        with open(file_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+        
+        log.debug(f"Data saved to {file_path}")
+    except Exception as e:
+        log.error(f"Failed to save data to {file_path}: {e}")
+        raise
 
 
 def save_big_response_to_file(file_path: str, response: Dict):
@@ -237,10 +252,25 @@ def save_big_response_to_file(file_path: str, response: Dict):
         file.flush()
 
 
-def load_response_from_file(file_path: str) -> Dict:
-    """ Load response from a file in JSON format """
-    with open(file_path, 'r') as file:
-        return json.load(file)
+def load_response_from_file(file_path: str) -> Dict[str, Any]:
+    """
+    Load JSON response from file
+    
+    Args:
+        file_path: Path to JSON file
+        
+    Returns:
+        Dictionary containing loaded data
+    """
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        log.warning(f"Cache file not found: {file_path}")
+        return {}
+    except json.JSONDecodeError as e:
+        log.error(f"Failed to decode JSON from {file_path}: {e}")
+        return {}
 
 
 def add_years(date_str: str, years: int) -> str:
