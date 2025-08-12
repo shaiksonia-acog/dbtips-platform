@@ -268,7 +268,7 @@ async def run_endpoints(job_data):
         logging.info("="*80)
         logging.info("\t\t\tconnection created in end points")
 
-        # Define endpoint categories (your existing code remains the same)
+        # Define endpoint categories 
         diseases_only_endpoints = [
             get_evidence_literature_semaphore, 
             get_mouse_studies, 
@@ -316,7 +316,7 @@ async def run_endpoints(job_data):
         if target is None: # Disease Dossier
             unique_diseases = [disease]
 
-            # Call diseases-only endpoint (your existing code)
+            # Call diseases-only endpoint 
             for endpoint in diseases_only_endpoints:
                 try:
                     request_data = DiseasesRequest(diseases=unique_diseases)
@@ -342,7 +342,7 @@ async def run_endpoints(job_data):
                     return 'error', endpoint.__name__ if callable(endpoint) else str(endpoint), str(e)
                 await asyncio.sleep(5)
 
-            # Call disease-only endpoints (your existing code)
+            # Call disease-only endpoints
             for disease in unique_diseases:
                 for endpoint in disease_only_endpoints:
                     try:
@@ -353,7 +353,7 @@ async def run_endpoints(job_data):
                         logging.error(f"\t\t\t\tError calling {endpoint.__name__} for disease {disease}: {e}")
                         return 'error', endpoint.__name__ if callable(endpoint) else str(endpoint), str(e)
 
-            # Extract literature for disease (your existing code)
+            # Extract literature for disease
             for disease in unique_diseases:
                 try:
                     logging.info(f"\t\t\tStarting literature extraction for disease: {disease}")
@@ -395,7 +395,7 @@ async def run_endpoints(job_data):
                 await asyncio.sleep(5)
         
         else: # Target Dossier
-            # Target-only endpoints (your existing code)
+            # Target-only endpoints
             for endpoint in target_only_endpoints:
                 try:
                     request_data = TargetOnlyRequest(target=target)
@@ -414,7 +414,7 @@ async def run_endpoints(job_data):
                 pipeline_inp = [disease]
                 oth_inp = [disease]
 
-            # Target-disease endpoints (your existing code)
+            # Target-disease endpoints
             for endpoint in target_disease_endpoints:
                 try:
                     if endpoint.__name__ == "get_target_pipeline_all_semaphore":
@@ -433,7 +433,7 @@ async def run_endpoints(job_data):
                     logging.error(f"\t\t\t\tError calling {endpoint.__name__} for  {target} and {disease}: {e}")
                     return 'error', endpoint.__name__ if callable(endpoint) else str(endpoint), str(e)
 
-            # Extract literature for target-disease combination (your existing code)
+            # Extract literature for target-disease combination 
             try:
                 actual_disease = disease if disease != 'no-disease' else None
                 logging.info(f"\t\t\tStarting literature extraction for target-disease: {target}-{disease}")
