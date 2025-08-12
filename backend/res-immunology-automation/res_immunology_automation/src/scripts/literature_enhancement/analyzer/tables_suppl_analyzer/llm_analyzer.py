@@ -3,36 +3,21 @@ import json
 import os
 from abc import ABC, abstractmethod
 from typing import Dict, List
+from enum import Enum
 from pydantic import BaseModel, Field, constr
 
 class LLMResponse:
     analysis: str
     keywords: List[str] = Field(default_factory=list)
 
+class SectionTypeEnum(str, Enum):
+    tables = "Tables"
+    suppl_mater = "Supplementary Materials"
+
 LLM = os.getenv('LLM_MODEL','gpt-4o-mini')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', None)
 
-class TablesAnalyzer(ABC):
-    def __init__(self):
-        if not OPENAI_API_KEY:
-            raise ValueError("API Key not found in environment variables")            
-
-    @abstractmethod
-    def create_client(self):
-        pass
-
-    @abstractmethod
-    def get_llm_response(self, table_schema: Dict, table_description: str):
-        pass
-
-
-class TablesAnalyzerOpenAI(TablesAnalyzer):
-    def create_client(self):
-        self.client = client = OpenAI(api_key=OPENAI_API_KEY)
-
-    def get_llm_response(self, table_schema: str, table_description: str)-> LLMResponse:
-        
-        table_schema_prompt = f"""
+table_schema_prompt = f"""
         You are an expert in HTML table analysis and schema extraction. Given an HTML snippet containing one or more tables, your task is to accurately extract the schema of each table. Tables may include:
             - Nested or hierarchical column headers (using colspan)
             - Grouped or sectioned rows (using rowspan)
@@ -96,11 +81,35 @@ class TablesAnalyzerOpenAI(TablesAnalyzer):
             ```
         """
 
+class Analyzer(ABC):
+    def __init__(self):
+        if not OPENAI_API_KEY:
+            raise ValueError("API Key not found in environment variables")            
+
+    @abstractmethod
+    def create_client(self):
+        pass
+
+    @abstractmethod
+    def get_llm_response(self, table_schema: Dict, table_description: str):
+        pass
+
+
+class AnalyzerOpenAI(Analyzer):
+    def create_client(self):
+        self.client = client = OpenAI(api_key=OPENAI_API_KEY)
+
+    def get_llm_response(self, schema: str, description: str, section_type: SectionTypeEnum)-> LLMResponse:
+        prompts = {"table": table_prompt + f"\n Here's the schema: {schema} and the description of the table: {description}",
+                    "supplementary materials": suppl_prompt + f"\n Here's the available supplmentary materials references: {schema} and the description of the section : {description}"}
+        
+        prompt = prompts[section_type.lower()] 
+
         response = client.chat.completions.create(
         model=LLM,
         messages=[
             {"role": "system", "content": "You are an expert in analyzing and classifying scientific research."},
-            {"role": "user", "content": table_schema_prompt}
+            {"role": "user", "content": prompt}
         ],
         max_tokens=4096,
         temperature=0.2
@@ -115,7 +124,7 @@ class TablesAnalyzerOpenAI(TablesAnalyzer):
         insights = json.loads(response_content)
         return insights
 
-class TablesAnalyzerFactory:
-    def create_analyzer_client()->TablesAnalyzer:
+class LLMAnalyzerFactory:
+    def create_analyzer_client()->Analyzer:
         if 'gpt' in LLM:
-            return TablesAnalyzerOpenAI()
+            return AnalyzerOpenAI()

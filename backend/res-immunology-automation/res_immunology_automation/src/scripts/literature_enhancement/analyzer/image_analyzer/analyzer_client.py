@@ -10,7 +10,8 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-FIGURE_ANALYSIS_MODEL = os.getenv('figure_analysis_model', 'medgemma')
+MEDGEMMA_MODEL_URL = os.getenv("MEDGEMMA_MODEL_URL")
+FIGURE_ANALYSIS_MODEL = os.getenv("FIGURE_ANALYSIS_MODEL", "MedGemma").lower()
 
 class BaseFigureAnalyzer(ABC):
     def __init__(self, username: Optional[str] = None, password: Optional[str] = None):
@@ -51,7 +52,7 @@ class BaseFigureAnalyzer(ABC):
     async def analyze(self, figure_data: Dict) -> Dict:
         caption = figure_data.get("caption", "No caption provided")
         payload = {
-            "img_url": figure_data["img_url"],
+            "img_url": figure_data["image_url"],
             "system": self.get_system_prompt(),
             "user": self.get_user_prompt(caption),
             "caption": caption
@@ -67,7 +68,8 @@ class BaseFigureAnalyzer(ABC):
         try:
             async with httpx.AsyncClient(timeout=90.0) as client:
                 response = await client.post(
-                    self.get_api_url(),
+                    # self.get_api_url(),
+                    "https://medgemma-server.own4.aganitha.ai:8443/generate",
                     json=payload,
                     headers=headers,
                     auth=auth
@@ -91,32 +93,30 @@ class BaseFigureAnalyzer(ABC):
 
     def _error_response(self, error: str, status: str) -> Dict:
         return {
-            "text_extraction": "",
+            "keywords": "",
             "insights": "",
-            "gene": "",
-            "drug": "",
-            "cell_types": "",
+            "Genes": "",
+            "drugs": "",
             "process": "",
-            "error": error,
+            "error_message": error,
             "status": status
         }
 
 
 class MedGemmaAnalyzer(BaseFigureAnalyzer):
     def get_api_url(self) -> str:
-        return os.getenv("MEDGEMMA_API_URL")  # Define in env
+        return os.getenv("MEDGEMMA_MODEL_URL")  # Define in env
 
     def get_system_prompt(self) -> str:
         return """
         Analyze this medical image and respond with ONLY a JSON object. 
         Required JSON format: 
         { 
-        "text_extraction": "medical terms found in image", 
+        "keywords": "medical terms found in image", 
         "insights": "clinical insights from analysis", 
-        "gene": "gene names if any", 
-        "drug": "drug names if any", 
-        "cell_types": "cell types if any", 
-        "process": "biological process described" 
+        "Genes": "gene names if any", 
+        "drugs": "drug names if any", 
+        "process": "biological process described" ,
         }
         Rules: 
         - ONLY return the JSON object 
@@ -131,20 +131,19 @@ class MedGemmaAnalyzer(BaseFigureAnalyzer):
 
     def parse_response(self, result: Dict, figure_data: Dict) -> Dict:
         extracted = {
-            "text_extraction": "",
+            "keywords": "",
             "insights": "",
-            "gene": "",
-            "drug": "",
-            "cell_types": "",
+            "Genes": "",
+            "drugs": "",
             "process": "",
-            "error": "",
+            "error_message": "",
             "status": result.get("status", "unknown")
         }
 
         analysis = None
         if result.get("status") in ("success", "warning") and "analysis" in result:
             analysis = result["analysis"]
-        elif any(k in result for k in ["text_extraction", "insights", "gene", "drug", "cell_types", "process"]):
+        elif any(k in result for k in ["keywords", "insights", "Genes", "drugs", "process"]):
             analysis = result
         elif "raw_response" in result:
             try:
@@ -152,18 +151,17 @@ class MedGemmaAnalyzer(BaseFigureAnalyzer):
                 if json_match:
                     analysis = json.loads(json_match.group())
                 else:
-                    extracted["error"] = "No JSON found in raw response"
+                    extracted["error_message"] = "No JSON found in raw response"
             except Exception as e:
-                extracted["error"] = f"Failed to parse raw response: {str(e)}"
+                extracted["error_message"] = f"Failed to parse raw response: {str(e)}"
                 extracted["raw_response"] = result["raw_response"][:500]
 
         if analysis:
             extracted.update({
-                "text_extraction": self.clean_text_extraction(analysis.get("text_extraction", "")),
+                "keywords": self.clean_text_extraction(analysis.get("keywords", "")),
                 "insights": analysis.get("insights", ""),
-                "gene": analysis.get("gene", ""),
-                "drug": analysis.get("drug", ""),
-                "cell_types": analysis.get("cell_types", ""),
+                "Genes": analysis.get("Genes", ""),
+                "drugs": analysis.get("drugs", ""),
                 "process": analysis.get("process", "")
             })
 

@@ -14,22 +14,24 @@ SessionLocal = sessionmaker(bind=engine)
 
 # Use a session
 session: Session = SessionLocal()
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 def get_metadata(disease_name: str, target: str, status: str):
     if target:
-        return session.query(DiseaseImageMetadata).filter(and_(
-            DiseaseImageMetadata.Disease == disease_name,
-            DiseaseImageMetadata.Target == target,
-            DiseaseImageMetadata.status == status
+        return session.query(LiteratureImagesAnalysis).filter(and_(
+            LiteratureImagesAnalysis.Disease == disease_name,
+            LiteratureImagesAnalysis.Target == target,
+            LiteratureImagesAnalysis.status == status
         )).all()
 
-    return session.query(DiseaseImageMetadata).filter(and_(
-            DiseaseImageMetadata.Disease == disease_name,
-            DiseaseImageMetadata.status == status
+    return session.query(LiteratureImagesAnalysis).filter(and_(
+            LiteratureImagesAnalysis.Disease == disease_name,
+            LiteratureImagesAnalysis.status == status
         )).all()
 
 
-def fetch_rows(table_cls, target: str = None, disease: str = None, status: str = None):
+def fetch_rows(table_cls, target: str = None, disease: str = None, status: str = None)-> List[Dict[str, str|int]]:
     """
     Fetch rows from a given SQLAlchemy table with optional filters.
     
@@ -46,21 +48,36 @@ def fetch_rows(table_cls, target: str = None, disease: str = None, status: str =
     Raises:
         ValueError: If both target and disease are None.
     """
+    print("hi")
     if not target and not disease:
         raise ValueError("At least one of 'target' or 'disease' must be specified.")
-
+    print("Heelo")
     filters = []
     vals = {"target": target, "disease": disease, "status": status}
+    print("here.....")
     for k,v in vals.items():
         if v and hasattr(table_cls, k):
             filters.append(getattr(table_cls, k) == v)
-    
-    rows = session.query(table_cls).filter(and_(*filters)).all()
-    #convert sqlAlchemy rows to Dict
-    return [
-        {column.name: getattr(row, column.name) for column in table_cls.__table__.columns}
-        for row in rows
-    ]
+    print("Filters: ", filters)
+    try:
+        logger.info(f"Executing query: {query}")
+        query = session.query(table_cls).filter(and_(*filters))
+        logger.info(f"Executing query: {query}")
+        rows = query.all()
+        print("rows here:")
+        #convert sqlAlchemy rows to Dict
+        if rows:
+            return [
+                {column.name: getattr(row, column.name) for column in table_cls.__table__.columns}
+                for row in rows
+            ]
+        else:
+            return []
+
+    except Exception as e:
+        logger.exception(f"Error fetching rows for {table_cls.__name__}")
+        raise
+
 
 def update_table_rows(table_cls, update_values: dict, filter_conditions: dict):
     """

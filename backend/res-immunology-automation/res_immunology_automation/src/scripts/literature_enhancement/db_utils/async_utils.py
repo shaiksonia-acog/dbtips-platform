@@ -21,14 +21,14 @@ AsyncSessionLocal = async_sessionmaker(bind=engine, expire_on_commit=False, clas
 # Async function: Get metadata
 # -----------------------------
 async def aget_metadata(disease_name: str, target: Optional[str], status: str):
-    stmt = select(DiseaseImageMetadata).where(
+    stmt = select(LiteratureImagesAnalysis).where(
         and_(
-            DiseaseImageMetadata.Disease == disease_name,
-            DiseaseImageMetadata.status == status
+            LiteratureImagesAnalysis.Disease == disease_name,
+            LiteratureImagesAnalysis.status == status
         )
     )
     if target:
-        stmt = stmt.where(DiseaseImageMetadata.Target == target)
+        stmt = stmt.where(LiteratureImagesAnalysis.Target == target)
 
     async with AsyncSessionLocal() as session:
         result = await session.execute(stmt)
@@ -43,18 +43,23 @@ async def afetch_rows(table_cls, disease: str = None, target: str = None, status
 
     filters = []
     vals = {"target": target, "disease": disease, "status": status}
-    for k, v in vals.items():
-        if v and hasattr(table_cls, k):
-            filters.append(getattr(table_cls, k) == v)
+    try:
+        for k, v in vals.items():
+            if v and hasattr(table_cls, k):
+                filters.append(getattr(table_cls, k) == v)
 
-    stmt = select(table_cls).where(and_(*filters))
-    async with AsyncSessionLocal() as session:
-        result = await session.execute(stmt)
-        rows = result.scalars().all()
-        return [
-            {col.name: getattr(row, col.name) for col in table_cls.__table__.columns}
-            for row in rows
-        ]
+        stmt = select(table_cls).where(and_(*filters))
+        async with AsyncSessionLocal() as session:
+            result = await session.execute(stmt)
+            rows = result.scalars().all()
+            return [
+                {col.name: getattr(row, col.name) for col in table_cls.__table__.columns}
+                for row in rows
+            ] if rows else []
+    
+    except Exception as e:
+        logger.error(f"Error while fetching records from: {table_cls.__name__}")
+        raise 
     
 # -----------------------------
 # Async function: Update rows
