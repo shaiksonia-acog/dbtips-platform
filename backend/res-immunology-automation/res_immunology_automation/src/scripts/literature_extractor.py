@@ -4,8 +4,9 @@ from literature_enhancement.literature_extractror.config import (
     LITERATURE_ENDPOINT, TARGET_LITERATURE_ENDPOINT, MAX_PMIDS_TO_PROCESS
 )
 from literature_enhancement.literature_extractror.lit_utils import (
-    get_top_100_pmids, load_response_from_file, normalize_disease_name, normalize_target_name
+    get_top_100_pmids, normalize_disease_name, normalize_target_name
 )
+from utils import load_response_from_file
 from literature_enhancement.literature_extractror.pmid_converter import PMIDConverter
 from literature_enhancement.literature_extractror.data_storage import LiteratureStorage
 
