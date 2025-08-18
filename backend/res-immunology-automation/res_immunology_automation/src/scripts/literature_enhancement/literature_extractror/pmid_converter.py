@@ -100,13 +100,13 @@ class PMIDConverter:
             log.warning(f"Failed to convert PMID {pmid} to PMCID: {e}")
             return None
 
-    async def pmids_to_pmcids_batch(self, pmids: List[str], batch_size: int = 10) -> Dict[str, Optional[str]]:
+    async def pmids_to_pmcids_batch(self, pmids: List[str], batch_size: int = 5) -> Dict[str, Optional[str]]:
         """
         Convert multiple PMIDs to PMCIDs in smaller batches with longer delays
         
         Args:
             pmids: List of PubMed IDs
-            batch_size: Number of PMIDs to process in each batch
+            batch_size: Number of PMIDs to process in each batch (reduced from 10 to 5)
             
         Returns:
             Dictionary mapping PMIDs to PMCIDs (None if not available)

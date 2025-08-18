@@ -1,8 +1,9 @@
 """
-Supplementary Materials Data Segregation Module
+Enhanced Supplementary Materials Data Segregation Module
 
 This module extracts supplementary materials data from ArticlesMetadata.raw_full_text (NXML format) 
-and populates the LiteratureSupplementaryMaterialsAnalysis table with file URLs and descriptions.
+and populates the LiteratureSupplementaryMaterialsAnalysis table with file URLs, titles, and 
+properly labeled contextual descriptions.
 """
 
 import logging
@@ -10,10 +11,8 @@ import sys
 from pathlib import Path
 from typing import List, Dict, Optional
 from datetime import datetime
-import re
 from bs4 import BeautifulSoup
 from sqlalchemy.orm import Session
-from sqlalchemy import select
 
 # Add the scripts directory to sys.path to import modules (same as CLI)
 scripts_dir = Path(__file__).parent.parent.parent
@@ -21,6 +20,8 @@ sys.path.append(str(scripts_dir))
 
 from db.database import get_db
 from db.models import ArticlesMetadata, LiteratureSupplementaryMaterialsAnalysis
+from literature_enhancement.data_segregation.utils.literature_processing_utils import LiteratureProcessingUtils
+from literature_enhancement.data_segregation.utils.supplementary_utils import SupplementaryMaterialsUtils
 
 log = logging.getLogger(__name__)
 
@@ -30,6 +31,59 @@ class SupplementaryMaterialsSegregator:
     
     def __init__(self, db_session: Session):
         self.db = db_session
+        self.utils = LiteratureProcessingUtils()
+        self.supplementary_utils = SupplementaryMaterialsUtils()
+    
+    def extract_supplementary_materials_from_article(self, article: ArticlesMetadata) -> Optional[Dict]:
+        """
+        Extract supplementary materials from a single article
+        
+        Args:
+            article: ArticlesMetadata instance
+            
+        Returns:
+            Single dictionary with all supplementary materials or None if none found
+        """
+        return self.extract_supplementary_materials_from_nxml(
+            raw_nxml=article.raw_full_text,
+            pmcid=article.pmcid,
+            pmid=article.pmid,
+            disease=article.disease or "no-disease",
+            target=article.target or "no-target",
+            url=article.url or ""
+        )
+    
+    def check_existing_supplementary_materials(self, article: ArticlesMetadata, db_session: Session) -> bool:
+        """Check if supplementary materials for this article already exist"""
+        existing_materials = (
+            db_session.query(LiteratureSupplementaryMaterialsAnalysis)
+            .filter(
+                LiteratureSupplementaryMaterialsAnalysis.pmid == article.pmid,
+                LiteratureSupplementaryMaterialsAnalysis.disease == article.disease,
+                LiteratureSupplementaryMaterialsAnalysis.target == article.target
+            )
+            .first()
+        )
+        return existing_materials is not None
+    
+    def save_supplementary_materials(self, material_data: Optional[Dict], db_session: Session) -> int:
+        """Save extracted supplementary materials to database"""
+        if not material_data:
+            return 0
+        
+        literature_material = LiteratureSupplementaryMaterialsAnalysis(
+            pmid=material_data["pmid"],
+            disease=material_data["disease"],
+            target=material_data["target"],
+            url=material_data["url"],
+            pmcid=material_data["pmcid"],
+            title=material_data["title"],
+            description=material_data["description"],
+            file_names=material_data["file_names"]
+        )
+        
+        db_session.add(literature_material)
+        return 1
     
     def extract_supplementary_materials_from_nxml(self, raw_nxml: str, pmcid: str, pmid: str, 
                                                 disease: str, target: str, url: str) -> Optional[Dict]:
@@ -60,24 +114,31 @@ class SupplementaryMaterialsSegregator:
             return None
 
         # Find all supplementary materials across the entire article
-        all_materials = self._find_all_supplementary_materials(soup, pmcid)
+        all_materials = self.supplementary_utils.find_all_supplementary_materials(soup, pmcid)
         
-        if not all_materials:
+        # Extract contextual descriptions with enhanced section labeling and post-processing
+        contextual_descriptions = self.supplementary_utils.extract_contextual_descriptions(soup)
+        
+        if not all_materials and not contextual_descriptions:
             log.debug("No supplementary materials found in NXML for PMCID: %s", pmcid)
             return None
 
         # Group all materials into a single record
-        descriptions = []
+        titles = []
         file_urls = []
         
         for material in all_materials:
-            if material['description'] and material['description'] not in descriptions:
-                descriptions.append(material['description'])
+            if material['title'] and material['title'] not in titles:
+                titles.append(material['title'])
             if material['url'] and material['url'] not in file_urls:
                 file_urls.append(material['url'])
         
-        if not file_urls:
+        # If no file URLs found but we have contextual descriptions, still create a record
+        if not file_urls and not contextual_descriptions:
             return None
+        
+        # Enhanced description formatting with section labels and post-processing
+        description = self._format_enhanced_description(contextual_descriptions)
             
         return {
             "pmcid": pmcid,
@@ -85,471 +146,209 @@ class SupplementaryMaterialsSegregator:
             "disease": disease,
             "target": target,
             "url": url,
-            "description": ", ".join(descriptions),
-            "file_names": ", ".join(file_urls),
+            "title": ", ".join(titles) if titles else "Supplementary Materials",
+            "description": description,
+            "file_names": ", ".join(file_urls) if file_urls else "",
             "extraction_timestamp": datetime.utcnow().isoformat()
         }
     
-    def _find_all_supplementary_materials(self, soup: BeautifulSoup, pmcid: str) -> List[Dict]:
+    def _format_enhanced_description(self, contextual_descriptions: List[str]) -> str:
         """
-        Find all supplementary materials in the entire JATS XML document
-        Only looks for actual supplementary materials, not regular figures/tables
-        """
-        materials = []
+        Format the enhanced description with better structure and readability
         
-        # 1. Look for explicit supplementary-material tags
-        supp_materials = soup.find_all('supplementary-material')
-        for supp_mat in supp_materials:
-            material = self._extract_from_supplementary_material_tag(supp_mat, pmcid)
-            if material:
-                materials.append(material)
-        
-        # 2. Look for sections specifically about supplementary materials
-        supp_sections = self._find_genuine_supplementary_sections(soup)
-        for section in supp_sections:
-            section_materials = self._extract_materials_from_genuine_section(section, pmcid)
-            materials.extend(section_materials)
-        
-        # 3. Look for back matter with supplementary materials
-        back_matter = soup.find('back')
-        if back_matter:
-            back_materials = self._extract_from_back_matter(back_matter, pmcid)
-            materials.extend(back_materials)
-        
-        # Remove duplicates
-        unique_materials = []
-        seen_urls = set()
-        for material in materials:
-            if material['url'] not in seen_urls:
-                seen_urls.add(material['url'])
-                unique_materials.append(material)
-        
-        return unique_materials
-    
-    def _find_genuine_supplementary_sections(self, soup: BeautifulSoup) -> List:
-        """
-        Find sections that are genuinely about supplementary materials
-        More restrictive than the original method
-        """
-        sections = []
-        
-        # Look for sections with explicit supplementary material types
-        section_selectors = [
-            "sec[sec-type='supplementary-material']",
-            "sec[sec-type='additional-information']",
-        ]
-        
-        for selector in section_selectors:
-            try:
-                found_sections = soup.select(selector)
-                sections.extend(found_sections)
-            except Exception as e:
-                log.debug("Error with selector '%s': %s", selector, e)
-                continue
-        
-        # Look for sections with titles that explicitly mention supplementary materials
-        all_sections = soup.find_all('sec')
-        for section in all_sections:
-            title_elem = section.find('title')
-            if title_elem:
-                title_text = title_elem.get_text(strip=True).lower()
-                # Be more specific about what constitutes a supplementary section
-                if self._is_genuine_supplementary_title(title_text):
-                    sections.append(section)
-        
-        return sections
-    
-    def _is_genuine_supplementary_title(self, title: str) -> bool:
-        """
-        Check if a section title genuinely indicates supplementary materials
-        """
-        title = title.lower().strip()
-        
-        # Genuine supplementary material indicators
-        genuine_indicators = [
-            'supplementary material',
-            'supplementary materials', 
-            'supplementary information',
-            'supplemental material',
-            'supplemental materials',
-            'supplemental information',
-            'additional files',
-            'supporting information',
-            'appendix', # Only if it contains supplementary files
-        ]
-        
-        # Exclude regular content that's not supplementary
-        exclusions = [
-            'figure',
-            'table', 
-            'data availability',
-            'funding',
-            'acknowledgment',
-            'reference',
-            'method',
-            'result',
-            'discussion',
-            'conclusion',
-            'introduction',
-            'background'
-        ]
-        
-        # Check for genuine indicators
-        has_genuine_indicator = any(indicator in title for indicator in genuine_indicators)
-        
-        # Check for exclusions
-        has_exclusion = any(exclusion in title for exclusion in exclusions)
-        
-        return has_genuine_indicator and not has_exclusion
-    
-    def _extract_from_supplementary_material_tag(self, supp_mat_tag, pmcid: str) -> Optional[Dict]:
-        """
-        Extract material from explicit supplementary-material XML tags
-        """
-        # Look for media or links within the supplementary material
-        media_elem = supp_mat_tag.find('media')
-        if media_elem:
-            href = media_elem.get('xlink:href') or media_elem.get('href')
-            if href:
-                description = self._extract_clean_description(supp_mat_tag)
-                url = self._build_supplementary_url_from_href(href, pmcid)
-                return {
-                    'url': url,
-                    'description': description,
-                    'original_href': href
-                }
-        
-        # Look for external links
-        ext_link = supp_mat_tag.find('ext-link')
-        if ext_link:
-            href = ext_link.get('xlink:href') or ext_link.get('href')
-            if href and self._is_supplementary_file_url(href):
-                description = self._extract_clean_description(supp_mat_tag)
-                return {
-                    'url': href,
-                    'description': description,
-                    'original_href': href
-                }
-        
-        return None
-    
-    def _extract_materials_from_genuine_section(self, section, pmcid: str) -> List[Dict]:
-        """
-        Extract materials from sections that are genuinely about supplementary materials
-        """
-        materials = []
-        
-        # Look for links that point to actual supplementary files
-        all_links = section.find_all(['ext-link', 'media'])
-        for link in all_links:
-            href = link.get('xlink:href') or link.get('href') or ''
-            if href and self._is_supplementary_file_url(href):
-                description = self._extract_clean_description(link.parent if link.parent else link)
-                url = href if href.startswith('http') else self._build_supplementary_url_from_href(href, pmcid)
-                materials.append({
-                    'url': url,
-                    'description': description,
-                    'original_href': href
-                })
-        
-        return materials
-    
-    def _extract_from_back_matter(self, back_elem, pmcid: str) -> List[Dict]:
-        """
-        Extract supplementary materials from back matter
-        """
-        materials = []
-        
-        # Look specifically for supplementary-material tags in back matter
-        supp_materials = back_elem.find_all('supplementary-material')
-        for supp_mat in supp_materials:
-            material = self._extract_from_supplementary_material_tag(supp_mat, pmcid)
-            if material:
-                materials.append(material)
-        
-        return materials
-    
-    def _is_supplementary_file_url(self, href: str) -> bool:
-        """
-        Check if URL/href actually points to a supplementary file
-        More restrictive than original method
-        """
-        if not href:
-            return False
+        Args:
+            contextual_descriptions: List of section-labeled and post-processed descriptions
             
-        href_lower = href.lower()
-        
-        # Must contain supplementary indicators AND file extensions
-        supplementary_indicators = ['supplement', 'additional', 'supporting']
-        file_extensions = ['.xls', '.xlsx', '.doc', '.docx', '.pdf', '.zip', '.csv', '.txt', '.xml']
-        
-        has_supp_indicator = any(indicator in href_lower for indicator in supplementary_indicators)
-        has_file_extension = any(ext in href_lower for ext in file_extensions)
-        
-        # For PMC URLs, be more specific
-        if 'pmc.ncbi.nlm.nih.gov' in href_lower:
-            return '/bin/' in href_lower and has_file_extension
-        
-        return has_supp_indicator and has_file_extension
-    
-    def _build_supplementary_url_from_href(self, href: str, pmcid: str) -> str:
+        Returns:
+            Formatted description string
         """
-        Build proper supplementary material URL from href
-        """
-        # If it's already a full URL, return as is
-        if href.startswith('http'):
-            return href
+        if not contextual_descriptions:
+            return "No description available"
         
-        # Clean the href - get just the filename
-        if "/" in href:
-            file_name = href.split("/")[-1]
+        # Remove very similar descriptions to avoid redundancy
+        unique_descriptions = self._remove_similar_descriptions(contextual_descriptions)
+        
+        # If we have multiple descriptions, separate them clearly
+        if len(unique_descriptions) == 1:
+            return unique_descriptions[0]
+        elif len(unique_descriptions) <= 3:
+            # For 2-3 descriptions, use bullet points
+            return " • ".join(unique_descriptions)
         else:
-            file_name = href
-        
-        # Clean PMC ID
-        clean_pmcid = pmcid.replace("PMC", "") if pmcid.startswith("PMC") else pmcid
-        
-        # Build the URL
-        full_url = f"https://pmc.ncbi.nlm.nih.gov/articles/instance/{clean_pmcid}/bin/{file_name}"
-        
-        return full_url
+            # For more than 3, use numbered format for better readability
+            formatted = []
+            for i, desc in enumerate(unique_descriptions[:4], 1):  # Limit to 4 descriptions
+                formatted.append(f"{i}. {desc}")
+            return " ".join(formatted)
     
-    def _extract_clean_description(self, element) -> str:
+    def _remove_similar_descriptions(self, descriptions: List[str]) -> List[str]:
         """
-        Extract a clean description for supplementary material
-        """
-        description = ""
+        Remove descriptions that are too similar to avoid redundancy
         
-        # Try to get caption or title
-        caption_selectors = ['caption', 'title', 'label']
-        for selector in caption_selectors:
-            caption_elem = element.find(selector)
-            if caption_elem:
-                caption_text = caption_elem.get_text(strip=True)
-                if caption_text and len(caption_text) > 5:  # Avoid very short descriptions
-                    description = caption_text
+        Args:
+            descriptions: List of description strings
+            
+        Returns:
+            List of unique descriptions
+        """
+        if not descriptions:
+            return descriptions
+        
+        unique_descriptions = []
+        
+        for desc in descriptions:
+            # Check if this description is too similar to any existing one
+            is_similar = False
+            
+            for existing_desc in unique_descriptions:
+                # Remove section labels for comparison
+                desc_clean = self._remove_section_label(desc)
+                existing_clean = self._remove_section_label(existing_desc)
+                
+                # Calculate similarity based on word overlap
+                if self._descriptions_are_similar(desc_clean, existing_clean):
+                    is_similar = True
                     break
+            
+            if not is_similar:
+                unique_descriptions.append(desc)
         
-        # If no caption, try element text but be selective
-        if not description:
-            element_text = element.get_text(strip=True)
-            # Only use if it looks like a proper description, not a filename
-            if element_text and len(element_text) > 10 and not self._looks_like_filename(element_text):
-                description = element_text[:200]  # Truncate long descriptions
-        
-        # Clean the description
-        if description:
-            description = re.sub(r'\s+', ' ', description.strip())
-            description = re.sub(r'(Download|View|Click here).*$', '', description, flags=re.IGNORECASE)
-            description = description.strip()
-        
-        return description or "Supplementary Material"
+        return unique_descriptions
     
-    def _looks_like_filename(self, text: str) -> bool:
+    def _remove_section_label(self, description: str) -> str:
         """
-        Check if text looks like a filename rather than a description
+        Remove section label from description for similarity comparison
+        
+        Args:
+            description: Description string potentially with section label
+            
+        Returns:
+            Description without section label
         """
-        if not text:
+        import re
+        # Remove section labels in format [Section Name] or [Section Name - Subsection]
+        return re.sub(r'^\[([^\]]+)\]\s*', '', description)
+    
+    def _descriptions_are_similar(self, desc1: str, desc2: str, threshold: float = 0.7) -> bool:
+        """
+        Check if two descriptions are similar based on word overlap
+        
+        Args:
+            desc1: First description
+            desc2: Second description  
+            threshold: Similarity threshold (0-1)
+            
+        Returns:
+            True if descriptions are similar
+        """
+        if not desc1 or not desc2:
             return False
-            
-        # Check for file extensions
-        file_extensions = ['.xls', '.xlsx', '.doc', '.docx', '.pdf', '.zip', 
-                          '.csv', '.txt', '.xml', '.json', '.png', '.jpg', '.tif']
         
-        # Check if it's mostly a filename (short, has extension, no spaces)
-        has_extension = any(ext in text.lower() for ext in file_extensions)
-        is_short = len(text) < 50
-        few_spaces = text.count(' ') < 3
+        # Convert to word sets
+        words1 = set(desc1.lower().split())
+        words2 = set(desc2.lower().split())
         
-        return has_extension and is_short and few_spaces
+        # Remove common words that don't contribute to meaning
+        common_words = {'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'can', 'this', 'that', 'these', 'those'}
+        
+        words1 = words1 - common_words
+        words2 = words2 - common_words
+        
+        if not words1 or not words2:
+            return False
+        
+        # Calculate Jaccard similarity
+        intersection = words1.intersection(words2)
+        union = words1.union(words2)
+        
+        similarity = len(intersection) / len(union) if union else 0
+        return similarity >= threshold
     
-   
+    def process_target_disease_articles(self, target: str, disease: Optional[str] = None, batch_size: int = 50) -> int:
+        """Process articles filtered by target and disease to extract supplementary materials"""
+        return self.utils.process_target_disease_articles(
+            db_session=self.db,
+            extraction_func=self.extract_supplementary_materials_from_article,
+            check_existing_func=self.check_existing_supplementary_materials,
+            save_func=self.save_supplementary_materials,
+            target=target,
+            disease=disease,
+            batch_size=batch_size
+        )
+
     def process_disease_articles(self, disease: str, batch_size: int = 50) -> int:
+        """Process articles filtered by disease to extract supplementary materials"""
+        return self.utils.process_disease_articles(
+            db_session=self.db,
+            extraction_func=self.extract_supplementary_materials_from_article,
+            check_existing_func=self.check_existing_supplementary_materials,
+            save_func=self.save_supplementary_materials,
+            disease=disease,
+            batch_size=batch_size
+        )
+    
+    def preview_extraction(self, pmcid: str, pmid: str = None) -> Dict:
         """
-        Process articles filtered by disease to extract supplementary materials
+        Preview the extraction results for a single article without saving to database
+        Useful for testing and debugging
         
         Args:
-            disease: Disease name to filter articles
-            batch_size: Number of articles to process in each batch
+            pmcid: PMC ID of the article
+            pmid: Optional PubMed ID
             
         Returns:
-            Number of supplementary material records extracted
+            Dictionary with extraction preview results
         """
-        # Get articles for the specific disease that haven't been processed yet
-        stmt = (
-            select(ArticlesMetadata)
-            .where(
-                ArticlesMetadata.raw_full_text.isnot(None),
-                ArticlesMetadata.disease == disease
-            )
-            .limit(batch_size)
-        )
-        
-        articles = self.db.execute(stmt).scalars().all()
-        
-        if not articles:
-            log.info(f"No articles to process for disease: {disease}")
-            return 0
-        
-        total_materials_extracted = 0
-        
-        for article in articles:
-            try:
-                # Check if supplementary materials for this article already exist
-                existing_materials = (
-                    self.db.query(LiteratureSupplementaryMaterialsAnalysis)
-                    .filter(
-                        LiteratureSupplementaryMaterialsAnalysis.pmid == article.pmid,
-                        LiteratureSupplementaryMaterialsAnalysis.disease == article.disease
-                    )
-                    .first()
-                )
-                
-                if existing_materials:
-                    log.debug("Supplementary materials already exist for PMID: %s, Disease: %s", 
-                            article.pmid, article.disease)
-                    continue
-                
-                # Extract supplementary materials from the article
-                material_data = self.extract_supplementary_materials_from_nxml(
-                    raw_nxml=article.raw_full_text,
-                    pmcid=article.pmcid,
-                    pmid=article.pmid,
-                    disease=article.disease or "no-disease",
-                    target=article.target or "no-target",
-                    url=article.url or ""
-                )
-                
-                # Save to database if materials found
-                if material_data:
-                    literature_material = LiteratureSupplementaryMaterialsAnalysis(
-                        pmid=material_data["pmid"],
-                        disease=material_data["disease"],
-                        target=material_data["target"],
-                        url=material_data["url"],
-                        pmcid=material_data["pmcid"],
-                        description=material_data["description"],
-                        file_names=material_data["file_names"]
-                    )
-                    
-                    self.db.add(literature_material)
-                    total_materials_extracted += 1
-                    
-                    # Commit after each article
-                    self.db.commit()
-                    
-                    log.info("Processed article PMID: %s for disease %s, found supplementary materials", 
-                            article.pmid, disease)
-                else:
-                    log.debug("No supplementary materials found for PMID: %s", article.pmid)
-                
-            except Exception as e:
-                log.error("Error processing article PMID: %s for disease %s - %s", article.pmid, disease, e)
-                self.db.rollback()
-                continue
-        
-        log.info("Disease processing complete for %s. Extracted %d supplementary material records from %d articles", 
-                disease, total_materials_extracted, len(articles))
-        
-        return total_materials_extracted
-
-    def process_target_disease_articles(self, target: str, disease: Optional[str], batch_size: int = 50) -> int:
-        """
-        Process articles filtered by target and disease to extract supplementary materials
-        
-        Args:
-            target: Target name to filter articles
-            disease: Disease name to filter articles (optional)
-            batch_size: Number of articles to process in each batch
+        try:
+            # Find the article
+            query = self.db.query(ArticlesMetadata).filter(ArticlesMetadata.pmcid == pmcid)
+            if pmid:
+                query = query.filter(ArticlesMetadata.pmid == pmid)
             
-        Returns:
-            Number of supplementary material records extracted
-        """
-        # Build query based on whether disease is provided
-        query_conditions = [
-            ArticlesMetadata.raw_full_text.isnot(None),
-            ArticlesMetadata.target == target
-        ]
-        
-        if disease:
-            query_conditions.append(ArticlesMetadata.disease == disease)
-        
-        stmt = (
-            select(ArticlesMetadata)
-            .where(*query_conditions)
-            .limit(batch_size)
-        )
-        
-        articles = self.db.execute(stmt).scalars().all()
-        
-        if not articles:
-            log.info(f"No articles to process for target-disease: {target}-{disease}")
-            return 0
-        
-        total_materials_extracted = 0
-        
-        for article in articles:
-            try:
-                # Check if supplementary materials for this article already exist
-                existing_materials = (
-                    self.db.query(LiteratureSupplementaryMaterialsAnalysis)
-                    .filter(
-                        LiteratureSupplementaryMaterialsAnalysis.pmid == article.pmid,
-                        LiteratureSupplementaryMaterialsAnalysis.disease == article.disease,
-                        LiteratureSupplementaryMaterialsAnalysis.target == article.target
-                    )
-                    .first()
-                )
-                
-                if existing_materials:
-                    log.debug("Supplementary materials already exist for PMID: %s, Target: %s, Disease: %s", 
-                            article.pmid, article.target, article.disease)
-                    continue
-                
-                # Extract supplementary materials from the article
-                material_data = self.extract_supplementary_materials_from_nxml(
-                    raw_nxml=article.raw_full_text,
-                    pmcid=article.pmcid,
-                    pmid=article.pmid,
-                    disease=article.disease or "no-disease",
-                    target=article.target or "no-target",
-                    url=article.url or ""
-                )
-                
-                # Save to database if materials found
-                if material_data:
-                    literature_material = LiteratureSupplementaryMaterialsAnalysis(
-                        pmid=material_data["pmid"],
-                        disease=material_data["disease"],
-                        target=material_data["target"],
-                        url=material_data["url"],
-                        pmcid=material_data["pmcid"],
-                        description=material_data["description"],
-                        file_names=material_data["file_names"]
-                    )
-                    
-                    self.db.add(literature_material)
-                    total_materials_extracted += 1
-                    
-                    # Commit after each article
-                    self.db.commit()
-                    
-                    log.info("Processed article PMID: %s for target-disease %s-%s, found supplementary materials", 
-                            article.pmid, target, disease)
-                else:
-                    log.debug("No supplementary materials found for PMID: %s", article.pmid)
-                
-            except Exception as e:
-                log.error("Error processing article PMID: %s for target-disease %s-%s - %s", 
-                         article.pmid, target, disease, e)
-                self.db.rollback()
-                continue
-        
-        log.info("Target-disease processing complete for %s-%s. Extracted %d supplementary material records from %d articles", 
-                target, disease, total_materials_extracted, len(articles))
-        
-        return total_materials_extracted
-
+            article = query.first()
+            
+            if not article:
+                return {
+                    "status": "error",
+                    "message": f"Article not found: PMCID={pmcid}, PMID={pmid}",
+                    "pmcid": pmcid,
+                    "pmid": pmid
+                }
+            
+            # Extract supplementary materials
+            material_data = self.extract_supplementary_materials_from_article(article)
+            
+            if not material_data:
+                return {
+                    "status": "no_materials",
+                    "message": "No supplementary materials found",
+                    "pmcid": pmcid,
+                    "pmid": article.pmid,
+                    "disease": article.disease,
+                    "target": article.target
+                }
+            
+            return {
+                "status": "success",
+                "message": "Supplementary materials extracted successfully",
+                "data": material_data,
+                "preview": {
+                    "title": material_data["title"],
+                    "file_count": len(material_data["file_names"].split(", ")) if material_data["file_names"] else 0,
+                    "description_length": len(material_data["description"]),
+                    "description_preview": material_data["description"][:200] + "..." if len(material_data["description"]) > 200 else material_data["description"]
+                }
+            }
+            
+        except Exception as e:
+            log.error("Error during preview extraction for PMCID %s: %s", pmcid, e)
+            return {
+                "status": "error",
+                "message": f"Extraction error: {str(e)}",
+                "pmcid": pmcid,
+                "pmid": pmid
+            }
+    
 
 def main():
     """Main function to run supplementary materials data segregation"""
@@ -560,9 +359,22 @@ def main():
     
     try:
         segregator = SupplementaryMaterialsSegregator(db)
-        total_materials = segregator.process_all_articles()
         
-        print(f"Supplementary materials data segregation complete. Total records extracted: {total_materials}")
+        print("Enhanced Supplementary Materials Data Segregation Module loaded successfully")
+        print("\nAvailable methods:")
+        print("1. segregator.process_disease_articles(disease) - Process all articles for a disease")
+        print("2. segregator.process_target_disease_articles(target, disease) - Process articles for target/disease")
+        print("3. segregator.preview_extraction(pmcid, pmid) - Preview extraction for a single article")
+        print("\nEnhancements:")
+        print("- Section names are included in descriptions (e.g., [Methods], [Results - Data Analysis])")
+        print("- Disease keywords are filtered out from descriptions")
+        print("- Duplicate and similar descriptions are removed")
+        print("- Better formatting for multiple contextual descriptions")
+        
+        # Example usage
+        print(f"\nExample usage:")
+        print(f'preview = segregator.preview_extraction("PMC11318169")')
+        print(f'total_materials = segregator.process_disease_articles("diabetes")')
         
     except Exception as e:
         log.error("Error during supplementary materials data segregation: %s", e)

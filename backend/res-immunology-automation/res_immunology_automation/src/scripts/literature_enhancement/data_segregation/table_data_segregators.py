@@ -1,5 +1,5 @@
 """
-Table Data Segregation Module
+Table Data Segregation Module (Refactored)
 
 This module extracts table data from ArticlesMetadata.raw_full_text (NXML format) and populates 
 the LiteratureTablesAnalysis table with table schemas and descriptions using LLM analysis.
@@ -15,7 +15,6 @@ from datetime import datetime
 import re
 from bs4 import BeautifulSoup
 from sqlalchemy.orm import Session
-from sqlalchemy import select
 from openai import OpenAI
 
 # Add the scripts directory to sys.path to import modules (same as CLI)
@@ -24,6 +23,7 @@ sys.path.append(str(scripts_dir))
 
 from db.database import get_db
 from db.models import ArticlesMetadata, LiteratureTablesAnalysis
+from literature_enhancement.data_segregation.utils.literature_processing_utils import LiteratureProcessingUtils
 
 log = logging.getLogger(__name__)
 
@@ -42,6 +42,58 @@ class TableDataSegregator:
             raise ValueError("OpenAI API key must be provided either as parameter or OPENAI_API_KEY environment variable")
             
         self.openai_client = OpenAI(api_key=api_key)
+        self.utils = LiteratureProcessingUtils()
+    
+    def extract_tables_from_article(self, article: ArticlesMetadata) -> List[Dict]:
+        """
+        Extract tables from a single article
+        
+        Args:
+            article: ArticlesMetadata instance
+            
+        Returns:
+            List of table dictionaries
+        """
+        return self.extract_tables_from_nxml(
+            raw_nxml=article.raw_full_text,
+            pmcid=article.pmcid,
+            pmid=article.pmid,
+            disease=article.disease or "no-disease",
+            target=article.target or "no-target",
+            url=article.url or ""
+        )
+    
+    def check_existing_tables(self, article: ArticlesMetadata, db_session: Session) -> bool:
+        """Check if tables for this article already exist"""
+        existing_tables = (
+            db_session.query(LiteratureTablesAnalysis)
+            .filter(
+                LiteratureTablesAnalysis.pmid == article.pmid,
+                LiteratureTablesAnalysis.disease == article.disease,
+                LiteratureTablesAnalysis.target == article.target
+            )
+            .first()
+        )
+        return existing_tables is not None
+    
+    def save_tables(self, tables_data: List[Dict], db_session: Session) -> int:
+        """Save extracted tables to database"""
+        if not tables_data:
+            return 0
+        
+        for table_data in tables_data:
+            literature_table = LiteratureTablesAnalysis(
+                pmid=table_data["pmid"],
+                disease=table_data["disease"],
+                target=table_data["target"],
+                url=table_data["url"],
+                pmcid=table_data["pmcid"],
+                table_description=table_data["table_description"],
+                table_schema=table_data["table_schema"]
+            )
+            db_session.add(literature_table)
+        
+        return len(tables_data)
     
     def extract_tables_from_nxml(self, raw_nxml: str, pmcid: str, pmid: str, 
                                 disease: str, target: str, url: str) -> List[Dict]:
@@ -137,6 +189,30 @@ class TableDataSegregator:
         log.info("Extracted %d tables from PMCID: %s", len(tables), pmcid)
         return tables
     
+    def process_target_disease_articles(self, target: str, disease: Optional[str] = None, batch_size: int = 50) -> int:
+        """Process articles filtered by target and disease to extract tables"""
+        return self.utils.process_target_disease_articles(
+            db_session=self.db,
+            extraction_func=self.extract_tables_from_article,
+            check_existing_func=self.check_existing_tables,
+            save_func=self.save_tables,
+            target=target,
+            disease=disease,
+            batch_size=batch_size
+        )
+
+    def process_disease_articles(self, disease: str, batch_size: int = 50) -> int:
+        """Process articles filtered by disease to extract tables"""
+        return self.utils.process_disease_articles(
+            db_session=self.db,
+            extraction_func=self.extract_tables_from_article,
+            check_existing_func=self.check_existing_tables,
+            save_func=self.save_tables,
+            disease=disease,
+            batch_size=batch_size
+        )
+    
+    # Keep all the existing private methods for table-specific logic
     def _extract_table_title(self, table_wrap_element, table_index: int) -> str:
         """Extract table title from document structure (JATS XML)"""
         
@@ -334,190 +410,6 @@ class TableDataSegregator:
         
         return caption.strip()
 
-    def process_target_disease_articles(self, target: str, disease: Optional[str], batch_size: int = 50) -> int:
-        """
-        Process articles filtered by target and disease to extract tables
-        
-        Args:
-            target: Target name to filter articles
-            disease: Disease name to filter articles (optional)
-            batch_size: Number of articles to process in each batch
-            
-        Returns:
-            Number of tables extracted
-        """
-        # Build query based on whether disease is provided
-        query_conditions = [
-            ArticlesMetadata.raw_full_text.isnot(None),
-            ArticlesMetadata.target == target
-        ]
-        
-        if disease:
-            query_conditions.append(ArticlesMetadata.disease == disease)
-        
-        stmt = (
-            select(ArticlesMetadata)
-            .where(*query_conditions)
-            .limit(batch_size)
-        )
-        
-        articles = self.db.execute(stmt).scalars().all()
-        
-        if not articles:
-            log.info(f"No articles to process for target-disease: {target}-{disease}")
-            return 0
-        
-        total_tables_extracted = 0
-        
-        for article in articles:
-            try:
-                # Check if tables for this article already exist
-                existing_tables = (
-                    self.db.query(LiteratureTablesAnalysis)
-                    .filter(
-                        LiteratureTablesAnalysis.pmid == article.pmid,
-                        LiteratureTablesAnalysis.disease == article.disease,
-                        LiteratureTablesAnalysis.target == article.target
-                    )
-                    .first()
-                )
-                
-                if existing_tables:
-                    log.debug("Tables already exist for PMID: %s, Target: %s, Disease: %s", 
-                            article.pmid, article.target, article.disease)
-                    continue
-                
-                # Extract tables from the article
-                tables = self.extract_tables_from_nxml(
-                    raw_nxml=article.raw_full_text,
-                    pmcid=article.pmcid,
-                    pmid=article.pmid,
-                    disease=article.disease or "no-disease",
-                    target=article.target or "no-target",
-                    url=article.url or ""
-                )
-                
-                # Save tables to database
-                for table_data in tables:
-                    literature_table = LiteratureTablesAnalysis(
-                        pmid=table_data["pmid"],
-                        disease=table_data["disease"],
-                        target=table_data["target"],
-                        url=table_data["url"],
-                        pmcid=table_data["pmcid"],
-                        table_description=table_data["table_description"],
-                        table_schema=table_data["table_schema"]
-                    )
-                    
-                    self.db.add(literature_table)
-                
-                total_tables_extracted += len(tables)
-                
-                # Commit after each article
-                self.db.commit()
-                
-                log.info("Processed article PMID: %s for target-disease %s-%s, extracted %d tables", 
-                        article.pmid, target, disease, len(tables))
-                
-            except Exception as e:
-                log.error("Error processing article PMID: %s for target-disease %s-%s - %s", 
-                         article.pmid, target, disease, e)
-                self.db.rollback()
-                continue
-        
-        log.info("Target-disease processing complete for %s-%s. Extracted %d tables from %d articles", 
-                target, disease, total_tables_extracted, len(articles))
-        
-        return total_tables_extracted
-
-    def process_disease_articles(self, disease: str, batch_size: int = 50) -> int:
-        """
-        Process articles filtered by disease to extract tables
-        
-        Args:
-            disease: Disease name to filter articles
-            batch_size: Number of articles to process in each batch
-            
-        Returns:
-            Number of tables extracted
-        """
-        # Get articles for the specific disease that haven't been processed yet
-        stmt = (
-            select(ArticlesMetadata)
-            .where(
-                ArticlesMetadata.raw_full_text.isnot(None),
-                ArticlesMetadata.disease == disease
-            )
-            .limit(batch_size)
-        )
-        
-        articles = self.db.execute(stmt).scalars().all()
-        
-        if not articles:
-            log.info(f"No articles to process for disease: {disease}")
-            return 0
-        
-        total_tables_extracted = 0
-        
-        for article in articles:
-            try:
-                # Check if tables for this article already exist
-                existing_tables = (
-                    self.db.query(LiteratureTablesAnalysis)
-                    .filter(
-                        LiteratureTablesAnalysis.pmid == article.pmid,
-                        LiteratureTablesAnalysis.disease == article.disease
-                    )
-                    .first()
-                )
-                
-                if existing_tables:
-                    log.debug("Tables already exist for PMID: %s, Disease: %s", 
-                            article.pmid, article.disease)
-                    continue
-                
-                # Extract tables from the article
-                tables = self.extract_tables_from_nxml(
-                    raw_nxml=article.raw_full_text,
-                    pmcid=article.pmcid,
-                    pmid=article.pmid,
-                    disease=article.disease or "no-disease",
-                    target=article.target or "no-target",
-                    url=article.url or ""
-                )
-                
-                # Save tables to database
-                for table_data in tables:
-                    literature_table = LiteratureTablesAnalysis(
-                        pmid=table_data["pmid"],
-                        disease=table_data["disease"],
-                        target=table_data["target"],
-                        url=table_data["url"],
-                        pmcid=table_data["pmcid"],
-                        table_description=table_data["table_description"],
-                        table_schema=table_data["table_schema"]
-                    )
-                    
-                    self.db.add(literature_table)
-                
-                total_tables_extracted += len(tables)
-                
-                # Commit after each article
-                self.db.commit()
-                
-                log.info("Processed article PMID: %s for disease %s, extracted %d tables", 
-                        article.pmid, disease, len(tables))
-                
-            except Exception as e:
-                log.error("Error processing article PMID: %s for disease %s - %s", article.pmid, disease, e)
-                self.db.rollback()
-                continue
-        
-        log.info("Disease processing complete for %s. Extracted %d tables from %d articles", 
-                disease, total_tables_extracted, len(articles))
-        
-        return total_tables_extracted
-
 
 def main():
     """Main function to run table data segregation"""
@@ -529,7 +421,6 @@ def main():
     try:
         # Initialize segregator with API key from environment
         segregator = TableDataSegregator(db)
-        total_tables = segregator.process_all_articles()
         
         print(f"Table data segregation complete. Total tables extracted: {total_tables}")
         
