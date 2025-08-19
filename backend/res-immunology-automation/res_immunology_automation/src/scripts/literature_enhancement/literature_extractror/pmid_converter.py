@@ -60,7 +60,7 @@ class PMIDConverter:
             log.error(f"Request failed for URL {url} with params {params}: {e}")
             raise
     
-    async def pmid_to_pmcid_single(self, pmid: str) -> Optional[str]:
+    async def pmid_to_pmcid(self, pmid: str) -> Optional[str]:
         """
         Convert a single PMID to PMCID using pubmed_pmc linkname
     
@@ -100,13 +100,12 @@ class PMIDConverter:
             log.warning(f"Failed to convert PMID {pmid} to PMCID: {e}")
             return None
 
-    async def pmids_to_pmcids_batch(self, pmids: List[str], batch_size: int = 5) -> Dict[str, Optional[str]]:
+    async def pmids_to_pmcids(self, pmids: List[str]) -> Dict[str, Optional[str]]:
         """
-        Convert multiple PMIDs to PMCIDs in smaller batches with longer delays
+        Convert multiple PMIDs to PMCIDs 
         
         Args:
             pmids: List of PubMed IDs
-            batch_size: Number of PMIDs to process in each batch (reduced from 10 to 5)
             
         Returns:
             Dictionary mapping PMIDs to PMCIDs (None if not available)
@@ -114,44 +113,17 @@ class PMIDConverter:
         results = {}
         pmids_without_pmcid = []
         
-        for i in range(0, len(pmids), batch_size):
-            batch = pmids[i:i + batch_size]
-            log.info(f"Processing PMID batch {i//batch_size + 1}: {len(batch)} PMIDs")
+        for pmid in pmids:
             
-            # Process batch concurrently
-            tasks = [self.pmid_to_pmcid_single(pmid) for pmid in batch]
-            batch_results = await asyncio.gather(*tasks, return_exceptions=True)
-            
-            # Collect results and track PMIDs without PMCIDs
-            for pmid, pmcid in zip(batch, batch_results):
-                if isinstance(pmcid, Exception):
-                    log.warning(f"Error processing PMID {pmid}: {pmcid}")
-                    results[pmid] = None
-                    pmids_without_pmcid.append(pmid)
-                else:
-                    results[pmid] = pmcid
-                    if not pmcid:
-                        pmids_without_pmcid.append(pmid)
-            
-            # Add longer delay between batches to avoid rate limiting
-            if i + batch_size < len(pmids):
-                delay = get_random_latency(5, 8)  # Increased from 1-3 to 5-8 seconds
-                log.info(f"Waiting {delay:.1f}s before processing next batch...")
-                await asyncio.sleep(delay)
+            results[pmid] = await self.pmid_to_pmcid(pmid)            
+            await asyncio.sleep(0.2)
         
         successful_conversions = sum(1 for v in results.values() if v is not None)
-        
+        pmids_without_pmcid = sum(1 for v in results.values() if v is None)
         # Log summary with PMIDs without PMCIDs
         log.info(f"PMCID Conversion Summary:")
         log.info(f"  - Successfully converted: {successful_conversions}/{len(pmids)} PMIDs")
-        log.info(f"  - PMIDs without PMCIDs: {len(pmids_without_pmcid)}/{len(pmids)}")
-        
-        if pmids_without_pmcid:
-            # Log first 10 PMIDs without PMCIDs, then count if more
-            pmids_to_log = pmids_without_pmcid[:10]
-            log.warning(f"PMIDs without PMCIDs (showing first 10): {', '.join(pmids_to_log)}")
-            if len(pmids_without_pmcid) > 10:
-                log.warning(f"... and {len(pmids_without_pmcid) - 10} more PMIDs without PMCIDs")
+        log.info(f"  - PMIDs without PMCIDs: {pmids_without_pmcid}/{len(pmids)}")
         
         return results
     
@@ -222,29 +194,29 @@ class PMIDConverter:
 
 
 # Convenience functions for backward compatibility
-async def pubmed_to_pmc(pmid: str) -> Optional[str]:
-    """
-    Convert single PMID to PMCID (convenience function)
+# async def pubmed_to_pmc(pmid: str) -> Optional[str]:
+#     """
+#     Convert single PMID to PMCID (convenience function)
     
-    Args:
-        pmid: PubMed ID
+#     Args:
+#         pmid: PubMed ID
         
-    Returns:
-        PMC ID if available, None otherwise
-    """
-    async with PMIDConverter() as converter:
-        return await converter.pmid_to_pmcid_single(pmid)
+#     Returns:
+#         PMC ID if available, None otherwise
+#     """
+#     async with PMIDConverter() as converter:
+#         return await converter.pmid_to_pmcid_single(pmid)
 
 
-async def fetch_pmc_content(pmcid: str) -> Optional[str]:
-    """
-    Fetch PMC full text content (convenience function)
+# async def fetch_pmc_content(pmcid: str) -> Optional[str]:
+#     """
+#     Fetch PMC full text content (convenience function)
     
-    Args:
-        pmcid: PMC ID
+#     Args:
+#         pmcid: PMC ID
         
-    Returns:
-        XML content as string, None if failed
-    """
-    async with PMIDConverter() as converter:
-        return await converter.get_pmc_full_text(pmcid)
+#     Returns:
+#         XML content as string, None if failed
+#     """
+#     async with PMIDConverter() as converter:
+#         return await converter.get_pmc_full_text(pmcid)

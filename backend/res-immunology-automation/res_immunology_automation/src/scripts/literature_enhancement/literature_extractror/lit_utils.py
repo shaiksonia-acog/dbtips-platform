@@ -29,7 +29,7 @@ def get_random_latency(a: int = DEFAULT_REQUEST_DELAY[0], b: int = DEFAULT_REQUE
     return random.uniform(a, b)
 
 
-def get_top_100_pmids(literature_data: List[Dict[str, Any]], max_pmids: int = 100) -> List[str]:
+def get_top_100_literature(literature_data: List[Dict[str, Any]], max_pmids: int = 100) -> List[str]:
     """
     Extract top PMIDs by overall_score
     
@@ -48,39 +48,39 @@ def get_top_100_pmids(literature_data: List[Dict[str, Any]], max_pmids: int = 10
         key=lambda d: d.get("overall_score", 0), 
         reverse=True
     )
+
+    pmids = [{"pmid": d.get("PMID", "").strip(), "title": d.get("Title", "").strip()} for d in sorted_lit[:max_pmids]]
+    # # Filter out empty or invalid PMIDs
+    # valid_pmids = [pmid for pmid in pmids if pmid and pmid.isdigit()]
     
-    pmids = [str(d.get("PMID", "")).strip() for d in sorted_lit[:max_pmids]]
-    # Filter out empty or invalid PMIDs
-    valid_pmids = [pmid for pmid in pmids if pmid and pmid.isdigit()]
-    
-    log.info(f"Extracted {len(valid_pmids)} valid PMIDs from {len(literature_data)} literature entries")
-    return valid_pmids
+    # log.info(f"Extracted {len(valid_pmids)} valid PMIDs from {len(literature_data)} literature entries")
+    return pmids
 
 
-def normalize_disease_name(disease: str) -> str:
+def normalize_disease_and_target_name(disease_or_target_str: str) -> str:
     """
-    Normalize disease name for database storage
-    
+    Normalize disease or target name for database storage
+
     Args:
-        disease: Raw disease name
+        disease_or_target_str: Raw disease or target name
         
     Returns:
-        Normalized disease name (lowercase, underscores)
+        Normalized disease or target name (lowercase, underscores)
     """
-    return disease.strip().lower().replace(" ", "_")
+    return disease_or_target_str.strip().lower().replace(" ", "_")
 
 
-def normalize_target_name(target: str) -> str:
-    """
-    Normalize target name for database storage
+# def normalize_target_name(target: str) -> str:
+#     """
+#     Normalize target name for database storage
     
-    Args:
-        target: Raw target name
+#     Args:
+#         target: Raw target name
         
-    Returns:
-        Normalized target name (lowercase)
-    """
-    return target.strip().lower()
+#     Returns:
+#         Normalized target name (lowercase)
+#     """
+#     return target.strip().lower()
 
 
 def create_target_disease_id(target: str, disease: str) -> str:
@@ -94,8 +94,8 @@ def create_target_disease_id(target: str, disease: str) -> str:
     Returns:
         Combined ID string
     """
-    normalized_target = normalize_target_name(target)
-    normalized_disease = normalize_disease_name(disease)
+    normalized_target = normalize_disease_and_target_name(target)
+    normalized_disease = normalize_disease_and_target_name(disease)
     return f"{normalized_target}-{normalized_disease}"
 
 

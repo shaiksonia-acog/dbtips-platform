@@ -36,11 +36,11 @@ async def extract_disease_literature_cli(diseases: List[str]) -> None:
             
             if success:
                 summary = extractor.get_extraction_summary(disease)
-                print(f"\n✓ Extraction completed for {disease}")
-                print(f"  Articles stored: {summary['total_articles']}")
-                print(f"  With full text: {summary['articles_with_full_text']} ({summary['full_text_percentage']}%)")
+                log.info(f"\n✓ Extraction completed for {disease}")
+                log.info(f"  Articles stored: {summary['total_articles']}")
+                log.info(f"  With full text: {summary['articles_with_full_text']} ({summary['full_text_percentage']}%)")
             else:
-                print(f"\n✗ Extraction failed for {disease}")
+                log.info(f"\n✗ Extraction failed for {disease}")
                 
         else:
             # Multiple diseases
@@ -48,14 +48,14 @@ async def extract_disease_literature_cli(diseases: List[str]) -> None:
             results = await extractor.extract_literature_batch(diseases)
             
             successful = sum(1 for success in results.values() if success)
-            print(f"\n✓ Batch extraction completed: {successful}/{len(diseases)} successful")
+            log.info(f"\n✓ Batch extraction completed: {successful}/{len(diseases)} successful")
             
             for disease, success in results.items():
                 if success:
                     summary = extractor.get_extraction_summary(disease)
-                    print(f"  ✓ {disease}: {summary['total_articles']} articles ({summary['full_text_percentage']}% with full text)")
+                    log.info(f"  ✓ {disease}: {summary['total_articles']} articles ({summary['full_text_percentage']}% with full text)")
                 else:
-                    print(f"  ✗ {disease}: Failed")
+                    log.info(f"  ✗ {disease}: Failed")
     
     finally:
         db_session.close()
@@ -76,11 +76,11 @@ async def extract_target_literature_cli(target: str, diseases: List[str]) -> Non
             
             if success:
                 summary = extractor.get_extraction_summary(disease, target)
-                print(f"\n✓ Extraction completed for {target}-{diseases[0]}")
-                print(f"  Articles stored: {summary['total_articles']}")
-                print(f"  With full text: {summary['articles_with_full_text']} ({summary['full_text_percentage']}%)")
+                log.info(f"\n✓ Extraction completed for {target}-{diseases[0]}")
+                log.info(f"  Articles stored: {summary['total_articles']}")
+                log.info(f"  With full text: {summary['articles_with_full_text']} ({summary['full_text_percentage']}%)")
             else:
-                print(f"\n✗ Extraction failed for {target}-{diseases[0]}")
+                log.info(f"\n✗ Extraction failed for {target}-{diseases[0]}")
                 
         else:
             # Multiple target-disease combinations
@@ -93,16 +93,16 @@ async def extract_target_literature_cli(target: str, diseases: List[str]) -> Non
                 results[f"{target}-{disease}"] = success
             
             successful = sum(1 for success in results.values() if success)
-            print(f"\n✓ Batch extraction completed: {successful}/{len(diseases)} successful")
+            log.info(f"\n✓ Batch extraction completed: {successful}/{len(diseases)} successful")
             
             for combo, success in results.items():
                 if success:
                     disease_name = combo.split('-', 1)[1]
                     disease_param = disease_name if disease_name != "no-disease" else None
                     summary = extractor.get_extraction_summary(disease_param, target)
-                    print(f"  ✓ {combo}: {summary['total_articles']} articles ({summary['full_text_percentage']}% with full text)")
+                    log.info(f"  ✓ {combo}: {summary['total_articles']} articles ({summary['full_text_percentage']}% with full text)")
                 else:
-                    print(f"  ✗ {combo}: Failed")
+                    log.info(f"  ✗ {combo}: Failed")
     
     finally:
         db_session.close()
@@ -115,19 +115,19 @@ async def show_summary_cli(diseases: List[str], target: str = None) -> None:
     try:
         extractor = LiteratureExtractor(db_session)
         
-        print(f"\n{'='*60}")
-        print("LITERATURE EXTRACTION SUMMARY")
-        print(f"{'='*60}")
+        log.info(f"\n{'='*60}")
+        log.info("LITERATURE EXTRACTION SUMMARY")
+        log.info(f"{'='*60}")
         
         for disease in diseases:
             disease_param = disease if disease != "no-disease" else None
             summary = extractor.get_extraction_summary(disease_param, target)
             
             combo_name = f"{target}-{disease}" if target else disease
-            print(f"\n{combo_name}:")
-            print(f"  Total articles: {summary['total_articles']}")
-            print(f"  With full text: {summary['articles_with_full_text']} ({summary['full_text_percentage']}%)")
-            print(f"  With PMCID: {summary['articles_with_pmcid']} ({summary['pmcid_percentage']}%)")
+            log.info(f"\n{combo_name}:")
+            log.info(f"  Total articles: {summary['total_articles']}")
+            log.info(f"  With full text: {summary['articles_with_full_text']} ({summary['full_text_percentage']}%)")
+            log.info(f"  With PMCID: {summary['articles_with_pmcid']} ({summary['pmcid_percentage']}%)")
     
     finally:
         db_session.close()
@@ -225,10 +225,10 @@ Examples:
         elif args.command == 'summary':
             asyncio.run(show_summary_cli(args.diseases, args.target))
         else:
-            parser.print_help()
+            parser.log.info_help()
     
     except KeyboardInterrupt:
-        print("\n\nOperation cancelled by user")
+        log.info("\n\nOperation cancelled by user")
         sys.exit(1)
     except Exception as e:
         log.error(f"CLI error: {e}")
