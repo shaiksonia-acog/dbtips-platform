@@ -20,8 +20,8 @@ sys.path.append(str(scripts_dir))
 
 from db.database import get_db
 from db.models import ArticlesMetadata, LiteratureSupplementaryMaterialsAnalysis
-from literature_enhancement.data_segregation.utils.literature_processing_utils import LiteratureProcessingUtils
-from literature_enhancement.data_segregation.utils.supplementary_utils import SupplementaryMaterialsUtils
+from utils.literature_processing_utils import LiteratureProcessingUtils
+from utils.supplementary_utils import SupplementaryMaterialsUtils
 
 log = logging.getLogger(__name__)
 

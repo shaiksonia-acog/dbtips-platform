@@ -43,7 +43,26 @@ class LiteratureProcessingUtils:
         Returns:
             Number of records extracted
         """
-        # Build query conditions dynamically
+        # Check whether the Extraction is completed for the given target and disease
+        query_conditions = [LiteratureEnhancementPipelineStatus.pipeline_type == "extraction", 
+                            LiteratureEnhancementPipelineStatus.status= "completed"]
+        if target:
+            query_conditions.append(LiteratureEnhancementPipelineStatus.target == target)
+        if disease:
+            query_conditions.append(LiteratureEnhancementPipelineStatus.disease == disease)
+        
+        stmt = (
+            select(LiteratureEnhancementPipelineStatus)
+            .where(*query_conditions)
+            .limit(batch_size)
+        )
+
+        status = db_session.execute(stmt).scalars().all()
+        if not status:
+            log.info(f"Extraction is not completed for target: {target}, disease: {disease}")
+            return "error"
+
+        # Fetch all metadata articles with full text
         query_conditions = [ArticlesMetadata.raw_full_text.isnot(None)]
         
         if target:
@@ -176,5 +195,52 @@ class LiteratureProcessingUtils:
             batch_size=batch_size
         )
 
+    @staticmethod
+    def check_pipeline_status(
+        db_session: Session,
+        pipeline_types: List[str] 
+        target: Optional[str] = None,
+        disease: Optional[str] = None,
+        
+    ) -> bool:
+        """
+        Check if the current and previous pipelines are completed for the given target and disease
+        
+        Args:
+            db_session: Database session
+            target: Target name to filter articles 
+            disease: Disease name to filter articles 
+            pipeline_types: List of pipeline types to check status for
+            
+        Returns:
+            True if extraction is completed, False otherwise
+        """
+        query_conditions = [LiteratureEnhancementPipelineStatus.pipeline_type == pipeline_type,
+                                        LiteratureEnhancementPipelineStatus.status == "completed"]
+        if target:
+            query_conditions.append(LiteratureEnhancementPipelineStatus.target == target)
+        if disease:
+        query_conditions.append(LiteratureEnhancementPipelineStatus.disease == disease)
     
-   
+        stmt = (
+            select(LiteratureEnhancementPipelineStatus)
+            .where(*_query_conditions)
+            .limit(batch_size)
+        )
+
+        return stmt
+
+        #     pipeline_status[pipeline_type] = db_session.execute(stmt).scalars().all()
+
+        # logs = []
+        # all_completed = True
+
+        # for ptype, status_obj in pipeline_status.items():
+        #     if status_obj is None:
+        #         logs.append(f"No status found for pipeline type: {ptype}")
+        #         all_completed = False
+        #     elif status_obj.status != "completed":
+        #         logs.append(f"Pipeline '{ptype}' is in '{status_obj.status}' state, not completed yet")
+        #         all_completed = False
+
+        # return all_completed, logs
