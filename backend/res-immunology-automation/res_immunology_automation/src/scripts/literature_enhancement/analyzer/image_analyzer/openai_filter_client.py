@@ -2,9 +2,6 @@ import os
 import json
 import re
 import logging
-import asyncio
-import base64
-import requests
 from typing import Dict, Optional
 from openai import OpenAI
 
@@ -12,8 +9,8 @@ logger = logging.getLogger(__name__)
 
 class OpenAIPathwayFilter:
     """
-    OpenAI GPT-4o-mini based filter to determine if images show disease pathways or mechanisms
-    This replaces the MedGemmaPathwayFilter for filtering stage only
+    OpenAI GPT-4o-mini based filter to determine if captions describe disease pathways or mechanisms
+    Caption-only filtering without image processing
     """
     
     def __init__(self, api_key: Optional[str] = None):
@@ -26,145 +23,56 @@ class OpenAIPathwayFilter:
         self.model = "gpt-4o-mini"
 
     def get_classification_system_prompt(self) -> str:
-        """System prompt for pathway classification"""
-        return """You are an expert biomedical image classifier specialized in identifying disease pathway diagrams.
+        """System prompt for pathway classification based on captions only"""
+        return """You are given captions of figures from biomedical/clinical publications. Your task is to classify each caption into one of the following categories:
 
-Analyze BOTH the image content and caption text to determine if this shows **disease pathways or mechanisms**.
+* **Pathway figures** → captions describing molecular mechanisms, biological signaling pathways, disease mechanisms, or interactions between genes, proteins, metabolites, or drugs (e.g., "Proposed signaling pathway of TGF-β in fibrosis").
 
-Consider VISUAL elements AND textual context together:
+* **Others** → captions that do not describe pathways (e.g., imaging data, clinical results, charts, survival curves, histology, structural models, etc.).
 
-TRUE (Disease Pathways):
-- Pathway diagrams with arrows/flow connections
-- Drug/molecular mechanisms with directional flow
-- Metabolic/signaling cascades
-- Disease process flowcharts
-- Network diagrams showing biological relationships
-- Caption mentions: "pathway", "mechanism", "cascade", "signaling", "process"
-
-FALSE (Not Pathways):
-- Radiology: MRI, CT, PET, X-ray, ultrasound images
-- Histology/microscopy slides
-- Clinical photographs
-- Data plots: bar/line/scatter/pie charts, survival curves
-- Tables, demographic data, statistical comparisons
-- Isolated anatomical structures without process flow
-- Caption mentions: "scan", "image", "histology", "microscopy", "data", "results"
-
-KEY: Look for PROCESS FLOW (arrows, connections) in image AND pathway-related terms in caption.
+Examples:
+* Caption: "Schematic representation of the NF-κB signaling pathway in inflammatory bowel disease." → **Pathway figures**
+* Caption: "Kaplan–Meier survival curve of patients with stage III colorectal cancer." → **Others**
+* Caption: "Diagram illustrating the crosstalk between PI3K/AKT and MAPK pathways in breast cancer." → **Pathway figures**
+* Caption: "Representative MRI scans showing liver fibrosis progression." → **Others**
 
 Return only JSON:
 {
   "is_disease_pathway": true/false,
   "confidence": "high/medium/low",
-  "reasoning": "Brief explanation citing both visual and textual evidence"
+  "reasoning": "Brief explanation based on caption analysis"
 }"""
 
     def get_classification_user_prompt(self, caption: str) -> str:
         """User prompt for pathway classification"""
-        caption_text = f"Caption: {caption.strip()}" if caption and caption.strip() and caption.lower() not in ["no caption provided", "no caption", "n/a"] else "No caption available"
+        caption_text = caption.strip() if caption and caption.strip() and caption.lower() not in ["no caption provided", "no caption", "n/a"] else "No caption available"
     
-        return f"""Analyze this biomedical content for disease pathways/mechanisms.
+        return f"""Analyze this biomedical caption for disease pathways/mechanisms.
 
-{caption_text}
+Caption: {caption_text}
 
 INSTRUCTIONS:
-1. Examine the IMAGE for: arrows, flow diagrams, network connections, process steps
-2. Examine the CAPTION for: pathway terminology, mechanism descriptions, process words
-3. Combine both visual and textual evidence
+1. Examine the caption for pathway terminology, mechanism descriptions, process words
+2. Look for terms indicating molecular mechanisms, signaling pathways, disease processes
+3. Distinguish between pathway descriptions vs. clinical data, imaging, histology, charts
 
-EXCLUDE: Clinical scans (MRI/CT/X-ray), histology slides, data charts, tables, isolated structures
+INCLUDE: Pathway figures - captions describing mechanisms, signaling, interactions, processes
+EXCLUDE: Clinical scans, histology, data charts, survival curves, structural models without mechanisms
 
-Focus on: Process diagrams with directional flow showing biological mechanisms
+Return exact JSON format with reasoning based on caption analysis."""
 
-Return exact JSON format with reasoning that references both image content and caption analysis."""
-
-    def download_and_encode_image(self, image_url: str) -> str:
-        """Download image from URL and encode to base64"""
-        try:
-            # Headers to mimic a browser request and avoid 403 errors
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                "Accept": "image/webp,image/apng,image/*,*/*;q=0.8",
-                "Accept-Language": "en-US,en;q=0.9",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Cache-Control": "no-cache",
-                "Pragma": "no-cache",
-                "Sec-Fetch-Dest": "image",
-                "Sec-Fetch-Mode": "no-cors",
-                "Sec-Fetch-Site": "cross-site"
-            }
-            
-            # Add referer if it's an NCBI/PMC URL
-            if "ncbi.nlm.nih.gov" in image_url or "pmc.ncbi.nlm.nih.gov" in image_url:
-                headers["Referer"] = "https://www.ncbi.nlm.nih.gov/"
-            
-            # Use requests instead of httpx
-            response = requests.get(image_url, headers=headers, timeout=60, allow_redirects=True)
-            response.raise_for_status()
-            
-            # Verify we got image content
-            content_type = response.headers.get("content-type", "")
-            if not content_type.startswith("image/"):
-                logger.warning(f"Unexpected content type '{content_type}' for image {image_url}")
-            
-            # Encode image to base64
-            image_data = response.content
-            encoded_image = base64.b64encode(image_data).decode('utf-8')
-            logger.debug(f"Successfully downloaded and encoded image from {image_url} (size: {len(image_data)} bytes)")
-            return encoded_image
-                
-        except requests.exceptions.HTTPError as e:
-            if e.response.status_code == 403:
-                logger.error(f"403 Forbidden error for {image_url}. Server may be blocking automated requests.")
-                # Try a different approach for 403 errors
-                try:
-                    # Brief delay before retry
-                    import time
-                    time.sleep(1)
-                    
-                    # Retry with minimal headers
-                    simple_headers = {
-                        "User-Agent": "Mozilla/5.0 (compatible; Academic Research Bot)",
-                        "Accept": "*/*"
-                    }
-                    retry_response = requests.get(image_url, headers=simple_headers, timeout=60, allow_redirects=True)
-                    retry_response.raise_for_status()
-                    image_data = retry_response.content
-                    encoded_image = base64.b64encode(image_data).decode('utf-8')
-                    logger.info(f"Successfully downloaded image on retry: {image_url}")
-                    return encoded_image
-                except Exception as retry_e:
-                    logger.error(f"Retry also failed for {image_url}: {str(retry_e)}")
-                    raise e
-            else:
-                raise e
-        except requests.exceptions.TooManyRedirects as e:
-            logger.error(f"Too many redirects for image {image_url}: {str(e)}")
-            raise
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Request error downloading image {image_url}: {str(e)}")
-            raise
-        except Exception as e:
-            logger.error(f"Error downloading/encoding image {image_url}: {str(e)}")
-            raise
-
-    def filter_image(self, image_url: str, caption: str = "") -> Dict:
+    def filter_caption(self, caption: str) -> Dict:
         """
-        Filter image using OpenAI GPT-4o-mini to determine if it shows disease pathways
+        Filter caption using OpenAI GPT-4o-mini to determine if it describes disease pathways
         
         Args:
-            image_url: URL of the image to analyze
-            caption: Image caption text for context
+            caption: Caption text to analyze
             
         Returns:
             Dict with filtering results matching pipeline expectations
         """
         try:
-            logger.info(f"OpenAI filtering image: {image_url[:50]}{'...' if len(image_url) > 50 else ''}")
-            logger.debug(f"Caption context: '{caption[:100]}{'...' if len(caption) > 100 else ''}'")
-            
-            # Download and encode image
-            encoded_image = self.download_and_encode_image(image_url)
+            logger.info(f"OpenAI filtering caption: '{caption[:50]}{'...' if len(caption) > 50 else ''}'")
             
             # Call OpenAI API with retries
             max_retries = 3
@@ -178,19 +86,13 @@ Return exact JSON format with reasoning that references both image content and c
                         max_tokens=300,
                         messages=[
                             {"role": "system", "content": self.get_classification_system_prompt()},
-                            {
-                                "role": "user",
-                                "content": [
-                                    {"type": "text", "text": self.get_classification_user_prompt(caption)},
-                                    {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{encoded_image}"}}
-                                ],
-                            },
+                            {"role": "user", "content": self.get_classification_user_prompt(caption)}
                         ],
                     )
 
                     result_text = response.choices[0].message.content.strip()
-                    parsed = self.parse_filter_response(result_text, image_url)
-                    logger.info(f"Successfully filtered image: {image_url[:50]}... - Result: {parsed.get('is_disease_pathway')}")
+                    parsed = self.parse_filter_response(result_text, caption)
+                    logger.info(f"Successfully filtered caption - Result: {parsed.get('is_disease_pathway')}")
                     return parsed
                 
                 except Exception as e:
@@ -206,10 +108,10 @@ Return exact JSON format with reasoning that references both image content and c
                         continue
                         
         except Exception as e:
-            logger.error(f"OpenAI filtering failed for {image_url[:50]}...: {str(e)}")
+            logger.error(f"OpenAI filtering failed for caption: {str(e)}")
             return self._error_response(str(e))
 
-    def parse_filter_response(self, result_text: str, image_url: str) -> Dict:
+    def parse_filter_response(self, result_text: str, caption: str) -> Dict:
         """Parse OpenAI filtering response"""
         try:
             # Try direct JSON parse first
@@ -250,7 +152,7 @@ Return exact JSON format with reasoning that references both image content and c
                     "reasoning": str(reasoning),
                     "status": "filtered_success",
                     "error_message": None,
-                    "filter_method": "openai_gpt4omini"
+                    "filter_method": "openai_gpt4omini_caption"
                 }
             else:
                 logger.error("Invalid or empty content from OpenAI response")
@@ -268,37 +170,42 @@ Return exact JSON format with reasoning that references both image content and c
             "reasoning": f"OpenAI filtering failed: {error}",
             "status": "filter_error", 
             "error_message": error,
-            "filter_method": "openai_gpt4omini"
+            "filter_method": "openai_gpt4omini_caption"
         }
 
-    def batch_filter_images(self, images_data: list) -> list:
+    def batch_filter_captions(self, captions_data: list) -> list:
         """
-        Filter multiple images in batch with rate limiting
+        Filter multiple captions in batch with rate limiting
         
         Args:
-            images_data: List of image data dictionaries
+            captions_data: List of caption strings or image data dictionaries
             
         Returns:
             List of filtering results
         """
         results = []
         
-        for i, image_data in enumerate(images_data):
+        for i, item in enumerate(captions_data):
             try:
-                image_url = image_data.get("image_url", "")
-                caption = image_data.get("image_caption", "")
+                # Handle both string captions and dict with caption
+                if isinstance(item, str):
+                    caption = item
+                elif isinstance(item, dict):
+                    caption = item.get("image_caption", "")
+                else:
+                    caption = str(item)
                 
-                # Filter the image
-                filter_result = self.filter_image(image_url, caption)
+                # Filter the caption
+                filter_result = self.filter_caption(caption)
                 results.append(filter_result)
                 
                 # Add delay to respect OpenAI rate limits
-                if i < len(images_data) - 1:  # Don't delay after last item
+                if i < len(captions_data) - 1:  # Don't delay after last item
                     import time
                     time.sleep(1.0)  # 1 second delay for OpenAI
                     
             except Exception as e:
-                logger.error(f"Error filtering image {i}: {str(e)}")
+                logger.error(f"Error filtering caption {i}: {str(e)}")
                 results.append(self._error_response(str(e)))
         
         return results

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Sequence, String,Integer, DateTime, PrimaryKeyConstraint, Text
+from sqlalchemy import Column, Sequence, String,Integer, DateTime, PrimaryKeyConstraint, Text, Boolean
 from .database import Base
 
 
@@ -90,11 +90,12 @@ class LiteratureImagesAnalysis(Base):
     pmcid = Column(String)
     image_url = Column(String)
     image_caption = Column(Text)
-    Genes = Column(Text)
+    genes = Column(Text)
     insights = Column(Text)
     drugs = Column(Text)
     keywords = Column(Text)
     process = Column(Text)
+    is_disease_pathway = Column(Boolean)  # NEW COLUMN: True/False for disease pathway relevance
     error_message = Column(Text)
     status = Column(String)
 
@@ -103,7 +104,7 @@ class LiteratureTablesAnalysis(Base):
 
     index = Column(Integer, primary_key=True, autoincrement=True)
     pmid = Column(String, nullable=False)
-    disease = Column(String, nullable=False, default="no-disease" )
+    disease = Column(String, nullable=False, default="no-disease")
     target = Column(String, nullable=False, default="no-target")
     url = Column(String)
     pmcid = Column(String, nullable=False)
@@ -125,3 +126,20 @@ class LiteratureSupplementaryMaterialsAnalysis(Base):
     file_names = Column(Text)  # renamed from "table/suppl schema schema" to valid identifier
     analysis = Column(Text)
     keywords = Column(Text)
+    title = Column(Text, nullable=True)  # <-- This is the new field you need to add
+
+class LiteratureEnhancementPipelineStatus(Base):
+    __tablename__ = 'literature_enhancement_pipeline_status'
+
+    # composite key fields
+    disease = Column(String, nullable=False)
+    target = Column(String, nullable=False)
+    pipeline_type = Column(String, nullable=False)
+
+    # pipeline status (initially empty, later updated)
+    pipeline_status = Column(String, nullable=True)
+
+    __table_args__ = (
+        UniqueConstraint('disease', 'target', 'pipeline_type', name='uq_disease_target_pipeline'),
+    )
+

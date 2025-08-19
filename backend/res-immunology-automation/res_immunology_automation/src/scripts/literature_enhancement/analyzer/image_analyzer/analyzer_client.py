@@ -1,3 +1,4 @@
+#analyzer_client (using med gemma model via httpx and different codebase)
 import os
 import json
 import re
@@ -7,59 +8,6 @@ from typing import Dict, Optional
 import httpx
 
 logger = logging.getLogger(__name__)
-
-class MedGemmaPathwayFilter:
-    """
-    MedGemma-based filter to determine if images show disease pathways or mechanisms
-    This is the filtering stage before detailed content analysis
-    """
-    
-    def __init__(self, username: Optional[str] = None, password: Optional[str] = None):
-        self.username = username or os.getenv('username')
-        self.password = password or os.getenv('password')
-
-        if not self.username or not self.password:
-            raise ValueError("LDAP credentials not found in environment variables")
-
-    def get_system_prompt(self) -> str:
-        """Concise system prompt for pathway filtering"""
-        return """You are a biomedical image expert. Determine if this image shows disease pathways or mechanisms.
-
-RETURN TRUE for:
-- Disease pathway diagrams with arrows/connections
-- Drug mechanism flowcharts  
-- Metabolic/signaling pathway maps
-- Network diagrams showing biological interactions
-- Schematic disease processes with directional flow
-
-RETURN FALSE for:
-- Data plots, bar charts, statistical graphs
-- Basic microscopy without pathway annotations
-- Simple experimental procedures
-- Patient demographic tables
-- Individual protein structures without interactions
-
-Look for visual pathway indicators: arrows, connecting lines, flow diagrams, network structures.
-
-Return only this JSON format:
-{
-  "is_disease_pathway": true/false,
-  "confidence": "high/medium/low", 
-  "reasoning": "Brief explanation"
-}"""
-
-    def get_user_prompt(self, caption: str) -> str:
-        """Concise user prompt for pathway filtering"""
-        caption_text = f"Caption: {caption.strip()}" if caption and caption.strip() else "No caption available"
-        
-        return f"""Analyze if this medical image shows disease pathways or mechanisms.
-
-{caption_text}
-
-Focus on pathway visual elements like arrows, connections, flow diagrams. Return the exact JSON format from system prompt."""
-
-    # ... rest of the methods remain the same as original
-
 
 class MedGemmaAnalyzer:
     """
@@ -75,32 +23,27 @@ class MedGemmaAnalyzer:
             raise ValueError("LDAP credentials not found in environment variables")
 
     def get_system_prompt(self) -> str:
-        """Concise system prompt for content analysis"""
-        return """Extract biomedical information from this confirmed pathway image.
+        """Optimized system prompt - shorter but precise"""
+        return """Extract biomedical information from this pathway image in 5 categories:
 
-Extract in 5 categories:
+1. **genes**: Official human gene symbols only (HGNC format: PAH, TH, TPH1). Exclude metabolites, amino acids, proteins.
 
-1. **Genes**: Only official human gene symbols (HGNC format like PAH, TH, TPH1). Not metabolites or amino acids.
+2. **drugs**: Pharmaceutical compounds, therapeutic agents only.
 
-2. **drugs**: Pharmaceutical compounds, therapeutic agents, drug names.
+3. **keywords**: Disease names, metabolites, amino acids, techniques, biomarkers.
 
-3. **keywords**: All other medical terms - diseases, metabolites, amino acids, techniques, biomarkers.
+4. **process**: Main biological process (e.g., "phenylalanine metabolism").
 
-4. **process**: Main biological process shown (e.g., "phenylalanine metabolism", "insulin signaling").
+5. **insights**: Clinical relevance visible in the image.
 
-5. **insights**: Clinical relevance, therapeutic implications, key findings from the image.
+Rules: Extract only visible terms. Use "not mentioned" if empty. No guessing.
 
-Rules:
-- Extract only what's visible in the image
-- Use "not mentioned" if category is empty
-- Be thorough but concise
-
-Return only this JSON:
+Return JSON:
 {
-  "Genes": "comma-separated gene symbols or 'not mentioned'",
-  "drugs": "comma-separated drug names or 'not mentioned'",
-  "keywords": "comma-separated medical terms or 'not mentioned'",
-  "process": "biological process description or 'not mentioned'",
+  "genes": "gene symbols or 'not mentioned'",
+  "drugs": "drug names or 'not mentioned'", 
+  "keywords": "medical terms or 'not mentioned'",
+  "process": "biological process or 'not mentioned'",
   "insights": "clinical insights or 'not mentioned'"
 }"""
 
@@ -129,10 +72,11 @@ Return analysis in the exact JSON format specified."""
         logger.info(f"MedGemma analyzing content for PMCID: {figure_data.get('pmcid', 'unknown')}")
         
         payload = {
-            "img_url": figure_data["image_url"],
             "system": self.get_system_prompt(),
             "user": self.get_user_prompt(caption),
-            "caption": ""  # Empty string as in working example
+            "img_url": figure_data["image_url"],
+            "caption": caption if caption != "No caption provided" else None,
+            "max_tokens": 128000
         }
 
         headers = {
@@ -155,6 +99,7 @@ Return analysis in the exact JSON format specified."""
 
                 if response.status_code == 200:
                     result = response.json()
+                    logger.debug(f"MedGemma raw response: {result}")
                     parsed = self.parse_analysis_response(result, figure_data)
                     logger.info(f"Successfully analyzed content for: {figure_data.get('pmcid', 'unknown')}")
                     return parsed
@@ -178,7 +123,7 @@ Return analysis in the exact JSON format specified."""
         extracted = {
             "keywords": "not mentioned",
             "insights": "not mentioned", 
-            "Genes": "not mentioned",
+            "genes": "not mentioned",
             "drugs": "not mentioned",
             "process": "not mentioned",
             "error_message": None,
@@ -186,65 +131,59 @@ Return analysis in the exact JSON format specified."""
         }
 
         analysis = None
+        pmcid = figure_data.get('pmcid', 'unknown')
         
-        # Handle the response structure
+        # Handle the response structure based on your server's format
         if result.get("status") == "success":
-            # Try content field first
-            if "content" in result:
+            logger.info(f"MedGemma returned success status for {pmcid}")
+            
+            # Check for 'content' field first (direct structured response)
+            if "content" in result and result["content"]:
                 content = result["content"]
+                logger.debug(f"Found content field: {type(content)} - {str(content)[:200]}")
+                
                 if isinstance(content, dict):
                     analysis = content
-                    logger.info("Using content field from MedGemma response")
+                    logger.info(f"Using structured content dict for {pmcid}")
+                elif isinstance(content, str):
+                    # Try to parse string content as JSON
+                    analysis = self._parse_json_from_string(content, pmcid)
+                else:
+                    logger.warning(f"Unexpected content type: {type(content)} for {pmcid}")
             
-            # Then try raw_response field
-            elif "raw_response" in result:
-                try:
-                    raw_response = result["raw_response"].strip()
-                    
-                    # Remove markdown code blocks if present
-                    if raw_response.startswith("```json") and raw_response.endswith("```"):
-                        raw_response = raw_response[7:-3].strip()
-                    elif raw_response.startswith("```") and raw_response.endswith("```"):
-                        raw_response = raw_response[3:-3].strip()
-                    
-                    # Try to parse as JSON
-                    analysis = json.loads(raw_response)
-                    logger.info("Successfully parsed JSON from MedGemma raw_response")
-                    
-                except json.JSONDecodeError as e:
-                    # Try to extract JSON object from the raw response
-                    json_match = re.search(r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}', raw_response, re.DOTALL)
-                    if json_match:
-                        try:
-                            json_str = json_match.group()
-                            analysis = json.loads(json_str)
-                            logger.info("Successfully extracted and parsed JSON from raw response")
-                        except json.JSONDecodeError:
-                            extracted["error_message"] = f"Failed to parse extracted JSON: {str(e)}"
-                            extracted["status"] = "analysis_error"
-                            logger.error(f"JSON parsing error: {str(e)}")
-                    else:
-                        extracted["error_message"] = "No valid JSON found in response"
-                        extracted["status"] = "analysis_error"
-                        logger.warning("No valid JSON found in raw response")
+            # Fallback to raw_response field
+            if not analysis and "raw_response" in result and result["raw_response"]:
+                logger.info(f"Attempting to parse raw_response for {pmcid}")
+                analysis = self._parse_json_from_string(result["raw_response"], pmcid)
+            
+            # Last resort: check other possible response fields
+            if not analysis:
+                for field in ["generated_text", "text", "output", "response"]:
+                    if field in result and result[field]:
+                        logger.info(f"Attempting to parse {field} field for {pmcid}")
+                        analysis = self._parse_json_from_string(result[field], pmcid)
+                        if analysis:
+                            break
 
         # Update extracted data with analysis results
         if analysis and isinstance(analysis, dict):
             try:
                 # Handle different possible field names from the API
                 field_mappings = {
-                    "Genes": ["Genes", "genes", "gene_names", "gene"],
-                    "drugs": ["drugs", "drug_names", "drug", "medications"],
-                    "keywords": ["keywords", "terms", "medical_terms"],
-                    "process": ["process", "biological_process", "pathway"],
-                    "insights": ["insights", "clinical_insights", "findings", "significance"]
+                    "genes": ["genes", "genes", "gene_names", "gene", "gene_symbols"],
+                    "drugs": ["drugs", "drug_names", "drug", "medications", "compounds"],
+                    "keywords": ["keywords", "terms", "medical_terms", "biomarkers"],
+                    "process": ["process", "biological_process", "pathway", "mechanism"],
+                    "insights": ["insights", "clinical_insights", "findings", "significance", "clinical_relevance"]
                 }
                 
+                found_fields = 0
                 for db_field, possible_fields in field_mappings.items():
                     value = None
                     for field in possible_fields:
                         if field in analysis:
                             value = analysis[field]
+                            found_fields += 1
                             break
                     
                     if value:
@@ -254,27 +193,76 @@ Return analysis in the exact JSON format specified."""
                             extracted[db_field] = self._clean_field(cleaned_value)
                         else:
                             extracted[db_field] = self._clean_field(str(value))
-                    else:
-                        extracted[db_field] = "not mentioned"
-                
-                # Set status to analyzed if successful and no error message
-                if not extracted.get("error_message"):
-                    extracted["status"] = "analyzed"
-                    logger.info("Content analysis completed successfully")
                     
-                logger.debug(f"Extracted genes: {extracted['Genes']}")
-                logger.debug(f"Extracted keywords: {extracted['keywords']}")
+                    # Log what we found
+                    logger.debug(f"Field {db_field}: {extracted[db_field]}")
                 
+                # Set status to analyzed if we found at least some fields
+                if found_fields > 0 and not extracted.get("error_message"):
+                    extracted["status"] = "analyzed"
+                    logger.info(f"Content analysis completed successfully for {pmcid} ({found_fields} fields found)")
+                else:
+                    extracted["error_message"] = f"No recognizable fields found in analysis response (found keys: {list(analysis.keys())})"
+                    extracted["status"] = "analysis_error"
+                    logger.warning(f"No recognizable analysis fields found for {pmcid}")
+                    
             except Exception as e:
                 extracted["error_message"] = f"Error processing analysis fields: {str(e)}"
                 extracted["status"] = "analysis_error"
-                logger.error(f"Error processing analysis fields: {str(e)}")
+                logger.error(f"Error processing analysis fields for {pmcid}: {str(e)}")
         else:
             if not extracted.get("error_message"):
-                extracted["error_message"] = "Invalid or empty analysis data"
+                extracted["error_message"] = f"Invalid or empty analysis data. Response keys: {list(result.keys()) if isinstance(result, dict) else 'not dict'}"
                 extracted["status"] = "analysis_error"
+                logger.error(f"Invalid analysis data for {pmcid}: {extracted['error_message']}")
 
         return extracted
+
+    def _parse_json_from_string(self, text: str, pmcid: str) -> Optional[Dict]:
+        """Attempt to parse JSON from a text string with multiple strategies"""
+        if not text or not isinstance(text, str):
+            return None
+        
+        text = text.strip()
+        logger.debug(f"Attempting to parse JSON from text for {pmcid}: {text[:200]}...")
+        
+        # Strategy 1: Direct JSON parsing
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError:
+            pass
+        
+        # Strategy 2: Remove markdown code blocks
+        cleaned_text = text
+        if text.startswith("```json") and text.endswith("```"):
+            cleaned_text = text[7:-3].strip()
+        elif text.startswith("```") and text.endswith("```"):
+            cleaned_text = text[3:-3].strip()
+        
+        if cleaned_text != text:
+            try:
+                return json.loads(cleaned_text)
+            except json.JSONDecodeError:
+                pass
+        
+        # Strategy 3: Find JSON object with regex
+        json_patterns = [
+            r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}',  # Simple nested braces
+            r'\{.*?\}',  # Greedy match
+        ]
+        
+        for pattern in json_patterns:
+            matches = re.findall(pattern, text, re.DOTALL)
+            for match in matches:
+                try:
+                    result = json.loads(match.strip())
+                    logger.info(f"Successfully extracted JSON using regex for {pmcid}")
+                    return result
+                except json.JSONDecodeError:
+                    continue
+        
+        logger.warning(f"Failed to parse any JSON from response for {pmcid}")
+        return None
 
     def _clean_field(self, field_value: str) -> str:
         """Clean and validate individual field values"""
@@ -282,7 +270,7 @@ Return analysis in the exact JSON format specified."""
             return "not mentioned"
         
         cleaned = field_value.strip()
-        if not cleaned or cleaned.lower() in ["", "n/a", "none", "null", "not mentioned"]:
+        if not cleaned or cleaned.lower() in ["", "n/a", "none", "null", "not mentioned", "not available"]:
             return "not mentioned"
         
         # Remove quotes and extra whitespace
@@ -312,7 +300,7 @@ Return analysis in the exact JSON format specified."""
         return {
             "keywords": "not mentioned",
             "insights": "not mentioned", 
-            "Genes": "not mentioned",
+            "genes": "not mentioned",
             "drugs": "not mentioned",
             "process": "not mentioned",
             "error_message": error,
