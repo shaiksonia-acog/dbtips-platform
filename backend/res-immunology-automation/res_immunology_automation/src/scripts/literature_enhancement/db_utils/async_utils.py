@@ -195,11 +195,12 @@ async def check_pipeline_status(
 # -----------------------------
 # Generic Pipeline Status Update
 # -----------------------------
-async def create_pipeline_status_completed(
+async def create_pipeline_status(
     disease: str, 
     target: str, 
-    pipeline_type: str
-) -> bool:
+    pipeline_type: str, 
+    pipeline_status: str
+    ) -> bool:
     """
     Generic function to update pipeline status to 'completed' in literature_enhancement_pipeline_status table
     
@@ -227,7 +228,7 @@ async def create_pipeline_status_completed(
             
             if existing_record:
                 # Update existing record
-                existing_record.pipeline_status = "completed"
+                existing_record.pipeline_status = pipeline_status
                 logger.info(f"Updated pipeline status for {disease}-{target}-{pipeline_type} to 'completed'")
             else:
                 # Create new record
@@ -235,11 +236,11 @@ async def create_pipeline_status_completed(
                     disease=disease,
                     target=target,
                     pipeline_type=pipeline_type,
-                    pipeline_status="completed"
+                    pipeline_status=pipeline_status
                 )
                 session.add(new_record)
-                logger.info(f"Created new pipeline status record for {disease}-{target}-{pipeline_type} with status 'completed'")
-            
+                logger.info(f"Created new pipeline status record for {disease}-{target}-{pipeline_type} with status '{pipeline_status}'")
+
             await session.commit()
             return True
             
