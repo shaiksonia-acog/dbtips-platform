@@ -29,16 +29,16 @@ def get_random_latency(a: int = DEFAULT_REQUEST_DELAY[0], b: int = DEFAULT_REQUE
     return random.uniform(a, b)
 
 
-def get_top_100_literature(literature_data: List[Dict[str, Any]], max_pmids: int = 100) -> List[str]:
+def get_top_n_literature(literature_data: List[Dict[str, Any]], n: int) -> List[Dict[str, str]]:
     """
-    Extract top PMIDs by overall_score
+    Extract top n PMIDs by overall_score WITH titles
     
     Args:
         literature_data: List of literature dictionaries
-        max_pmids: Maximum number of PMIDs to return
+        n: Number of PMIDs to return
         
     Returns:
-        List of top PMIDs sorted by overall_score
+        List of dicts with pmid and title
     """
     if not literature_data:
         return []
@@ -49,13 +49,16 @@ def get_top_100_literature(literature_data: List[Dict[str, Any]], max_pmids: int
         reverse=True
     )
 
-    pmids = [{"pmid": d.get("PMID", "").strip(), "title": d.get("Title", "").strip()} for d in sorted_lit[:max_pmids]]
-    # # Filter out empty or invalid PMIDs
-    # valid_pmids = [pmid for pmid in pmids if pmid and pmid.isdigit()]
+    # Return both PMID and title - FIXED: Check "Title" key from literature endpoint
+    pmid_title_pairs = []
+    for d in sorted_lit[:n]:
+        pmid = str(d.get("PMID", "")).strip()
+        title = d.get("Title", "")  # Use "Title" key from literature endpoint cache
+        if pmid and pmid.isdigit():
+            pmid_title_pairs.append({"pmid": pmid, "title": title.strip()})
     
-    # log.info(f"Extracted {len(valid_pmids)} valid PMIDs from {len(literature_data)} literature entries")
-    return pmids
-
+    log.info(f"Extracted {len(pmid_title_pairs)} valid PMIDs with titles from {len(literature_data)} literature entries")
+    return pmid_title_pairs
 
 def normalize_disease_and_target_name(disease_or_target_str: str) -> str:
     """

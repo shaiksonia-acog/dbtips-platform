@@ -9,7 +9,12 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sess
 sys.path.append('/app/res-immunology-automation/res_immunology_automation/src/scripts/')
 print("path: ", sys.path)
 
-from literature_enhancement.db_utils.async_utils import afetch_rows, aupdate_table_rows, AsyncSessionLocal, afetch_rows_with_null_check
+from literature_enhancement.db_utils.async_utils import (
+    afetch_rows, 
+    aupdate_table_rows, 
+    AsyncSessionLocal, 
+    afetch_rows_with_null_check  # Now imported from utils
+)
 from table_analyzer_client import TableAnalyzerFactory
 from db.models import LiteratureTablesAnalysis
 
@@ -20,52 +25,19 @@ logging.basicConfig(level=logging.INFO)
 # Initialize the analyzer
 analyzer = TableAnalyzerFactory.create_analyzer_client()
 
+
 # -------------------------
-# Fetch unprocessed tables
-# -------------------------
-# -------------------------
-# Fetch unprocessed tables
+# Fetch unprocessed tables (now uses utils function)
 # -------------------------
 async def fetch_tables(disease: str, target: Optional[str] = None):
     """Fetch tables from database that need processing (where analysis or keywords are null)"""
-    return await afetch_rows_with_null_check(LiteratureTablesAnalysis, disease, target)
+    return await afetch_rows_with_null_check(
+        table_cls=LiteratureTablesAnalysis, 
+        disease=disease, 
+        target=target,
+        null_columns=['analysis', 'keywords']  # Specify which columns to check
+    )
 
-# -------------------------
-# Updated fetch function with null checks
-# -------------------------
-async def afetch_rows_with_null_check(table_cls, disease: str, target: Optional[str] = None):
-    """
-    Fetch rows where analysis or keywords are null (unprocessed records)
-    """
-    if not disease:
-        raise ValueError("Disease must be specified.")
-
-    filters = [
-        table_cls.disease == disease,
-        # Check for unprocessed records (null analysis OR null keywords)
-        (table_cls.analysis.is_(None)) | (table_cls.keywords.is_(None)) | 
-        (table_cls.analysis == '') | (table_cls.keywords == '')
-    ]
-    
-    # Add target filter if provided
-    if target:
-        filters.append(table_cls.target == target)
-
-    try:
-        from sqlalchemy import and_, or_
-        stmt = select(table_cls).where(and_(*filters))
-        
-        async with AsyncSessionLocal() as session:
-            result = await session.execute(stmt)
-            rows = result.scalars().all()
-            return [
-                {col.name: getattr(row, col.name) for col in table_cls.__table__.columns}
-                for row in rows
-            ] if rows else []
-    
-    except Exception as e:
-        logger.error(f"Error while fetching unprocessed records from: {table_cls.__name__}")
-        raise
 
 async def analyse_tables(tables_data: List[Dict]):
     """Process and analyze each table"""
@@ -121,6 +93,7 @@ async def update_table_analysis(table_analysis_data: Dict, table_metadata: Dict)
     except Exception as e:
         logger.error(f"Error updating the Table Analysis data to the DB: {e}")
         raise e
+
 # -------------------------
 # Main entrypoint
 # -------------------------
@@ -150,7 +123,7 @@ if __name__ == "__main__":
     # asyncio.run(main())
     
     # Example 1: Analyze tables for a specific disease
-    asyncio.run(main("phenylketonuria"))
+    asyncio.run(main("asthma"))
     
     # Example 2: Analyze tables for a specific disease and target
     # asyncio.run(main("diabetes", "insulin"))

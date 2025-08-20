@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Sequence, String,Integer, DateTime, PrimaryKeyConstraint, Text, Boolean
+#models.py
+from sqlalchemy import Column, Sequence, String,Integer, DateTime, PrimaryKeyConstraint, Text, Boolean, UniqueConstraint
 from .database import Base
 
 
@@ -140,6 +141,6 @@ class LiteratureEnhancementPipelineStatus(Base):
     pipeline_status = Column(String, nullable=True)
 
     __table_args__ = (
-        UniqueConstraint('disease', 'target', 'pipeline_type', name='uq_disease_target_pipeline'),
+        PrimaryKeyConstraint('disease', 'target', 'pipeline_type', name='pk_disease_target_pipeline'),
     )
 
