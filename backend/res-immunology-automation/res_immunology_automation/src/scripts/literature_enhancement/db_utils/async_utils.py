@@ -193,21 +193,22 @@ async def check_pipeline_status(
         return None
 
 # -----------------------------
-# Generic Pipeline Status Update
+# Generic Pipeline Status Update (REFACTORED)
 # -----------------------------
 async def create_pipeline_status(
     disease: str, 
     target: str, 
-    pipeline_type: str, 
-    pipeline_status: str
-    ) -> bool:
+    pipeline_type: str,
+    status: str
+) -> bool:
     """
-    Generic function to update pipeline status to 'completed' in literature_enhancement_pipeline_status table
+    Generic function to create or update pipeline status in literature_enhancement_pipeline_status table
     
     Args:
         disease: Disease name
         target: Target name
         pipeline_type: Type of pipeline (e.g., 'literature_extraction', 'image_analysis', etc.)
+        status: Pipeline status 
     
     Returns:
         bool: True if successful, False otherwise
@@ -228,19 +229,19 @@ async def create_pipeline_status(
             
             if existing_record:
                 # Update existing record
-                existing_record.pipeline_status = pipeline_status
-                logger.info(f"Updated pipeline status for {disease}-{target}-{pipeline_type} to 'completed'")
+                existing_record.pipeline_status = status
+                logger.info(f"Updated pipeline status for {disease}-{target}-{pipeline_type} to '{status}'")
             else:
                 # Create new record
                 new_record = LiteratureEnhancementPipelineStatus(
                     disease=disease,
                     target=target,
                     pipeline_type=pipeline_type,
-                    pipeline_status=pipeline_status
+                    pipeline_status=status
                 )
                 session.add(new_record)
-                logger.info(f"Created new pipeline status record for {disease}-{target}-{pipeline_type} with status '{pipeline_status}'")
-
+                logger.info(f"Created new pipeline status record for {disease}-{target}-{pipeline_type} with status '{status}'")
+            
             await session.commit()
             return True
             

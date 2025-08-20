@@ -1,3 +1,4 @@
+#pmid_converter.py
 """
 PMID to PMCID conversion utilities using NCBI E-utilities with improved rate limiting
 Updated with enhanced logging for PMIDs without PMCIDs
@@ -192,6 +193,81 @@ class PMIDConverter:
             pmcid = f'PMC{pmcid}'
         return f"https://www.ncbi.nlm.nih.gov/pmc/articles/{pmcid}/"
 
+    async def pmids_to_full_texts(self, pmids: List[str]) -> Dict[str, Dict[str, Optional[str]]]:
+        """
+        Convert multiple PMIDs to PMCIDs and fetch their full text XML in one operation
+        
+        Args:
+            pmids: List of PubMed IDs
+            
+        Returns:
+            Dictionary mapping PMIDs to:
+            {
+                'pmcid': Optional[str],     # PMCID if available, None otherwise
+                'full_text': Optional[str], # Full text XML if available, None otherwise
+                'url': Optional[str]        # PMC URL if PMCID available, None otherwise
+            }
+        """
+        results = {}
+        conversion_stats = {'converted': 0, 'no_pmcid': 0, 'full_text_fetched': 0, 'no_full_text': 0}
+        
+        # Step 1: Convert all PMIDs to PMCIDs first
+        log.info(f"Starting PMCID conversion for {len(pmids)} PMIDs...")
+        pmcid_mapping = {}
+        
+        for pmid in pmids:
+            pmcid = await self.pmid_to_pmcid(pmid)
+            pmcid_mapping[pmid] = pmcid
+            
+            if pmcid:
+                conversion_stats['converted'] += 1
+            else:
+                conversion_stats['no_pmcid'] += 1
+                
+            await asyncio.sleep(0.2)  # Rate limiting between conversions
+        
+        log.info(f"PMCID Conversion Summary:")
+        log.info(f"  - Successfully converted: {conversion_stats['converted']}/{len(pmids)} PMIDs")
+        log.info(f"  - PMIDs without PMCIDs: {conversion_stats['no_pmcid']}/{len(pmids)}")
+        
+        # Step 2: Fetch full text for PMCIDs that were successfully converted
+        log.info(f"Starting full text retrieval for {conversion_stats['converted']} PMCIDs...")
+        
+        for pmid, pmcid in pmcid_mapping.items():
+            result_entry = {
+                'pmcid': pmcid,
+                'full_text': None,
+                'url': None
+            }
+            
+            if pmcid:
+                # Generate URL
+                result_entry['url'] = await self.get_pmc_url(pmcid)
+                
+                # Fetch full text
+                full_text = await self.get_pmc_full_text(pmcid)
+                result_entry['full_text'] = full_text
+                
+                if full_text:
+                    conversion_stats['full_text_fetched'] += 1
+                    log.debug(f"✓ Successfully fetched full text for PMID {pmid} -> PMCID {pmcid}")
+                else:
+                    conversion_stats['no_full_text'] += 1
+                    log.debug(f"✗ No full text available for PMID {pmid} -> PMCID {pmcid}")
+                
+                # Rate limiting between full text requests
+                await asyncio.sleep(0.2)
+            
+            results[pmid] = result_entry
+        
+        # Final summary
+        log.info(f"Full Text Retrieval Summary:")
+        log.info(f"  - Full text retrieved: {conversion_stats['full_text_fetched']}/{conversion_stats['converted']} PMCIDs")
+        log.info(f"  - PMCIDs without full text: {conversion_stats['no_full_text']}/{conversion_stats['converted']}")
+        log.info(f"Overall Success Rate: {conversion_stats['full_text_fetched']}/{len(pmids)} ({conversion_stats['full_text_fetched']/len(pmids)*100:.1f}%) PMIDs with full text")
+        
+        return results
+
 
 # Convenience functions for backward compatibility
 # async def pubmed_to_pmc(pmid: str) -> Optional[str]:
@@ -220,3 +296,36 @@ class PMIDConverter:
 #     """
 #     async with PMIDConverter() as converter:
 #         return await converter.get_pmc_full_text(pmcid)
+
+
+
+# async def fetch_full_texts_from_pmids(self, pmids: List[str]) -> Dict[str, Tuple[Optional[str], Optional[str]]]:
+#     """
+#     Convenience function: Convert PMIDs to PMCIDs and fetch full texts
+    
+#     Args:
+#         pmids: List of PubMed IDs
+        
+#     Returns:
+#         Dictionary mapping PMID -> (PMCID, full text XML)
+#         - PMCID is None if not available
+#         - full text is None if not available
+#     """
+#     results: Dict[str, Tuple[Optional[str], Optional[str]]] = {}
+
+#     # Step 1: Convert PMIDs → PMCIDs
+#     pmid_to_pmcid = await self.pmids_to_pmcids(pmids)
+
+#     # Step 2: Fetch full text for each PMCID
+#     for pmid, pmcid in pmid_to_pmcid.items():
+#         if not pmcid:
+#             results[pmid] = (None, None)
+#             continue
+
+#         full_text = await self.get_pmc_full_text(pmcid)
+#         results[pmid] = (pmcid, full_text)
+
+#         # Respect API rate limits
+#         await asyncio.sleep(0.2)
+
+#     return results

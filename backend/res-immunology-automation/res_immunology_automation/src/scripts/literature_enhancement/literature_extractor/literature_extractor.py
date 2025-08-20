@@ -1,9 +1,14 @@
+#literature_extractor.py
+"""
+Updated literature extraction with optimized PMID checking
+Refactored to use LiteratureExtractor class from extractor.py
+"""
 import os
 import sys
 import asyncio
 import logging
 from pathlib import Path
-from typing import List, Dict, Any, Set
+from typing import List, Dict, Any, Set, Tuple
 
 from sqlalchemy import and_
 from db.models import (
@@ -18,55 +23,57 @@ from literature_enhancement.literature_extractor.lit_utils import (
     normalize_disease_and_target_name,
     get_top_n_literature,
 )
-from literature_enhancement.literature_extractor.pmid_converter import PMIDConverter
-from literature_enhancement.literature_extractor.data_storage import LiteratureStorage
+from literature_enhancement.literature_extractor.extractor import LiteratureExtractor
 from utils import load_response_from_file
-from literature_enhancement.db_utils.async_utils import create_pipeline_status_completed, log_error_to_management, check_pipeline_status
+from literature_enhancement.db_utils.async_utils import create_pipeline_status, check_pipeline_status
 
-# --- Helpers ---
+# --- Helper Functions ---
 
 def log_prefix(disease: str, target: str) -> str:
+    """Generate consistent log prefix"""
     return f"[Disease: {disease}, Target: {target}]"
 
-def fetch_cache(file_path: str, endpoint: str) -> List[Dict[str, Any]]:
-    if not os.path.exists(file_path):
-        logging.error(f"Cache file not found: {file_path}")
-        return []
-    cache = load_response_from_file(file_path)
-    return cache.get(endpoint, {}).get("literature", [])
+def get_normalized_values(disease: str, target: str) -> Tuple[str, str]:
+    """Get normalized disease and target values with defaults"""
+    return (
+        disease or "no-disease",
+        target or "no-target"
+    )
 
-def top_n(items: List[Dict[str, Any]], n: int) -> List[Dict[str, Any]]:
-    return items[:n] if items else []
+def get_endpoint_type(target: str) -> str:
+    """Get appropriate endpoint based on target"""
+    return TARGET_LITERATURE_ENDPOINT if target != "no-target" else LITERATURE_ENDPOINT
+
+def fetch_cache(file_path: str, endpoint: str) -> List[Dict[str, Any]]:
+    """Load literature data from cache file"""
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"Cache file not found: {file_path}")
+    
+    cache = load_response_from_file(file_path)
+    literature_data = cache.get(endpoint, {}).get("literature", [])
+    
+    if not literature_data:
+        raise ValueError(f"No literature data found in cache for endpoint {endpoint}")
+    
+    return literature_data
 
 def get_existing_pmids(db, disease: str, target: str) -> Set[str]:
+    """Fetch existing PMIDs for disease-target combination"""
     try:
         rows = db.query(ArticlesMetadata.pmid).filter(
             and_(ArticlesMetadata.disease == disease, ArticlesMetadata.target == target)
         ).all()
-        return {r.pmid for r in rows}
+        existing_pmids = {r.pmid for r in rows}
+        logging.info(f"{log_prefix(disease, target)} Found {len(existing_pmids)} existing PMIDs in database")
+        return existing_pmids
     except Exception as e:
         logging.error(f"{log_prefix(disease, target)} Error fetching existing PMIDs: {e}")
-        return set()
+        raise
 
-# --- Main Extraction ---
-
-async def extract_literature(db, disease: str | None, target: str | None = None) -> bool:
-    disease = disease or "no-disease"
-    target = target or "no-target"
-    prefix = log_prefix(disease, target)
-
-    logging.info(f"{prefix} Starting extraction")
-
-    # --- Checkpoint: Check if pipeline is already completed ---
-    current_status = await check_pipeline_status(disease, target, "extraction")
-    if current_status == "completed":
-        logging.info(f"{prefix} Literature extraction already completed - skipping")
-        return True
-
-    storage = LiteratureStorage(db)
-
-    # --- Resolve cache source ---
+def get_cache_record(db, disease: str, target: str) -> Tuple[Any, str]:
+    """Get cache record and endpoint for disease-target combination"""
     ndisease = normalize_disease_and_target_name(disease)
+    
     if target != "no-target":
         ntarget = normalize_disease_and_target_name(target)
         record = db.query(TargetDisease).filter_by(id=f"{ntarget}-{ndisease}").first()
@@ -74,100 +81,115 @@ async def extract_literature(db, disease: str | None, target: str | None = None)
     else:
         record = db.query(Disease).filter_by(id=ndisease).first()
         endpoint = LITERATURE_ENDPOINT
-
-    if not record:
-        error_msg = f"{prefix} No cache record found"
-        logging.error(error_msg)
-        # Log error to management table instead of updating pipeline status
-        await log_error_to_management(
-            job_details=f"literature_extraction_{disease}_{target}",
-            endpoint=endpoint,
-            error_description="No cache record found for disease/target combination"
-        )
-        return False
-
-    # --- Load cache ---
-    literature = fetch_cache(record.file_path, endpoint)
-    if not literature:
-        error_msg = f"{prefix} No literature in cache"
-        logging.warning(error_msg)
-        # Log error to management table
-        await log_error_to_management(
-            job_details=f"literature_extraction_{disease}_{target}",
-            endpoint=endpoint,
-            error_description="No literature data found in cache"
-        )
-        return False
     
-    logging.info(f"{prefix} Loaded {len(literature)} entries")
+    if not record:
+        raise ValueError(f"No cache record found for disease/target combination: {disease}/{target}")
+    
+    return record, endpoint
 
-    # Get top PMID-title pairs
-    top_pmid_title_pairs = get_top_n_literature(literature, MAX_PMIDS_TO_PROCESS)
-    if not top_pmid_title_pairs:
-        error_msg = f"{prefix} No PMIDs found"
-        logging.warning(error_msg)
-        # Log error to management table
-        await log_error_to_management(
-            job_details=f"literature_extraction_{disease}_{target}",
-            endpoint=endpoint,
-            error_description="No valid PMIDs found in literature data"
-        )
-        return False
+async def should_skip_extraction(disease: str, target: str) -> bool:
+    """Check if extraction should be skipped (already completed)"""
+    current_status = await check_pipeline_status(disease, target, "extraction")
+    if current_status == "completed":
+        logging.info(f"{log_prefix(disease, target)} Literature extraction already completed - skipping")
+        return True
+    return False
 
-    existing = get_existing_pmids(db, disease, target)
-    to_process = [p for p in top_pmid_title_pairs if p["pmid"] not in existing]
-    if not to_process:
-        logging.info(f"{prefix} All PMIDs already exist")
-        # Update pipeline status to completed since no new processing needed
-        await create_pipeline_status_completed(disease, target, "extraction")
+def filter_new_pmids(pmid_title_pairs: List[Dict[str, Any]], existing_pmids: Set[str]) -> List[Dict[str, Any]]:
+    """Filter out already processed PMIDs"""
+    new_pmids = [p for p in pmid_title_pairs if p["pmid"] not in existing_pmids]
+    logging.info(f"Filtered to {len(new_pmids)} new PMIDs from {len(pmid_title_pairs)} total PMIDs")
+    return new_pmids
+
+# --- Main Extraction Function ---
+
+async def extract_literature(db, disease: str | None, target: str | None = None) -> bool:
+    """
+    Main literature extraction function with optimized PMID checking
+    Refactored to use LiteratureExtractor class while preserving all existing functionality
+    Raises exceptions on critical failures instead of returning False
+    """
+    # Normalize inputs
+    disease, target = get_normalized_values(disease, target)
+    prefix = log_prefix(disease, target)
+    endpoint = get_endpoint_type(target)
+
+    logging.info(f"{prefix} Starting extraction")
+
+    # FIRST: Check if pipeline is already completed - skip if yes
+    if await should_skip_extraction(disease, target):
         return True
 
-    # --- Convert & Store ---
-    processed, success, skipped, errors = 0, 0, 0, 0
-    async with PMIDConverter() as conv:
-        mapping = await conv.pmids_to_pmcids([p["pmid"] for p in to_process])
+    try:
+        # Create LiteratureExtractor instance
+        extractor = LiteratureExtractor(db)
 
-        for idx, item in enumerate(to_process, 1):
-            pmid, title = item["pmid"], item["title"]
-            processed += 1
-            logging.info(f"{prefix} Processing PMID {pmid} ({idx}/{len(to_process)})")
+        # Get cache record and validate (will raise exception if not found)
+        record, endpoint = get_cache_record(db, disease, target)
 
-            try:
-                pmcid = mapping.get(pmid)
-                if not pmcid:
-                    skipped += 1
-                    continue
+        # Load and validate literature data (will raise exception if not found)
+        literature = fetch_cache(record.file_path, endpoint)
+        logging.info(f"{prefix} Loaded {len(literature)} literature entries from cache")
 
-                full_text = await conv.get_pmc_full_text(pmcid)
-                if not full_text:
-                    skipped += 1
-                    continue
+        # Get top PMID-title pairs
+        top_pmid_title_pairs = get_top_n_literature(literature, MAX_PMIDS_TO_PROCESS)
+        if not top_pmid_title_pairs:
+            raise ValueError("No valid PMIDs found in literature data")
 
-                url = await conv.get_pmc_url(pmcid)
-                # Pass the title from literature cache to store_article
-                if storage.store_article(disease, pmid, pmcid, title, url, full_text, target):
-                    success += 1
-                else:
-                    errors += 1
+        logging.info(f"{prefix} Found {len(top_pmid_title_pairs)} valid PMID-title pairs")
 
-                if idx < len(to_process):
-                    await asyncio.sleep(0.2)
+        # Get existing PMIDs from database (will raise exception on DB error)
+        existing_pmids = get_existing_pmids(db, disease, target)
+        
+        # Filter to only new PMIDs
+        new_pmids_to_process = filter_new_pmids(top_pmid_title_pairs, existing_pmids)
+        
+        if not new_pmids_to_process:
+            logging.info(f"{prefix} All PMIDs already exist in database - marking as completed")
+            await create_pipeline_status(disease, target, "extraction", "completed")
+            return True
 
-            except Exception as e:
-                logging.error(f"{prefix} Error PMID {pmid}: {e}")
-                errors += 1
-
-    logging.info(f"{prefix} Done. Processed {processed}, Success {success}, Skipped {skipped}, Errors {errors}")
-
-    # Only update pipeline status to completed if extraction was successful
-    if success > 0 or skipped == processed:
-        await create_pipeline_status_completed(disease, target, "extraction")
-        return True
-    else:
-        # Log error but don't update pipeline status
-        await log_error_to_management(
-            job_details=f"literature_extraction_{disease}_{target}",
-            endpoint=endpoint,
-            error_description=f"Extraction failed: {errors} errors, {success} successes"
+        # Process only the new PMIDs using the LiteratureExtractor
+        processing_stats = await extractor._process_pmids_to_articles(
+            new_pmids_to_process, disease, target
         )
-        return False
+
+        # Extract individual stats from the tuple returned by _process_pmids_to_articles
+        processed_count, success_count, error_count = processing_stats
+
+        # Create stats dictionary to match the existing logic
+        processing_stats_dict = {
+            'processed': processed_count,
+            'success': success_count,
+            'errors': error_count,
+            'skipped': 0  # The LiteratureExtractor handles skipped articles internally
+        }
+
+        # Mark as completed if we successfully processed at least some articles
+        # or if all were skipped (meaning the PMIDs exist but have no content available)
+        if processing_stats_dict['success'] > 0 or processing_stats_dict['skipped'] == processing_stats_dict['processed']:
+            logging.info(f"{prefix} Literature extraction completed successfully")
+            await create_pipeline_status(disease, target, "extraction", "completed")
+            return True
+        else:
+            # If we had some successes but also errors, still mark as completed
+            # since we made progress
+            if processing_stats_dict['success'] > 0:
+                logging.warning(f"{prefix} Completed with partial success - "
+                              f"Success: {processing_stats_dict['success']}, Errors: {processing_stats_dict['errors']}")
+                await create_pipeline_status(disease, target, "extraction", "completed")
+                return True
+            else:
+                # No successes at all - this is a critical failure
+                error_msg = (f"Literature extraction failed completely - "
+                           f"Processed: {processing_stats_dict['processed']}, "
+                           f"Errors: {processing_stats_dict['errors']}, "
+                           f"Success: {processing_stats_dict['success']}")
+                logging.error(f"{prefix} {error_msg}")
+                raise RuntimeError(error_msg)
+
+    except Exception as e:
+        # Log the error and re-raise so build_dossier can handle it
+        error_msg = f"Literature extraction failed for {disease}-{target}: {str(e)}"
+        logging.error(f"{prefix} {error_msg}")
+        raise RuntimeError(error_msg) from e

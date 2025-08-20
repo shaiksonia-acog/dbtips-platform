@@ -1,3 +1,4 @@
+#config
 """
 Configuration settings for literature extraction
 Updated to reflect new database schema
