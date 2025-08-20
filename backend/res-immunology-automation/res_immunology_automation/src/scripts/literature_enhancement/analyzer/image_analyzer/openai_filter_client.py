@@ -72,7 +72,7 @@ Return exact JSON format with reasoning based on caption analysis."""
             Dict with filtering results matching pipeline expectations
         """
         try:
-            logger.info(f"OpenAI filtering caption: '{caption[:50]}{'...' if len(caption) > 50 else ''}'")
+            logger.info("Determining if caption describes disease pathway using OpenAI...")
             
             # Call OpenAI API with retries
             max_retries = 3
@@ -92,7 +92,7 @@ Return exact JSON format with reasoning based on caption analysis."""
 
                     result_text = response.choices[0].message.content.strip()
                     parsed = self.parse_filter_response(result_text, caption)
-                    logger.info(f"Successfully filtered caption - Result: {parsed.get('is_disease_pathway')}")
+                    logger.info(f"Is Pathway figure?: {parsed.get('is_disease_pathway')}")
                     return parsed
                 
                 except Exception as e:
@@ -143,7 +143,7 @@ Return exact JSON format with reasoning based on caption analysis."""
                 if isinstance(is_pathway, str):
                     is_pathway = is_pathway.lower() in ["true", "yes", "1"]
                 
-                logger.info(f"OpenAI filter result: {is_pathway} (confidence: {confidence})")
+                logger.debug(f"OpenAI filter result: {is_pathway} (confidence: {confidence})")
                 logger.debug(f"Reasoning: {reasoning}")
                 
                 return {

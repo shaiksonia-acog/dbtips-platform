@@ -1,11 +1,13 @@
+
 import asyncio
 from typing import Dict
-from openai_filter_client import OpenAIPathwayFilter
-from analyzer_client import MedGemmaAnalyzer
-from gene_validator import validate_genes_async
+from literature_enhancement.analyzer.image_analyzer.openai_filter_client import OpenAIPathwayFilter
+from literature_enhancement.analyzer.image_analyzer.analyzer_client import MedGemmaAnalyzer, ImageDataModel, ImageDataAnalysisResult
+from literature_enhancement.analyzer.image_analyzer.gene_validator import validate_genes_async
 import logging
-
-logger = logging.getLogger(__name__)
+import os
+module_name = os.path.splitext(os.path.basename(__file__))[0]
+logger = logging.getLogger(module_name)
 
 class ThreeStageHybridAnalysisPipeline:
     """
@@ -19,10 +21,10 @@ class ThreeStageHybridAnalysisPipeline:
         self.openai_filter = OpenAIPathwayFilter()
         self.medgemma_analyzer = MedGemmaAnalyzer()
     
-    async def process_single_image(self, image_data: Dict) -> Dict:
+    async def process_single_image(self, image_data: ImageDataModel) -> Dict:
         """Process a single image through the three-stage pipeline"""
-        pmcid = image_data.get('pmcid', 'unknown')
-        caption = image_data.get('image_caption', '')
+        pmcid = image_data.get("pmcid")
+        caption = image_data.get("image_caption")
         
         logger.info(f"Starting analysis for PMCID: {pmcid}")
         

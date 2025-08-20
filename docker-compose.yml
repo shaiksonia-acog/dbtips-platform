@@ -55,6 +55,7 @@ services:
       - MEDGEMMA_MODEL_URL=${MEDGEMMA_MODEL_URL}
     volumes:
       - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json:/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json
+      - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/literature_enhancement:/app/res-immunology-automation/res_immunology_automation/src/scripts/literature_enhancement
       - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/db:/app/res-immunology-automation/res_immunology_automation/src/scripts/db
       - ./backend/data:/app/database
       - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/logs:/app/res-immunology-automation/res_immunology_automation/src/scripts/logs

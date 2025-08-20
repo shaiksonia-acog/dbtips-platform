@@ -4,18 +4,13 @@ import asyncio
 from typing import Dict, List, Optional, Any
 from sqlalchemy import select, and_
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
-
-# Add the path to import modules
-sys.path.append('/app/res-immunology-automation/res_immunology_automation/src/scripts/')
-print("path: ", sys.path)
-
-from literature_enhancement.db_utils.async_utils import afetch_rows, aupdate_table_rows, AsyncSessionLocal, afetch_rows_with_null_check
-from supplementary_analyzer_client import SupplementaryAnalyzerFactory
+from literature_enhancement.db_utils.async_utils import afetch_rows, aupdate_table_rows, AsyncSessionLocal, afetch_rows_with_null_check, create_pipeline_status
+from literature_enhancement.analyzer.supplementary_analyzer.supplementary_analyzer_client import SupplementaryAnalyzerFactory
 from db.models import LiteratureSupplementaryMaterialsAnalysis
 
 import logging
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+module_name = os.path.splitext(os.path.basename(__file__))[0]
+logger = logging.getLogger(module_name)
 
 # Initialize the analyzer
 analyzer = SupplementaryAnalyzerFactory.create_analyzer_client()
@@ -201,7 +196,7 @@ async def main(disease: str = "no-disease", target: str = "no-target"):
             logger.info("Supplementary materials analysis completed successfully!")
         else:
             logger.info("No unprocessed supplementary materials found matching the criteria (with both description and title present).")
-            
+        await create_pipeline_status(disease, target, "supplementary-analysis", "completed")
     except Exception as e:
         logger.error(f"Error in main execution: {e}")
         raise e

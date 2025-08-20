@@ -12,7 +12,8 @@ from dotenv import load_dotenv
 import logging
 
 load_dotenv()
-logger = logging.getLogger(__name__)
+module_name = os.path.splitext(os.path.basename(__file__))[0]
+logger = logging.getLogger(module_name)
 
 class GeneValidator:
     """Simple gene validator using NCBI API"""

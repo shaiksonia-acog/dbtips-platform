@@ -4,23 +4,20 @@ import asyncio
 from typing import Dict, List, Optional, Any
 from sqlalchemy import select, and_
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
-
-# Add the path to import modules
-sys.path.append('/app/res-immunology-automation/res_immunology_automation/src/scripts/')
-print("path: ", sys.path)
-
 from literature_enhancement.db_utils.async_utils import (
     afetch_rows, 
     aupdate_table_rows, 
     AsyncSessionLocal, 
+    create_pipeline_status,
     afetch_rows_with_null_check  # Now imported from utils
 )
-from table_analyzer_client import TableAnalyzerFactory
+from literature_enhancement.analyzer.table_analyzer.table_analyzer_client import TableAnalyzerFactory
 from db.models import LiteratureTablesAnalysis
 
 import logging
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+module_name = os.path.splitext(os.path.basename(__file__))[0]
+logger = logging.getLogger(module_name)
+
 
 # Initialize the analyzer
 analyzer = TableAnalyzerFactory.create_analyzer_client()
@@ -42,16 +39,17 @@ async def fetch_tables(disease: str, target: Optional[str] = None):
 async def analyse_tables(tables_data: List[Dict]):
     """Process and analyze each table"""
     for table_data in tables_data:
+        print("table data:", table_data)
         try:
             logger.info(f"Processing table from PMCID: {table_data.get('pmcid')} - {table_data.get('table_description', 'No description')[:100]}...")
             
             # Analyze the table
             table_analysis = await analyzer.analyze(table_data)
-            logger.info("Generated Analysis from OpenAI GPT-4o-mini")
+            logger.debug("Generated Analysis from OpenAI GPT-4o-mini")
             
             # Update the database
             await update_table_analysis(table_analysis, table_data)
-            logger.info("Updated Database with Table Analysis")
+            logger.debug("Updated Database with Table Analysis")
                      
         except Exception as e:
             logger.error(f"Error processing table from PMCID: {table_data.get('pmcid')}. Skipping. Error: {e}")
@@ -65,7 +63,7 @@ async def analyse_tables(tables_data: List[Dict]):
                 logger.info("Marked record with error information")
             except Exception as update_error:
                 logger.error(f"Failed to update error information: {update_error}")
-
+        break
 
 async def update_table_analysis(table_analysis_data: Dict, table_metadata: Dict):
     """Update the analysis results in the database"""
@@ -88,7 +86,7 @@ async def update_table_analysis(table_analysis_data: Dict, table_metadata: Dict)
             filter_conditions = {"index": table_metadata["index"]}
         
         await aupdate_table_rows(LiteratureTablesAnalysis, update_data, filter_conditions)
-        logger.info("Updated table analysis in DB.")
+        logger.debug("Updated table analysis in DB.")
         
     except Exception as e:
         logger.error(f"Error updating the Table Analysis data to the DB: {e}")
@@ -97,7 +95,7 @@ async def update_table_analysis(table_analysis_data: Dict, table_metadata: Dict)
 # -------------------------
 # Main entrypoint
 # -------------------------
-async def main(disease: str = "no-disease", target: str = ""):
+async def main(disease: str, target: str):
     """Main function to run the table analysis pipeline"""
     try:
         # Fetch tables that need analysis (where analysis or keywords are null/empty)
@@ -110,7 +108,7 @@ async def main(disease: str = "no-disease", target: str = ""):
             logger.info("Table analysis completed successfully!")
         else:
             logger.info("No unprocessed tables found matching the criteria.")
-            
+        await create_pipeline_status(disease, target, "table-analysis", "completed")  
     except Exception as e:
         logger.error(f"Error in main execution: {e}")
         raise e

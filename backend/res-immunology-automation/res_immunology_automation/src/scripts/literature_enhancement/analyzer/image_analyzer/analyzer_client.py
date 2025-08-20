@@ -1,13 +1,31 @@
 #analyzer_client (using med gemma model via httpx and different codebase)
-import os
 import json
 import re
 import logging
 import asyncio
 from typing import Dict, Optional
 import httpx
+from pydantic import BaseModel
+import os
+module_name = os.path.splitext(os.path.basename(__file__))[0]
+logger = logging.getLogger(module_name)
 
-logger = logging.getLogger(__name__)
+class ImageDataModel(BaseModel):
+    pmcid: str
+    pmid: str
+    disease: str
+    target: str
+    image_url: str
+    image_caption: Optional[str] = None
+
+class ImageDataAnalysisResult(BaseModel):   
+    keywords: str
+    insights: str
+    genes: str
+    drugs: str
+    process: str
+    error_message: Optional[str] = None
+    status: str
 
 class MedGemmaAnalyzer:
     """
@@ -24,40 +42,42 @@ class MedGemmaAnalyzer:
 
     def get_system_prompt(self) -> str:
         """Optimized system prompt - shorter but precise"""
-        return """Extract biomedical information from this pathway image in 5 categories:
+        prompt =  """Extract biomedical information from this pathway image in 5 categories:
 
-1. **genes**: Official human gene symbols only (HGNC format: PAH, TH, TPH1). Exclude metabolites, amino acids, proteins.
+            1. **genes**: Official human gene symbols only (HGNC format: PAH, TH, TPH1). Exclude metabolites, amino acids, proteins.
 
-2. **drugs**: Pharmaceutical compounds, therapeutic agents only.
+            2. **drugs**: Pharmaceutical compounds, therapeutic agents only.
 
-3. **keywords**: Disease names, metabolites, amino acids, techniques, biomarkers.
+            3. **keywords**: Disease names, metabolites, amino acids, techniques, biomarkers.
 
-4. **process**: Main biological process (e.g., "phenylalanine metabolism").
+            4. **process**: Main biological process (e.g., "phenylalanine metabolism").
 
-5. **insights**: Clinical relevance visible in the image.
+            5. **insights**: Clinical relevance visible in the image.
 
-Rules: Extract only visible terms. Use "not mentioned" if empty. No guessing.
+            Rules: Extract only visible terms. Use "not mentioned" if empty. No guessing.
 
-Return JSON:
-{
-  "genes": "gene symbols or 'not mentioned'",
-  "drugs": "drug names or 'not mentioned'", 
-  "keywords": "medical terms or 'not mentioned'",
-  "process": "biological process or 'not mentioned'",
-  "insights": "clinical insights or 'not mentioned'"
-}"""
-
+            Return JSON:
+            {
+            "genes": "gene symbols or 'not mentioned'",
+            "drugs": "drug names or 'not mentioned'", 
+            "keywords": "medical terms or 'not mentioned'",
+            "process": "biological process or 'not mentioned'",
+            "insights": "clinical insights or 'not mentioned'"
+            }"""
+        return prompt
+        
     def get_user_prompt(self, caption: str) -> str:
         """Concise user prompt for content analysis"""
         context = f"Caption: {caption}" if caption and caption != "No caption provided" else "No caption context"
         
-        return f"""Extract comprehensive biomedical information from this pathway image.
+        user_prompt = f"""Extract comprehensive biomedical information from this pathway image.
 
-{context}
+        {context}
 
-Return analysis in the exact JSON format specified."""
+        Return analysis in the exact JSON format specified."""
+        return user_prompt
 
-    async def analyze_content(self, figure_data: Dict) -> Dict:
+    async def analyze_content(self, figure_data: ImageDataModel) -> Dict:
         """
         Analyze image content (assumes image has already passed filtering)
         
@@ -117,7 +137,7 @@ Return analysis in the exact JSON format specified."""
             logger.error("MedGemma analysis failed for %s: %s", figure_data.get("pmcid", "unknown"), exc)
             return self._error_response(str(exc), "analysis_error")
 
-    def parse_analysis_response(self, result: Dict, figure_data: Dict) -> Dict:
+    def parse_analysis_response(self, result: Dict, figure_data: Dict) -> ImageDataAnalysisResult:
         """Parse MedGemma response and return database-compatible fields"""
         # Initialize with "not mentioned" defaults
         extracted = {
