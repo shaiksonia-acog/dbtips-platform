@@ -9,9 +9,10 @@ import logging
 import re
 from typing import List, Dict, Optional, Set
 from bs4 import BeautifulSoup
+from datetime import datetime
 
+logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
-
 
 class SupplementaryMaterialsUtils:
     """Utility class containing helper functions for supplementary materials extraction"""
@@ -62,9 +63,6 @@ class SupplementaryMaterialsUtils:
             if desc_key not in seen and desc.get('text'):
                 seen.add(desc_key)
                 unique_descriptions.append(desc)
-        
-        # Sort by relevance score and return top contexts
-        # unique_descriptions.sort(key=lambda x: x.get('relevance_score', 0), reverse=True)
         
         # Return formatted descriptions with section names
         formatted_descriptions = []
@@ -146,12 +144,6 @@ class SupplementaryMaterialsUtils:
             return contexts
         
         # Enhanced section handling based on element type
-        # if element.name in ['sec']:
-        #     contexts.extend(self._extract_section_context_enhanced(element, section_type))
-        # elif element.name == 'abstract':
-        #     context = self._extract_abstract_context(element, section_type)
-        #     if context:
-        #         contexts.append(context)
         if element.name == 'p':
             context = self._extract_paragraph_context(element, section_type)
             if context:
@@ -166,105 +158,6 @@ class SupplementaryMaterialsUtils:
                 contexts.append(context)
         
         return contexts
-    
-    # def _extract_section_context_enhanced(self, section_element, section_type: str) -> List[Dict]:
-    #     """
-    #     Enhanced section context extraction with better subsection handling
-    #     """
-    #     contexts = []
-        
-    #     # Get section title
-    #     title_elem = section_element.find('title')
-    #     section_title = title_elem.get_text(strip=True) if title_elem else ""
-        
-    #     # Look for subsections first
-    #     subsections = section_element.find_all('sec', recursive=False)
-    #     if subsections:
-    #         for subsec in subsections:
-    #             subsec_contexts = self._extract_subsection_context(subsec, section_type, section_title)
-    #             contexts.extend(subsec_contexts)
-        
-    #     # Then look for direct paragraphs in this section
-    #     direct_paragraphs = []
-    #     for child in section_element.children:
-    #         if hasattr(child, 'name') and child.name == 'p':
-    #             direct_paragraphs.append(child)
-        
-    #     for p in direct_paragraphs:
-    #         p_text = p.get_text(separator=' ', strip=True)
-    #         if self._contains_supplementary_mentions(p_text):
-    #             context = {
-    #                 'text': p_text,
-    #                 'section_type': section_type,
-    #                 'section_title': section_title,
-    #                 # 'tag_name': 'p',
-    #                 # 'relevance_score': self._calculate_relevance_score(p_text),
-    #                 # 'char_length': len(p_text)
-    #             }
-    #             contexts.append(context)
-        
-    #     return contexts
-    
-    # def _extract_subsection_context(self, subsection, parent_section_type: str, parent_title: str) -> List[Dict]:
-    #     """
-    #     Extract context from subsections with proper labeling
-    #     """
-    #     contexts = []
-        
-    #     # Get subsection title
-    #     title_elem = subsection.find('title')
-    #     subsection_title = title_elem.get_text(strip=True) if title_elem else ""
-        
-    #     # Combine parent and subsection titles
-    #     full_section_title = f"{parent_title} - {subsection_title}" if parent_title and subsection_title else (subsection_title or parent_title)
-        
-    #     # Find paragraphs in this subsection
-    #     paragraphs = subsection.find_all('p')
-    #     for p in paragraphs:
-    #         p_text = p.get_text(separator=' ', strip=True)
-    #         if self._contains_supplementary_mentions(p_text):
-    #             context = {
-    #                 'text': p_text,
-    #                 'section_type': parent_section_type,
-    #                 'section_title': full_section_title,
-    #                 # 'tag_name': 'p',
-    #                 # 'relevance_score': self._calculate_relevance_score(p_text),
-    #                 # 'char_length': len(p_text)
-    #             }
-    #             contexts.append(context)
-        
-    #     return contexts
-    
-    # def _extract_abstract_context(self, abstract_element, section_type: str) -> Optional[Dict]:
-    #     """
-    #     Extract context from abstract with special handling
-    #     """
-    #     abstract_text = abstract_element.get_text(separator=' ', strip=True)
-        
-    #     if not self._contains_supplementary_mentions(abstract_text):
-    #         return None
-        
-    #     # For abstracts, extract only the relevant sentences
-    #     sentences = re.split(r'[.!?]+', abstract_text)
-    #     relevant_sentences = []
-        
-    #     for sentence in sentences:
-    #         if self._contains_supplementary_mentions(sentence):
-    #             relevant_sentences.append(sentence.strip())
-        
-    #     if not relevant_sentences:
-    #         return None
-        
-    #     context_text = '. '.join(relevant_sentences) + '.'
-        
-    #     return {
-    #         'text': context_text,
-    #         'section_type': section_type,
-    #         'section_title': 'Abstract',
-    #         # 'tag_name': 'abstract',
-    #         # 'relevance_score': self._calculate_relevance_score(context_text),
-    #         # 'char_length': len(context_text)
-    #     }
     
     def _extract_paragraph_context(self, paragraph_element, section_type: str) -> Optional[Dict]:
         """
@@ -282,23 +175,9 @@ class SupplementaryMaterialsUtils:
         # Get surrounding context (previous and next siblings)
         context_parts = []
         
-        # Get previous sibling if it's also a paragraph
-        # prev_sibling = paragraph_element.find_previous_sibling('p')
-        # if prev_sibling:
-        #     prev_text = prev_sibling.get_text(separator=' ', strip=True)
-        #     # if len(prev_text) < 300:  # Only include if not too long
-        #     context_parts.append(prev_text)
-        
         # Add the main paragraph
         if self._contains_supplementary_mentions(para_text):
             context_parts.append(para_text)
-
-        # Get next sibling if it's also a paragraph
-        # next_sibling = paragraph_element.find_next_sibling('p')
-        # if next_sibling:
-        #     next_text = next_sibling.get_text(separator=' ', strip=True)
-        #     if len(next_text) < 300:  # Only include if not too long
-        #         context_parts.append(next_text)
         
         context_text = " ".join(context_parts)
         
@@ -306,9 +185,6 @@ class SupplementaryMaterialsUtils:
             'text': context_text,
             'section_type': section_type,
             'section_title': section_title,
-            # 'tag_name': 'p',
-            # 'relevance_score': self._calculate_relevance_score(para_text),
-            # 'char_length': len(context_text)
         }
     
     def _extract_caption_context(self, caption_element, section_type: str) -> Optional[Dict]:
@@ -341,10 +217,8 @@ class SupplementaryMaterialsUtils:
             'text': context_text,
             'section_type': section_type,
             'section_title': section_title,
-            # 'tag_name': 'caption',
             'parent_element': parent_fig.name if parent_fig else None,
-            # 'relevance_score': self._calculate_relevance_score(caption_text),
-            # 'char_length': len(context_text)
+            
         }
     
     def _extract_generic_context(self, element, section_type: str) -> Optional[Dict]:
@@ -366,8 +240,6 @@ class SupplementaryMaterialsUtils:
             'section_type': section_type,
             'section_title': "",
             'tag_name': element.name,
-            # 'relevance_score': self._calculate_relevance_score(element_text),
-            # 'char_length': len(element_text)
         }
     
     def _contains_supplementary_mentions(self, text: str) -> bool:
@@ -396,58 +268,6 @@ class SupplementaryMaterialsUtils:
         ]
         
         return any(keyword in text_lower for keyword in supplementary_keywords)
-    
-    # def _calculate_relevance_score(self, text: str) -> float:
-    #     """
-    #     Calculate a relevance score for the context based on content quality
-    #     """
-    #     if not text:
-    #         return 0.0
-        
-    #     score = 0.0
-    #     text_lower = text.lower()
-        
-    #     # Base score for having supplementary mentions
-    #     supplementary_keywords = [
-    #         'supplementary material', 'supplementary materials', 'supplementary data',
-    #         'supplemental material', 'supplemental materials', 'supplemental data',
-    #         'supplementary information', 'supplemental information'
-    #     ]
-        
-    #     for keyword in supplementary_keywords:
-    #         if keyword in text_lower:
-    #             score += 1.0
-        
-    #     # Bonus for descriptive content
-    #     descriptive_terms = [
-    #         'contains', 'includes', 'provides', 'presents', 'shows', 'describes',
-    #         'details', 'analysis', 'results', 'data', 'methods', 'procedures'
-    #     ]
-        
-    #     for term in descriptive_terms:
-    #         if term in text_lower:
-    #             score += 0.3
-        
-    #     # Bonus for mentioning specific file types or data types
-    #     file_indicators = [
-    #         'table', 'figure', 'dataset', 'spreadsheet', 'document',
-    #         'protocol', 'guideline', 'questionnaire', 'survey'
-    #     ]
-        
-    #     for indicator in file_indicators:
-    #         if indicator in text_lower:
-    #             score += 0.4
-        
-    #     # Length-based scoring
-    #     text_length = len(text)
-    #     if text_length < 30:
-    #         score *= 0.3
-    #     elif text_length > 1500:
-    #         score *= 0.7
-    #     elif 80 <= text_length <= 600:
-    #         score *= 1.3
-        
-    #     return round(max(score, 0.0), 2)
     
     # Keep the existing methods for finding supplementary materials
     def find_all_supplementary_materials(self, soup: BeautifulSoup, pmcid: str) -> List[Dict]:
@@ -640,3 +460,187 @@ class SupplementaryMaterialsUtils:
         is_short = len(text) < 50
         few_spaces = text.count(' ') < 3
         return has_extension and is_short and few_spaces
+
+class SupplementaryMaterialsExtractor:
+    def __init__(self):
+        self.supplementary_utils = SupplementaryMaterialsUtils()
+
+    def extract_supplementary_materials_from_nxml(self, raw_nxml: str, pmcid: str, pmid: str, 
+                                                disease: str, target: str, url: str) -> Optional[Dict]:
+        """
+        Extract supplementary materials from raw NXML/XML content (JATS format from PMC)
+        Returns a single record with all supplementary materials grouped together
+        
+        Args:
+            raw_nxml: Raw NXML content from ArticlesMetadata
+            pmcid: PMC ID
+            pmid: PubMed ID  
+            disease: Disease name
+            target: Target name
+            url: Article URL
+            
+        Returns:
+            Single dictionary with all supplementary materials or None if none found
+        """
+        if not raw_nxml:
+            log.debug("No raw NXML content for PMCID: %s", pmcid)
+            return None
+            
+        try:
+            # Parse as XML instead of HTML
+            soup = BeautifulSoup(raw_nxml, "xml")
+        except Exception as e:
+            log.error("Failed to parse NXML for PMCID %s: %s", pmcid, e)
+            return None
+
+        # Find all supplementary materials across the entire article
+        all_materials = self.supplementary_utils.find_all_supplementary_materials(soup, pmcid)
+        
+        # Extract contextual descriptions with enhanced section labeling and post-processing
+        contextual_descriptions = self.supplementary_utils.extract_contextual_descriptions(soup)
+        
+        if not all_materials and not contextual_descriptions:
+            log.debug("No supplementary materials found in NXML for PMCID: %s", pmcid)
+            return None
+
+        # Group all materials into a single record
+        titles = []
+        file_urls = []
+        
+        for material in all_materials:
+            if material['title'] and material['title'] not in titles:
+                titles.append(material['title'])
+            if material['url'] and material['url'] not in file_urls:
+                file_urls.append(material['url'])
+        
+        # If no file URLs found but we have contextual descriptions, still create a record
+        if not file_urls and not contextual_descriptions:
+            return None
+        
+        # Enhanced description formatting with section labels and post-processing
+        description = self._format_enhanced_description(contextual_descriptions)
+            
+        return {
+            "pmcid": pmcid,
+            "pmid": pmid,
+            "disease": disease,
+            "target": target,
+            "url": url,
+            "title": ", ".join(titles) if titles else "Supplementary Materials",
+            "description": description,
+            "file_names": ", ".join(file_urls) if file_urls else "",
+            "extraction_timestamp": datetime.utcnow().isoformat()
+        }
+    
+    def _format_enhanced_description(self, contextual_descriptions: List[str]) -> str:
+        """
+        Format the enhanced description with better structure and readability
+        
+        Args:
+            contextual_descriptions: List of section-labeled and post-processed descriptions
+            
+        Returns:
+            Formatted description string
+        """
+        if not contextual_descriptions:
+            return "No description available"
+        
+        # Remove very similar descriptions to avoid redundancy
+        unique_descriptions = self._remove_similar_descriptions(contextual_descriptions)
+        
+        # If we have multiple descriptions, separate them clearly
+        if len(unique_descriptions) == 1:
+            return unique_descriptions[0]
+        elif len(unique_descriptions) <= 3:
+            # For 2-3 descriptions, use bullet points
+            return " • ".join(unique_descriptions)
+        else:
+            # For more than 3, use numbered format for better readability
+            formatted = []
+            for i, desc in enumerate(unique_descriptions[:4], 1):  # Limit to 4 descriptions
+                formatted.append(f"{i}. {desc}")
+            return " ".join(formatted)
+    
+    def _remove_similar_descriptions(self, descriptions: List[str]) -> List[str]:
+        """
+        Remove descriptions that are too similar to avoid redundancy
+        
+        Args:
+            descriptions: List of description strings
+            
+        Returns:
+            List of unique descriptions
+        """
+        if not descriptions:
+            return descriptions
+        
+        unique_descriptions = []
+        
+        for desc in descriptions:
+            # Check if this description is too similar to any existing one
+            is_similar = False
+            
+            for existing_desc in unique_descriptions:
+                # Remove section labels for comparison
+                desc_clean = self._remove_section_label(desc)
+                existing_clean = self._remove_section_label(existing_desc)
+                
+                # Calculate similarity based on word overlap
+                if self._descriptions_are_similar(desc_clean, existing_clean):
+                    is_similar = True
+                    break
+            
+            if not is_similar:
+                unique_descriptions.append(desc)
+        
+        return unique_descriptions
+    
+    def _remove_section_label(self, description: str) -> str:
+        """
+        Remove section label from description for similarity comparison
+        
+        Args:
+            description: Description string potentially with section label
+            
+        Returns:
+            Description without section label
+        """
+        import re
+        # Remove section labels in format [Section Name] or [Section Name - Subsection]
+        return re.sub(r'^\[([^\]]+)\]\s*', '', description)
+    
+    def _descriptions_are_similar(self, desc1: str, desc2: str, threshold: float = 0.7) -> bool:
+        """
+        Check if two descriptions are similar based on word overlap
+        
+        Args:
+            desc1: First description
+            desc2: Second description  
+            threshold: Similarity threshold (0-1)
+            
+        Returns:
+            True if descriptions are similar
+        """
+        if not desc1 or not desc2:
+            return False
+        
+        # Convert to word sets
+        words1 = set(desc1.lower().split())
+        words2 = set(desc2.lower().split())
+        
+        # Remove common words that don't contribute to meaning
+        common_words = {'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'can', 'this', 'that', 'these', 'those'}
+        
+        words1 = words1 - common_words
+        words2 = words2 - common_words
+        
+        if not words1 or not words2:
+            return False
+        
+        # Calculate Jaccard similarity
+        intersection = words1.intersection(words2)
+        union = words1.union(words2)
+        
+        similarity = len(intersection) / len(union) if union else 0
+        return similarity >= threshold
+    
