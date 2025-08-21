@@ -6,8 +6,9 @@ from datetime import datetime
 from typing import Dict, Optional
 import httpx
 import logging
-module_name = os.path.splitext(os.path.basename(__file__))[0]
-logger = logging.getLogger(module_name)
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
@@ -51,7 +52,10 @@ class BaseTableAnalyzer(ABC):
         return ", ".join(unique_terms[:20])  # Allow more keywords for tables
 
     async def analyze(self, table_data: Dict) -> Dict:
-        """Analyze table data using the configured model"""
+        """
+        Analyze table data using the configured model
+        Enhanced to throw appropriate exceptions for retry mechanism
+        """
         table_description = table_data.get("table_description", "No description provided")
         table_schema = table_data.get("table_schema", "No schema provided")
         
@@ -91,15 +95,31 @@ class BaseTableAnalyzer(ABC):
                     return parsed
                 else:
                     logger.error("API returned status %d: %s", response.status_code, response.text[:200])
-                    return self._error_response(f"HTTP {response.status_code} error", f"error_{response.status_code}")
-        except httpx.TimeoutException:
+                    # Raise HTTPStatusError for retry mechanism to handle
+                    raise httpx.HTTPStatusError(
+                        f"HTTP {response.status_code} error: {response.text[:200]}",
+                        request=response.request,
+                        response=response
+                    )
+                    
+        except httpx.TimeoutException as e:
             logger.error("API timeout for table %s", table_data.get("pmcid", "unknown"))
-            return self._error_response("API timeout", "error")
-        except Exception as exc:
-            logger.error("Analysis failed for table %s: %s", table_data.get("pmcid", "unknown"), exc)
-            return self._error_response(str(exc), "error")
-
-        return table_data
+            # Re-raise timeout exception for retry mechanism
+            raise httpx.TimeoutException(f"API timeout for table {table_data.get('pmcid', 'unknown')}") from e
+            
+        except httpx.HTTPStatusError:
+            # Re-raise HTTP status errors for retry mechanism
+            raise
+            
+        except httpx.RequestError as e:
+            logger.error("Request error for table %s: %s", table_data.get("pmcid", "unknown"), str(e))
+            # Raise as connection error for retry mechanism
+            raise httpx.ConnectError(f"Request error for table {table_data.get('pmcid', 'unknown')}: {str(e)}") from e
+            
+        except Exception as e:
+            logger.error("Analysis failed for table %s: %s", table_data.get("pmcid", "unknown"), str(e))
+            # Re-raise unexpected errors
+            raise Exception(f"Analysis failed for table {table_data.get('pmcid', 'unknown')}: {str(e)}") from e
 
     def _error_response(self, error: str, status: str) -> Dict:
         """Generate error response format"""
@@ -156,8 +176,8 @@ Please analyze what the table is trying to convey and provide the analysis in th
             "table_intent": "",
             "description": "",
             "inference": "",
-            "error_message": "",
-            "status": "success"
+            "error_message": None,
+            "status": "processed"
         }
 
         try:

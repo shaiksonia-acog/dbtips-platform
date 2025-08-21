@@ -1,9 +1,11 @@
+#openai_filter.py (Refactored with new retry mechanism)
 import os
 import json
 import re
 import logging
 from typing import Dict, Optional
 from openai import OpenAI
+from ..retry_decorators import sync_api_retry, PipelineStopException, ContinueToNextRecordException
 
 logger = logging.getLogger(__name__)
 
@@ -11,6 +13,7 @@ class OpenAIPathwayFilter:
     """
     OpenAI GPT-4o-mini based filter to determine if captions describe disease pathways or mechanisms
     Caption-only filtering without image processing
+    Enhanced with robust retry mechanism and pipeline error handling
     """
     
     def __init__(self, api_key: Optional[str] = None):
@@ -61,58 +64,79 @@ EXCLUDE: Clinical scans, histology, data charts, survival curves, structural mod
 
 Return exact JSON format with reasoning based on caption analysis."""
 
+    @sync_api_retry(max_retries=3, base_delay=1.0, backoff_multiplier=2.0)
+    def _call_openai_api(self, caption: str) -> dict:
+        """
+        Wrapped OpenAI API call with retry mechanism
+        This is the core API call that will be retried
+        """
+        try:
+            logger.debug(f"Making OpenAI API call for caption analysis")
+            
+            response = self.client.chat.completions.create(
+                model=self.model,
+                temperature=0,
+                max_tokens=300,
+                messages=[
+                    {"role": "system", "content": self.get_classification_system_prompt()},
+                    {"role": "user", "content": self.get_classification_user_prompt(caption)}
+                ],
+            )
+
+            result_text = response.choices[0].message.content.strip()
+            return self.parse_filter_response(result_text, caption)
+            
+        except Exception as e:
+            # Convert OpenAI specific exceptions to requests exceptions for consistent handling
+            if "timeout" in str(e).lower():
+                import requests
+                raise requests.exceptions.Timeout(str(e)) from e
+            elif any(code in str(e) for code in ["400", "401", "403", "404", "500", "502", "503"]):
+                import requests
+                raise requests.exceptions.HTTPError(str(e)) from e
+            else:
+                raise  # Re-raise as-is for other exceptions
+
     def filter_caption(self, caption: str) -> Dict:
         """
         Filter caption using OpenAI GPT-4o-mini to determine if it describes disease pathways
+        Enhanced with retry mechanism and proper exception handling
         
         Args:
             caption: Caption text to analyze
             
         Returns:
             Dict with filtering results matching pipeline expectations
+            
+        Raises:
+            PipelineStopException: For critical errors that should stop the pipeline
+            ContinueToNextRecordException: For timeout errors that should skip current record
         """
         try:
             logger.info("Determining if caption describes disease pathway using OpenAI...")
             
-            # Call OpenAI API with retries
-            max_retries = 3
-            for attempt in range(max_retries):
-                try:
-                    logger.debug(f"OpenAI API filtering attempt {attempt + 1}/{max_retries}")
-                    
-                    response = self.client.chat.completions.create(
-                        model=self.model,
-                        temperature=0,
-                        max_tokens=300,
-                        messages=[
-                            {"role": "system", "content": self.get_classification_system_prompt()},
-                            {"role": "user", "content": self.get_classification_user_prompt(caption)}
-                        ],
-                    )
-
-                    result_text = response.choices[0].message.content.strip()
-                    parsed = self.parse_filter_response(result_text, caption)
-                    logger.info(f"Is Pathway figure?: {parsed.get('is_disease_pathway')}")
-                    return parsed
-                
-                except Exception as e:
-                    error_msg = f"OpenAI API error: {str(e)} (attempt {attempt + 1})"
-                    logger.warning(error_msg)
-                    if attempt == max_retries - 1:
-                        return self._error_response(error_msg)
-                    else:
-                        wait_time = 2 ** attempt  # Exponential backoff
-                        logger.info(f"Retrying in {wait_time} seconds...")
-                        import time
-                        time.sleep(wait_time)
-                        continue
+            # Use the retry-wrapped API call
+            parsed = self._call_openai_api(caption)
+            logger.info(f"Is Pathway figure?: {parsed.get('is_disease_pathway')}")
+            return parsed
+            
+        except ContinueToNextRecordException:
+            # Timeout errors - skip current record and continue
+            logger.error("OpenAI filtering timed out after retries - continuing to next record")
+            return self._error_response("OpenAI API timeout after retries", "filter_timeout")
+            
+        except PipelineStopException as e:
+            # Critical errors - stop the entire pipeline
+            logger.error(f"OpenAI filtering failed critically: {str(e)}")
+            raise RuntimeError(f"OpenAI filtering failed: {str(e)}") from e
                         
         except Exception as e:
-            logger.error(f"OpenAI filtering failed for caption: {str(e)}")
-            return self._error_response(str(e))
+            # Unexpected errors - also stop pipeline for safety
+            logger.error(f"Unexpected OpenAI filtering error: {str(e)}")
+            raise RuntimeError(f"Unexpected OpenAI filtering error: {str(e)}") from e
 
     def parse_filter_response(self, result_text: str, caption: str) -> Dict:
-        """Parse OpenAI filtering response"""
+        """Parse OpenAI filtering response - UNCHANGED"""
         try:
             # Try direct JSON parse first
             try:
@@ -162,13 +186,13 @@ Return exact JSON format with reasoning based on caption analysis."""
             logger.error(f"Error parsing OpenAI filter response: {str(e)}")
             return self._error_response(f"Response parsing error: {str(e)}")
     
-    def _error_response(self, error: str) -> Dict:
-        """Return error response for filtering failures"""
+    def _error_response(self, error: str, status: str = "filter_error") -> Dict:
+        """Return error response for filtering failures - UNCHANGED"""
         return {
             "is_disease_pathway": False,  # Conservative approach - default to False on error
             "confidence": "error",
             "reasoning": f"OpenAI filtering failed: {error}",
-            "status": "filter_error", 
+            "status": status, 
             "error_message": error,
             "filter_method": "openai_gpt4omini_caption"
         }
@@ -176,12 +200,16 @@ Return exact JSON format with reasoning based on caption analysis."""
     def batch_filter_captions(self, captions_data: list) -> list:
         """
         Filter multiple captions in batch with rate limiting
+        Enhanced with proper exception handling
         
         Args:
             captions_data: List of caption strings or image data dictionaries
             
         Returns:
             List of filtering results
+            
+        Raises:
+            RuntimeError: If critical errors occur that should stop the pipeline
         """
         results = []
         
@@ -195,7 +223,7 @@ Return exact JSON format with reasoning based on caption analysis."""
                 else:
                     caption = str(item)
                 
-                # Filter the caption
+                # Filter the caption - this may raise exceptions
                 filter_result = self.filter_caption(caption)
                 results.append(filter_result)
                 
@@ -204,8 +232,12 @@ Return exact JSON format with reasoning based on caption analysis."""
                     import time
                     time.sleep(1.0)  # 1 second delay for OpenAI
                     
+            except RuntimeError:
+                # Re-raise pipeline stopping errors
+                raise
             except Exception as e:
                 logger.error(f"Error filtering caption {i}: {str(e)}")
-                results.append(self._error_response(str(e)))
+                # For unexpected errors in batch processing, stop the pipeline
+                raise RuntimeError(f"Batch filtering failed at item {i}: {str(e)}") from e
         
         return results

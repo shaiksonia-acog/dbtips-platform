@@ -1,4 +1,4 @@
-#analyzer_client (using med gemma model via httpx and different codebase)
+#analyzer_client.py (Complete Refactored with new retry mechanism)
 import json
 import re
 import logging
@@ -7,6 +7,8 @@ from typing import Dict, Optional
 import httpx
 from pydantic import BaseModel
 import os
+from ..retry_decorators import async_api_retry, PipelineStopException, ContinueToNextRecordException
+
 module_name = os.path.splitext(os.path.basename(__file__))[0]
 logger = logging.getLogger(module_name)
 
@@ -31,6 +33,7 @@ class MedGemmaAnalyzer:
     """
     Optimized MedGemma analyzer for detailed content analysis
     This is used ONLY after images have been confirmed as pathway-relevant by the filter
+    Enhanced with robust retry mechanism for API calls
     """
     
     def __init__(self, username: Optional[str] = None, password: Optional[str] = None):
@@ -41,7 +44,7 @@ class MedGemmaAnalyzer:
             raise ValueError("LDAP credentials not found in environment variables")
 
     def get_system_prompt(self) -> str:
-        """Optimized system prompt - shorter but precise"""
+        """Optimized system prompt - shorter but precise - UNCHANGED"""
         prompt =  """Extract biomedical information from this pathway image in 5 categories:
 
             1. **genes**: Official human gene symbols only (HGNC format: PAH, TH, TPH1). Exclude metabolites, amino acids, proteins.
@@ -67,7 +70,7 @@ class MedGemmaAnalyzer:
         return prompt
         
     def get_user_prompt(self, caption: str) -> str:
-        """Concise user prompt for content analysis"""
+        """Concise user prompt for content analysis - UNCHANGED"""
         context = f"Caption: {caption}" if caption and caption != "No caption provided" else "No caption context"
         
         user_prompt = f"""Extract comprehensive biomedical information from this pathway image.
@@ -77,19 +80,13 @@ class MedGemmaAnalyzer:
         Return analysis in the exact JSON format specified."""
         return user_prompt
 
-    async def analyze_content(self, figure_data: ImageDataModel) -> Dict:
+    @async_api_retry(max_retries=3, base_delay=2.0, backoff_multiplier=2.5)
+    async def _call_medgemma_api(self, figure_data: ImageDataModel) -> Dict:
         """
-        Analyze image content (assumes image has already passed filtering)
-        
-        Args:
-            figure_data: Dictionary containing image information
-            
-        Returns:
-            Dictionary with analysis results
+        Wrapped MedGemma API call with retry mechanism
+        This is the core API call that will be retried
         """
         caption = figure_data.get("caption") or figure_data.get("image_caption", "No caption provided")
-        
-        logger.info(f"MedGemma analyzing content for PMCID: {figure_data.get('pmcid', 'unknown')}")
         
         payload = {
             "system": self.get_system_prompt(),
@@ -106,39 +103,67 @@ class MedGemmaAnalyzer:
 
         auth = httpx.BasicAuth(self.username, self.password)
 
-        try:
-            async with httpx.AsyncClient(timeout=httpx.Timeout(300.0, connect=30.0)) as client:
-                logger.info(f"Sending content analysis request for: {figure_data.get('pmcid', 'unknown')}")
-                
-                response = await client.post(
-                    "https://medgemma-server.own4.aganitha.ai:8443/generate",
-                    json=payload,
-                    headers=headers,
-                    auth=auth
-                )
+        # Use a single client instance for the retry attempts
+        async with httpx.AsyncClient(timeout=httpx.Timeout(300.0, connect=30.0)) as client:
+            logger.info(f"Sending content analysis request for: {figure_data.get('pmcid', 'unknown')}")
+            
+            response = await client.post(
+                "https://medgemma-server.own4.aganitha.ai:8443/generate",
+                json=payload,
+                headers=headers,
+                auth=auth
+            )
 
-                if response.status_code == 200:
-                    result = response.json()
-                    logger.debug(f"MedGemma raw response: {result}")
-                    parsed = self.parse_analysis_response(result, figure_data)
-                    logger.info(f"Successfully analyzed content for: {figure_data.get('pmcid', 'unknown')}")
-                    return parsed
-                else:
-                    logger.error("MedGemma API returned status %d: %s", response.status_code, response.text[:200])
-                    return self._error_response(f"HTTP {response.status_code} error", "analysis_error")
-                    
-        except httpx.TimeoutException:
-            logger.error("MedGemma API timeout for %s after 300 seconds", figure_data.get("pmcid", "unknown"))
-            return self._error_response("MedGemma API timeout after 300 seconds", "analysis_error")
-        except httpx.ConnectError:
-            logger.error("MedGemma connection error for %s", figure_data.get("pmcid", "unknown"))
-            return self._error_response("MedGemma connection error", "analysis_error")
-        except Exception as exc:
-            logger.error("MedGemma analysis failed for %s: %s", figure_data.get("pmcid", "unknown"), exc)
-            return self._error_response(str(exc), "analysis_error")
+            # Raise HTTPStatusError for bad status codes - this will be caught by the retry decorator
+            response.raise_for_status()
+            
+            result = response.json()
+            logger.debug(f"MedGemma raw response: {result}")
+            return result
+
+    async def analyze_content(self, figure_data: ImageDataModel) -> Dict:
+        """
+        Analyze image content (assumes image has already passed filtering)
+        Enhanced with retry mechanism and proper exception handling
+        
+        Args:
+            figure_data: Dictionary containing image information
+            
+        Returns:
+            Dictionary with analysis results
+            
+        Raises:
+            RuntimeError: For critical errors that should stop the pipeline
+        """
+        
+        logger.info(f"MedGemma analyzing content for PMCID: {figure_data.get('pmcid', 'unknown')}")
+        
+        try:
+            # Use the retry-wrapped API call
+            result = await self._call_medgemma_api(figure_data)
+            
+            # Parse the result using existing logic
+            parsed = self.parse_analysis_response(result, figure_data)
+            logger.info(f"Successfully analyzed content for: {figure_data.get('pmcid', 'unknown')}")
+            return parsed
+            
+        except ContinueToNextRecordException as e:
+            # Timeout errors - skip current record and continue
+            logger.error(f"MedGemma analysis timed out for {figure_data.get('pmcid', 'unknown')} - continuing to next record")
+            return self._error_response("MedGemma API timeout after retries", "analysis_timeout")
+            
+        except PipelineStopException as e:
+            # Critical errors - stop the entire pipeline
+            logger.error(f"MedGemma analysis failed critically for {figure_data.get('pmcid', 'unknown')}: {str(e)}")
+            raise RuntimeError(f"MedGemma analysis failed: {str(e)}") from e
+                        
+        except Exception as e:
+            # Unexpected errors - also stop pipeline for safety
+            logger.error(f"Unexpected MedGemma analysis error for {figure_data.get('pmcid', 'unknown')}: {str(e)}")
+            raise RuntimeError(f"Unexpected MedGemma analysis error: {str(e)}") from e
 
     def parse_analysis_response(self, result: Dict, figure_data: Dict) -> ImageDataAnalysisResult:
-        """Parse MedGemma response and return database-compatible fields"""
+        """Parse MedGemma response and return database-compatible fields - UNCHANGED"""
         # Initialize with "not mentioned" defaults
         extracted = {
             "keywords": "not mentioned",
@@ -239,7 +264,7 @@ class MedGemmaAnalyzer:
         return extracted
 
     def _parse_json_from_string(self, text: str, pmcid: str) -> Optional[Dict]:
-        """Attempt to parse JSON from a text string with multiple strategies"""
+        """Attempt to parse JSON from a text string with multiple strategies - UNCHANGED"""
         if not text or not isinstance(text, str):
             return None
         
@@ -285,7 +310,7 @@ class MedGemmaAnalyzer:
         return None
 
     def _clean_field(self, field_value: str) -> str:
-        """Clean and validate individual field values"""
+        """Clean and validate individual field values - UNCHANGED"""
         if not field_value or not isinstance(field_value, str):
             return "not mentioned"
         
@@ -316,7 +341,7 @@ class MedGemmaAnalyzer:
             return cleaned if len(cleaned) > 1 else "not mentioned"
 
     def _error_response(self, error: str, status: str) -> Dict:
-        """Return error response for analysis failures"""
+        """Return error response for analysis failures - UNCHANGED"""
         return {
             "keywords": "not mentioned",
             "insights": "not mentioned", 
