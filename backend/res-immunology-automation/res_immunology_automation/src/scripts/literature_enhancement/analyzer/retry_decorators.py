@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Retry decorators for API calls with exponential backoff
+Enhanced retry decorators for API calls with exponential backoff
 Handles different error types with appropriate pipeline stopping logic
+Now includes GPU memory error handling for MedGemma
 """
 
 import asyncio
@@ -20,6 +21,14 @@ class PipelineStopException(Exception):
 
 class ContinueToNextRecordException(Exception):
     """Exception to skip current record and continue with next"""
+    pass
+
+class GPUMemoryException(Exception):
+    """Exception for GPU memory related issues that require model reload"""
+    pass
+
+class ModelLoadException(Exception):
+    """Exception for model loading failures that can be retried"""
     pass
 
 def sync_api_retry(max_retries: int = 3, base_delay: float = 1.0, backoff_multiplier: float = 2.0):
@@ -82,7 +91,8 @@ def sync_api_retry(max_retries: int = 3, base_delay: float = 1.0, backoff_multip
 
 def async_api_retry(max_retries: int = 3, base_delay: float = 2.0, backoff_multiplier: float = 2.5):
     """
-    Retry decorator for async API calls (MedGemma)
+    Enhanced retry decorator for async API calls (MedGemma)
+    Now includes special handling for GPU memory errors
     Uses longer delays for MedGemma as requested
     
     Args:
@@ -98,6 +108,24 @@ def async_api_retry(max_retries: int = 3, base_delay: float = 2.0, backoff_multi
             for attempt in range(max_retries + 1):  # +1 for initial attempt
                 try:
                     return await func(*args, **kwargs)
+                
+                except ModelLoadException as e:
+                    # GPU memory was recovered - allow retry
+                    last_exception = e
+                    if attempt == max_retries:
+                        logger.error(f"Model loading still failed after {max_retries} retries: {str(e)}")
+                        raise ContinueToNextRecordException(f"Model loading failed after {max_retries} retries") from e
+                    
+                    delay = base_delay * (backoff_multiplier ** attempt)
+                    logger.warning(f"Attempt {attempt + 1} - model loading issue, retrying in {delay}s: {str(e)}")
+                    await asyncio.sleep(delay)
+                    
+                except GPUMemoryException as e:
+                    # GPU memory errors should not be retried by this decorator
+                    # They are handled by the calling function
+                    last_exception = e
+                    logger.error(f"GPU memory error - not retrying at this level: {str(e)}")
+                    raise e
                     
                 except httpx.TimeoutException as e:
                     last_exception = e
@@ -113,6 +141,17 @@ def async_api_retry(max_retries: int = 3, base_delay: float = 2.0, backoff_multi
                 except httpx.HTTPStatusError as e:
                     last_exception = e
                     status_code = e.response.status_code
+                    
+                    # Check if the HTTP error contains GPU memory issues
+                    try:
+                        error_response = e.response.json()
+                        error_detail = str(error_response.get('detail', ''))
+                        if any(indicator in error_detail.lower() for indicator in 
+                               ['cuda out of memory', 'out of memory', 'failed to allocate', 'model loading failed']):
+                            logger.error(f"HTTP error contains GPU memory issue: {error_detail}")
+                            raise GPUMemoryException(f"GPU memory error via HTTP {status_code}: {error_detail}") from e
+                    except (ValueError, TypeError, AttributeError):
+                        pass  # Not JSON or doesn't contain detail
                     
                     if attempt == max_retries:
                         # For HTTP errors (404, 500, etc.), stop the pipeline
@@ -136,6 +175,14 @@ def async_api_retry(max_retries: int = 3, base_delay: float = 2.0, backoff_multi
                     
                 except Exception as e:
                     last_exception = e
+                    
+                    # Check if the general exception contains GPU memory error indicators
+                    error_str = str(e).lower()
+                    if any(indicator in error_str for indicator in 
+                           ['cuda out of memory', 'out of memory', 'failed to allocate', 'model loading failed']):
+                        logger.error(f"General exception contains GPU memory issue: {str(e)}")
+                        raise GPUMemoryException(f"GPU memory error: {str(e)}") from e
+                    
                     if attempt == max_retries:
                         # For unexpected errors, stop the pipeline
                         logger.error(f"Unexpected MedGemma error after {max_retries} retries, stopping pipeline: {str(e)}")
