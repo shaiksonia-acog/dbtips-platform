@@ -11,18 +11,15 @@ import asyncio
 from typing import Optional, Dict, Any
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
-
-sys.path.append("/app/res-immunology-automation/res_immunology_automation/src/scripts/")
 from literature_enhancement.db_utils.async_utils import check_pipeline_status , create_pipeline_status
 # Import the three segregation modules
-from supplementary_data_segregators import SupplementaryMaterialsSegregator
-from figure_data_segregators import FigureDataSegregator
-from table_data_segregators import TableDataSegregator
+from literature_enhancement.data_segregation.supplementary_data_segregators import SupplementaryMaterialsSegregator
+from literature_enhancement.data_segregation.figure_data_segregators import FigureDataSegregator
+from literature_enhancement.data_segregation.table_data_segregators import TableDataSegregator
 from contextlib import contextmanager
 
-
-logging.basicConfig(level=logging.INFO)
-log = logging.getLogger(__name__)
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+log = logging.getLogger(module_name)
 
 POSTGRES_USER: str = os.getenv("POSTGRES_USER")
 POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD")
@@ -250,7 +247,7 @@ class LiteratureDataSegregationRunner:
 
 
 # Convenience functions for easy integration
-async def run_literature_segregation(target: Optional[str] = None, disease: Optional[str] = None
+async def run_literature_segregation(disease: str, target: str
                             ) -> Dict[str, Any]:
     """
     Convenience function to run all literature segregation for a target-disease combination

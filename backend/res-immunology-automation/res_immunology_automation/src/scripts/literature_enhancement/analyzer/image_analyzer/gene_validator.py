@@ -14,7 +14,9 @@ import logging
 from ..retry_decorators import sync_api_retry, PipelineStopException, ContinueToNextRecordException
 
 load_dotenv()
-module_name = os.path.splitext(os.path.basename(__file__))[0]
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+from literature_enhancement.config import LOGGING_LEVEL
+logging.basicConfig(level=LOGGING_LEVEL)
 logger = logging.getLogger(module_name)
 
 class GeneValidator:

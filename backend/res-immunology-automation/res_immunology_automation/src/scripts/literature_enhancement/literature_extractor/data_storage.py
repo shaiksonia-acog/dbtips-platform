@@ -10,8 +10,11 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_
 
 from db.models import ArticlesMetadata
-
-log = logging.getLogger(__name__)
+import os
+from literature_enhancement.config import LOGGING_LEVEL
+logging.basicConfig(level=LOGGING_LEVEL)
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+log = logging.getLogger(module_name)
 
 
 class LiteratureStorage:

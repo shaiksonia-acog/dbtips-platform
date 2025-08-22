@@ -3,16 +3,16 @@ import os
 import sys
 import asyncio
 from typing import Dict, List, Optional
-sys.path.append('/app/res-immunology-automation/res_immunology_automation/src/scripts/')
-print("path: ", sys.path)
 from literature_enhancement.analyzer.image_analyzer.analyzer_client import ImageDataModel, ImageDataAnalysisResult
 from literature_enhancement.db_utils.async_utils import afetch_rows, aupdate_table_rows, check_pipeline_status, create_pipeline_status
 from db.models import LiteratureImagesAnalysis
 from literature_enhancement.analyzer.image_analyzer.analyzer_pipeline import ThreeStageHybridAnalysisPipeline
 
 import logging
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+logger = logging.getLogger(module_name)
+from literature_enhancement.config import LOGGING_LEVEL
+logging.basicConfig(level=LOGGING_LEVEL)
 
 def log_prefix(disease: str, target: str) -> str:
     """Generate consistent log prefix"""
@@ -66,9 +66,6 @@ async def process_images_hybrid(images_data: List[ImageDataModel], disease: str,
     pipeline = ThreeStageHybridAnalysisPipeline()
     prefix = log_prefix(disease, target)
     
-    logger.info("=" * 50)
-    logger.info("STARTING HYBRID ANALYSIS PIPELINE")
-    logger.info("=" * 50)
     
     for idx, image_data in enumerate(images_data, 1):
         pmcid = image_data.get('pmcid', 'unknown')
@@ -81,22 +78,22 @@ async def process_images_hybrid(images_data: List[ImageDataModel], disease: str,
             status = result.get('status', 'unknown')
             
             # Handle different result statuses
-            if status == "filtered_openai":
+            if is_disease_pathway == False:
                 filtered += 1
-                logger.info(f"{prefix} Filtered out (OpenAI): {pmcid}")
+                logger.debug(f"{prefix} Not a Pathway Figure: {pmcid}")
                 
             elif status == "processed":
                 processed += 1
                 if result.get('genes', 'not mentioned') != 'not mentioned':
                     genes_validated += 1
-                logger.info(f"{prefix} Success: {pmcid}")
+                logger.debug(f"{prefix} Success: {pmcid}")
                 
-            elif status in ["filter_timeout", "analysis_timeout"]:
+            elif error_type in ["OpenAI Timeout", "MedGemma Timeout"]:
                 # Timeout errors - record continues but log the timeout
                 timeout_errors += 1
                 logger.warning(f"{prefix} Timeout error: {pmcid} - {status}")
                 
-            elif status in ["filter_error", "analysis_error"]:
+            elif error_type in ["OpenAI Parsing Error"] or status == "analysis_error":
                 # Critical errors that should have stopped the pipeline
                 critical_errors += 1
                 logger.error(f"{prefix} Critical error occurred but not raised: {pmcid} - {status}")
@@ -195,7 +192,7 @@ async def update_image_analysis(image_analysis_data: ImageDataAnalysisResult, im
         # Re-raise database errors as they might indicate bigger issues
         raise RuntimeError(f"Database update failed: {str(e)}") from e
 
-async def main(disease: str, target: str = None, record_status: str = "extracted"):
+async def main(disease: str, target: str = None, record_status: List[str] = ["extracted", "error"]):
     """
     Main function - enhanced with comprehensive error handling following literature extraction pattern
     Properly handles both timeout errors (continue) and critical errors (stop pipeline)
@@ -204,9 +201,10 @@ async def main(disease: str, target: str = None, record_status: str = "extracted
     # Normalize inputs
     disease, target = get_normalized_values(disease, target)
     prefix = log_prefix(disease, target)
-    
-    logger.info(f"{prefix} Starting hybrid analysis pipeline")
-    
+    logger.info("=" * 80)
+    logger.info(f"IMAGE ANALYSIS PIPELINE INITIATED for {prefix}")
+    logger.info("=" * 80)
+
     try:
         # FIRST: Check if pipeline is already completed - skip if yes
         if await should_skip_analysis(disease, target):

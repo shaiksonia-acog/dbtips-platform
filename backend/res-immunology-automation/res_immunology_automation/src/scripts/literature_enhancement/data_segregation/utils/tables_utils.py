@@ -6,9 +6,11 @@ from bs4 import BeautifulSoup
 import logging
 from typing import List, Dict, Any
 from datetime import datetime
+from literature_enhancement.config import LOGGING_LEVEL
+logging.basicConfig(level=LOGGING_LEVEL)
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+log = logging.getLogger(module_name)
 
-logging.basicConfig(level=logging.INFO)
-log = logging.getLogger(__name__)
 
 api_key = os.getenv('OPENAI_API_KEY')
 
@@ -79,6 +81,9 @@ class TablesExtractor:
                 try:
                     table_schema = self._extract_table_schema_with_llm(table_html)
                     # Add the programmatically extracted title to the schema
+
+                    # filter empty schemas
+
                     table_schema["title"] = table_title
                 except Exception as e:
                     log.warning("Failed to extract schema for table %d in PMCID %s: %s", idx, pmcid, e)
@@ -88,6 +93,11 @@ class TablesExtractor:
                         "row_headers": [],
                         "error": f"Schema extraction failed: {str(e)}"
                     }
+                if not description and "error" in table_schema:
+                    continue
+                
+                if not description and not len(table_schema.get("column_headers")) and not len(table_schema.get("row_headers")):
+                    continue
 
                 tables.append({
                     "pmcid": pmcid,
@@ -236,7 +246,7 @@ class TablesExtractor:
             return cleaned_schema
             
         except json.JSONDecodeError as e:
-            log.error("Failed to parse LLM response as JSON: %s", e)
+            log.info("Failed to parse LLM response as JSON: %s", e)
             return {
                 "title": "",  # Will be populated by caller
                 "column_headers": [],

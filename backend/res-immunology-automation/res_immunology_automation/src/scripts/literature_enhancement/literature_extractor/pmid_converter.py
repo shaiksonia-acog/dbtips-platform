@@ -9,7 +9,7 @@ import xml.etree.ElementTree as ET
 from typing import Dict, List, Optional, Set
 import aiohttp
 
-from .config import NCBI_API_KEY, NCBI_EMAIL, NCBI_BASE_URL
+from literature_enhancement.config import NCBI_API_KEY, NCBI_EMAIL, NCBI_BASE_URL
 from .lit_utils import get_random_latency, retry_with_backoff
 
 log = logging.getLogger(__name__)

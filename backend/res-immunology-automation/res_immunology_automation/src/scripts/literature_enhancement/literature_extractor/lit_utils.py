@@ -8,12 +8,12 @@ import random
 import time
 from typing import Any, Dict, List, Optional
 from pathlib import Path
-
-from .config import DEFAULT_REQUEST_DELAY
-
 # Set up logging
-logging.basicConfig(level=logging.INFO)
-log = logging.getLogger(__name__)
+from literature_enhancement.config import LOGGING_LEVEL, DEFAULT_REQUEST_DELAY
+logging.basicConfig(level=LOGGING_LEVEL)
+import os
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+log = logging.getLogger(module_name)
 
 
 def get_random_latency(a: int = DEFAULT_REQUEST_DELAY[0], b: int = DEFAULT_REQUEST_DELAY[1]) -> float:

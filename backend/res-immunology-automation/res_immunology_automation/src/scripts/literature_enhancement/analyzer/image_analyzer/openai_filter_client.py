@@ -6,8 +6,10 @@ import logging
 from typing import Dict, Optional
 from openai import OpenAI
 from ..retry_decorators import sync_api_retry, PipelineStopException, ContinueToNextRecordException
-
-logger = logging.getLogger(__name__)
+from literature_enhancement.config import LOGGING_LEVEL
+logging.basicConfig(level=LOGGING_LEVEL)
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+logger = logging.getLogger(module_name)
 
 class OpenAIPathwayFilter:
     """
@@ -113,7 +115,7 @@ Return exact JSON format with reasoning based on caption analysis."""
             ContinueToNextRecordException: For timeout errors that should skip current record
         """
         try:
-            logger.info("Determining if caption describes disease pathway using OpenAI...")
+            logger.debug("Determining if caption describes disease pathway using OpenAI...")
             
             # Use the retry-wrapped API call
             parsed = self._call_openai_api(caption)

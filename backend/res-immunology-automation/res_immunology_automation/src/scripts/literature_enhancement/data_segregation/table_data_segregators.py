@@ -15,16 +15,15 @@ from datetime import datetime
 
 from sqlalchemy.orm import Session
 
-# Add the scripts directory to sys.path to import modules (same as CLI)
-sys.path.append("/app/res-immunology-automation/res_immunology_automation/src/scripts")
-
 from db.database import get_db
 from db.models import ArticlesMetadata, LiteratureTablesAnalysis
 from literature_enhancement.data_segregation.utils.literature_processing_utils import LiteratureProcessingUtils
 from literature_enhancement.data_segregation.utils.tables_utils import TablesExtractor
 
-logging.basicConfig(level=logging.INFO)
-log = logging.getLogger(__name__)
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+from literature_enhancement.config import LOGGING_LEVEL
+logging.basicConfig(level=LOGGING_LEVEL)
+logger = logging.getLogger(module_name)
 
 
 class TableDataSegregator:
@@ -86,7 +85,7 @@ class TableDataSegregator:
         
         return len(tables_data)
     
-    def process_articles(self, target: Optional[str] = None, disease: Optional[str] = None, batch_size: int = 50) -> int:
+    def process_articles(self, target: str, disease: str, batch_size: int = 50) -> int:
         """Process articles filtered by target and disease to extract tables"""
         return self.utils.process_articles(
             db_session=self.db,
@@ -102,8 +101,6 @@ class TableDataSegregator:
     
 def main():
     """Main function to run table data segregation"""
-    logging.basicConfig(level=logging.INFO)
-    
     # Get database session
     db = next(get_db())
     

@@ -10,9 +10,13 @@ import re
 from typing import List, Dict, Optional, Set
 from bs4 import BeautifulSoup
 from datetime import datetime
+import os
 
-logging.basicConfig(level=logging.INFO)
-log = logging.getLogger(__name__)
+from literature_enhancement.config import LOGGING_LEVEL
+logging.basicConfig(level=LOGGING_LEVEL)
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+log = logging.getLogger(module_name)
+
 
 class SupplementaryMaterialsUtils:
     """Utility class containing helper functions for supplementary materials extraction"""

@@ -5,16 +5,17 @@ Shared utilities for processing literature data from NXML articles.
 This module consolidates common functionality used across table, figure, 
 and supplementary materials extraction modules.
 """
-
+import os
 import logging
 from typing import List, Optional, Callable, Any
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from db.models import ArticlesMetadata
 
-logging.basicConfig(level=logging.INFO)
-log = logging.getLogger(__name__)
-
+from literature_enhancement.config import LOGGING_LEVEL
+logging.basicConfig(level=LOGGING_LEVEL)
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+log = logging.getLogger(module_name)
 
 class LiteratureProcessingUtils:
     """Common utilities for literature data processing"""
@@ -145,3 +146,4 @@ class LiteratureProcessingUtils:
             disease=disease,
             batch_size=batch_size
         )
+

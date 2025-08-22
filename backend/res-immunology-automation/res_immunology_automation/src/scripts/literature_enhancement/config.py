@@ -22,6 +22,7 @@ BASE_DELAY = 1.0
 # Processing limits
 MAX_PMIDS_TO_PROCESS = 100
 
+CACHE_DIR_PATH: str = "/app/res-immunology-automation/res_immunology_automation/src/scripts/"
 # Endpoints
 LITERATURE_ENDPOINT = "/evidence/literature/"
 TARGET_LITERATURE_ENDPOINT = "/evidence/target-literature/"
@@ -29,3 +30,5 @@ TARGET_LITERATURE_ENDPOINT = "/evidence/target-literature/"
 # Default values for database fields
 DEFAULT_DISEASE = "no-disease"
 DEFAULT_TARGET = "no-target"
+
+LOGGING_LEVEL = os.getenv("LOGGING_LEVEL", "INFO")

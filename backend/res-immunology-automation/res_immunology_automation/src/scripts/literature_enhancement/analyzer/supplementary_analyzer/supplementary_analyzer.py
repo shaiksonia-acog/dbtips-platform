@@ -1,7 +1,4 @@
 import os
-import sys
-sys.path.append('/app/res-immunology-automation/res_immunology_automation/src/scripts/')
-print("path: ", sys.path)
 import asyncio
 from typing import Dict, List, Optional, Any
 from sqlalchemy import select, and_, or_
@@ -23,7 +20,9 @@ from literature_enhancement.analyzer.retry_decorators import (
 from db.models import LiteratureSupplementaryMaterialsAnalysis
 
 import logging
-module_name = os.path.splitext(os.path.basename(__file__))[0]
+from literature_enhancement.config import LOGGING_LEVEL
+logging.basicConfig(level=LOGGING_LEVEL)
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
 logger = logging.getLogger(module_name)
 
 # Initialize the analyzer
@@ -110,10 +109,6 @@ async def analyse_supplementary_materials(supplementary_data: List[Dict], diseas
     critical_errors = 0
     
     prefix = log_prefix(disease, target)
-    
-    logger.info("=" * 50)
-    logger.info("STARTING SUPPLEMENTARY DATA ANALYSIS PIPELINE")
-    logger.info("=" * 50)
     
     for idx, suppl_data in enumerate(supplementary_data, 1):
         pmcid = suppl_data.get('pmcid', 'unknown')
@@ -248,7 +243,7 @@ async def update_supplementary_analysis(supplementary_analysis_data: Dict, suppl
 # -------------------------
 # Main entrypoint
 # -------------------------
-async def main(disease: str, target: Optional[str] = None):
+async def main(disease: str, target: str):
     """
     Main function to run the supplementary data analysis pipeline
     Enhanced with comprehensive error handling following literature extraction pattern
@@ -262,23 +257,25 @@ async def main(disease: str, target: Optional[str] = None):
     logger.info(f"{prefix} Starting supplementary data analysis pipeline")
     
     try:
-        # FIRST: Check if pipeline is already completed - skip if yes
-        if await should_skip_analysis(disease, target):
-            return True
+        # # FIRST: Check if pipeline is already completed - skip if yes
+        # if await should_skip_analysis(disease, target):
+        #     return True
 
         # # SECOND: Check prerequisites (extraction and segregation must be completed)
         # if not await check_prerequisites(disease, target):
         #     raise RuntimeError("Prerequisites not met - extraction and segregation must be completed first")
         
         # THIRD: Perform Supplementary Data Analysis
-        logger.info(f"{prefix} Performing Supplementary Data Analysis...")
+        logger.info("=" * 50)
+        logger.info(f"SUPPLEMENTARY DATA ANALYSIS PIPELINE for {prefix}")
+        logger.info("=" * 50)
         
         # Fetch supplementary materials that need analysis (where analysis or keywords are null/empty)
         supplementary_materials = await fetch_supplementary_materials(disease, target)
         logger.info(f"{prefix} Found {len(supplementary_materials)} unprocessed supplementary materials for analysis")
         
         if supplementary_materials:
-            logger.info(f"{prefix} Analyzing Supplementary Materials...")
+            logger.debug(f"{prefix} Analyzing Supplementary Materials...")
             # Process supplementary materials through the analysis pipeline
             # This may raise RuntimeError for critical errors
             await analyse_supplementary_materials(supplementary_materials, disease, target)

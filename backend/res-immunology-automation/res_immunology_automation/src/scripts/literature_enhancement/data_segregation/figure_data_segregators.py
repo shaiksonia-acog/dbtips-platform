@@ -6,25 +6,22 @@ the LiteratureImagesAnalysis table with image URLs and captions.
 """
 
 import logging
-import sys
+import sys, os
 from pathlib import Path
 from typing import List, Dict, Optional
 from datetime import datetime
 import re
 from bs4 import BeautifulSoup
 from sqlalchemy.orm import Session
-
-# Add the scripts directory to sys.path to import modules (same as CLI)
-scripts_dir = Path(__file__).parent.parent.parent
-sys.path.append(str(scripts_dir))
-
 from db.database import get_db
 from db.models import ArticlesMetadata, LiteratureImagesAnalysis
-from utils.literature_processing_utils import LiteratureProcessingUtils
-from utils.figures_utils import FiguresExtractor
+from literature_enhancement.data_segregation.utils.literature_processing_utils import LiteratureProcessingUtils
+from literature_enhancement.data_segregation.utils.figures_utils import FiguresExtractor
 
-logging.basicConfig(level=logging.INFO)
-log = logging.getLogger(__name__)
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+from literature_enhancement.config import LOGGING_LEVEL
+logging.basicConfig(level=LOGGING_LEVEL)
+log = logging.getLogger(module_name)
 
 class FigureDataSegregator:
     """Handles extraction and segregation of figure data from NXML articles"""
@@ -102,8 +99,6 @@ class FigureDataSegregator:
     
 def main():
     """Main function to run figure data segregation"""
-    logging.basicConfig(level=logging.INFO)
-    
     # Get database session
     db = next(get_db())
     

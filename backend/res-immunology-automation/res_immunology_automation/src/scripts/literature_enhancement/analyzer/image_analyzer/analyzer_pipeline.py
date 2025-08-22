@@ -2,14 +2,14 @@
 import asyncio
 from typing import Dict
 import sys
-sys.path.append('/app/res-immunology-automation/res_immunology_automation/src/scripts/')
-print("path: ", sys.path)
 from literature_enhancement.analyzer.image_analyzer.openai_filter_client import OpenAIPathwayFilter
 from literature_enhancement.analyzer.image_analyzer.analyzer_client import MedGemmaAnalyzer, ImageDataModel, ImageDataAnalysisResult
 from literature_enhancement.analyzer.image_analyzer.gene_validator import validate_genes_async
 import logging
 import os
-module_name = os.path.splitext(os.path.basename(__file__))[0]
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+from literature_enhancement.config import LOGGING_LEVEL
+logging.basicConfig(level=logging.LOGGING_LEVEL)
 logger = logging.getLogger(module_name)
 
 class ThreeStageHybridAnalysisPipeline:
@@ -46,7 +46,7 @@ class ThreeStageHybridAnalysisPipeline:
         
         # STAGE 1: OpenAI filtering
         try:
-            logger.info(f"Stage 1 - OpenAI filtering: {pmcid}")
+            logger.debug(f"Stage 1 - OpenAI filtering: {pmcid}")
             filter_result = self.openai_filter.filter_caption(caption)
             
             if filter_result.get("status") == "filter_timeout":
@@ -57,7 +57,9 @@ class ThreeStageHybridAnalysisPipeline:
                     "genes": "not mentioned", "drugs": "not mentioned",
                     "process": "not mentioned", "is_disease_pathway": False,
                     "error_message": f"OpenAI filtering timeout: {filter_result.get('error_message')}",
-                    "status": "filter_timeout"
+                    # "status": "filter_timeout"
+                    "error_type": "OpenAI Timeout",
+                    "status": "error"
                 }
             
             if filter_result.get("status") == "filter_error":
@@ -68,17 +70,21 @@ class ThreeStageHybridAnalysisPipeline:
                     "genes": "not mentioned", "drugs": "not mentioned",
                     "process": "not mentioned", "is_disease_pathway": False,
                     "error_message": f"OpenAI filtering failed: {filter_result.get('error_message')}",
-                    "status": "filter_error"
+                    # "status": "filter_error"
+                    "error_type": "OpenAI Parsing Error",
+                    "status": "error"
                 }
             
             if not filter_result.get("is_disease_pathway", False):
-                logger.info(f"Filtered out (not pathway): {pmcid}")
+                logger.debug(f"Filtered out (not pathway): {pmcid}")
                 return {
                     "keywords": "not mentioned", "insights": "not mentioned",
                     "genes": "not mentioned", "drugs": "not mentioned", 
                     "process": "not mentioned", "is_disease_pathway": False,
-                    "error_message": "Not disease pathway relevant",
-                    "status": "filtered_openai"
+                    "error_message": None,
+                    # "status": "filtered_openai"
+                    "error_type": None,
+                    "status": "processed"
                 }
             
             logger.info(f"Stage 1 passed: {pmcid}")
@@ -107,13 +113,16 @@ class ThreeStageHybridAnalysisPipeline:
                     "genes": "not mentioned", "drugs": "not mentioned",
                     "process": "not mentioned", "is_disease_pathway": True,
                     "error_message": f"MedGemma analysis timeout: {analysis_result.get('error_message')}",
-                    "status": "analysis_timeout"
+                    # "status": "analysis_timeout"
+                    "error_type": "MedGemma Timeout",
+                    "status": "error"
                 }
             
             if analysis_result.get("status") == "analyzed":
                 analysis_result["status"] = "processed"
                 analysis_result["error_message"] = None
                 logger.info(f"Stage 2 completed: {pmcid}")
+
             elif analysis_result.get("status") == "analysis_error":
                 # Analysis error from MedGemma - stop pipeline
                 logger.error(f"MedGemma analysis failed critically for {pmcid}")

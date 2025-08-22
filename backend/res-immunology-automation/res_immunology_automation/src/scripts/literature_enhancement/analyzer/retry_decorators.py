@@ -11,8 +11,11 @@ import functools
 from typing import Callable, Any, Optional
 import httpx
 import requests
-
-logger = logging.getLogger(__name__)
+import os
+from literature_enhancement.config import LOGGING_LEVEL
+logging.basicConfig(level=LOGGING_LEVEL)
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+logger = logging.getLogger(module_name)
 
 class PipelineStopException(Exception):
     """Exception to stop the entire pipeline"""
@@ -22,7 +25,7 @@ class ContinueToNextRecordException(Exception):
     """Exception to skip current record and continue with next"""
     pass
 
-def sync_api_retry(max_retries: int = 3, base_delay: float = 1.0, backoff_multiplier: float = 2.0):
+def sync_api_retry(max_retries: int = 3, base_delay: float = 10.0, backoff_multiplier: float = 2.0):
     """
     Retry decorator for synchronous API calls (NCBI, OpenAI)
     
@@ -80,7 +83,7 @@ def sync_api_retry(max_retries: int = 3, base_delay: float = 1.0, backoff_multip
         return wrapper
     return decorator
 
-def async_api_retry(max_retries: int = 3, base_delay: float = 2.0, backoff_multiplier: float = 2.5):
+def async_api_retry(max_retries: int = 3, base_delay: float = 10.0, backoff_multiplier: float = 2.5):
     """
     Retry decorator for async API calls (MedGemma)
     Uses longer delays for MedGemma as requested

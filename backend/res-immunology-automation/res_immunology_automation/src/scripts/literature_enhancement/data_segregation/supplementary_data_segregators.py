@@ -7,7 +7,7 @@ properly labeled contextual descriptions.
 """
 
 import logging
-import sys
+import sys, os
 from pathlib import Path
 from typing import List, Dict, Optional
 from datetime import datetime
@@ -20,11 +20,13 @@ sys.path.append(str(scripts_dir))
 
 from db.database import get_db
 from db.models import ArticlesMetadata, LiteratureSupplementaryMaterialsAnalysis
-from utils.literature_processing_utils import LiteratureProcessingUtils
-from utils.supplementary_utils import SupplementaryMaterialsUtils, SupplementaryMaterialsExtractor
+from literature_enhancement.data_segregation.utils.literature_processing_utils import LiteratureProcessingUtils
+from literature_enhancement.data_segregation.utils.supplementary_utils import SupplementaryMaterialsUtils, SupplementaryMaterialsExtractor
 
-logging.basicConfig(level=logging.INFO)
-log = logging.getLogger(__name__)
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+from literature_enhancement.config import LOGGING_LEVEL
+logging.basicConfig(level=LOGGING_LEVEL)
+log = logging.getLogger(module_name)
 
 class SupplementaryMaterialsSegregator(SupplementaryMaterialsExtractor):
     """Handles extraction and segregation of supplementary materials data from NXML articles"""
@@ -162,7 +164,6 @@ class SupplementaryMaterialsSegregator(SupplementaryMaterialsExtractor):
 
 def main():
     """Main function to run supplementary materials data segregation"""
-    logging.basicConfig(level=logging.INFO)
     
     # Get database session
     db = next(get_db())

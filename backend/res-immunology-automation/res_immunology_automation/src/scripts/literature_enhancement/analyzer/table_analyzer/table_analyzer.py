@@ -1,7 +1,5 @@
 import os
 import sys
-sys.path.append('/app/res-immunology-automation/res_immunology_automation/src/scripts/')
-print("path: ", sys.path)
 import asyncio
 from typing import Dict, List, Optional, Any
 from sqlalchemy import select, and_
@@ -23,7 +21,9 @@ from literature_enhancement.analyzer.retry_decorators import (
 from db.models import LiteratureTablesAnalysis
 
 import logging
-module_name = os.path.splitext(os.path.basename(__file__))[0]
+from literature_enhancement.config import LOGGING_LEVEL
+logging.basicConfig(level=LOGGING_LEVEL)
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
 logger = logging.getLogger(module_name)
 
 # Initialize the analyzer

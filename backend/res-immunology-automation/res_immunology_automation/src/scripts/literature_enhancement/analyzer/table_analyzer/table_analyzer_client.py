@@ -6,9 +6,10 @@ from datetime import datetime
 from typing import Dict, Optional
 import httpx
 import logging
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from literature_enhancement.config import LOGGING_LEVEL
+logging.basicConfig(level=LOGGING_LEVEL)
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+logger = logging.getLogger(module_name)
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 

@@ -9,7 +9,9 @@ from pydantic import BaseModel
 import os
 from ..retry_decorators import async_api_retry, PipelineStopException, ContinueToNextRecordException
 
-module_name = os.path.splitext(os.path.basename(__file__))[0]
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+from literature_enhancement.config import LOGGING_LEVEL
+logging.basicConfig(level=LOGGING_LEVEL)
 logger = logging.getLogger(module_name)
 
 class ImageDataModel(BaseModel):
@@ -104,7 +106,7 @@ class MedGemmaAnalyzer:
         auth = httpx.BasicAuth(self.username, self.password)
 
         # Use a single client instance for the retry attempts
-        async with httpx.AsyncClient(timeout=httpx.Timeout(300.0, connect=30.0)) as client:
+        async with httpx.AsyncClient(timeout=httpx.Timeout(180.0, connect=30.0)) as client:
             logger.info(f"Sending content analysis request for: {figure_data.get('pmcid', 'unknown')}")
             
             response = await client.post(

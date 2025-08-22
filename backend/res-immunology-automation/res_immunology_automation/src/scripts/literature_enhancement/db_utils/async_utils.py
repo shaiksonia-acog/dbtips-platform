@@ -7,8 +7,10 @@ from sqlalchemy import and_, update, or_
 from typing import Optional
 from db.models import LiteratureEnhancementPipelineStatus, ErrorManagement
 from datetime import datetime
-
-logger = logging.getLogger(__name__)
+from literature_enhancement.config import LOGGING_LEVEL
+logging.basicConfig(level=LOGGING_LEVEL)
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+logger = logging.getLogger(module_name)
 
 # Load DB credentials
 POSTGRES_USER: str = os.getenv("POSTGRES_USER")
@@ -45,16 +47,27 @@ async def aget_metadata(disease_name: str, target: Optional[str], status: str):
 # -----------------------------
 # Async function: Fetch rows
 # -----------------------------
-async def afetch_rows(table_cls, disease: str = None, target: str = None, status: str = None):
+async def afetch_rows(table_cls, disease: str = None, target: str = None, status = None):
     if not target and not disease:
         raise ValueError("At least one of 'target' or 'disease' must be specified.")
     
     filters = []
-    vals = {"target": target, "disease": disease, "status": status}
+    vals = {"target": target, "disease": disease}
+    
     try:
+        # Handle regular string fields (target, disease)
         for k, v in vals.items():
             if v and hasattr(table_cls, k):
                 filters.append(getattr(table_cls, k) == v)
+        
+        # Handle status separately to support multiple values
+        if status and hasattr(table_cls, 'status'):
+            if isinstance(status, list):
+                # Use IN clause for multiple statuses
+                filters.append(getattr(table_cls, 'status').in_(status))
+            else:
+                # Use equality for single status
+                filters.append(getattr(table_cls, 'status') == status)
         
         stmt = select(table_cls).where(and_(*filters))
         async with AsyncSessionLocal() as session:
@@ -68,7 +81,7 @@ async def afetch_rows(table_cls, disease: str = None, target: str = None, status
     except Exception as e:
         logger.error(f"Error while fetching records from: {table_cls.__tablename__}")
         raise
-
+        
 # -----------------------------
 # NEW: Async function: Fetch rows with null checks (MOVED FROM TABLE ANALYZER)
 # -----------------------------
@@ -182,10 +195,10 @@ async def check_pipeline_status(
             existing_record = result.scalar_one_or_none()
             
             if existing_record:
-                logger.info(f"Pipeline status for {disease}-{target}-{pipeline_type}: {existing_record.pipeline_status}")
+                logger.info(f"Pipeline status for {disease}-{target} for pipeline: {pipeline_type.upper()}: {existing_record.pipeline_status}")
                 return existing_record.pipeline_status
             else:
-                logger.info(f"No pipeline status record found for {disease}-{target}-{pipeline_type}")
+                logger.info(f"No pipeline status record found for {disease}-{target} for pipeline: {pipeline_type.upper()}")
                 return None
                 
     except Exception as e:
@@ -285,3 +298,21 @@ async def log_error_to_management(
     except Exception as e:
         logger.error(f"Failed to log error to management table: {e}")
         return False
+
+async def fetch_total_rows_count(table_cls, disease: str, target: str)->int:
+    """
+    Fetch total rows for a given disease and optional target
+    
+    Args:
+        table_cls: SQLAlchemy model class
+        disease: Disease name to filter by
+        target: Optional target name to filter by
+    
+    Returns:
+        List of dictionaries representing the rows
+    """
+    async with AsyncSessionLocal() as session:
+        total_stmt = select(table_cls).where(and_(table_cls.disease == disease, table_cls.target == target))
+        total_result = await session.execute(total_stmt)
+        total_records = total_result.scalars().all()
+        return total_records

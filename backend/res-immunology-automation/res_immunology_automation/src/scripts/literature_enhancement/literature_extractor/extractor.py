@@ -11,10 +11,6 @@ from typing import Any, Dict, List, Optional, Tuple
 from sqlalchemy.orm import Session
 
 from db.models import Disease, TargetDisease
-from .config import (
-    LITERATURE_ENDPOINT, TARGET_LITERATURE_ENDPOINT, 
-    MAX_PMIDS_TO_PROCESS, RATE_LIMIT, MAX_RETRIES, BACKOFF_FACTOR, BASE_DELAY
-)
 from .lit_utils import (
     get_top_n_literature,
     normalize_disease_and_target_name, get_random_latency
@@ -23,8 +19,12 @@ from utils import load_response_from_file, save_response_to_file
 from .pmid_converter import PMIDConverter
 from .data_storage import LiteratureStorage
 from literature_enhancement.db_utils.async_utils import create_pipeline_status, log_error_to_management, check_pipeline_status
-
-log = logging.getLogger(__name__)
+import os
+from literature_enhancement.config import (LOGGING_LEVEL, LITERATURE_ENDPOINT, TARGET_LITERATURE_ENDPOINT, 
+    MAX_PMIDS_TO_PROCESS, RATE_LIMIT, MAX_RETRIES, BACKOFF_FACTOR, BASE_DELAY)
+logging.basicConfig(level=LOGGING_LEVEL)
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+log = logging.getLogger(module_name)
 
 
 class LiteratureExtractor:
