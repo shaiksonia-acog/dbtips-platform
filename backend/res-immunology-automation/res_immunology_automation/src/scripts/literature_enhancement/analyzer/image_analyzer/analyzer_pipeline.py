@@ -9,7 +9,7 @@ import logging
 import os
 module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
 from literature_enhancement.config import LOGGING_LEVEL
-logging.basicConfig(level=logging.LOGGING_LEVEL)
+logging.basicConfig(level=LOGGING_LEVEL)
 logger = logging.getLogger(module_name)
 
 class ThreeStageHybridAnalysisPipeline:

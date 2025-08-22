@@ -81,7 +81,7 @@ async def process_images_hybrid(images_data: List[ImageDataModel], disease: str,
             status = result.get('status', 'unknown')
             
             # Handle different result statuses
-            if is_disease_pathway == False:
+            if result.get("is_disease_pathway") == False:
                 filtered += 1
                 logger.debug(f"{prefix} Not a Pathway Figure: {pmcid}")
                 
@@ -91,7 +91,7 @@ async def process_images_hybrid(images_data: List[ImageDataModel], disease: str,
                     genes_validated += 1
                 logger.debug(f"{prefix} Success: {pmcid}")
                 
-            elif error_type in ["OpenAI Timeout", "MedGemma Timeout"]:
+            elif result.get("error_type") in ["OpenAI Timeout", "MedGemma Timeout"]:
                 # Timeout errors - record continues but log the timeout
                 timeout_errors += 1
                 logger.warning(f"{prefix} Timeout error: {pmcid} - {status}")
@@ -101,7 +101,7 @@ async def process_images_hybrid(images_data: List[ImageDataModel], disease: str,
                 gpu_memory_errors += 1
                 logger.warning(f"{prefix} GPU memory error (recovery attempted): {pmcid}")
                 
-            elif error_type in ["OpenAI Parsing Error"] or status == "analysis_error":
+            elif result.get("error_type") in ["OpenAI Parsing Error"] or status == "analysis_error":
                 # Critical errors that should have stopped the pipeline
                 critical_errors += 1
                 logger.error(f"{prefix} Critical error occurred but not raised: {pmcid} - {status}")
