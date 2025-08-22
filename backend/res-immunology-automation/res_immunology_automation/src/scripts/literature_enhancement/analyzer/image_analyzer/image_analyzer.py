@@ -263,6 +263,8 @@ async def check_medgemma_server_health():
         return False, f"Server returned HTTP {e.response.status_code}"
     except Exception as e:
         return False, f"Server check failed: {str(e)}"
+
+async def preload_medgemma_model():
     """
     Preload the MedGemma model before starting processing
     This helps avoid initial GPU memory allocation issues
