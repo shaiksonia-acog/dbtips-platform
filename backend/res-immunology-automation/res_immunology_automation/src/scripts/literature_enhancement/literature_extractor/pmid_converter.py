@@ -11,8 +11,9 @@ import aiohttp
 
 from literature_enhancement.config import NCBI_API_KEY, NCBI_EMAIL, NCBI_BASE_URL
 from .lit_utils import get_random_latency, retry_with_backoff
-
-log = logging.getLogger(__name__)
+import os
+module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
+log = logging.getLogger(module_name)
 
 
 class PMIDConverter:
@@ -227,7 +228,7 @@ class PMIDConverter:
             await asyncio.sleep(0.2)  # Rate limiting between conversions
         
         log.info(f"PMCID Conversion Summary:")
-        log.info(f"  - Successfully converted: {conversion_stats['converted']}/{len(pmids)} PMIDs")
+        log.info(f"  - PMCIDs Availability: {conversion_stats['converted']}/{len(pmids)} PMIDs")
         log.info(f"  - PMIDs without PMCIDs: {conversion_stats['no_pmcid']}/{len(pmids)}")
         
         # Step 2: Fetch full text for PMCIDs that were successfully converted

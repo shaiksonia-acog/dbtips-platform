@@ -115,7 +115,8 @@ def get_cache_record(db, disease: str, target: str) -> Tuple[Any, str]:
         endpoint = LITERATURE_ENDPOINT
     
     if not record:
-        raise ValueError(f"No cache record found for disease/target combination: {disease}/{target}")
+        raise ValueError(f"CACHE not available for disease-target combination: {disease}-{target}...")
+
     
     return record, endpoint
 

@@ -119,10 +119,10 @@ def retry_with_backoff(max_retries: int = 3, base_delay: float = 1.0):
                 except Exception as e:
                     if attempt == max_retries:
                         log.error(f"Failed after {max_retries} retries: {e}")
-                        raise
+                        raise e
                     
                     delay = base_delay * (2 ** attempt)
-                    log.warning(f"Attempt {attempt + 1} failed: {e}. Retrying in {delay:.1f}s...")
+                    log.debug(f"Attempt {attempt + 1} failed: {e}. Retrying in {delay:.1f}s...")
                     time.sleep(delay)
             
         return wrapper
