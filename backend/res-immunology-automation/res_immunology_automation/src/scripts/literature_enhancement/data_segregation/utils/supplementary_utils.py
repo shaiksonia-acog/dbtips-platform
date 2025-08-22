@@ -523,18 +523,19 @@ class SupplementaryMaterialsExtractor:
         
         # Enhanced description formatting with section labels and post-processing
         description = self._format_enhanced_description(contextual_descriptions)
-            
-        return {
-            "pmcid": pmcid,
-            "pmid": pmid,
-            "disease": disease,
-            "target": target,
-            "url": url,
-            "title": ", ".join(titles) if titles else "Supplementary Materials",
-            "description": description,
-            "file_names": ", ".join(file_urls) if file_urls else "",
-            "extraction_timestamp": datetime.utcnow().isoformat()
-        }
+        if description:
+            return {
+                "pmcid": pmcid,
+                "pmid": pmid,
+                "disease": disease,
+                "target": target,
+                "url": url,
+                "title": ", ".join(titles) if titles else "Supplementary Materials",
+                "description": description,
+                "file_names": ", ".join(file_urls) if file_urls else "",
+                "extraction_timestamp": datetime.utcnow().isoformat()
+            }
+        return None
     
     def _format_enhanced_description(self, contextual_descriptions: List[str]) -> str:
         """
@@ -547,7 +548,7 @@ class SupplementaryMaterialsExtractor:
             Formatted description string
         """
         if not contextual_descriptions:
-            return "No description available"
+            return None
         
         # Remove very similar descriptions to avoid redundancy
         unique_descriptions = self._remove_similar_descriptions(contextual_descriptions)
