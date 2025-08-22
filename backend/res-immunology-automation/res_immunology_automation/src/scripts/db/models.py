@@ -96,8 +96,9 @@ class LiteratureImagesAnalysis(Base):
     drugs = Column(Text)
     keywords = Column(Text)
     process = Column(Text)
-    is_disease_pathway = Column(Boolean)  # NEW COLUMN: True/False for disease pathway relevance
+    is_disease_pathway = Column(Boolean)  
     error_message = Column(Text)
+    error_type = Column(String)  
     status = Column(String)
 
 class LiteratureTablesAnalysis(Base):
@@ -110,7 +111,7 @@ class LiteratureTablesAnalysis(Base):
     url = Column(String)
     pmcid = Column(String, nullable=False)
     table_description = Column(String)
-    table_schema = Column(Text)  # renamed from "table/suppl schema schema" to valid identifier
+    table_schema = Column(Text)  
     analysis = Column(Text)
     keywords = Column(Text)
 
@@ -124,10 +125,10 @@ class LiteratureSupplementaryMaterialsAnalysis(Base):
     url = Column(String)
     pmcid = Column(String, nullable=False)
     description = Column(String)
-    file_names = Column(Text)  # renamed from "table/suppl schema schema" to valid identifier
+    file_names = Column(Text)  
     analysis = Column(Text)
     keywords = Column(Text)
-    title = Column(Text, nullable=True)  # <-- This is the new field you need to add
+    title = Column(Text, nullable=True) 
 
 class LiteratureEnhancementPipelineStatus(Base):
     __tablename__ = 'literature_enhancement_pipeline_status'
@@ -136,8 +137,6 @@ class LiteratureEnhancementPipelineStatus(Base):
     disease = Column(String, nullable=False)
     target = Column(String, nullable=False)
     pipeline_type = Column(String, nullable=False)
-
-    # pipeline status (initially empty, later updated)
     pipeline_status = Column(String, nullable=True)
 
     __table_args__ = (
