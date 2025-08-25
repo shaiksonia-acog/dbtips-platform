@@ -208,7 +208,7 @@ async def extract_literature(disease: str , target: str) -> bool:
             else:
                 # If we had some successes but also errors, still mark as completed
                 # since we made progress
-                if processing_stats_dict['success'] > 0:
+                if processing_stats_dict['success'] > 0 or processing_stats_dict['processed']>0:
                     logging.warning(f"{prefix} Completed with partial success - "
                                 f"Success: {processing_stats_dict['success']}, Errors: {processing_stats_dict['errors']}")
                     await create_pipeline_status(disease, target, "extraction", "completed")

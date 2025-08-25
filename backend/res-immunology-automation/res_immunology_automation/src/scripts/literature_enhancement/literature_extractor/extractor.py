@@ -206,15 +206,21 @@ class LiteratureExtractor:
                             log.debug(f"Successfully stored article PMID {pmid} with title: {title[:50]}...")
                         else:
                             error_count += 1
-                            log.warning(f"Failed to store article PMID {pmid}")
+                            error_msg = f"LITERATURE EXTRACTOR: Failed to store article PMID {pmid}"
+                            log.error(msg, exc_info=True)
+                            raise RuntimeError(msg) from e
                             
                     except Exception as e:
                         error_count += 1
-                        log.error(f"Error processing PMID {pmid}: {e}")
+                        error_msg = f"LITERATURE EXTRACTOR: Error processing PMID {pmid}: {e}"
+                        log.error(msg, exc_info=True)
+                        raise RuntimeError(msg) from e
 
             except Exception as e:
-                log.error(f"Error in combined PMID processing: {e}")
                 error_count = len(pmids)
+                msg = f"LITERATURE EXTRACTOR: Error in combined PMID processing (count={error_count}, pmids={pmids}): {e}"
+                log.error(msg, exc_info=True)
+                raise RuntimeError(msg) from e
 
         return processed_count, success_count, error_count
 

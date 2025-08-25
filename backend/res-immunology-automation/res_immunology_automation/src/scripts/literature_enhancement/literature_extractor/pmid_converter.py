@@ -57,50 +57,92 @@ class PMIDConverter:
         try:
             async with self.session.get(url, params=params) as response:
                 response.raise_for_status()
+                if params.get("format") == "json":
+                    return await response.json()
                 return await response.text()
         except Exception as e:
             log.error(f"Request failed for URL {url} with params {params}: {e}")
             raise
     
-    async def pmid_to_pmcid(self, pmid: str) -> Optional[str]:
-        """
-        Convert a single PMID to PMCID using pubmed_pmc linkname
+    # async def pmid_to_pmcid(self, pmid: str) -> Optional[str]:
+    #     """
+    #     Convert a single PMID to PMCID using pubmed_pmc linkname
     
+    #     Args:
+    #         pmid: PubMed ID
+        
+    #     Returns:
+    #         PMC ID if available, None otherwise
+    #     """
+    #     url = f"{self.base_url}/elink.fcgi"
+    #     params = self._build_eutils_params(
+    #         dbfrom='pubmed',
+    #         linkname='pubmed_pmc',
+    #         id=pmid,
+    #         retmode='xml'
+    #     )
+    
+    #     try:
+    #         response_text = await self._make_request(url, params)
+    #         root = ET.fromstring(response_text)
+        
+    #         # Look for PMC links with the specific linkname
+    #         for link_set in root.findall('.//LinkSet'):
+    #             for link_set_db in link_set.findall('.//LinkSetDb'):
+    #                 link_name = link_set_db.find('LinkName')
+    #                 if link_name is not None and link_name.text == 'pubmed_pmc':
+    #                     pmc_ids = link_set_db.findall('.//Id')
+    #                     if pmc_ids:
+    #                         pmc_id = pmc_ids[0].text
+    #                         log.debug(f"✓ Converted PMID {pmid} to PMCID {pmc_id}")
+    #                         return pmc_id
+        
+    #         log.debug(f"✗ No PMCID found for PMID {pmid}")
+    #         return None
+        
+    #     except Exception as e:
+    #         log.warning(f"Failed to convert PMID {pmid} to PMCID: {e}")
+    #         return None
+
+    async def pmid_to_pmcid(self, pmid: str, tool: str = "my_tool", email: str = NCBI_EMAIL) -> Optional[str]:
+        """
+        Converts a PubMed ID (PMID) to a PubMed Central ID (PMC ID) using the NCBI ID conversion API.
+
         Args:
-            pmid: PubMed ID
-        
+            pmid (str): The PubMed ID to convert.
+            tool (str, optional): The name of the tool making the request. Defaults to "my_tool".
+            email (str, optional): User's email address for NCBI API usage.
+
         Returns:
-            PMC ID if available, None otherwise
+            Optional[str]: The corresponding PMC ID if available, otherwise None.
         """
-        url = f"{self.base_url}/elink.fcgi"
-        params = self._build_eutils_params(
-            dbfrom='pubmed',
-            linkname='pubmed_pmc',
-            id=pmid,
-            retmode='xml'
-        )
-    
+        base_url = "https://www.ncbi.nlm.nih.gov/pmc/utils/idconv/v1.0/"
+        params = {
+            "tool": tool,
+            "email": email,
+            "ids": pmid,
+            "format": "json",
+            "api_key": NCBI_API_KEY
+        }
+
         try:
-            response_text = await self._make_request(url, params)
-            root = ET.fromstring(response_text)
-        
-            # Look for PMC links with the specific linkname
-            for link_set in root.findall('.//LinkSet'):
-                for link_set_db in link_set.findall('.//LinkSetDb'):
-                    link_name = link_set_db.find('LinkName')
-                    if link_name is not None and link_name.text == 'pubmed_pmc':
-                        pmc_ids = link_set_db.findall('.//Id')
-                        if pmc_ids:
-                            pmc_id = pmc_ids[0].text
-                            log.debug(f"✓ Converted PMID {pmid} to PMCID {pmc_id}")
-                            return pmc_id
-        
-            log.debug(f"✗ No PMCID found for PMID {pmid}")
-            return None
+            data = await self._make_request(base_url, params=params)
+
+            # Check for successful response
+            if data["status"] == "ok":
+                records = data.get("records", [])
+                if records:
+                    pmc_id = records[0].get("pmcid", None)  # Get the first record's PMC ID
+                    return pmc_id  # Return the PMC ID if found
+                else:
+                    print(f"No PMC ID found for PMID: {pmid}")
+                    return None  # No records found
+            else:
+                print(f"Error in response: {data.get('error', 'Unknown error')}")
+                return None  # Error in response
         
         except Exception as e:
-            log.warning(f"Failed to convert PMID {pmid} to PMCID: {e}")
-            return None
+            raise e
 
     async def pmids_to_pmcids(self, pmids: List[str]) -> Dict[str, Optional[str]]:
         """
