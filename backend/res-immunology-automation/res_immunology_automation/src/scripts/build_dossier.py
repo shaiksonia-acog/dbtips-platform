@@ -14,7 +14,7 @@ from api import get_evidence_literature_semaphore, get_mouse_studies, \
                 search_patents, get_complete_indication_pipeline, get_disease_gtr_data_semaphore, \
                 pgs_catalog_data
 
-
+from literature_enhancement.enhancement_runner import run_enhancement_pipeline
                 
 import logging
 import time
@@ -28,11 +28,6 @@ from sqlalchemy import update, String
 import os, sys
 import tzlocal
 from datetime import datetime, timezone
-from literature_extractor import extract_literature_with_titles
-from literature_segregation import (
-    run_literature_segregation_for_disease,
-    run_literature_segregation_for_target_disease
-)
 
 os.makedirs("logs", exist_ok=True)
 logging.basicConfig(
@@ -282,11 +277,13 @@ async def run_endpoints(job_data):
             get_diseases_profiles_llm,
             # get_complete_indication_pipeline,
             pgs_catalog_data,
-            get_disease_gtr_data_semaphore
+            get_disease_gtr_data_semaphore,
+        
         ]
 
         disease_only_endpoints = [
-            get_disease_ontology
+            get_disease_ontology,
+            run_enhancement_pipeline
         ]
 
         target_only_endpoints = [
@@ -307,7 +304,8 @@ async def run_endpoints(job_data):
             # get_target_pipeline_semaphore,
             get_target_pipeline_all_semaphore,
             get_evidence_target_literature,
-            search_patents
+            search_patents,
+            run_enhancement_pipeline
         ]
         
         target = job_data.get('target', None)
@@ -346,53 +344,16 @@ async def run_endpoints(job_data):
             for disease in unique_diseases:
                 for endpoint in disease_only_endpoints:
                     try:
-                        request_data = DiseaseRequest(disease=disease)
-                        logging.info(f"\t\t\tCalling {endpoint.__name__} for disease: {disease}")
-                        response = await endpoint(request_data, redis=redis, db=db)
+                        if endpoint.__name__ == 'run_enhancement_pipeline':
+                            logging.info(f"\t\t\tCalling {endpoint.__name__} for disease: {disease}")
+                            response = await endpoint(disease=disease)
+                        else:
+                            request_data = DiseaseRequest(disease=disease)
+                            logging.info(f"\t\t\tCalling {endpoint.__name__} for disease: {disease}")
+                            response = await endpoint(request_data, redis=redis, db=db)
                     except Exception as e:
                         logging.error(f"\t\t\t\tError calling {endpoint.__name__} for disease {disease}: {e}")
                         return 'error', endpoint.__name__ if callable(endpoint) else str(endpoint), str(e)
-
-            # Extract literature for disease
-            for disease in unique_diseases:
-                try:
-                    logging.info(f"\t\t\tStarting literature extraction for disease: {disease}")
-                    success = await extract_literature_with_titles(db, disease)
-                    if success:
-                        logging.info(f"\t\t\t\tLiterature extraction successful for disease: {disease}")
-                    else:
-                        logging.warning(f"\t\t\t\tLiterature extraction failed for disease: {disease}")
-                        return 'error', 'literature_extraction', f'Literature extraction failed for disease: {disease}'
-                except Exception as e:
-                    logging.error(f"\t\t\t\tError in literature extraction for disease {disease}: {e}")
-                    return 'error', 'literature_extraction', str(e)
-                await asyncio.sleep(5)
-
-            # NEW: Run literature data segregation for disease
-            for disease in unique_diseases:
-                try:
-                    logging.info(f"\t\t\tStarting literature data segregation for disease: {disease}")
-                    segregation_results = await run_literature_segregation_for_disease(
-                        db_session=db,
-                        disease=disease,
-                        openai_api_key=os.getenv('OPENAI_API_KEY'),
-                        batch_size=50
-                    )
-                    
-                    if segregation_results['errors']:
-                        logging.warning(f"\t\t\t\tLiterature segregation had errors for disease {disease}: {segregation_results['errors']}")
-                    else:
-                        logging.info(f"\t\t\t\tLiterature segregation successful for disease {disease}: "
-                                   f"Supplementary: {segregation_results['supplementary_materials']}, "
-                                   f"Figures: {segregation_results['figures']}, "
-                                   f"Tables: {segregation_results['tables']}")
-                    
-                except Exception as e:
-                    logging.error(f"\t\t\t\tError in literature data segregation for disease {disease}: {e}")
-                    # Don't return error here as segregation failure shouldn't stop dossier building
-                    # But log it for monitoring
-                    
-                await asyncio.sleep(5)
         
         else: # Target Dossier
             # Target-only endpoints
@@ -420,12 +381,16 @@ async def run_endpoints(job_data):
                     if endpoint.__name__ == "get_target_pipeline_all_semaphore":
                         request_data = TargetRequest(target=target, diseases=pipeline_inp)
                         logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target} and disease: {pipeline_inp}")
+                    
                     else:
                         request_data = TargetRequest(target=target, diseases=oth_inp)
                         logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target} and disease: {oth_inp}")
                     
                     if endpoint.__name__ in ['get_evidence_target_literature']:
                         response = await endpoint(request_data, db=db, build_cache=True)
+                    elif endpoint.__name__ == 'run_enhancement_pipeline':
+                        logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target} and disease: {disease}")
+                        response = await endpoint(disease=disease, target=target)
                     else:
                         response = await endpoint(request_data, redis=redis, db=db, build_cache=True)
 
@@ -433,45 +398,6 @@ async def run_endpoints(job_data):
                     logging.error(f"\t\t\t\tError calling {endpoint.__name__} for  {target} and {disease}: {e}")
                     return 'error', endpoint.__name__ if callable(endpoint) else str(endpoint), str(e)
 
-            # Extract literature for target-disease combination 
-            try:
-                actual_disease = disease if disease != 'no-disease' else None
-                logging.info(f"\t\t\tStarting literature extraction for target-disease: {target}-{disease}")
-                success = await extract_literature_with_titles(db, actual_disease, target)
-                if success:
-                    logging.info(f"\t\t\t\tLiterature extraction successful for target-disease: {target}-{disease}")
-                else:
-                    logging.warning(f"\t\t\t\tLiterature extraction failed for target-disease: {target}-{disease}")
-                    return 'error', 'literature_extraction', f'Literature extraction failed for target-disease: {target}-{disease}'
-            except Exception as e:
-                logging.error(f"\t\t\t\tError in literature extraction for target-disease {target}-{disease}: {e}")
-                return 'error', 'literature_extraction', str(e)
-            await asyncio.sleep(5)
-
-            # NEW: Run literature data segregation for target-disease
-            try:
-                actual_disease = disease if disease != 'no-disease' else None
-                logging.info(f"\t\t\tStarting literature data segregation for target-disease: {target}-{disease}")
-                segregation_results = await run_literature_segregation_for_target_disease(
-                    db_session=db,
-                    target=target,
-                    disease=actual_disease,
-                    openai_api_key=os.getenv('OPENAI_API_KEY'),
-                    batch_size=50
-                )
-                
-                if segregation_results['errors']:
-                    logging.warning(f"\t\t\t\tLiterature segregation had errors for target-disease {target}-{disease}: {segregation_results['errors']}")
-                else:
-                    logging.info(f"\t\t\t\tLiterature segregation successful for target-disease {target}-{disease}: "
-                               f"Supplementary: {segregation_results['supplementary_materials']}, "
-                               f"Figures: {segregation_results['figures']}, "
-                               f"Tables: {segregation_results['tables']}")
-                
-            except Exception as e:
-                logging.error(f"\t\t\t\tError in literature data segregation for target-disease {target}-{disease}: {e}")
-                # Don't return error here as segregation failure shouldn't stop dossier building
-                
             await asyncio.sleep(5)
 
         await asyncio.sleep(5)
