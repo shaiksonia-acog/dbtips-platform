@@ -371,16 +371,16 @@ class SupplementaryMaterialsUtils:
         if media_elem:
             href = media_elem.get('xlink:href') or media_elem.get('href')
             if href:
-                title = self._extract_clean_title(supp_mat_tag)
+                description = self._extract_clean_description(supp_mat_tag)
                 url = self._build_supplementary_url_from_href(href, pmcid)
-                return {'url': url, 'title': title, 'original_href': href}
+                return {'url': url, 'description': description, 'original_href': href}
         
         ext_link = supp_mat_tag.find('ext-link')
         if ext_link:
             href = ext_link.get('xlink:href') or ext_link.get('href')
             if href and self._is_supplementary_file_url(href):
-                title = self._extract_clean_title(supp_mat_tag)
-                return {'url': href, 'title': title, 'original_href': href}
+                description = self._extract_clean_description(supp_mat_tag)
+                return {'url': href, 'description': description, 'original_href': href}
         
         return None
     
@@ -391,9 +391,9 @@ class SupplementaryMaterialsUtils:
         for link in all_links:
             href = link.get('xlink:href') or link.get('href') or ''
             if href and self._is_supplementary_file_url(href):
-                title = self._extract_clean_title(link.parent if link.parent else link)
+                description = self._extract_clean_description(link.parent if link.parent else link)
                 url = href if href.startswith('http') else self._build_supplementary_url_from_href(href, pmcid)
-                materials.append({'url': url, 'title': title, 'original_href': href})
+                materials.append({'url': url, 'description': description, 'original_href': href})
         return materials
     
     def _extract_from_back_matter(self, back_elem, pmcid: str) -> List[Dict]:
@@ -430,32 +430,32 @@ class SupplementaryMaterialsUtils:
         clean_pmcid = pmcid.replace("PMC", "") if pmcid.startswith("PMC") else pmcid
         return f"https://pmc.ncbi.nlm.nih.gov/articles/instance/{clean_pmcid}/bin/{file_name}"
     
-    def _extract_clean_title(self, element) -> str:
-        """Extract a clean title for supplementary material"""
-        title = ""
+    def _extract_clean_description(self, element) -> str:
+        """Extract a clean description for supplementary material"""
+        description = ""
         caption_selectors = ['caption', 'title', 'label']
         for selector in caption_selectors:
             caption_elem = element.find(selector)
             if caption_elem:
                 caption_text = caption_elem.get_text(strip=True)
                 if caption_text and len(caption_text) > 5:
-                    title = caption_text
+                    description = caption_text
                     break
         
-        if not title:
+        if not description:
             element_text = element.get_text(strip=True)
             if element_text and len(element_text) > 10 and not self._looks_like_filename(element_text):
-                title = element_text[:200]
+                description = element_text[:200]
         
-        if title:
-            title = re.sub(r'\s+', ' ', title.strip())
-            title = re.sub(r'(Download|View|Click here)[^.]*\.', '', title, flags=re.IGNORECASE)
-            title = title.strip()
+        if description:
+            description = re.sub(r'\s+', ' ', description.strip())
+            description = re.sub(r'(Download|View|Click here)[^.]*\.', '', description, flags=re.IGNORECASE)
+            description = description.strip()
         
-        return title or "Supplementary Material"
+        return description or "Supplementary Material"
     
     def _looks_like_filename(self, text: str) -> bool:
-        """Check if text looks like a filename rather than a title"""
+        """Check if text looks like a filename rather than a description"""
         if not text:
             return False
         file_extensions = ['.xls', '.xlsx', '.doc', '.docx', '.pdf', '.zip', 
@@ -508,12 +508,12 @@ class SupplementaryMaterialsExtractor:
             return None
 
         # Group all materials into a single record
-        titles = []
+        descriptions = []
         file_urls = []
         
         for material in all_materials:
-            if material['title'] and material['title'] not in titles:
-                titles.append(material['title'])
+            if material['description'] and material['description'] not in descriptions:
+                descriptions.append(material['description'])
             if material['url'] and material['url'] not in file_urls:
                 file_urls.append(material['url'])
         
@@ -521,31 +521,31 @@ class SupplementaryMaterialsExtractor:
         if not file_urls and not contextual_descriptions:
             return None
         
-        # Enhanced description formatting with section labels and post-processing
-        description = self._format_enhanced_description(contextual_descriptions)
-        if description:
+        # Enhanced context_chunks formatting with section labels and post-processing
+        context_chunks = self._format_enhanced_context_chunks(contextual_descriptions)
+        if context_chunks:
             return {
                 "pmcid": pmcid,
                 "pmid": pmid,
                 "disease": disease,
                 "target": target,
                 "url": url,
-                "title": ", ".join(titles) if titles else "Supplementary Materials",
-                "description": description,
+                "description": ", ".join(descriptions) if descriptions else "Supplementary Materials",
+                "context_chunks": context_chunks,
                 "file_names": ", ".join(file_urls) if file_urls else "",
                 "extraction_timestamp": datetime.utcnow().isoformat()
             }
         return None
     
-    def _format_enhanced_description(self, contextual_descriptions: List[str]) -> str:
+    def _format_enhanced_context_chunks(self, contextual_descriptions: List[str]) -> str:
         """
-        Format the enhanced description with better structure and readability
+        Format the enhanced context_chunks with better structure and readability
         
         Args:
             contextual_descriptions: List of section-labeled and post-processed descriptions
             
         Returns:
-            Formatted description string
+            Formatted context_chunks string
         """
         if not contextual_descriptions:
             return None
@@ -648,4 +648,3 @@ class SupplementaryMaterialsExtractor:
         
         similarity = len(intersection) / len(union) if union else 0
         return similarity >= threshold
-    

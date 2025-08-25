@@ -2,8 +2,8 @@
 Enhanced Supplementary Materials Data Segregation Module
 
 This module extracts supplementary materials data from ArticlesMetadata.raw_full_text (NXML format) 
-and populates the LiteratureSupplementaryMaterialsAnalysis table with file URLs, titles, and 
-properly labeled contextual descriptions.
+and populates the LiteratureSupplementaryMaterialsAnalysis table with file URLs, descriptions, and 
+properly labeled contextual context_chunks.
 """
 
 import logging
@@ -79,8 +79,8 @@ class SupplementaryMaterialsSegregator(SupplementaryMaterialsExtractor):
             target=material_data["target"],
             url=material_data["url"],
             pmcid=material_data["pmcid"],
-            title=material_data["title"],
             description=material_data["description"],
+            context_chunks=material_data["context_chunks"],
             file_names=material_data["file_names"]
         )
         
@@ -145,10 +145,10 @@ class SupplementaryMaterialsSegregator(SupplementaryMaterialsExtractor):
                 "message": "Supplementary materials extracted successfully",
                 "data": material_data,
                 "preview": {
-                    "title": material_data["title"],
+                    "description": material_data["description"],
                     "file_count": len(material_data["file_names"].split(", ")) if material_data["file_names"] else 0,
-                    "description_length": len(material_data["description"]),
-                    "description_preview": material_data["description"][:200] + "..." if len(material_data["description"]) > 200 else material_data["description"]
+                    "context_chunks_length": len(material_data["context_chunks"]),
+                    "context_chunks_preview": material_data["context_chunks"][:200] + "..." if len(material_data["context_chunks"]) > 200 else material_data["context_chunks"]
                 }
             }
             
@@ -176,10 +176,10 @@ def main():
         print("2. segregator.process_articles(target, disease) - Process articles for target/disease")
         print("3. segregator.preview_extraction(pmcid, pmid) - Preview extraction for a single article")
         print("\nEnhancements:")
-        print("- Section names are included in descriptions (e.g., [Methods], [Results - Data Analysis])")
-        print("- Disease keywords are filtered out from descriptions")
-        print("- Duplicate and similar descriptions are removed")
-        print("- Better formatting for multiple contextual descriptions")
+        print("- Section names are included in context_chunks (e.g., [Methods], [Results - Data Analysis])")
+        print("- Disease keywords are filtered out from context_chunks")
+        print("- Duplicate and similar context_chunks are removed")
+        print("- Better formatting for multiple contextual context_chunks")
         
         # Example usage
         print(f"\nExample usage:")

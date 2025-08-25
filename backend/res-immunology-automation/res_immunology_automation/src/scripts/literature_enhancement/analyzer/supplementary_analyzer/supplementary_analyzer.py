@@ -115,7 +115,7 @@ async def analyse_supplementary_materials(supplementary_data: List[Dict], diseas
         
         try:
             logger.info(f"\n{prefix} Processing {idx}/{total_materials}: {pmcid}")
-            logger.info(f"Processing supplementary material from PMCID: {pmcid} - {suppl_data.get('title', 'No title')[:100]}...")
+            logger.info(f"Processing supplementary material from PMCID: {pmcid} - {suppl_data.get('description', 'No description')[:100]}...")
             
             # Analyze the supplementary material with retry mechanism
             # This may raise RuntimeError for critical errors

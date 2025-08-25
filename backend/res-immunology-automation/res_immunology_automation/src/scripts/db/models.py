@@ -116,19 +116,19 @@ class LiteratureTablesAnalysis(Base):
     keywords = Column(Text)
 
 class LiteratureSupplementaryMaterialsAnalysis(Base):
-    __tablename__ = 'literature_supplmentary_materials_analysis'
+    __tablename__ = 'literature_supplementary_materials_analysis'  # Fixed: was 'tablename'
 
     index = Column(Integer, primary_key=True, autoincrement=True)
     pmid = Column(String, nullable=False)
-    disease = Column(String, nullable=False, default="no-disease" )
+    disease = Column(String, nullable=False, default="no-disease")
     target = Column(String, nullable=False, default="no-target")
     url = Column(String)
     pmcid = Column(String, nullable=False)
-    description = Column(String)
-    file_names = Column(Text)  
+    context_chunks = Column(String)
+    file_names = Column(Text)  # Fixed: was 'Colxumn'
     analysis = Column(Text)
     keywords = Column(Text)
-    title = Column(Text, nullable=True) 
+    description = Column(Text, nullable=True)
 
 class LiteratureEnhancementPipelineStatus(Base):
     __tablename__ = 'literature_enhancement_pipeline_status'
