@@ -51,3 +51,8 @@ class DiseaseDrugsMapping(BaseModel):
 class DiseasesTarget(BaseModel):
     disease: List[str] | str = "no-disease"
     target: str = "no-target"
+
+class LiteratureAnalysisRequest(BaseModel):
+    targets: List[str] = Field(default_factory=lambda: ["no-target"])
+    diseases: List[str] = Field(default_factory=lambda: ["no-disease"])
+

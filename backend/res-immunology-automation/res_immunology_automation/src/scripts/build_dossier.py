@@ -1,18 +1,39 @@
-from db.database import get_db, Base # , engine, , SessionLocal
+from db.database import get_db, Base
 from db.models import DiseaseDossierStatus, ErrorManagement, TargetDossierStatus
 
-from api_models import DiseasesRequest, DiseaseRequest, TargetOnlyRequest, TargetRequest
-from api import get_evidence_literature_semaphore, get_mouse_studies, \
-                get_network_biology_semaphore, get_top_10_literature, \
-                get_diseases_profiles, get_indication_pipeline_semaphore, \
-                get_kol, get_key_influencers, get_rna_sequence_semaphore, \
-                get_disease_ontology, get_diseases_profiles_llm, get_target_details, \
-                get_ontology, get_protein_expressions, get_subcellular, \
-                get_anatomy, get_protein_structure, get_target_mouse_studies, \
-                get_targetability, get_gene_essentiality_map, get_tractability, \
-                get_paralogs, get_target_pipeline_all_semaphore, get_evidence_target_literature, \
-                search_patents, get_complete_indication_pipeline, get_disease_gtr_data_semaphore, \
-                pgs_catalog_data
+from api_models import DiseasesRequest, DiseaseRequest, TargetOnlyRequest, TargetRequest, LiteratureAnalysisRequest
+from api import (
+    get_evidence_literature_semaphore, 
+    get_mouse_studies,
+    get_network_biology_semaphore, 
+    get_top_10_literature,
+    get_diseases_profiles, 
+    get_indication_pipeline_semaphore,
+    get_kol, 
+    get_key_influencers,
+    get_rna_sequence_semaphore,
+    get_disease_ontology, 
+    get_diseases_profiles_llm,
+    get_target_details,
+    get_ontology, 
+    get_protein_expressions,
+    get_subcellular,
+    get_anatomy, 
+    get_protein_structure,
+    get_target_mouse_studies,
+    get_targetability, 
+    get_gene_essentiality_map,
+    get_tractability,
+    get_paralogs, 
+    get_target_pipeline_all_semaphore,
+    get_evidence_target_literature,
+    search_patents, 
+    get_complete_indication_pipeline,
+    get_disease_gtr_data_semaphore,
+    pgs_catalog_data,
+    get_literature_table_analysis,
+    get_literature_supplementary_materials_analysis
+)
 
 from literature_enhancement.enhancement_runner import run_enhancement_pipeline
                 
@@ -31,7 +52,7 @@ from datetime import datetime, timezone
 
 os.makedirs("logs", exist_ok=True)
 logging.basicConfig(
-    filename="logs/build_dossier.log",  # Log file location
+    filename="logs/build_dossier.log",
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
@@ -44,6 +65,7 @@ POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD")
 POSTGRES_DB: str = os.getenv("POSTGRES_DB")
 POSTGRES_HOST: str = os.getenv("POSTGRES_HOST")
 error_count_threshold = 3
+
 if any(var is None for var in [POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_HOST]):
     logging.info("Connection parameters not configured properly")
     sys.exit()
@@ -60,13 +82,10 @@ SessionLocal = async_sessionmaker(
 )
 
 async def create_models():
-    # This will create the tables for all models defined with Base
-    # Base.metadata.create_all(bind=engine)
-    async with engine.begin() as conn:  # `engine.begin()` ensures the connection is properly initialized
+    async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
 async def fetch_processing_records(db):
-
     processing_records = None
     disease_result = await db.execute(
         select(DiseaseDossierStatus).where(DiseaseDossierStatus.status == "processing")
@@ -109,7 +128,6 @@ async def fetch_pending_jobs(db):
         TargetDossierStatus.status.label("status"),
         TargetDossierStatus.error_count.label("error_count"),
         TargetDossierStatus.creation_time.label("creation_time")
-
         ).where(
             and_(
                 TargetDossierStatus.status.in_(["error", "submitted"]),
@@ -119,7 +137,7 @@ async def fetch_pending_jobs(db):
     
     combined_query = union_all(disease_query, target_query).order_by("creation_time")
     
-    result =  await db.execute(combined_query)
+    result = await db.execute(combined_query)
     column_names = result.keys()
     pending_records = result.fetchall()
 
@@ -127,7 +145,6 @@ async def fetch_pending_jobs(db):
         for record in pending_records:
             record_dict = dict(zip(column_names, record))
 
-            # Use named attribute access with dictionary keys
             if record_dict.get("target") is not None:
                 job_id = 't' + str(record.job_id)
                 pending_jobs[job_id] = {"target": record.target, "disease": record.disease, "error_count": record.error_count}
@@ -142,17 +159,15 @@ async def fetch_error_count(db, **values):
     if target is None:
         query = select(DiseaseDossierStatus).where(
             DiseaseDossierStatus.disease == disease)
-        
     else:
         query = select(TargetDossierStatus).where(
             and_(
-        TargetDossierStatus.disease == disease,
-        TargetDossierStatus.target == target
+                TargetDossierStatus.disease == disease,
+                TargetDossierStatus.target == target
             )
         )
     
-    result =  await db.execute(query)
-    
+    result = await db.execute(query)
     pending_records = result.scalars().all()
     
     if pending_records:
@@ -169,18 +184,14 @@ async def update_record_status(db, table, **values):
             .where(table.disease == disease)
             .values(**params)
         )
-
         logging.info(f"updating status for Disease Record for {disease} to {params['status']}")
-    
     else:
         params = {k: v for k, v in values.items() if k not in ['disease', 'target']}
-
         update_stmt = (
             update(table)
             .where(and_(table.disease == disease, table.target == target))
             .values(**params)
         )
-
         logging.info(f"updating status for Target Record for {target}-{disease} to {params['status']}")
 
     await db.execute(update_stmt) 
@@ -190,17 +201,13 @@ async def build_dossier():
     logging.info("dossier started")
     global task_started
     if task_started:
-        return  # Prevent multiple instances from starting
+        return
     task_started = True
 
-    # db = get_db()
     while True:
-
         async with SessionLocal() as db:
             logging.info("connection created")
             processing_records = await fetch_processing_records(db)
-
-            # processing_records = [record for record in processing_records if record]
             logging.info(f"Processing jobs: {processing_records}")
             
             try:
@@ -220,43 +227,34 @@ async def build_dossier():
                             values['disease'] = job['disease']
                         logging.info(f"processing jobs: {job}")
 
-                        #change the status of current building disease to processing and processing_time
                         await update_record_status(db, job_type, **values)
                         
-                        # run all endpoints for the disease
-                        build_status, endpoint, e= await run_endpoints(values)
+                        build_status, endpoint, e = await run_endpoints(values)
                         local_time = datetime.now(tzlocal.get_localzone())
 
-                        # update the status and processed_time according to the build status
                         if build_status != 'error':
                             values.update({'status':build_status, 'processed_time':local_time})
                             await update_record_status(db, job_type, **values)
-                            
                         else:
-                            # update the corresponding status record to error
                             error_count = job['error_count'] + 1
                             values.update({'status':build_status, 'processed_time':local_time, 'error_count': error_count})
                             await update_record_status(db, job_type, **values)
                             
-                            # make an entry in error management table
                             new_record = ErrorManagement(job_details=job_id,
-                                    endpoint=endpoint, error_description=e, error_encountered_time=local_time)  # Create a new instance of the identified model
-                            db.add(new_record)  # Add the new record to the session
-
+                                    endpoint=endpoint, error_description=e, error_encountered_time=local_time)
+                            db.add(new_record)
                             await db.commit()
                         logging.info(f"updated status: {job}")
 
                 await asyncio.sleep(WAIT_TIME)
             except Exception as e:
                 logging.error(f"Error in build_dossier: {e}")
-
             finally:
                 await db.close()
                 logging.info("connection closed")
         break
 
 async def run_endpoints(job_data):
-    
     try:
         db = next(get_db())
         redis = get_redis()
@@ -265,20 +263,18 @@ async def run_endpoints(job_data):
 
         # Define endpoint categories 
         diseases_only_endpoints = [
-            get_evidence_literature_semaphore, 
-            get_mouse_studies, 
-            get_network_biology_semaphore, 
-            get_top_10_literature, 
-            get_diseases_profiles, 
-            get_indication_pipeline_semaphore, 
-            get_kol, 
-            get_key_influencers, 
-            get_rna_sequence_semaphore,
-            get_diseases_profiles_llm,
-            # get_complete_indication_pipeline,
-            pgs_catalog_data,
-            get_disease_gtr_data_semaphore,
-        
+            # get_evidence_literature_semaphore, 
+            # get_mouse_studies, 
+            # get_network_biology_semaphore, 
+            # get_top_10_literature, 
+            # get_diseases_profiles, 
+            # get_indication_pipeline_semaphore, 
+            # get_kol, 
+            # get_key_influencers, 
+            # get_rna_sequence_semaphore,
+            # get_diseases_profiles_llm,
+            # pgs_catalog_data,
+            # get_disease_gtr_data_semaphore,
         ]
 
         disease_only_endpoints = [
@@ -301,20 +297,25 @@ async def run_endpoints(job_data):
         ]
 
         target_disease_endpoints = [
-            # get_target_pipeline_semaphore,
             get_target_pipeline_all_semaphore,
             get_evidence_target_literature,
             search_patents,
-            run_enhancement_pipeline
+            run_enhancement_pipeline,
+        ]
+
+        # These endpoints run after enhancement pipeline completes
+        literature_analysis_endpoints = [
+            get_literature_table_analysis,
+            get_literature_supplementary_materials_analysis
         ]
         
         target = job_data.get('target', None)
         disease = job_data.get('disease', None)
 
-        if target is None: # Disease Dossier
+        if target is None:  # Disease Dossier
             unique_diseases = [disease]
 
-            # Call diseases-only endpoint 
+            # Call diseases-only endpoints 
             for endpoint in diseases_only_endpoints:
                 try:
                     request_data = DiseasesRequest(diseases=unique_diseases)
@@ -340,7 +341,7 @@ async def run_endpoints(job_data):
                     return 'error', endpoint.__name__ if callable(endpoint) else str(endpoint), str(e)
                 await asyncio.sleep(5)
 
-            # Call disease-only endpoints
+            # Call disease-only endpoints (including enhancement pipeline)
             for disease in unique_diseases:
                 for endpoint in disease_only_endpoints:
                     try:
@@ -354,8 +355,20 @@ async def run_endpoints(job_data):
                     except Exception as e:
                         logging.error(f"\t\t\t\tError calling {endpoint.__name__} for disease {disease}: {e}")
                         return 'error', endpoint.__name__ if callable(endpoint) else str(endpoint), str(e)
+
+            # Run literature analysis endpoints after enhancement pipeline
+            for endpoint in literature_analysis_endpoints:
+                try:
+                    request_data = LiteratureAnalysisRequest(diseases=unique_diseases)
+                    logging.info(f"\t\t\tCalling {endpoint.__name__} for diseases: {unique_diseases}")
+                    response = await endpoint(request_data, db=db, build_cache=True)
+                    logging.info(f"\t\t\t\t{endpoint.__name__} completed")
+                except Exception as e:
+                    logging.error(f"\t\t\t\tError calling {endpoint.__name__} for {unique_diseases}: {e}")
+                    return 'error', endpoint.__name__ if callable(endpoint) else str(endpoint), str(e)
+                await asyncio.sleep(5)
         
-        else: # Target Dossier
+        else:  # Target Dossier
             # Target-only endpoints
             for endpoint in target_only_endpoints:
                 try:
@@ -365,7 +378,6 @@ async def run_endpoints(job_data):
                 except Exception as e:
                     logging.error(f"\t\t\t\tError calling {endpoint.__name__} for target {target}: {e}")
                     return 'error', endpoint.__name__ if callable(endpoint) else str(endpoint), str(e)
-
                 await asyncio.sleep(5)
 
             if disease == 'no-disease':
@@ -375,30 +387,45 @@ async def run_endpoints(job_data):
                 pipeline_inp = [disease]
                 oth_inp = [disease]
 
-            # Target-disease endpoints
+            # Target-disease endpoints (including enhancement pipeline)
             for endpoint in target_disease_endpoints:
                 try:
                     if endpoint.__name__ == "get_target_pipeline_all_semaphore":
                         request_data = TargetRequest(target=target, diseases=pipeline_inp)
                         logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target} and disease: {pipeline_inp}")
-                    
-                    else:
+                        response = await endpoint(request_data, redis=redis, db=db, build_cache=True)
+                    elif endpoint.__name__ in ['get_evidence_target_literature']:
                         request_data = TargetRequest(target=target, diseases=oth_inp)
                         logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target} and disease: {oth_inp}")
-                    
-                    if endpoint.__name__ in ['get_evidence_target_literature']:
                         response = await endpoint(request_data, db=db, build_cache=True)
                     elif endpoint.__name__ == 'run_enhancement_pipeline':
                         logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target} and disease: {disease}")
                         response = await endpoint(disease=disease, target=target)
                     else:
+                        request_data = TargetRequest(target=target, diseases=oth_inp)
+                        logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target} and disease: {oth_inp}")
                         response = await endpoint(request_data, redis=redis, db=db, build_cache=True)
 
                 except Exception as e:
-                    logging.error(f"\t\t\t\tError calling {endpoint.__name__} for  {target} and {disease}: {e}")
+                    logging.error(f"\t\t\t\tError calling {endpoint.__name__} for {target} and {disease}: {e}")
                     return 'error', endpoint.__name__ if callable(endpoint) else str(endpoint), str(e)
 
             await asyncio.sleep(5)
+
+            # Run literature analysis endpoints after enhancement pipeline
+            for endpoint in literature_analysis_endpoints:
+                try:
+                    if disease == 'no-disease':
+                        request_data = LiteratureAnalysisRequest(targets=[target])
+                    else:
+                        request_data = LiteratureAnalysisRequest(diseases=[disease], targets=[target])
+                    logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target} and disease: {disease}")
+                    response = await endpoint(request_data, db=db, build_cache=True)
+                    logging.info(f"\t\t\t\t{endpoint.__name__} completed")
+                except Exception as e:
+                    logging.error(f"\t\t\t\tError calling {endpoint.__name__} for {target} and {disease}: {e}")
+                    return 'error', endpoint.__name__ if callable(endpoint) else str(endpoint), str(e)
+                await asyncio.sleep(5)
 
         await asyncio.sleep(5)
         
@@ -409,13 +436,10 @@ async def run_endpoints(job_data):
         logging.info("\t\tconnection closed in endpoints")
         logging.info("="*80)
 
-
 async def main():
     """Main entry point to initialize database and start dossier processing."""
     await create_models()
     await build_dossier()
 
-
 if __name__ == "__main__":
-    # time.sleep(100)
     asyncio.run(main())
