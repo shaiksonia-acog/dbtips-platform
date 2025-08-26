@@ -29,7 +29,7 @@ class BaseSupplementaryAnalyzer(ABC):
         pass
 
     @abstractmethod
-    def get_user_prompt(self, title: str, description: str, file_names: str, url: str = None) -> str:
+    def get_user_prompt(self, description: str, context_chunks: str, file_names: str, url: str = None) -> str:
         pass
 
     @abstractmethod
@@ -38,17 +38,17 @@ class BaseSupplementaryAnalyzer(ABC):
 
     async def analyze(self, suppl_data: Dict) -> Dict:
         """Analyze supplementary material data using the configured model"""
-        title = suppl_data.get("title", "").strip()
         description = suppl_data.get("description", "").strip()
+        context_chunks = suppl_data.get("context_chunks", "").strip()
         file_names = suppl_data.get("file_names", "")
         url = suppl_data.get("url", "")
         
-        # Ensure both title and description are present
-        if not title or not description:
-            return self._error_response("Missing title or description", "error")
+        # Ensure both description and context_chunks are present
+        if not description or not context_chunks:
+            return self._error_response("Missing description or context_chunks", "error")
         
-        # Check if description indicates no proper content
-        if description.lower() == "no description available":
+        # Check if context_chunks indicates no proper content
+        if context_chunks.lower() == "no description available":
             return {
                 "analysis": "there wasnt a proper context for this article to perform analysis",
                 "keywords": "there wasnt a proper context for this article to perform analysis",
@@ -64,7 +64,7 @@ class BaseSupplementaryAnalyzer(ABC):
                 },
                 {
                     "role": "user", 
-                    "content": self.get_user_prompt(title, description, file_names, url)
+                    "content": self.get_user_prompt(description, context_chunks, file_names, url)
                 }
             ],
             "temperature": 0.1,
@@ -114,7 +114,7 @@ class OpenAISupplementaryAnalyzer(BaseSupplementaryAnalyzer):
         return "https://api.openai.com/v1/chat/completions"
 
     def get_system_prompt(self) -> str:
-        return """You are a specialized biomedical researcher with expertise in analyzing supplementary materials from scientific publications. Your role is to provide detailed medical and scientific insights about supplementary materials based on their titles and chunks of texts which discuss or describe.
+        return """You are a specialized biomedical researcher with expertise in analyzing supplementary materials from scientific publications. Your role is to provide detailed medical and scientific insights about supplementary materials based on their descriptions and chunks of texts which discuss or describe.
 
                 Focus on:
                     - Areas that talks about supplementary informations and additional data attached to the article
@@ -155,15 +155,15 @@ class OpenAISupplementaryAnalyzer(BaseSupplementaryAnalyzer):
                     - Use professional biomedical terminology appropriately
                     - Be specific about the type of data and its scientific value"""
 
-    def get_user_prompt(self, title: str, description: str, file_names: str, url: str = None) -> str:
+    def get_user_prompt(self, description: str, context_chunks: str, file_names: str, url: str = None) -> str:
         file_info = f"\n\nFile Names: {file_names}" if file_names else ""
         url_info = f"\nURL: {url}" if url else ""
         
         return f"""Analyze this supplementary material from a biomedical research publication. Provide detailed medical and scientific insights about its content and significance, along with crucial clinical/medical keywords.
 
-Title: {title}
+Description: {description}
 
-Description: {description}{file_info}{url_info}
+Context Chunks: {context_chunks}{file_info}{url_info}
 
 Provide:
 1. A comprehensive biomedical analysis focusing on clinical relevance, study methodology, therapeutic implications, and research significance

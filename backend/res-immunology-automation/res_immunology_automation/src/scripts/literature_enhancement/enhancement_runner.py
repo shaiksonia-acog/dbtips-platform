@@ -1,3 +1,4 @@
+import os
 import sys
 sys.path.append('/app/res-immunology-automation/res_immunology_automation/src/scripts/')
 from literature_enhancement.analyzer.literature_analyzer import run_analyzers
