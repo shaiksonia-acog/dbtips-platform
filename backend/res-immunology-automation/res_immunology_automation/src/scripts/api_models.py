@@ -47,3 +47,7 @@ class SearchRequest(BaseModel):
 class DiseaseDrugsMapping(BaseModel):
     disease: str
     approved_drugs: List[str]
+
+class DiseasesTarget(BaseModel):
+    disease: List[str] | str = "no-disease"
+    target: str = "no-target"

@@ -45,7 +45,7 @@ from services import (
     # parse_safety_events,
 )
 from api_models import TargetRequest, GraphRequest, DiseaseRequest, SearchQueryModel, DiseasesRequest, \
-    SearchRequest, TargetOnlyRequest,ExcelExportRequest, DiseaseDrugsMapping, DiseaseRequestOnto
+    SearchRequest, TargetOnlyRequest,ExcelExportRequest, DiseaseDrugsMapping, DiseaseRequestOnto, DiseaseRequest
 from utils import format_for_cytoscape, get_efo_id, find_disease_id_by_name, send_graphql_request, \
     save_response_to_file, load_response_from_file, calculate_expiry_date, add_years, \
     save_big_response_to_file, \
@@ -64,7 +64,7 @@ from component_services.market_intelligence_service import extract_nct_ids, fetc
     remove_duplicates,remove_duplicates_from_indication_pipeline,get_outcome_status_openai, \
     fetch_drug_warning_data, resolve_chembl_id_from_name, get_patient_advocacy_group_by_disease, \
     get_target_pipeline_strapi_all,fetch_patient_stories_from_source
-
+from component_services.fetch_images import fetch_literature_images
     # get_target_pipeline_strapi
 from component_services.evidence_services import build_query, get_geo_data_for_diseases,fetch_mouse_models,\
     fetch_and_filter_figures_by_disease_and_pmids,fetch_mouse_model_data_alliancegenome,\
@@ -2156,6 +2156,196 @@ async def get_network_biology(request: DiseasesRequest,
         return cached_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/evidence/literature-images/", tags=["Evidence"])
+async def get_pathway_figures_disease(request: DiseasesRequest,
+                              db: Session = Depends(get_db),
+                              build_cache=False):
+
+    """
+    Fetches the Pathway figures from Literature Enhancement Pipeline given a disease
+    """
+
+    diseases: List[str] = request.diseases
+    diseases = [s.strip().lower().replace(" ", "_") for s in diseases]
+    diseases_str = "-".join(diseases)
+    key: str = f"/evidence/literature-images/:{diseases_str}"
+    endpoint: str = "/evidence/literature-images/"
+
+    # Directory to store the cached JSON file
+    cache_dir: str = "cached_data_json/disease"
+    os.makedirs(cache_dir, exist_ok=True)  # Ensure the directory exists
+    
+    cached_diseases: Set[str] = set()
+    cached_data: Dict[str, Any] = {}
+    
+    for disease in diseases:
+        disease_record = db.query(Disease).filter_by(id=f"{disease}").first()
+        # 1. Check if the cached JSON file exists
+        if disease_record is not None:
+            cached_file_path: str = disease_record.file_path
+            print(f"Loading cached response from file: {cached_file_path}")
+            cached_responses: Dict = load_response_from_file(cached_file_path)
+
+            # Check if the endpoint response exists in the cached data
+            if f"{endpoint}" in cached_responses:
+                cached_diseases.add(disease)
+                print(f"Returning cached response from file: {cached_file_path}")
+                cached_data[disease.replace("_", " ")] = cached_responses[f"{endpoint}"]
+
+    # filtering diseases whose response is not present in the json file
+    filtered_diseases = [disease for disease in diseases if disease not in cached_diseases]
+
+    if len(filtered_diseases) == 0:  # all disease already present in the json file
+        print("All diseases already present in cached json files, returning cached response")
+        return cached_data
+
+    print("filtered diseases: ", filtered_diseases)
+
+    try:
+        if build_cache == True:
+            for disease in filtered_diseases:
+                disease_record = db.query(Disease).filter_by(id=f"{disease}").first()
+                file_path: str = os.path.join(cache_dir, f"{disease}.json")
+
+                # Fetch literature images data from database
+                data = fetch_literature_images(db, disease.replace("_", " "))
+                
+                # Fetch Network-Biology data from network-biology endpoint and append it with literature
+                file_content = load_response_from_file(file_path)
+                pathways_data = file_content.get("/evidence/network-biology/", None)
+                if pathways_data:
+                    # Map the keys with the Literature Enhancement Keys
+                    key_map = {"pmid": "pmid", "pmcid": "pmcid", "url": "url",
+                                "image_url": "image_url", "caption": "image_caption",
+                                "gene_symbols": "genes","insights": "insights",
+                                "drugs": "drugs", "keywords": "keywords", 
+                                "process": "process"
+                                }
+                    
+                    for pathway_record in pathways_data:
+                        new_record = {
+                            v: pathway_record.get(k)  
+                            for k, v in key_map.items()
+                        }
+                        data.append(new_record)
+
+                cached_data[disease.replace("_", " ")] = {"results": data}
+
+                if disease_record is not None:
+                    cached_file_path: str = disease_record.file_path
+                    cached_responses = load_response_from_file(cached_file_path)
+                else:
+                    cached_responses = {}
+
+                cached_responses[f"{endpoint}"] = {"results": data}
+
+                if disease_record is None:
+                    save_response_to_file(file_path, cached_responses)
+                    new_record = Disease(id=disease, file_path=file_path)  # Create a new instance of the identified model
+                    db.add(new_record)  # Add the new record to the session
+                    db.commit()  # Commit the transaction to save the record to the database
+                    db.refresh(new_record)  # Refresh the instance to reflect any changes from the DB
+                    print(f"Record with ID {disease} added to the disease table.")
+                else:
+                    save_response_to_file(cached_file_path, cached_responses)
+                    
+        return cached_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/evidence/target-literature-images/", tags=["Evidence"])
+async def get_pathway_figures_target(request: TargetRequest,
+                                     db: Session = Depends(get_db),
+                                     build_cache=False):
+
+    """
+    Fetches the Pathway figures from Literature Enhancement Pipeline given a target and disease
+    """
+    target: str = request.target.strip().lower()
+    diseases: List[str] = [s.strip().lower().replace(" ", "_") for s in request.diseases]
+    
+    endpoint: str = "/evidence/target-literature-images/"
+    
+    # Directory to store the cached JSON file
+    cache_dir: str = "cached_data_json/target"
+    os.makedirs(cache_dir, exist_ok=True)
+    
+    cached_data: Dict[str, Any] = {}
+    cached_diseases: Set[str] = set()
+
+    for disease in diseases:
+        target_disease_record = db.query(TargetDisease).filter_by(id=f"{target}-{disease}").first()
+        # 1. Check if the cached JSON file exists
+        if target_disease_record is not None:
+            cached_file_path: str = target_disease_record.file_path
+            print(f"Loading cached response from file: {cached_file_path}")
+            cached_responses: Dict = load_response_from_file(cached_file_path)
+
+            # Check if the endpoint response exists in the cached data
+            if f"{endpoint}" in cached_responses:
+                cached_diseases.add(disease)
+                print(f"Returning cached response from file: {cached_file_path}")
+                cached_data[disease.replace("_"," ")]=cached_responses[f"{endpoint}"]
+
+    # filtering diseases whose response is not present in the json file
+    filtered_diseases = [disease for disease in diseases if disease not in cached_diseases]
+
+    if len(filtered_diseases) == 0:  # all disease already present in the json file
+        print("All diseases already present in cached json files,returning cached response")
+        return cached_data
+
+    print("filtered diseases: ", filtered_diseases)
+    # Check if cached response exists in Redis
+    target_terms_file: str = "../target_data/target_terms.json"
+
+    try:
+        if build_cache == True:
+            for disease in diseases:
+                # Handle 'no-disease' case
+                actual_disease = None if disease == "no-disease" else disease.replace("_", " ")
+                
+                # Create cache key
+                cache_key = f"{target}_{disease}" 
+                    
+                target_record = db.query(TargetDisease).filter_by(id=cache_key).first()
+                file_path: str = os.path.join(cache_dir, f"{cache_key}.json")
+                
+                # Fetch literature images data from database
+                data = fetch_literature_images(db, disease, target)
+                disease_key = disease.replace("_", " ") if disease != "no-disease" else "no-disease"
+                
+                if target not in cached_data:
+                    cached_data[target] = {}
+                cached_data[target][disease_key] = {"results": data}
+
+                if target_record is not None:
+                    cached_file_path: str = target_record.file_path
+                    cached_responses = load_response_from_file(cached_file_path)
+                else:
+                    cached_responses = {}
+
+                if target not in cached_responses:
+                    cached_responses[target] = {}
+                if f"{endpoint}" not in cached_responses[target]:
+                    cached_responses[target][f"{endpoint}"] = {}
+                
+                cached_responses[target][f"{endpoint}"][disease_key] = {"results": data}
+
+                if target_record is None:
+                    save_response_to_file(file_path, cached_responses)
+                    new_record = Target(id=cache_key, file_path=file_path)
+                    db.add(new_record)
+                    db.commit()
+                    db.refresh(new_record)
+                    print(f"Record with ID {cache_key} added to the target table.")
+                else:
+                    save_response_to_file(cached_file_path, cached_responses)
+                    
+        return cached_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/evidence/search-patent/", tags=["Evidence"])
 async def search_patents(request: TargetRequest, redis: Redis = Depends(get_redis),
