@@ -64,8 +64,14 @@ from component_services.market_intelligence_service import extract_nct_ids, fetc
     remove_duplicates,remove_duplicates_from_indication_pipeline,get_outcome_status_openai, \
     fetch_drug_warning_data, resolve_chembl_id_from_name, get_patient_advocacy_group_by_disease, \
     get_target_pipeline_strapi_all,fetch_patient_stories_from_source
-from component_services.fetch_images import fetch_literature_images
-    # get_target_pipeline_strapi
+from component_services.fetch_images import (
+    fetch_literature_images_data,
+    map_literature_to_network_biology_format,
+    combine_literature_and_network_biology_data,
+    process_target_literature_request
+)  
+from component_services.literature_enhancement_services import fetch_literature_table_analysis, fetch_literature_supplementary_materials_analysis
+
 from component_services.evidence_services import build_query, get_geo_data_for_diseases,fetch_mouse_models,\
     fetch_and_filter_figures_by_disease_and_pmids,fetch_mouse_model_data_alliancegenome,\
     get_top_10_literature_helper,add_platform_name,add_study_type, add_sample_type, get_mesh_term_for_disease, build_query_target
@@ -2158,79 +2164,127 @@ async def get_network_biology(request: DiseasesRequest,
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/evidence/literature-images/", tags=["Evidence"])
-async def get_pathway_figures_disease(request: DiseasesRequest,
-                              db: Session = Depends(get_db),
-                              build_cache=False):
-
+async def get_literature_images_evidence(request: DiseasesRequest,
+                                        db: Session = Depends(get_db),
+                                        build_cache: bool = False):
     """
-    Fetches the Pathway figures from Literature Enhancement Pipeline given a disease
+    Get literature images evidence combining database query with network biology format.
+    Returns both table data and network biology response structure.
     """
-
-    diseases: List[str] = request.diseases
-    diseases = [s.strip().lower().replace(" ", "_") for s in diseases]
-    diseases_str = "-".join(diseases)
-    key: str = f"/evidence/literature-images/:{diseases_str}"
-    endpoint: str = "/evidence/literature-images/"
-
-    # Directory to store the cached JSON file
-    cache_dir: str = "cached_data_json/disease"
-    os.makedirs(cache_dir, exist_ok=True)  # Ensure the directory exists
     
-    cached_diseases: Set[str] = set()
-    cached_data: Dict[str, Any] = {}
+    print(f"Literature-images endpoint called for diseases: {request.diseases}")
     
-    for disease in diseases:
-        disease_record = db.query(Disease).filter_by(id=f"{disease}").first()
-        # 1. Check if the cached JSON file exists
-        if disease_record is not None:
-            cached_file_path: str = disease_record.file_path
-            print(f"Loading cached response from file: {cached_file_path}")
-            cached_responses: Dict = load_response_from_file(cached_file_path)
-
-            # Check if the endpoint response exists in the cached data
-            if f"{endpoint}" in cached_responses:
-                cached_diseases.add(disease)
-                print(f"Returning cached response from file: {cached_file_path}")
-                cached_data[disease.replace("_", " ")] = cached_responses[f"{endpoint}"]
-
-    # filtering diseases whose response is not present in the json file
-    filtered_diseases = [disease for disease in diseases if disease not in cached_diseases]
-
-    if len(filtered_diseases) == 0:  # all disease already present in the json file
-        print("All diseases already present in cached json files, returning cached response")
-        return cached_data
-
-    print("filtered diseases: ", filtered_diseases)
-
     try:
+        diseases: List[str] = request.diseases
+        diseases = [s.strip().lower().replace(" ", "_") for s in diseases]
+        
+        diseases_str = "-".join(diseases)
+        key: str = f"/evidence/literature-images/:{diseases_str}"
+        endpoint: str = "/evidence/literature-images/"
+        network_biology_endpoint: str = "/evidence/network-biology/"
+        
+        # Directory to store the cached JSON file
+        cache_dir: str = "cached_data_json/disease"
+        os.makedirs(cache_dir, exist_ok=True)
+        
+        cached_diseases: Set[str] = set()
+        cached_data: Dict[str, Any] = {}
+        
+        print("Checking cache for diseases")
+        # Check for cached data
+        for disease in diseases:
+            disease_record = db.query(Disease).filter_by(id=f"{disease}").first()
+            if disease_record is not None:
+                cached_file_path: str = disease_record.file_path
+                try:
+                    cached_responses: Dict = load_response_from_file(cached_file_path)
+                    if f"{endpoint}" in cached_responses:
+                        cached_diseases.add(disease)
+                        cached_data[disease.replace("_", " ")] = cached_responses[f"{endpoint}"]
+                except Exception as cache_error:
+                    print(f"Error loading cache for {disease}: {cache_error}")
+
+        # Filter diseases whose response is not present in the json file
+        filtered_diseases = [disease for disease in diseases if disease not in cached_diseases]
+
+        if len(filtered_diseases) == 0:
+            print("All diseases found in cache, returning cached response")
+            return cached_data
+
+        print(f"Processing {len(filtered_diseases)} diseases not in cache")
+
         if build_cache == True:
+            print("Building cache for diseases")
+            
+            # Fetch all literature data from database (with default target="no-target")
+            all_literature_data = fetch_literature_images_data(db)
+            
+            # Map literature data to network biology format
+            literature_network_biology_format = map_literature_to_network_biology_format(all_literature_data)
+            
+            # Check which diseases need network biology data fetching
+            diseases_needing_network_biology = []
+            diseases_with_existing_network_biology = {}
+            
             for disease in filtered_diseases:
+                disease_key = disease.replace("_", " ")
+                disease_record = db.query(Disease).filter_by(id=f"{disease}").first()
+                
+                network_biology_exists = False
+                existing_network_biology_data = []
+                
+                if disease_record is not None:
+                    try:
+                        cached_file_path: str = disease_record.file_path
+                        cached_responses = load_response_from_file(cached_file_path)
+                        
+                        # Check if network biology data already exists in cache
+                        if network_biology_endpoint in cached_responses:
+                            network_biology_exists = True
+                            existing_network_biology_data = cached_responses[network_biology_endpoint].get("results", [])
+                            diseases_with_existing_network_biology[disease_key] = existing_network_biology_data
+                            print(f"Found existing network biology data for {disease_key}")
+                        else:
+                            diseases_needing_network_biology.append(disease)
+                    except Exception as e:
+                        print(f"Error checking cache for {disease}: {e}")
+                        diseases_needing_network_biology.append(disease)
+                else:
+                    diseases_needing_network_biology.append(disease)
+            
+            # Fetch network biology data only for diseases that don't have it cached
+            network_biology_data = {}
+            
+            # Add existing network biology data
+            network_biology_data.update(diseases_with_existing_network_biology)
+            
+            # Fetch new network biology data only if needed
+            if diseases_needing_network_biology:
+                print(f"Fetching network biology data for {len(diseases_needing_network_biology)} diseases")
+                for disease in diseases_needing_network_biology:
+                    disease_key = disease.replace("_", " ")
+                    # Use the same function that the network biology endpoint uses
+                    data = fetch_and_filter_figures_by_disease_and_pmids(disease_key)
+                    network_biology_data[disease_key] = data
+            else:
+                print("No new network biology data needed - using existing cached data")
+            
+            print(f"Total network biology data available for {len(network_biology_data)} diseases")
+            
+            # Combine both datasets
+            combined_data = combine_literature_and_network_biology_data(
+                literature_network_biology_format, network_biology_data
+            )
+            
+            for disease in filtered_diseases:
+                disease_key = disease.replace("_", " ")
+                
                 disease_record = db.query(Disease).filter_by(id=f"{disease}").first()
                 file_path: str = os.path.join(cache_dir, f"{disease}.json")
 
-                # Fetch literature images data from database
-                data = fetch_literature_images(db, disease.replace("_", " "))
-                
-                # Fetch Network-Biology data from network-biology endpoint and append it with literature
-                file_content = load_response_from_file(file_path)
-                pathways_data = file_content.get("/evidence/network-biology/", None)
-                if pathways_data:
-                    # Map the keys with the Literature Enhancement Keys
-                    key_map = {"pmid": "pmid", "pmcid": "pmcid", "url": "url",
-                                "image_url": "image_url", "caption": "image_caption",
-                                "gene_symbols": "genes","insights": "insights",
-                                "drugs": "drugs", "keywords": "keywords", 
-                                "process": "process"
-                                }
-                    
-                    for pathway_record in pathways_data:
-                        new_record = {
-                            v: pathway_record.get(k)  
-                            for k, v in key_map.items()
-                        }
-                        data.append(new_record)
-
-                cached_data[disease.replace("_", " ")] = {"results": data}
+                # Get combined data for this specific disease
+                disease_data = combined_data.get(disease_key, {"results": []})
+                cached_data[disease_key] = disease_data
 
                 if disease_record is not None:
                     cached_file_path: str = disease_record.file_path
@@ -2238,147 +2292,239 @@ async def get_pathway_figures_disease(request: DiseasesRequest,
                 else:
                     cached_responses = {}
 
-                cached_responses[f"{endpoint}"] = {"results": data}
+                # Store the combined response
+                cached_responses[f"{endpoint}"] = disease_data
+                
+                # Only update network-biology cache if we fetched new data for this disease
+                if disease in diseases_needing_network_biology:
+                    network_biology_only = network_biology_data.get(disease_key, [])
+                    cached_responses[f"{network_biology_endpoint}"] = {"results": network_biology_only}
+                    print(f"Updated network biology cache for disease: {disease}")
 
                 if disease_record is None:
                     save_response_to_file(file_path, cached_responses)
-                    new_record = Disease(id=disease, file_path=file_path)  # Create a new instance of the identified model
-                    db.add(new_record)  # Add the new record to the session
-                    db.commit()  # Commit the transaction to save the record to the database
-                    db.refresh(new_record)  # Refresh the instance to reflect any changes from the DB
-                    print(f"Record with ID {disease} added to the disease table.")
-                else:
-                    save_response_to_file(cached_file_path, cached_responses)
-                    
-        return cached_data
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/evidence/target-literature-images/", tags=["Evidence"])
-async def get_pathway_figures_target(request: TargetRequest,
-                                     db: Session = Depends(get_db),
-                                     build_cache=False):
-
-    """
-    Fetches the Pathway figures from Literature Enhancement Pipeline given a target and disease
-    """
-    target: str = request.target.strip().lower()
-    diseases: List[str] = [s.strip().lower().replace(" ", "_") for s in request.diseases]
-    
-    endpoint: str = "/evidence/target-literature-images/"
-    
-    # Directory to store the cached JSON file
-    cache_dir: str = "cached_data_json/target"
-    os.makedirs(cache_dir, exist_ok=True)
-    
-    cached_data: Dict[str, Any] = {}
-    cached_diseases: Set[str] = set()
-
-    for disease in diseases:
-        target_disease_record = db.query(TargetDisease).filter_by(id=f"{target}-{disease}").first()
-        # 1. Check if the cached JSON file exists
-        if target_disease_record is not None:
-            cached_file_path: str = target_disease_record.file_path
-            print(f"Loading cached response from file: {cached_file_path}")
-            cached_responses: Dict = load_response_from_file(cached_file_path)
-
-            # Check if the endpoint response exists in the cached data
-            if f"{endpoint}" in cached_responses:
-                cached_diseases.add(disease)
-                print(f"Returning cached response from file: {cached_file_path}")
-                cached_data[disease.replace("_"," ")]=cached_responses[f"{endpoint}"]
-
-    # filtering diseases whose response is not present in the json file
-    filtered_diseases = [disease for disease in diseases if disease not in cached_diseases]
-
-    if len(filtered_diseases) == 0:  # all disease already present in the json file
-        print("All diseases already present in cached json files,returning cached response")
-        return cached_data
-
-    print("filtered diseases: ", filtered_diseases)
-    # Check if cached response exists in Redis
-    target_terms_file: str = "../target_data/target_terms.json"
-
-    try:
-        if build_cache == True:
-            for disease in diseases:
-                # Handle 'no-disease' case
-                actual_disease = None if disease == "no-disease" else disease.replace("_", " ")
-                
-                # Create cache key
-                cache_key = f"{target}_{disease}" 
-                    
-                target_record = db.query(TargetDisease).filter_by(id=cache_key).first()
-                file_path: str = os.path.join(cache_dir, f"{cache_key}.json")
-                
-                # Fetch literature images data from database
-                data = fetch_literature_images(db, disease, target)
-                disease_key = disease.replace("_", " ") if disease != "no-disease" else "no-disease"
-                
-                if target not in cached_data:
-                    cached_data[target] = {}
-                cached_data[target][disease_key] = {"results": data}
-
-                if target_record is not None:
-                    cached_file_path: str = target_record.file_path
-                    cached_responses = load_response_from_file(cached_file_path)
-                else:
-                    cached_responses = {}
-
-                if target not in cached_responses:
-                    cached_responses[target] = {}
-                if f"{endpoint}" not in cached_responses[target]:
-                    cached_responses[target][f"{endpoint}"] = {}
-                
-                cached_responses[target][f"{endpoint}"][disease_key] = {"results": data}
-
-                if target_record is None:
-                    save_response_to_file(file_path, cached_responses)
-                    new_record = Target(id=cache_key, file_path=file_path)
+                    new_record = Disease(id=disease, file_path=file_path)
                     db.add(new_record)
                     db.commit()
                     db.refresh(new_record)
-                    print(f"Record with ID {cache_key} added to the target table.")
+                    print(f"Added new disease record: {disease}")
                 else:
                     save_response_to_file(cached_file_path, cached_responses)
-                    
+                    print(f"Updated cache for disease: {disease}")
+        else:
+            print("Fetching data without caching")
+            
+            # Fetch all literature data from database (with default target="no-target")
+            all_literature_data = fetch_literature_images_data(db)
+            
+            # Map literature data to network biology format
+            literature_network_biology_format = map_literature_to_network_biology_format(all_literature_data)
+            
+            # Fetch network biology data directly using the same logic as network biology endpoint
+            network_biology_data = {}
+            for disease in diseases:
+                disease_key = disease.replace("_", " ")
+                # Use the same function that the network biology endpoint uses
+                data = fetch_and_filter_figures_by_disease_and_pmids(disease_key)
+                network_biology_data[disease_key] = data
+            
+            print(f"Fetched network biology data for {len(network_biology_data)} diseases")
+            
+            # Combine both datasets
+            combined_data = combine_literature_and_network_biology_data(
+                literature_network_biology_format, network_biology_data
+            )
+            
+            # Get combined data for requested diseases
+            for disease in diseases:
+                disease_key = disease.replace("_", " ")
+                cached_data[disease_key] = combined_data.get(disease_key, {"results": []})
+        
+        print("Literature-images endpoint completed successfully")
         return cached_data
+        
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"Error in literature-images endpoint: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
 
+
+@app.post("/evidence/target-literature-images/", tags=["Evidence"])
+async def get_target_literature_images_evidence(request: TargetRequest,
+                                               db: Session = Depends(get_db),
+                                               build_cache: bool = False):
+    """
+    Get target-specific literature images evidence.
+    If no diseases provided, defaults to "no-disease".
+    Only returns literature images data (no network biology data).
+    """
+    
+    print(f"Target-literature-images endpoint called for target: {request.target}, diseases: {request.diseases}")
+    
+    try:
+        # Process target and diseases with proper defaults
+        processed_target, processed_diseases = process_target_literature_request(request.target, request.diseases)
+        
+        print(f"Processed target: {processed_target}, diseases: {processed_diseases}")
+        
+        # Determine cache type and directory based on the same logic as literature-table-analysis
+        is_target_only = processed_target != "no-target" and processed_diseases == ["no-disease"]
+        is_disease_only = processed_target == "no-target" and processed_diseases != ["no-disease"]
+        is_combination = processed_target != "no-target" and processed_diseases != ["no-disease"]
+        
+        endpoint: str = "/evidence/target-literature-images/"
+        
+        # Set cache directory and model based on request type
+        if is_disease_only:
+            cache_dir = "cached_data_json/disease"
+            cache_items = processed_diseases
+            table_model = Disease
+        elif is_target_only:
+            cache_dir = "cached_data_json/target"
+            cache_items = [processed_target]
+            table_model = Target
+        else:  # combination or both no-target and no-disease
+            cache_dir = "cached_data_json/target_disease"
+            # Create cache items in the format: target-disease
+            cache_items = [f"{processed_target}-{disease}" for disease in processed_diseases]
+            table_model = TargetDisease
+        
+        os.makedirs(cache_dir, exist_ok=True)
+        
+        cached_data: Dict[str, Any] = {}
+        items_to_process = []
+        
+        print("Checking cache for target-disease combination")
+        
+        # Check for cached data
+        for item in cache_items:
+            clean_item = item.strip().lower().replace(" ", "_")
+            record = db.query(table_model).filter_by(id=clean_item).first()
+            
+            if record and os.path.exists(record.file_path):
+                try:
+                    cached_responses = load_response_from_file(record.file_path)
+                    if endpoint in cached_responses:
+                        if is_combination:
+                            # For combinations, extract disease name from target-disease format
+                            disease_name = clean_item.split('-')[1].replace("_", " ")
+                            cached_data[disease_name] = cached_responses[endpoint]
+                        elif is_disease_only:
+                            key = clean_item.replace("_", " ")
+                            cached_data[key] = cached_responses[endpoint]
+                        else:  # target_only
+                            cached_data[clean_item] = cached_responses[endpoint]
+                        continue
+                except Exception as cache_error:
+                    print(f"Error loading cache for {item}: {cache_error}")
+            
+            items_to_process.append(item)
+        
+        if not items_to_process:
+            print("All items found in cache, returning cached data")
+            return cached_data
+
+        print(f"Processing items not in cache: {items_to_process}")
+
+        # Fetch literature data for items that need processing
+        for item in items_to_process:
+            clean_item = item.strip().lower().replace(" ", "_")
+            
+            # Determine query parameters based on cache type
+            if is_disease_only:
+                query_target, query_diseases = "no-target", [item]
+                key = item.replace("_", " ")
+            elif is_target_only:
+                query_target, query_diseases = item, ["no-disease"]
+                key = item
+            else:  # combination - parse target-disease format
+                parts = clean_item.split('-')
+                query_target, query_diseases = parts[0], [parts[1]]
+                key = parts[1].replace("_", " ")  # Use disease name as response key
+            
+            # Fetch literature data with specific target and diseases
+            literature_data = fetch_literature_images_data(
+                db, 
+                target=query_target, 
+                diseases=query_diseases
+            )
+            
+            # Map literature data to network biology format
+            literature_network_biology_format = map_literature_to_network_biology_format(literature_data)
+            
+            # Store the data using the appropriate key
+            if is_combination:
+                cached_data[key] = literature_network_biology_format.get(key, {"results": []})
+            else:
+                # For single target or disease queries, the mapping might return data with a different key
+                if literature_network_biology_format:
+                    # Get the first (and likely only) entry
+                    first_key = next(iter(literature_network_biology_format))
+                    cached_data[key] = literature_network_biology_format[first_key]
+                else:
+                    cached_data[key] = {"results": []}
+            
+            # Handle file caching
+            if build_cache:
+                print(f"Caching response for item: {clean_item}")
+                try:
+                    record = db.query(table_model).filter_by(id=clean_item).first()
+                    file_path = os.path.join(cache_dir, f"{clean_item}.json")
+                    
+                    if record and os.path.exists(record.file_path):
+                        cached_responses = load_response_from_file(record.file_path)
+                        cached_responses[endpoint] = cached_data[key]
+                        save_response_to_file(record.file_path, cached_responses)
+                    else:
+                        cached_responses = {endpoint: cached_data[key]}
+                        save_response_to_file(file_path, cached_responses)
+                        if not record:
+                            new_record = table_model(id=clean_item, file_path=file_path)
+                            db.add(new_record)
+                            db.commit()
+                            db.refresh(new_record)
+                            print(f"Added new record with ID {clean_item} to database")
+                    
+                    print(f"Cached response to: {file_path}")
+                    
+                except Exception as cache_error:
+                    print(f"Error caching response for {clean_item}: {cache_error}")
+        
+        print("Target-literature-images endpoint completed successfully")
+        return cached_data
+        
+    except Exception as e:
+        print(f"Error in target-literature-images endpoint: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
 
 @app.post("/evidence/literature-table-analysis/", tags=["Evidence"])
-async def get_literature_table_analysis(request: LiteratureAnalysisRequest,
+async def get_literature_table_analysis(request: TargetRequest,
                                        db: Session = Depends(get_db),
                                        build_cache: bool = False):
     """
-    Get literature table analysis data for targets, diseases, or combinations
+    Get literature table analysis data for target and diseases combinations
     """
     
-    targets: List[str] = request.targets
+    target: str = request.target
     diseases: List[str] = request.diseases
     endpoint: str = "/evidence/literature-table-analysis/"
     
     # Determine cache type and directory
-    is_target_only = targets != ["no-target"] and diseases == ["no-disease"]
-    is_disease_only = targets == ["no-target"] and diseases != ["no-disease"]
-    is_combination = targets != ["no-target"] and diseases != ["no-disease"]
+    is_target_only = target != "no-target" and not diseases
+    is_disease_only = target == "no-target" and diseases
+    is_combination = target != "no-target" and diseases
     
     if is_disease_only:
         cache_dir = "cached_data_json/disease"
         cache_items = diseases
         table_model = Disease
-        id_format = lambda item: item
     elif is_target_only:
         cache_dir = "cached_data_json/target"
-        cache_items = targets
+        cache_items = [target]
         table_model = Target
-        id_format = lambda item: item
-    else:  # combination or both no-target and no-disease
+    else:  # combination
         cache_dir = "cached_data_json/target_disease"
-        cache_items = [f"{target}-{disease}" for target in targets for disease in diseases]
+        cache_items = [f"{target}-{disease}" for disease in diseases]
         table_model = TargetDisease
-        id_format = lambda item: item
     
     os.makedirs(cache_dir, exist_ok=True)
     
@@ -2387,6 +2533,7 @@ async def get_literature_table_analysis(request: LiteratureAnalysisRequest,
     items_to_process = []
     
     for item in cache_items:
+        # For file operations, convert spaces to underscores
         clean_item = item.strip().lower().replace(" ", "_")
         record = db.query(table_model).filter_by(id=clean_item).first()
         
@@ -2394,12 +2541,12 @@ async def get_literature_table_analysis(request: LiteratureAnalysisRequest,
             cached_responses = load_response_from_file(record.file_path)
             if endpoint in cached_responses:
                 if is_combination:
-                    # For combinations, use disease name as key
-                    disease_name = item.split('-')[1].replace("_", " ")
+                    # For combinations, use disease name as key (with spaces)
+                    disease_name = item.split('-')[1]
                     cached_data[disease_name] = cached_responses[endpoint]
                 else:
-                    key = item.replace("_", " ") if is_disease_only else item
-                    cached_data[key] = cached_responses[endpoint]
+                    # Use original item name (with spaces for diseases)
+                    cached_data[item] = cached_responses[endpoint]
                 continue
         
         items_to_process.append(item)
@@ -2413,25 +2560,32 @@ async def get_literature_table_analysis(request: LiteratureAnalysisRequest,
     try:
         if build_cache:
             for item in items_to_process:
+                # For file operations, convert spaces to underscores
                 clean_item = item.strip().lower().replace(" ", "_")
                 
                 # Determine query parameters based on cache type
                 if is_disease_only:
-                    query_targets, query_diseases = ["no-target"], [item]
-                    key = item.replace("_", " ")
+                    # Query: target="no-target", disease="alzheimer disease" (with spaces)
+                    query_target = "no-target"
+                    query_disease = item  # Keep spaces for database query
+                    key = item  # Keep spaces for response key
                 elif is_target_only:
-                    query_targets, query_diseases = [item], ["no-disease"]
+                    # Query: target="glp1r", disease="no-disease"
+                    query_target = target
+                    query_disease = "no-disease"
                     key = item
-                else:
-                    parts = item.split('-')
-                    query_targets, query_diseases = [parts[0]], [parts[1]]
-                    key = parts[1].replace("_", " ")
+                else:  # combination
+                    # Split: "glp1r-alzheimer disease" -> target="glp1r", disease="alzheimer disease"
+                    parts = item.split('-', 1)  # Split only on first hyphen
+                    query_target = parts[0]
+                    query_disease = parts[1]  # Keep spaces for database query
+                    key = parts[1]  # Keep spaces for response key
                 
-                # Fetch data
-                data = fetch_literature_table_analysis(query_targets, query_diseases, db)
+                # Fetch data with exact match logic (using spaces for disease)
+                data = fetch_literature_table_analysis(query_target, [query_disease], db)
                 cached_data[key] = {"results": data}
                 
-                # Handle file caching
+                # Handle file caching (using underscores)
                 record = db.query(table_model).filter_by(id=clean_item).first()
                 file_path = os.path.join(cache_dir, f"{clean_item}.json")
                 
@@ -2456,37 +2610,34 @@ async def get_literature_table_analysis(request: LiteratureAnalysisRequest,
 
 
 @app.post("/evidence/literature-supplementary-materials-analysis/", tags=["Evidence"])
-async def get_literature_supplementary_materials_analysis(request: LiteratureAnalysisRequest,
+async def get_literature_supplementary_materials_analysis(request: TargetRequest,
                                                          db: Session = Depends(get_db),
                                                          build_cache: bool = False):
     """
-    Get literature supplementary materials analysis data for targets, diseases, or combinations
+    Get literature supplementary materials analysis data for target and diseases combinations
     """
     
-    targets: List[str] = request.targets
+    target: str = request.target
     diseases: List[str] = request.diseases
     endpoint: str = "/evidence/literature-supplementary-materials-analysis/"
     
     # Determine cache type and directory
-    is_target_only = targets != ["no-target"] and diseases == ["no-disease"]
-    is_disease_only = targets == ["no-target"] and diseases != ["no-disease"]
-    is_combination = targets != ["no-target"] and diseases != ["no-disease"]
+    is_target_only = target != "no-target" and not diseases
+    is_disease_only = target == "no-target" and diseases
+    is_combination = target != "no-target" and diseases
     
     if is_disease_only:
         cache_dir = "cached_data_json/disease"
         cache_items = diseases
         table_model = Disease
-        id_format = lambda item: item
     elif is_target_only:
         cache_dir = "cached_data_json/target"
-        cache_items = targets
+        cache_items = [target]
         table_model = Target
-        id_format = lambda item: item
-    else:  # combination or both no-target and no-disease
+    else:  # combination
         cache_dir = "cached_data_json/target_disease"
-        cache_items = [f"{target}-{disease}" for target in targets for disease in diseases]
+        cache_items = [f"{target}-{disease}" for disease in diseases]
         table_model = TargetDisease
-        id_format = lambda item: item
     
     os.makedirs(cache_dir, exist_ok=True)
     
@@ -2495,6 +2646,7 @@ async def get_literature_supplementary_materials_analysis(request: LiteratureAna
     items_to_process = []
     
     for item in cache_items:
+        # For file operations, convert spaces to underscores
         clean_item = item.strip().lower().replace(" ", "_")
         record = db.query(table_model).filter_by(id=clean_item).first()
         
@@ -2502,12 +2654,12 @@ async def get_literature_supplementary_materials_analysis(request: LiteratureAna
             cached_responses = load_response_from_file(record.file_path)
             if endpoint in cached_responses:
                 if is_combination:
-                    # For combinations, use disease name as key
-                    disease_name = item.split('-')[1].replace("_", " ")
+                    # For combinations, use disease name as key (with spaces)
+                    disease_name = item.split('-')[1]
                     cached_data[disease_name] = cached_responses[endpoint]
                 else:
-                    key = item.replace("_", " ") if is_disease_only else item
-                    cached_data[key] = cached_responses[endpoint]
+                    # Use original item name (with spaces for diseases)
+                    cached_data[item] = cached_responses[endpoint]
                 continue
         
         items_to_process.append(item)
@@ -2521,25 +2673,32 @@ async def get_literature_supplementary_materials_analysis(request: LiteratureAna
     try:
         if build_cache:
             for item in items_to_process:
+                # For file operations, convert spaces to underscores
                 clean_item = item.strip().lower().replace(" ", "_")
                 
                 # Determine query parameters based on cache type
                 if is_disease_only:
-                    query_targets, query_diseases = ["no-target"], [item]
-                    key = item.replace("_", " ")
+                    # Query: target="no-target", disease="alzheimer disease" (with spaces)
+                    query_target = "no-target"
+                    query_disease = item  # Keep spaces for database query
+                    key = item  # Keep spaces for response key
                 elif is_target_only:
-                    query_targets, query_diseases = [item], ["no-disease"]
+                    # Query: target="glp1r", disease="no-disease"
+                    query_target = target
+                    query_disease = "no-disease"
                     key = item
-                else:
-                    parts = item.split('-')
-                    query_targets, query_diseases = [parts[0]], [parts[1]]
-                    key = parts[1].replace("_", " ")
+                else:  # combination
+                    # Split: "glp1r-alzheimer disease" -> target="glp1r", disease="alzheimer disease"
+                    parts = item.split('-', 1)  # Split only on first hyphen
+                    query_target = parts[0]
+                    query_disease = parts[1]  # Keep spaces for database query
+                    key = parts[1]  # Keep spaces for response key
                 
-                # Fetch data
-                data = fetch_literature_supplementary_materials_analysis(query_targets, query_diseases, db)
+                # Fetch data with exact match logic (using spaces for disease)
+                data = fetch_literature_supplementary_materials_analysis(query_target, [query_disease], db)
                 cached_data[key] = {"results": data}
                 
-                # Handle file caching
+                # Handle file caching (using underscores)
                 record = db.query(table_model).filter_by(id=clean_item).first()
                 file_path = os.path.join(cache_dir, f"{clean_item}.json")
                 

@@ -1,3 +1,4 @@
+#literature_enhancement_services.py
 """
 Literature Enhancement Services Module
 Handles literature table analysis and supplementary materials data fetching and processing
@@ -8,14 +9,14 @@ from typing import List, Dict, Any, Optional
 import logging
 
 
-def fetch_literature_table_analysis(targets: Optional[List[str]] = None, 
+def fetch_literature_table_analysis(target: str = None, 
                                    diseases: Optional[List[str]] = None, 
                                    db: Session = None) -> List[Dict[str, Any]]:
     """
-    Fetch literature table analysis data based on targets and/or diseases
+    Fetch literature table analysis data based on target and/or diseases with exact matching
     
     Args:
-        targets (Optional[List[str]]): List of target names
+        target (str): Single target name
         diseases (Optional[List[str]]): List of disease names
         db (Session): Database session
         
@@ -26,22 +27,23 @@ def fetch_literature_table_analysis(targets: Optional[List[str]] = None,
         # Start with base query
         query = db.query(LiteratureTablesAnalysis)
         
-        # Apply filters based on provided parameters
-        filters = []
+        # Apply exact matching logic - query separate columns
+        # Always filter by target column
+        target_filter = target.strip().lower()
+        query = query.filter(LiteratureTablesAnalysis.target == target_filter)
         
-        if targets and targets != ["no-target"]:
-            # Convert targets to lowercase
-            target_filters = [target.strip().lower() for target in targets]
-            filters.append(LiteratureTablesAnalysis.target.in_(target_filters))
-        
-        if diseases and diseases != ["no-disease"]:
-            # Convert diseases to lowercase and replace spaces with underscores
-            disease_filters = [disease.strip().lower().replace(" ", "_") for disease in diseases]
-            filters.append(LiteratureTablesAnalysis.disease.in_(disease_filters))
-        
-        # Apply all filters
-        if filters:
-            query = query.filter(*filters)
+        # Always filter by disease column
+        if diseases and len(diseases) == 1:
+            # Single disease - use exact match
+            disease_filter = diseases[0].strip().lower()
+            query = query.filter(LiteratureTablesAnalysis.disease == disease_filter)
+        elif diseases and len(diseases) > 1:
+            # Multiple diseases - use IN clause
+            disease_filters = [disease.strip().lower() for disease in diseases]
+            query = query.filter(LiteratureTablesAnalysis.disease.in_(disease_filters))
+        else:
+            # No diseases specified - this shouldn't happen in our use case
+            pass
         
         records = query.all()
         
@@ -58,7 +60,7 @@ def fetch_literature_table_analysis(targets: Optional[List[str]] = None,
             }
             results.append(result_dict)
         
-        filter_info = f"targets: {targets}, diseases: {diseases}"
+        filter_info = f"target: {target}, diseases: {diseases}"
         logging.info(f"Found {len(results)} literature table analysis records for {filter_info}")
         return results
         
@@ -67,14 +69,14 @@ def fetch_literature_table_analysis(targets: Optional[List[str]] = None,
         raise e
 
 
-def fetch_literature_supplementary_materials_analysis(targets: Optional[List[str]] = None, 
+def fetch_literature_supplementary_materials_analysis(target: str = None, 
                                                      diseases: Optional[List[str]] = None, 
                                                      db: Session = None) -> List[Dict[str, Any]]:
     """
-    Fetch literature supplementary materials analysis data based on targets and/or diseases
+    Fetch literature supplementary materials analysis data based on target and/or diseases with exact matching
     
     Args:
-        targets (Optional[List[str]]): List of target names
+        target (str): Single target name
         diseases (Optional[List[str]]): List of disease names
         db (Session): Database session
         
@@ -85,22 +87,23 @@ def fetch_literature_supplementary_materials_analysis(targets: Optional[List[str
         # Start with base query
         query = db.query(LiteratureSupplementaryMaterialsAnalysis)
         
-        # Apply filters based on provided parameters
-        filters = []
+        # Apply exact matching logic - query separate columns
+        # Always filter by target column
+        target_filter = target.strip().lower()
+        query = query.filter(LiteratureSupplementaryMaterialsAnalysis.target == target_filter)
         
-        if targets and targets != ["no-target"]:
-            # Convert targets to lowercase
-            target_filters = [target.strip().lower() for target in targets]
-            filters.append(LiteratureSupplementaryMaterialsAnalysis.target.in_(target_filters))
-        
-        if diseases and diseases != ["no-disease"]:
-            # Convert diseases to lowercase and replace spaces with underscores
-            disease_filters = [disease.strip().lower().replace(" ", "_") for disease in diseases]
-            filters.append(LiteratureSupplementaryMaterialsAnalysis.disease.in_(disease_filters))
-        
-        # Apply all filters
-        if filters:
-            query = query.filter(*filters)
+        # Always filter by disease column
+        if diseases and len(diseases) == 1:
+            # Single disease - use exact match
+            disease_filter = diseases[0].strip().lower()
+            query = query.filter(LiteratureSupplementaryMaterialsAnalysis.disease == disease_filter)
+        elif diseases and len(diseases) > 1:
+            # Multiple diseases - use IN clause
+            disease_filters = [disease.strip().lower() for disease in diseases]
+            query = query.filter(LiteratureSupplementaryMaterialsAnalysis.disease.in_(disease_filters))
+        else:
+            # No diseases specified - this shouldn't happen in our use case
+            pass
         
         records = query.all()
         
@@ -117,7 +120,7 @@ def fetch_literature_supplementary_materials_analysis(targets: Optional[List[str
             }
             results.append(result_dict)
         
-        filter_info = f"targets: {targets}, diseases: {diseases}"
+        filter_info = f"target: {target}, diseases: {diseases}"
         logging.info(f"Found {len(results)} literature supplementary materials analysis records for {filter_info}")
         return results
         
