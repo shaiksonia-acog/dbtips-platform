@@ -209,7 +209,7 @@ async def build_dossier():
                     logging.info(f"pending jobs: {pending_jobs}")
                     for job_id, job in pending_jobs.items():
                         local_time = datetime.now(tzlocal.get_localzone())    
-                        values = {'status': 'processing', 'submission_time': local_time}
+                        values = {'status': 'processing', 'submission_time': local_time, "processed_time": None}
                         
                         if job['target'] is None:
                             job_type = DiseaseDossierStatus
