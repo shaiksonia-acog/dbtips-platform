@@ -51,3 +51,5 @@ class DiseaseDrugsMapping(BaseModel):
 class DiseasesTarget(BaseModel):
     disease: List[str] | str = "no-disease"
     target: str = "no-target"
+
+
