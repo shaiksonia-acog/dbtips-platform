@@ -4,7 +4,7 @@ const TargetIndication = ({ target, indications }) => {
   const location = useLocation();
 
   // Do not render the banner if the location is "/"
-  if (location.pathname === "/") {
+  if (location.pathname === "/" || (!target && indications.length === 0)||location.pathname === "/login") {
     return null;
   }
   return (
