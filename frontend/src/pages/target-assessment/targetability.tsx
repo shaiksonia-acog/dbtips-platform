@@ -88,7 +88,9 @@ const Targetability = ({ target,  }) => {
 									zmax: 1,
 									showscale: true,
 									colorbar: {
-										title: 'Value',
+										title: {
+											text: 'Value',
+										},
 									},
 									// Add gap between cells
 									xgap: 1, // Gap between cells along the x-axis

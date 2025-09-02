@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -373,7 +374,7 @@ const Home = ({ setAppState }: { setAppState: (prev: any) => any }) => {
         });
       }
     }
-  }, [data, navigate, payload, confirm]);
+  }, [data, navigate, payload, confirm, setAppState]);
   const isButtonDisabled = target === "" && selectedIndications.length === 0;
 
   const dropdownRenderIndications = () => {
