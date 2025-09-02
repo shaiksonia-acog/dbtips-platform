@@ -33,7 +33,7 @@ class OpenAIPathwayFilter:
 
 * **Pathway figures** → captions describing molecular mechanisms, biological signaling pathways, disease mechanisms, or interactions between genes, proteins, metabolites, or drugs (e.g., "Proposed signaling pathway of TGF-β in fibrosis").
 
-* **Others** → captions that do not describe pathways (e.g., imaging data, clinical results, charts, survival curves, histology, structural models, etc.).
+* **Others** → captions that do not describe pathways (e.g., imaging data, clinical results, charts, survival curves, histology, structural models, experimental results, graphs, plots, bar graph, box plot, panels, etc.).
 
 Examples:
 * Caption: "Schematic representation of the NF-κB signaling pathway in inflammatory bowel disease." → **Pathway figures**
@@ -46,7 +46,13 @@ Return only JSON:
   "is_disease_pathway": true/false,
   "confidence": "high/medium/low",
   "reasoning": "Brief explanation based on caption analysis"
-}"""
+}
+
+Important clarification:
+- If the caption mainly reports **data, measurements, expression levels, statistical tests, or results shown as bar graphs, box plots, or panels**, classify as **Others** (even if specific proteins or signaling molecules are mentioned).
+- Only classify as **Pathway figures** if the caption explicitly describes a **mechanism, pathway diagram, molecular interactions, or proposed disease model**.
+"""
+
 
     def get_classification_user_prompt(self, caption: str) -> str:
         """User prompt for pathway classification"""
@@ -59,12 +65,16 @@ Caption: {caption_text}
 INSTRUCTIONS:
 1. Examine the caption for pathway terminology, mechanism descriptions, process words
 2. Look for terms indicating molecular mechanisms, signaling pathways, disease processes
-3. Distinguish between pathway descriptions vs. clinical data, imaging, histology, charts
+3. Distinguish between pathway descriptions vs. clinical data, imaging, histology, charts, graphs, plots, panels
 
 INCLUDE: Pathway figures - captions describing mechanisms, signaling, interactions, processes
-EXCLUDE: Clinical scans, histology, data charts, survival curves, structural models without mechanisms
+EXCLUDE: Clinical scans, histology, data charts, survival curves, structural models without mechanisms, experimental results, graphs, plots, bar graphs, box plots, panels
 
-Return exact JSON format with reasoning based on caption analysis."""
+Additional clarification:
+- Mentions of proteins, receptors, cytokines, or signaling molecules **in the context of expression levels, assays, or experimental measurements** should be classified as **Others** unless a pathway/interaction is explicitly described.
+- Only classify as **Pathway figures** when the caption presents a mechanistic or pathway-level explanation (e.g., "proposed mechanism", "signaling cascade", "schematic diagram of interactions").
+"""
+
 
     @sync_api_retry(max_retries=3, base_delay=1.0, backoff_multiplier=2.0)
     def _call_openai_api(self, caption: str) -> dict:

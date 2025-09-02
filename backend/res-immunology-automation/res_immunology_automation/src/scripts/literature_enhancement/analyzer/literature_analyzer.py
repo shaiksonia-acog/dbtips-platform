@@ -1,4 +1,3 @@
-
 from literature_enhancement.analyzer.image_analyzer.image_analyzer import main as image_analyzer_main
 from literature_enhancement.analyzer.supplementary_analyzer.supplementary_analyzer import main as supplementary_analyzer_main
 from literature_enhancement.analyzer.table_analyzer.table_analyzer import main as table_analyzer_main
@@ -43,75 +42,59 @@ async def check_status_and_run(disease: str, target: str,
         logger.info(f"Previous stages for {pipeline_type.upper()} not completed - TERMINATING")
         raise Exception(f"Previous stages for {pipeline_type.upper()} not completed - TERMINATING")
 
-# async def run_analyzers(disease: str, target: str = "no-target", pipeline_status: str = "completed"):
-#     try:
-
-#         pipelines_details = {
-#             "image-analysis": image_analyzer_main,
-#             "table-analysis": table_analyzer_main,
-#             "supplementary-data-analysis": supplementary_analyzer_main
-#         }
-#         """Run all analyzers sequentially"""
-#         # for pipeline_type, pipeline_runner in pipelines_details.items():
-#         #     if pipeline_type == "supplementary-analysis":
-#         #         await check_status_and_run(disease, target, pipeline_type, pipeline_runner, pipeline_status)
-#         #         break
-
-#         tasks = [
-#             check_status_and_run(disease, target, pipeline_type, pipeline_runner, pipeline_status)
-#             for pipeline_type, pipeline_runner in pipelines_details.items()
-#         ]
-#         # Run them in parallel
-#         results = await asyncio.gather(*tasks, return_exceptions=True)
-
-#         successful_results = []
-#         failed_pipelines = []
-        
-#         for i, result in enumerate(results):
-#             pipeline_type = list(pipelines_details.keys())[i]
-            
-#             if isinstance(result, Exception):
-#                 logging.error(f"Pipeline '{pipeline_type}' failed: {str(result)}")
-#                 failed_pipelines.append((pipeline_type, result))
-#             else:
-#                 successful_results.append((pipeline_type, result))
-#                 logging.info(f"Pipeline '{pipeline_type}' completed successfully")
-
-#         # Log summary
-#         logging.info(f"Completed {len(successful_results)}/{len(pipelines_details)} pipelines successfully")
-        
-#         if failed_pipelines:
-#             logging.warning(f"Failed pipelines: {[name for name, _ in failed_pipelines]}")
-#             # Optionally re-raise the first exception or handle differently based on requirements
-#             raise failed_pipelines[0][1]
-        
-#         return {
-#             "successful": successful_results,
-#             "failed": failed_pipelines,
-#             "total_pipelines": len(pipelines_details)
-#         }
-
-#     except Exception as e:
-#         logging.error(f"Critical error in run_analyzers: {str(e)}")
-#         raise
-
-
-# if __name__ == "__main__":
-#     disease = "phenylketonuria"
-#     target = "no-target"
-#     asyncio.run(run_analyzers(disease, target))
+def should_run_image_analyzer(disease: str, target: str) -> bool:
+    """
+    Determine if image analyzer should run based on input parameters.
+    Image analyzer runs only for:
+    1. Disease-specific analysis (disease != "no-disease", target == "no-target")
+    2. Target-disease combination (both disease and target are specified and not "no-*")
+    
+    It does NOT run for:
+    - Target-only analysis (target != "no-target", disease == "no-disease")
+    """
+    # Target-only case: skip image analyzer
+    if target != "no-target" and disease == "no-disease":
+        logger.info("Target-only analysis detected - skipping image analyzer")
+        return False
+    
+    # Disease-only case: run image analyzer
+    if disease != "no-disease" and target == "no-target":
+        logger.info("Disease-only analysis detected - including image analyzer")
+        return True
+    
+    # Target-disease combination: run image analyzer
+    if disease != "no-disease" and target != "no-target":
+        logger.info("Target-disease combination detected - including image analyzer")
+        return True
+    
+    # Default case (shouldn't happen, but log it)
+    logger.warning(f"Unexpected combination: disease={disease}, target={target} - defaulting to skip image analyzer")
+    return False
 
 async def run_analyzers(disease: str, target: str = "no-target", pipeline_status: str = "completed"):
     try:
-        pipelines_details = {
+        # Define all available pipelines
+        all_pipelines = {
             "image-analysis": image_analyzer_main,
             "table-analysis": table_analyzer_main,
             "supplementary-data-analysis": supplementary_analyzer_main
         }
         
-        logger.info(f"Starting analysis pipelines for disease: {disease}, target: {target}")
+        # Filter pipelines based on input type
+        pipelines_details = {}
         
-        # Create tasks for all pipelines
+        # Always include table and supplementary analyzers
+        pipelines_details["table-analysis"] = all_pipelines["table-analysis"]
+        pipelines_details["supplementary-data-analysis"] = all_pipelines["supplementary-data-analysis"]
+        
+        # Conditionally include image analyzer
+        if should_run_image_analyzer(disease, target):
+            pipelines_details["image-analysis"] = all_pipelines["image-analysis"]
+        
+        logger.info(f"Starting analysis pipelines for disease: {disease}, target: {target}")
+        logger.info(f"Active pipelines: {list(pipelines_details.keys())}")
+        
+        # Create tasks for selected pipelines
         tasks = [
             check_status_and_run(disease, target, pipeline_type, pipeline_runner, pipeline_status)
             for pipeline_type, pipeline_runner in pipelines_details.items()
@@ -136,6 +119,7 @@ async def run_analyzers(disease: str, target: str = "no-target", pipeline_status
 
         # Log summary
         logger.info(f"Pipeline execution summary:")
+        logger.info(f"  - Active pipelines: {len(pipelines_details)}")
         logger.info(f"  - Successful: {len(successful_results)}/{len(pipelines_details)} pipelines")
         logger.info(f"  - Failed: {len(failed_pipelines)}/{len(pipelines_details)} pipelines")
         
@@ -156,11 +140,13 @@ async def run_analyzers(disease: str, target: str = "no-target", pipeline_status
             
             raise Exception(error_msg)
         
-        logger.info("All analyzers completed successfully")
+        logger.info("All active analyzers completed successfully")
         return {
             "successful": successful_results,
             "failed": failed_pipelines,
             "total_pipelines": len(pipelines_details),
+            "active_pipelines": list(pipelines_details.keys()),
+            "skipped_pipelines": [name for name in all_pipelines.keys() if name not in pipelines_details],
             "success_rate": 1.0
         }
 

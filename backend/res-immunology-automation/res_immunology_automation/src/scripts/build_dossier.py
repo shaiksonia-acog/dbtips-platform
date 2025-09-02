@@ -12,7 +12,7 @@ from api import get_evidence_literature_semaphore, get_mouse_studies, \
                 get_targetability, get_gene_essentiality_map, get_tractability, \
                 get_paralogs, get_target_pipeline_all_semaphore, get_evidence_target_literature, \
                 search_patents, get_complete_indication_pipeline, get_disease_gtr_data_semaphore, \
-                pgs_catalog_data
+                pgs_catalog_data, get_literature_images_evidence, get_target_literature_images_evidence
 
 from literature_enhancement.enhancement_runner import run_enhancement_pipeline
                 
@@ -283,7 +283,8 @@ async def run_endpoints(job_data):
 
         disease_only_endpoints = [
             get_disease_ontology,
-            run_enhancement_pipeline
+            run_enhancement_pipeline,
+            get_literature_images_evidence
         ]
 
         target_only_endpoints = [
@@ -305,7 +306,8 @@ async def run_endpoints(job_data):
             get_target_pipeline_all_semaphore,
             get_evidence_target_literature,
             search_patents,
-            run_enhancement_pipeline
+            run_enhancement_pipeline,
+            get_target_literature_images_evidence
         ]
         
         target = job_data.get('target', None)
@@ -326,6 +328,8 @@ async def run_endpoints(job_data):
                         response = await endpoint(request_data)
                     elif endpoint.__name__ in ['get_evidence_literature_semaphore', 'get_diseases_profiles_llm', 'get_disease_gtr_data_semaphore', 'pgs_catalog_data']:
                         response = await endpoint(request_data, redis=redis, db=db, build_cache=True)
+                    elif endpoint.__name__ in ['get_literature_images_evidence']:
+                        response = await endpoint(request_data, db=db, build_cache=True)
                     elif endpoint.__name__ in ['get_rna_sequence_semaphore']:
                         response = await endpoint(request_data, redis=redis, db=db, build_cache=True)
                     else:
@@ -347,6 +351,10 @@ async def run_endpoints(job_data):
                         if endpoint.__name__ == 'run_enhancement_pipeline':
                             logging.info(f"\t\t\tCalling {endpoint.__name__} for disease: {disease}")
                             response = await endpoint(disease=disease)
+                        elif endpoint.__name__ == 'get_literature_images_evidence':
+                            request_data = DiseasesRequest(diseases=[disease])
+                            logging.info(f"\t\t\tCalling {endpoint.__name__} for disease: {disease}")
+                            response = await endpoint(request_data, db=db, build_cache=True)
                         else:
                             request_data = DiseaseRequest(disease=disease)
                             logging.info(f"\t\t\tCalling {endpoint.__name__} for disease: {disease}")
@@ -381,12 +389,20 @@ async def run_endpoints(job_data):
                     if endpoint.__name__ == "get_target_pipeline_all_semaphore":
                         request_data = TargetRequest(target=target, diseases=pipeline_inp)
                         logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target} and disease: {pipeline_inp}")
-                    
+                    elif endpoint.__name__ == 'get_target_literature_images_evidence':
+                        # Skip target-literature-images endpoint if it's target only (no-disease)
+                        if disease == 'no-disease':
+                            logging.info(f"\t\t\tSkipping {endpoint.__name__} for target-only case: {target}")
+                            continue
+                        request_data = TargetRequest(target=target, diseases=oth_inp)
+                        logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target} and disease: {oth_inp}")
                     else:
                         request_data = TargetRequest(target=target, diseases=oth_inp)
                         logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target} and disease: {oth_inp}")
                     
                     if endpoint.__name__ in ['get_evidence_target_literature']:
+                        response = await endpoint(request_data, db=db, build_cache=True)
+                    elif endpoint.__name__ in ['get_target_literature_images_evidence']:
                         response = await endpoint(request_data, db=db, build_cache=True)
                     elif endpoint.__name__ == 'run_enhancement_pipeline':
                         logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target} and disease: {disease}")
@@ -418,4 +434,4 @@ async def main():
 
 if __name__ == "__main__":
     time.sleep(100)
-    asyncio.run(main())
+    asyncio.run(main())git

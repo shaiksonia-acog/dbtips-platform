@@ -74,7 +74,7 @@ def fetch_literature_images_data(db, target: str = "no-target", diseases: List[s
                 "url": record.url or "",
                 "image_url": record.image_url or "",
                 "image_caption": record.image_caption or "",
-                "genes": record.genes.split(",") if record.genes else [],
+                "genes": [gene.strip() for gene in record.genes.split(",")] if record.genes else [],               
                 "insights": record.insights or "",
                 "drugs": record.drugs or "",
                 "keywords": record.keywords or "",
