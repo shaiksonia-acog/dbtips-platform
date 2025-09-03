@@ -71,7 +71,7 @@ from component_services.fetch_images import (
     process_target_literature_request
 )  
 from component_services.literature_enhancement_services import fetch_literature_table_analysis, fetch_literature_supplementary_materials_analysis
-
+from component_services.literature_cache_update import update_literature_caches_with_analysis
 from component_services.evidence_services import build_query, get_geo_data_for_diseases,fetch_mouse_models,\
     fetch_and_filter_figures_by_disease_and_pmids,fetch_mouse_model_data_alliancegenome,\
     get_top_10_literature_helper,add_platform_name,add_study_type, add_sample_type, get_mesh_term_for_disease, build_query_target
@@ -2517,11 +2517,11 @@ async def get_literature_table_analysis(request: TargetRequest,
         cache_dir = "cached_data_json/disease"
         cache_items = diseases
         table_model = Disease
-    elif is_target_only:
-        cache_dir = "cached_data_json/target"
-        cache_items = [target]
-        table_model = Target
-    else:  # combination
+    # elif is_target_only:
+    #     cache_dir = "cached_data_json/target"
+    #     cache_items = [target]
+    #     table_model = Target
+    else:  # combination (includes target + ["no-disease"])
         cache_dir = "cached_data_json/target_disease"
         cache_items = [f"{target}-{disease}" for disease in diseases]
         table_model = TargetDisease
@@ -2541,9 +2541,16 @@ async def get_literature_table_analysis(request: TargetRequest,
             cached_responses = load_response_from_file(record.file_path)
             if endpoint in cached_responses:
                 if is_combination:
-                    # For combinations, use disease name as key (with spaces)
-                    disease_name = item.split('-')[1]
+                    # For combinations, extract disease name properly
+                    # Handle case where item is "target-disease"
+                    if '-' in item:
+                        disease_name = item.split('-', 1)[1]  # Get everything after first hyphen
+                    else:
+                        disease_name = item
                     cached_data[disease_name] = cached_responses[endpoint]
+                elif is_target_only:
+                    # For target-only, use "no-disease" as key
+                    cached_data["no-disease"] = cached_responses[endpoint]
                 else:
                     # Use original item name (with spaces for diseases)
                     cached_data[item] = cached_responses[endpoint]
@@ -2553,6 +2560,12 @@ async def get_literature_table_analysis(request: TargetRequest,
     
     if not items_to_process:
         print("All items cached, returning cached response")
+        # ALWAYS update literature endpoints with analysis, even when returning cached data
+        await update_literature_caches_with_analysis(
+            target, diseases, db, "table",
+            load_response_from_file, save_response_to_file,
+            Disease, TargetDisease
+        )
         return cached_data
     
     print(f"Processing items: {items_to_process}")
@@ -2573,13 +2586,22 @@ async def get_literature_table_analysis(request: TargetRequest,
                     # Query: target="glp1r", disease="no-disease"
                     query_target = target
                     query_disease = "no-disease"
-                    key = item
+                    key = "no-disease"  # Always use "no-disease" as key for target-only
                 else:  # combination
                     # Split: "glp1r-alzheimer disease" -> target="glp1r", disease="alzheimer disease"
-                    parts = item.split('-', 1)  # Split only on first hyphen
-                    query_target = parts[0]
-                    query_disease = parts[1]  # Keep spaces for database query
-                    key = parts[1]  # Keep spaces for response key
+                    # Handle the case properly - split only on first hyphen
+                    if '-' in item:
+                        parts = item.split('-', 1)  # Split only on first hyphen
+                        query_target = parts[0]
+                        query_disease = parts[1]  # This will be "no-disease" for your case
+                        key = parts[1]  # This should be "no-disease"
+                    else:
+                        # Fallback case
+                        query_target = target
+                        query_disease = item
+                        key = item
+                
+                print(f"Processing item: {item}, query_target: {query_target}, query_disease: {query_disease}, key: {key}")
                 
                 # Fetch data with exact match logic (using spaces for disease)
                 data = fetch_literature_table_analysis(query_target, [query_disease], db)
@@ -2601,6 +2623,15 @@ async def get_literature_table_analysis(request: TargetRequest,
                     db.commit()
                     db.refresh(new_record)
                     print(f"Record with ID {clean_item} added to database")
+
+            await update_literature_caches_with_analysis(
+                target, diseases, db, "table",
+                load_response_from_file, save_response_to_file,
+                Disease, TargetDisease
+                )
+        
+        
+        # ALWAYS update literature endpoints with analysis, regardless of build_cache flag
         
         return cached_data
         
@@ -2630,11 +2661,11 @@ async def get_literature_supplementary_materials_analysis(request: TargetRequest
         cache_dir = "cached_data_json/disease"
         cache_items = diseases
         table_model = Disease
-    elif is_target_only:
-        cache_dir = "cached_data_json/target"
-        cache_items = [target]
-        table_model = Target
-    else:  # combination
+    # elif is_target_only:
+    #     cache_dir = "cached_data_json/target"
+    #     cache_items = [target]
+    #     table_model = Target
+    else:  # combination (includes target + ["no-disease"])
         cache_dir = "cached_data_json/target_disease"
         cache_items = [f"{target}-{disease}" for disease in diseases]
         table_model = TargetDisease
@@ -2654,9 +2685,16 @@ async def get_literature_supplementary_materials_analysis(request: TargetRequest
             cached_responses = load_response_from_file(record.file_path)
             if endpoint in cached_responses:
                 if is_combination:
-                    # For combinations, use disease name as key (with spaces)
-                    disease_name = item.split('-')[1]
+                    # For combinations, extract disease name properly
+                    # Handle case where item is "target-disease"
+                    if '-' in item:
+                        disease_name = item.split('-', 1)[1]  # Get everything after first hyphen
+                    else:
+                        disease_name = item
                     cached_data[disease_name] = cached_responses[endpoint]
+                elif is_target_only:
+                    # For target-only, use "no-disease" as key
+                    cached_data["no-disease"] = cached_responses[endpoint]
                 else:
                     # Use original item name (with spaces for diseases)
                     cached_data[item] = cached_responses[endpoint]
@@ -2666,6 +2704,12 @@ async def get_literature_supplementary_materials_analysis(request: TargetRequest
     
     if not items_to_process:
         print("All items cached, returning cached response")
+        # ALWAYS update literature endpoints with analysis, even when returning cached data
+        await update_literature_caches_with_analysis(
+            target, diseases, db, "supplementary",
+            load_response_from_file, save_response_to_file,
+            Disease, TargetDisease
+        )
         return cached_data
     
     print(f"Processing items: {items_to_process}")
@@ -2686,13 +2730,22 @@ async def get_literature_supplementary_materials_analysis(request: TargetRequest
                     # Query: target="glp1r", disease="no-disease"
                     query_target = target
                     query_disease = "no-disease"
-                    key = item
+                    key = "no-disease"  # Always use "no-disease" as key for target-only
                 else:  # combination
                     # Split: "glp1r-alzheimer disease" -> target="glp1r", disease="alzheimer disease"
-                    parts = item.split('-', 1)  # Split only on first hyphen
-                    query_target = parts[0]
-                    query_disease = parts[1]  # Keep spaces for database query
-                    key = parts[1]  # Keep spaces for response key
+                    # Handle the case properly - split only on first hyphen
+                    if '-' in item:
+                        parts = item.split('-', 1)  # Split only on first hyphen
+                        query_target = parts[0]
+                        query_disease = parts[1]  # This will be "no-disease" for your case
+                        key = parts[1]  # This should be "no-disease"
+                    else:
+                        # Fallback case
+                        query_target = target
+                        query_disease = item
+                        key = item
+                
+                print(f"Processing item: {item}, query_target: {query_target}, query_disease: {query_disease}, key: {key}")
                 
                 # Fetch data with exact match logic (using spaces for disease)
                 data = fetch_literature_supplementary_materials_analysis(query_target, [query_disease], db)
@@ -2714,6 +2767,16 @@ async def get_literature_supplementary_materials_analysis(request: TargetRequest
                     db.commit()
                     db.refresh(new_record)
                     print(f"Record with ID {clean_item} added to database")
+
+
+            # ALWAYS update literature endpoints with analysis, regardless of build_cache flag
+            await update_literature_caches_with_analysis(
+                target, diseases, db, "supplementary",
+                load_response_from_file, save_response_to_file,
+                Disease, TargetDisease
+            )
+        
+        
         
         return cached_data
         
