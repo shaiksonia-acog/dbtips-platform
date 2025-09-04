@@ -108,7 +108,12 @@ from threading import Lock
 import asyncio
 import httpx
 import tzlocal
-
+from component_services.dossier_endpoint_utils import (
+    get_endpoints_for_job_type,
+    create_endpoint_records,
+    get_friendly_endpoint_name,
+    fetch_records_by_status
+)
 
 
 app = FastAPI()
@@ -220,165 +225,186 @@ async def download_file(file_path: str):
 
 #################################### Build Dossier ##############################################
 
-@app.post("/dossier/dossier-status/", tags = ["Dossier Status"])
+@app.post("/dossier/dossier-status/", tags=["Dossier Status"])
 async def get_dossier_status(request: TargetRequest, db: Session = Depends(get_db)):
     try:
         diseases = [disease.lower() for disease in request.diseases]
         target = request.target.lower().strip()
 
-        # {"procesed" :[{"target" : <target> , "diseases": [obesity]], error: [{"target" : <target> , "diseases": [T2D]], "processing: []}
         cached_records = []
         building_dossier = []
         local_time = datetime.now(tzlocal.get_localzone())
-        record = {}
 
-        errors = []
         processed_target = None
         pending_target = None
         processed_diseases = []
         pending_diseases = []
                 
         if target != "":
+            logging.info(f"Processing target: '{target}' with diseases: {diseases}")
             if len(diseases):
-                
                 for disease in diseases:
+                    logging.info(f"Processing target-disease combination: '{target}' - '{disease}'")
                     target_record = db.query(TargetDossierStatus).filter_by(target=target, disease=disease).first()
                     disease_record = db.query(DiseaseDossierStatus).filter_by(disease=f"{disease}").first()
                     target_only_record = db.query(TargetDossierStatus).filter_by(target=target, disease="no-disease").first()
 
-                    # if both records are existing in Disease and Target Status table
+                    # Check if both records exist and are processed
                     if target_record is not None and disease_record is not None: 
+                        logging.info(f"Found existing records for target '{target}' and disease '{disease}'")
                         target_status: str = target_record.status
                         disease_status: str = disease_record.status
-                        if target_status == 'processed' and disease_status  == 'processed':
+                        if target_status == 'processed' and disease_status == 'processed':
                             processed_target = target
                             processed_diseases.append(disease) 
-                        elif target_status in ['processing','submitted','error'] or disease_status in ['processing','submitted','error']:
+                        elif target_status in ['processing', 'submitted', 'error'] or disease_status in ['processing', 'submitted', 'error']:
                             pending_target = target
                             pending_diseases.append(disease)
-
                     else:
+                        # Create missing records and endpoint records
                         if target_record is None:
+                            logging.info(f"Creating new target record for '{target}' with disease '{disease}'")
                             new_target_record = TargetDossierStatus(target=target, disease=disease, status="submitted", creation_time=local_time)
-
-                            pending_target = target
                             db.add(new_target_record)
-                            db.commit()  # Commit the transaction to save the record to the database
-                            db.refresh(new_target_record)
+                            
                         if disease_record is None:
-                            new_disease_record = DiseaseDossierStatus(disease=f"{disease}",
-                                            status="submitted",  creation_time=local_time)  # Create a new instance of the identified model
-                            # Add the new record to the session
+                            logging.info(f"Creating new disease record for '{disease}'")
+                            new_disease_record = DiseaseDossierStatus(disease=f"{disease}", status="submitted", creation_time=local_time)
                             db.add(new_disease_record)
-                            db.commit()  # Commit the transaction to save the record to the database
-                            db.refresh(new_disease_record) 
                         
                         if target_only_record is None:
+                            logging.info(f"Creating target-only record for '{target}'")
                             target_only_record = TargetDossierStatus(target=target, disease='no-disease', status="submitted", creation_time=local_time)
                             db.add(target_only_record)
-                            db.commit()
-                            db.refresh(target_only_record)
+                            
+                            # Create endpoint records for target-only
+                            target_only_endpoints = get_endpoints_for_job_type(target, 'no-disease')
+                            create_endpoint_records(db, target, 'no-disease', target_only_endpoints)
 
-                        logging.info(f"added record for target {target} and disease {disease}")
+                        # Create endpoint records for target-disease combination
+                        endpoints = get_endpoints_for_job_type(target, disease)
+                        create_endpoint_records(db, target, disease, endpoints)
+                        
+                        pending_target = target
                         pending_diseases.append(disease)
+                
+                # Commit all changes at once
+                try:
+                    db.commit()
+                    logging.info("Successfully committed all new records")
+                except Exception as e:
+                    logging.error(f"Error committing records: {str(e)}")
+                    db.rollback()
+                    raise
                 
                 if len(processed_diseases):
                     cached_records.append({'target': processed_target, 'diseases': processed_diseases})
                 if len(pending_diseases):
                     building_dossier.append({'target': pending_target, 'diseases': pending_diseases})
             
-            else:
+            else:  # Target only, no diseases
+                logging.info(f"Processing target-only: '{target}' (no diseases)")
                 target_record = db.query(TargetDossierStatus).filter_by(target=target, disease='no-disease').first()
-                record = {'target': target,'diseases': diseases}
 
                 if target_record is not None:
+                    logging.info(f"Found existing target-only record for '{target}'")
                     cache_status: str = target_record.status
                     if cache_status == 'processed':
-                        # cached_records.append(record) 
                         processed_target = target
-
-                    elif cache_status in ['processing','submitted','error']:
-                        # building_dossier.append(record) 
+                    elif cache_status in ['processing', 'submitted', 'error']:
                         pending_target = target
-
                 else:
+                    logging.info(f"Creating new target-only record for '{target}'")
                     target_only_record = TargetDossierStatus(target=target, disease='no-disease', status="submitted", creation_time=local_time)
                     db.add(target_only_record)
-                    db.commit()  # Commit the transaction to save the record to the database
-                    db.refresh(target_only_record)
-                    # building_dossier.append(record) 
+                    
+                    # Create endpoint records for target-only
+                    endpoints = get_endpoints_for_job_type(target, 'no-disease')
+                    create_endpoint_records(db, target, 'no-disease', endpoints)
+                    
+                    try:
+                        db.commit()
+                        logging.info("Successfully committed target-only record")
+                    except Exception as e:
+                        logging.error(f"Error committing target-only record: {str(e)}")
+                        db.rollback()
+                        raise
+                    
                     pending_target = target
                 
                 if processed_target:
-                    cached_records.append({'target': processed_target, 'diseases': processed_diseases})
+                    cached_records.append({'target': processed_target, 'diseases': []})
                 if pending_target:
-                    building_dossier.append({'target': pending_target, 'diseases': pending_diseases})
-            
- 
-        if target == "":
+                    building_dossier.append({'target': pending_target, 'diseases': []})
+
+        if target == "":  # Disease only queries
+            logging.info(f"Processing disease-only queries: {diseases}")
             processed_diseases = []
             pending_diseases = []
+            
             for disease in diseases:
                 disease = disease.lower().strip()
+                logging.info(f"Processing disease-only: '{disease}'")
 
                 disease_record = db.query(DiseaseDossierStatus).filter_by(disease=f"{disease}").first()
+                
                 if disease_record is not None:
+                    logging.info(f"Found existing disease record for '{disease}' with status '{disease_record.status}'")
                     cache_status: str = disease_record.status
                     if cache_status == 'processed':
                         processed_diseases.append(disease) 
-                    elif cache_status in ['processing','submitted','error']:
+                    elif cache_status in ['processing', 'submitted', 'error']:
                         pending_diseases.append(disease) 
-                                
                 else:
-                    new_record = DiseaseDossierStatus(disease=f"{disease}",
-                                        status="submitted", creation_time=local_time)  # Create a new instance of the identified model
-                    db.add(new_record)  # Add the new record to the session
-                    db.commit()  # Commit the transaction to save the record to the database
-                    db.refresh(new_record) 
-                    logging.info(f"added record for disease {disease}")
+                    logging.info(f"Creating new disease-only record for '{disease}'")
+                    new_record = DiseaseDossierStatus(disease=f"{disease}", status="submitted", creation_time=local_time)
+                    db.add(new_record)
+                    
+                    # Create endpoint records for disease-only
+                    endpoints = get_endpoints_for_job_type("", disease)
+                    create_endpoint_records(db, "no-target", disease, endpoints)
+                    
                     pending_diseases.append(disease)
 
+            # Commit all disease records at once
+            if pending_diseases:
+                try:
+                    db.commit()
+                    logging.info("Successfully committed disease-only records")
+                except Exception as e:
+                    logging.error(f"Error committing disease-only records: {str(e)}")
+                    db.rollback()
+                    raise
+
             if len(processed_diseases):
-                cached_records.append({'target': target, 'diseases': processed_diseases})
+                cached_records.append({'target': '', 'diseases': processed_diseases})
             
             if len(pending_diseases):
-                building_dossier.append({'target': target, 'diseases': pending_diseases})
+                building_dossier.append({'target': '', 'diseases': pending_diseases})
+
+        logging.info(f"Final response - cached: {cached_records}, building: {building_dossier}")
 
     except Exception as e:
+        logging.error(f"Error in get_dossier_status: {str(e)}")
+        logging.error(f"Exception details: ", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))    
     
-    return {"cached":cached_records, "building": building_dossier}
+    return {"cached": cached_records, "building": building_dossier}
 
 
 dossier_semaphore = asyncio.Semaphore(1)
-@app.get("/dossier/dashboard/", tags = ["Dossier Status"])
-async def get_dossier_dashboard(db: Session = Depends(get_db)):
+@app.get("/dossier/progression-tracker-dashboard/", tags=["Dossier Status"])  # Renamed endpoint
+async def get_progression_tracker(db: Session = Depends(get_db)):
     try:
         response = {}
 
-        def fetch_records_by_status(job_type, record_status: str) -> List[Dict[str, str]]:
-            all_records = []
-            records = db.query(job_type).filter_by(status=record_status).all()
-            for record in records:
-                data = {'target': None, 'disease': None}
-                if job_type.__tablename__ == "target_dossier_status":
-                    data['target'] = record.target
-                data['disease'] = record.disease
-                data['submission_time'] = record.submission_time
-                data['processed_time'] = record.processed_time
-                data['error_count'] = record.error_count
-                all_records.append(data)
-            return all_records
-        
         status_list = ['submitted', 'processing', 'processed', 'error']
         job_types = [DiseaseDossierStatus, TargetDossierStatus]
         for job_type in job_types:
             for status in status_list:
                 if status not in response:
                     response[status] = []
-                response[status].extend(fetch_records_by_status(job_type, status))
-
-        
+                response[status].extend(fetch_records_by_status(db, job_type, status))
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))    

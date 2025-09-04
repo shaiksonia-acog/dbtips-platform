@@ -1,5 +1,5 @@
 #models.py
-from sqlalchemy import Column, Sequence, String,Integer, DateTime, PrimaryKeyConstraint, Text, Boolean, UniqueConstraint
+from sqlalchemy import Column, Sequence, String,Integer, DateTime, PrimaryKeyConstraint, Text, Boolean, UniqueConstraint, func
 from .database import Base
 
 
@@ -56,6 +56,22 @@ class TargetDossierStatus(Base):
     processed_time = Column(DateTime(timezone=True), nullable=True) 
     __table_args__ = (
         PrimaryKeyConstraint('target', 'disease', name='target-disease-pk'),
+    )
+
+class DossierEndpointStatus(Base):
+    __tablename__ = "dossier_endpoint_status"
+
+    job_id = Column(Integer, primary_key=True, autoincrement=True)  # Auto-increment primary key
+    target = Column(String, nullable=False)
+    disease = Column(String, nullable=False)
+    endpoint_name = Column(String, nullable=False)
+    status = Column(String, nullable=False)  # submitted, processing, processed, error
+    error_count = Column(Integer, default=0, nullable=False)
+    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
+    creation_time = Column(DateTime(timezone=True), default=func.now())
+
+    __table_args__ = (
+        UniqueConstraint('target', 'disease', 'endpoint_name', name='unique_target_disease_endpoint'),
     )
 
 class Admin(Base):
@@ -142,4 +158,3 @@ class LiteratureEnhancementPipelineStatus(Base):
     __table_args__ = (
         PrimaryKeyConstraint('disease', 'target', 'pipeline_type', name='pk_disease_target_pipeline'),
     )
-

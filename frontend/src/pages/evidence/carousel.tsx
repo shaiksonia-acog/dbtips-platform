@@ -66,27 +66,42 @@ const FlippableCard: React.FC<{ image: ImageData }> = ({ image }) => {
     return (
       <div className="card-back-content">
         {image.drugs && isPresent(image.drugs) && (
-          <div className="mb-4">
-            <Text strong className="text-blue-600 text-xs">
+          <div className="mb-2">
+            <Text strong className="text-blue-600" style={{ fontSize: '12px' }}>
               Drugs:
             </Text>
-            <Paragraph className="mt-1 mb-0 text-xs leading-relaxed text-justify">{image.drugs}</Paragraph>
+            <Paragraph 
+              className="mt-1 mb-0 leading-tight text-justify" 
+              style={{ fontSize: '11px', lineHeight: '1.2' }}
+            >
+              {image.drugs}
+            </Paragraph>
           </div>
         )}
         {image.process && isPresent(image.process) && (
-          <div className="mb-4">
-            <Text strong className="text-green-600 text-xs">
+          <div className="mb-2">
+            <Text strong className="text-green-600" style={{ fontSize: '12px' }}>
               Process:
             </Text>
-            <Paragraph className="mt-1 mb-0 text-xs leading-relaxed text-justify">{image.process}</Paragraph>
+            <Paragraph 
+              className="mt-1 mb-0 leading-tight text-justify" 
+              style={{ fontSize: '11px', lineHeight: '1.2' }}
+            >
+              {image.process}
+            </Paragraph>
           </div>
         )}
         {image.insights && isPresent(image.insights) && (
-          <div className="mb-2">
-            <Text strong className="text-gray-700 text-xs">
+          <div className="mb-1">
+            <Text strong className="text-gray-700" style={{ fontSize: '12px' }}>
               Insights:
             </Text>
-            <Paragraph className="mt-1 mb-0 text-xs leading-relaxed text-justify">{image.insights}</Paragraph>
+            <Paragraph 
+              className="mt-1 mb-0 leading-tight text-justify" 
+              style={{ fontSize: '11px', lineHeight: '1.2' }}
+            >
+              {image.insights}
+            </Paragraph>
           </div>
         )}
       </div>
@@ -242,10 +257,13 @@ const ImageCarousel: React.FC<CarouselProps> = ({ networkBiologyData }) => {
         }
 
         .card-back-content {
-          padding: 12px;
+          padding: 8px;
           height: 100%;
           overflow-y: auto;
           text-align: left;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
         }
 
         .line-clamp-2 {
@@ -256,17 +274,40 @@ const ImageCarousel: React.FC<CarouselProps> = ({ networkBiologyData }) => {
           text-overflow: ellipsis;
         }
 
-        .card-back-content::-webkit-scrollbar { width: 4px; }
-        .card-back-content::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 2px; }
-        .card-back-content::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 2px; }
-        .card-back-content::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+        .card-back-content::-webkit-scrollbar { 
+          width: 3px; 
+        }
+        
+        .card-back-content::-webkit-scrollbar-track { 
+          background: #f1f1f1; 
+          border-radius: 2px; 
+        }
+        
+        .card-back-content::-webkit-scrollbar-thumb { 
+          background: #c1c1c1; 
+          border-radius: 2px; 
+        }
+        
+        .card-back-content::-webkit-scrollbar-thumb:hover { 
+          background: #a8a8a8; 
+        }
 
         /* Keep image stable on hover (no extra transform) */
-        .flip-card:hover .flip-card-front img { transform: translateZ(0); transition: none; }
+        .flip-card:hover .flip-card-front img { 
+          transform: translateZ(0); 
+          transition: none; 
+        }
 
         /* Text utilities */
-        .text-justify { text-align: justify; word-wrap: break-word; hyphens: auto; }
-        .card-back-content .ant-typography { margin-bottom: 0 !important; }
+        .text-justify { 
+          text-align: justify; 
+          word-wrap: break-word; 
+          hyphens: auto; 
+        }
+        
+        .card-back-content .ant-typography { 
+          margin-bottom: 0 !important; 
+        }
       `}</style>
 
       <ConfigProvider
