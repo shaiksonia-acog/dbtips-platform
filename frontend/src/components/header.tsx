@@ -3,7 +3,7 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Dropdown } from "antd";
 import AganithaLogo from "../assets/aganitha-logo.png";
 import UserDropdown from "./userDropdown";
-
+import NotificationBell from "./notification"
 
 const Header = ({ app_state }) => {
  const location = useLocation();
@@ -446,6 +446,7 @@ const Header = ({ app_state }) => {
      <div className="flex items-center justify-between">
        <Link
          to={buildUrlWithIndications(
+
            "/",
            app_state.target,
            app_state.indications
@@ -512,12 +513,31 @@ const Header = ({ app_state }) => {
              </div>
             
            ))}
+           <div className="flex items-center justify-center gap-3 ">
+
+           
+           <NavLink
+		to={buildUrlWithIndications(
+			`/notification`,
+      app_state.target,
+			app_state.indications
+		)}
+		
+	><NotificationBell data={app_state.indications} /></NavLink>
+       {email && <UserDropdown email={email} onLogout={handleLogout} />}
+
+  </div>
          </nav>
         
        ):
-       <div>
-             <div style={{ display: "flex", justifyContent: "flex-end", padding: "0 16px" }}>
-     {email && <UserDropdown email={email} onLogout={handleLogout} />}
+       <div className="flex items-center gap-2 mr-2">
+           
+   <NavLink
+				to="/notification"
+				
+			><NotificationBell data={app_state.indications} /></NavLink>
+        <div  >
+     {!email && <UserDropdown email={email} onLogout={handleLogout} />}
    </div>
 
 

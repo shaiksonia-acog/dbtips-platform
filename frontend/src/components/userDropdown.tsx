@@ -34,7 +34,7 @@ const UserDropdown: React.FC<Props> = ({ email, onLogout }) => {
       <Button
         type="text"
         style={{ padding: 0 }}
-        icon={<UserOutlined style={{ fontSize: '20px', }}  />}
+        icon={<UserOutlined style={{ fontSize: '20px', color: '#08c' }}  />}
       />
     </Dropdown>
   );

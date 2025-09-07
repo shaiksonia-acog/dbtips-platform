@@ -4,7 +4,7 @@ import { Badge,  } from 'antd';
 import { BellOutlined } from '@ant-design/icons';
 
 const fetchData = async () => {
-  const response = await fetch(`${import.meta.env.VITE_API_URI}/dossier/dashboard/`);
+  const response = await fetch(`${import.meta.env.VITE_API_URI}/dossier/progression-tracker-dashboard/`);
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
