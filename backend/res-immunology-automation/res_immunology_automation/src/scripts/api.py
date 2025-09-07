@@ -1,8 +1,12 @@
 import os
 from urllib import response
-from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks
+from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks, Request
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+import smtplib
+import random
+import secrets
+from ldap3 import Server, Connection, ALL
 from typing import Optional, List, Dict, Any
 from dependencies import get_neo4j_driver
 from collections import defaultdict
@@ -13,9 +17,11 @@ from component_services.disease_profile_services import (
     find_ancestors, find_descendants, 
     extract_data_by_ids, fetch_gtr_records
 )
+from ldap3 import Server, Connection, ALL
 import uvicorn
 import logging
 from graphrag_service import get_redis
+from fastapi.responses import JSONResponse
 from redis import Redis
 import json, csv
 import requests
@@ -115,6 +121,17 @@ from component_services.dossier_endpoint_utils import (
     fetch_records_by_status
 )
 
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+class EmailRequest(BaseModel):
+    email: EmailStr  # Better email validation
+
+class VerifyRequest(BaseModel):
+    email: EmailStr
+    otp: str
+
+
 
 app = FastAPI()
 
@@ -131,16 +148,98 @@ logging.basicConfig(level=logging.INFO)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origin_regex=r".*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+LDAP_SERVER = "ldap://ldap.aganitha.ai"
+LDAP_USER_DN = "ou=people,dc=aganitha,dc=ai"
+def authenticate_user(username: str, password: str):
+    """
+    Authenticate user against LDAP server
+    """
+    server = Server(LDAP_SERVER, get_info=ALL)
+
+    # Construct full DN (depends on your LDAP setup)
+    user_dn = f"uid={username},{LDAP_USER_DN}"
+
+    try:
+        conn = Connection(server, user=user_dn, password=password, auto_bind=True)
+        if conn.bind():
+            conn.unbind()
+            return True
+    except Exception as e:
+        print("LDAP error:", str(e))
+        return False
+
+    return False
 
 app.mount("/gwas-data", StaticFiles(directory=GWAS_DATA_DIR), name="gwas-data")
 
 
+SMTP_SERVER = "smtp.gmail.com"
+SMTP_PORT = 587
+EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
+if not EMAIL_ADDRESS or not EMAIL_PASSWORD:
+    raise Exception("EMAIL_ADDRESS and EMAIL_PASSWORD must be set in environment variables")
+
+OTP_COOLDOWN = 60  # seconds between OTP requests
+OTP_EXPIRY = 1000   # 10 minutes
+SESSION_EXPIRY = 604800  # 1 week 
+
+def is_valid_email_domain(email: str) -> bool:
+    """Add basic domain validation if needed"""
+    # You can add domain whitelist/blacklist logic here
+    return True
+
+def generate_secure_otp() -> str:
+    """Generate cryptographically secure OTP"""
+    return str(random.SystemRandom().randint(100000, 999999))
+
+def get_rate_limit_key(email: str) -> str:
+    """Get Redis key for rate limiting"""
+    return f"rate_limit:{email}"
+
+def check_rate_limit(email: str, redis_client: Redis) -> bool:
+    """Check if email is rate limited"""
+    rate_key = get_rate_limit_key(email)
+    if redis_client.exists(rate_key):
+        return False
+    return True
+
+def set_rate_limit_login(email: str, redis_client: Redis):
+    """Set rate limit for email"""
+    rate_key = get_rate_limit_key(email)
+    redis_client.setex(rate_key, OTP_COOLDOWN, "1")
+
+# ---------- FUNCTIONS ----------
+def send_email(receiver_email: str, otp: str):
+    """Send OTP via Gmail SMTP with better error handling"""
+    try:
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+            server.starttls()
+            server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+            
+            subject = "Your OTP Code - Do Not Share"
+            body = f"""Your OTP code is: {otp}
+
+This code will expire in 10 minutes.
+If you didn't request this code, please ignore this email.
+
+Do not share this code with anyone."""
+            
+            msg = f"Subject: {subject}\n\n{body}"
+            server.sendmail(EMAIL_ADDRESS, receiver_email, msg)
+            
+    except smtplib.SMTPAuthenticationError:
+        raise HTTPException(status_code=500, detail="Email authentication failed")
+    except smtplib.SMTPException as e:
+        raise HTTPException(status_code=500, detail="Failed to send email")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Email service temporarily unavailable")
 @app.on_event("startup")
 async def startup():
     # This will create the tables for all models defined with Base
@@ -4693,3 +4792,140 @@ async def get_patient_stories(request: DiseasesRequest, redis: Redis = Depends(g
         return cached_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/send-otp/")
+async def send_otp(req: EmailRequest, redis_client: Redis = Depends(get_redis)):
+    email = req.email.lower()  # Normalize email
+    
+    # Validate email domain if needed
+    if not is_valid_email_domain(email):
+        raise HTTPException(status_code=400, detail="Email domain not allowed")
+    
+    # Check rate limiting
+    if not check_rate_limit(email, redis_client):
+        raise HTTPException(
+            status_code=429, 
+            detail="Too many requests. Please wait before requesting another OTP."
+        )
+    
+    # Generate and store OTP
+    otp = generate_secure_otp()
+    redis_client.setex(email, OTP_EXPIRY, otp)  # 5 min expiry
+    
+    # Set rate limit
+    set_rate_limit_login(email, redis_client)
+    
+    # Send email
+    send_email(email, otp)
+    
+    return {"message": "OTP sent successfully", "expires_in": OTP_EXPIRY}
+
+@app.post("/verify-otp/")
+async def verify_otp(req: VerifyRequest, redis_client: Redis = Depends(get_redis)):
+    email = req.email.lower()  # Normalize email
+    
+    # Fetch OTP from Redis
+    stored_otp = redis_client.get(email)
+    if not stored_otp:
+        raise HTTPException(status_code=400, detail="OTP expired or not found")
+    
+    # Validate OTP format
+    if not req.otp.isdigit() or len(req.otp) != 6:
+        raise HTTPException(status_code=400, detail="Invalid OTP format")
+    
+    if req.otp != stored_otp:
+        raise HTTPException(status_code=400, detail="Invalid OTP")
+    
+    # OTP verified -> clean up
+    redis_client.delete(email)
+    redis_client.delete(get_rate_limit_key(email))  # Remove rate limit on success
+    
+    # Create a new session in Redis
+    session_id = f"session_{secrets.token_hex(16)}"  # More secure session ID
+  
+    redis_client.setex(session_id, SESSION_EXPIRY, email)  # Store for 1 week
+    
+    # Return response with session cookie
+    response = JSONResponse(content={
+        "message": "OTP verified successfully",
+        "session_expires_in": SESSION_EXPIRY
+    })
+    response.set_cookie(
+        key="session_id",
+        value=session_id,
+        httponly=True,   # protects cookie from JS access
+        secure=False,    # Set to True in production with HTTPS
+        samesite="Lax",  # protects against CSRF
+        max_age=SESSION_EXPIRY  # cookie expires in 1 week
+    )
+    return response
+
+@app.post("/ldap-login/")
+async def ldap_login(req: LoginRequest, redis_client: Redis = Depends(get_redis)):
+    """LDAP login with session management"""
+    
+    # Authenticate user against LDAP
+    if not authenticate_user(req.username, req.password):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    # Authentication successful - create session
+    session_id = f"session_{secrets.token_hex(16)}"
+    
+    # Store username in session (you might want to store email instead if available from LDAP)
+    redis_client.setex(session_id, SESSION_EXPIRY, req.username)
+    
+    # Return response with session cookie
+    response = JSONResponse(content={
+        "message": "LDAP login successful",
+        "username": req.username,
+        "session_expires_in": SESSION_EXPIRY
+    })
+    response.set_cookie(
+        key="session_id",
+        value=session_id,
+        httponly=True,   # protects cookie from JS access
+        secure=False,    # Set to True in production with HTTPS
+        samesite="Lax",  # protects against CSRF
+        max_age=SESSION_EXPIRY  # cookie expires in 1 week
+    )
+    return response
+
+@app.get("/me")
+async def get_current_user(request: Request, redis_client: Redis = Depends(get_redis)):
+    session_id = request.cookies.get("session_id")
+    if not session_id:
+        raise HTTPException(status_code=401, detail="Not logged in")
+    
+    # Validate session format
+    if not session_id.startswith("session_"):
+        raise HTTPException(status_code=401, detail="Invalid session format")
+    
+    # Lookup user from Redis (could be email or username depending on login method)
+    user_identifier = redis_client.get(session_id)
+    if not user_identifier:
+        raise HTTPException(status_code=401, detail="Invalid or expired session")
+    
+    # Return user info - you might want to distinguish between email and username
+    return {
+        "user": user_identifier, 
+        "session_id": session_id,
+        "login_type": "email" if "@" in user_identifier else "ldap"
+    }
+
+@app.post("/logout")
+async def logout(request: Request, redis_client: Redis = Depends(get_redis)):
+    session_id = request.cookies.get("session_id")
+    
+    # Clean up server-side session
+    if session_id:
+        redis_client.delete(session_id)
+    
+    # Clear the cookie properly
+    response = JSONResponse(content={"message": "Logged out successfully"})
+    response.delete_cookie(
+        key="session_id",
+        path="/",  # Ensure same path as when cookie was set
+        httponly=True,  # Match original cookie settings
+        samesite="Lax"  # Match original cookie settings
+    )
+    return response

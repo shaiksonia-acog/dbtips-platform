@@ -32,3 +32,7 @@ langchain_community
 langchain-openai
 bs4
 lxml
+ldap3
+pydantic[email]
+passlib[bcrypt]
+email-validator
