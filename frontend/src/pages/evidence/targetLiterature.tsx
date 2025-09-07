@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState, useMemo } from "react";
 import { AgGridReact } from "ag-grid-react";
-import { Empty, Select, message, Tooltip, Button } from "antd";
+import { Empty, Select, message, Tooltip, Button,Tag,Modal } from "antd";
 import LoadingButton from "../../components/loading";
 import parse from "html-react-parser";
 import { fetchData } from "../../utils/fetchData";
@@ -26,6 +27,22 @@ function convertToArray(data) {
 }
 
 const Evidence = ({target,indications}) => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState("");
+  const [modalTitle, setModalTitle] = useState("");
+
+  const showModal = (content,title) => {
+    setModalContent(content);
+    setModalTitle(title);
+    setIsModalVisible(true);
+  };
+
+
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   
   const [selectedIndication, setSelectedIndication] = useState(indications);
   const [selectedLiterature, setSelectedLiterature] = useState([]);
@@ -241,7 +258,7 @@ const Evidence = ({target,indications}) => {
                   {
                     field: 'Qualifers',
                     headerName: 'Category',
-                    flex: 3,
+                    flex: 1,
                     valueFormatter: (params) => {
                       if (params.value) {
                         return params.value.join(', ');
@@ -252,7 +269,7 @@ const Evidence = ({target,indications}) => {
                   {
                     field: 'Title',
                     headerName: 'Title',
-                    flex: 8,
+                    flex: 6,
                     cellRenderer: (params) => {
                       return (
                         <a href={params.data.PubMedLink} target='_blank'>
@@ -292,21 +309,49 @@ const Evidence = ({target,indications}) => {
                         </Tooltip>
                       );
                       },
-                    flex:3
+                    flex:2
                   },
                   {
                     field:"citedby",
                     headerName:"Cited by",
-                    flex:2
-                  }
+                    flex:1
+                  },
+                  {
+                    field:"tables_analysis",
+                    headerName:"Tables Analysis",
+                    flex:2,
+                    
+                    cellRenderer: (params) => {
+                      const content = params.value;
+                      if (!content || content.length === 0) {
+                        return "";
+                      }
+                      return (
+                        <Tag color="geekblue" className="cursor-pointer mt-2" onClick={() => showModal(content,"Tables Analysis")}>
+                          View Analysis
+                        </Tag>
+                      );
+                    }
+                  },
+                  {field:"supplementary_analysis",headerName:"Supplementary File ",flex:2, cellRenderer: (params) => {
+                    const content = params.value;
+                    if (!content) {
+                      return "";
+                    }
+                    return (
+                      <Tag color="geekblue" className="cursor-pointer mt-2" onClick={() => showModal(content, "Supplementary Analysis")}>
+                        View Analysis
+                      </Tag>
+                    );
+                  }},
                 ]}
                 rowData={rowData}
                 rowSelection="multiple"
                 pagination={true}
                 rowMultiSelectWithClick={true}
                 onSelectionChanged={onSelectionChanged}
-				enableRangeSelection={true}
-				enableCellTextSelection={true}
+				    enableCellTextSelection={true}
+
               />
             </div>
           </>
@@ -323,7 +368,45 @@ const Evidence = ({target,indications}) => {
 
         {/* <AskLLM target={target} indications={indications} /> */}
       </section>
-
+      <Modal title={modalTitle} open={isModalVisible}  onCancel={handleCancel} footer={false} width={800} >
+        {typeof modalContent === 'string' ? (
+          <p>{modalContent}</p>
+        ) :(
+          Array.isArray(modalContent) && (modalContent as string[]).map((item, index) => {
+            const [desc, inference] = item.replace("Description:", "").split("| Inference:");
+        
+            // detect "Table X"
+            const tableMatch = desc.match(/^(Table\s*\d+)/i);
+            const restDesc = tableMatch ? desc.replace(tableMatch[0], "").replace("|", "").trim() : desc.trim();
+        
+            return (
+              <div
+                className={`mb-2 pb-2 ${index !== (modalContent as string[]).length - 1 ? 'border-b-2' : ''}`}
+                key={index}
+              >
+                {/* Table label */}
+                {tableMatch && (
+                  <p><strong>{tableMatch[0]}:</strong></p>
+                )}
+        
+                {/* Description */}
+                <p>
+                  <strong>Description:</strong> {restDesc}
+                </p>
+        
+                {/* Inference */}
+                {inference && (
+                  <p>
+                    <strong>Inference:</strong> {inference.trim()}
+                  </p>
+                )}
+              </div>
+            );
+          })
+        )
+        
+        }
+      </Modal>
     </div>
   );
 };

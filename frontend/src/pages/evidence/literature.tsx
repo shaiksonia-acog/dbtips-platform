@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { AgGridReact } from "ag-grid-react";
-import { Empty, message, Tooltip, Button } from "antd";
+import { Empty, message, Tooltip, Button,Modal, Tag } from "antd";
 import LoadingButton from "../../components/loading";
 import parse from "html-react-parser";
 import { fetchData } from "../../utils/fetchData";
@@ -28,6 +28,21 @@ const Literature = ({ indications }) => {
     "authors",
     "citedby",
   ]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState("");
+  const [modalTitle, setModalTitle] = useState("");
+
+  const showModal = (content,title) => {
+    setModalContent(content);
+    setModalTitle(title);
+    setIsModalVisible(true);
+  };
+
+
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
   const columnDefs = useMemo(
     () => [
       {
@@ -100,6 +115,34 @@ const Literature = ({ indications }) => {
         headerName: "Cited by",
         flex: 2,
       },
+      {
+        field:"tables_analysis",
+        headerName:"Tables Analysis",
+        flex:2,
+        
+        cellRenderer: (params) => {
+          const content = params.value;
+          if (!content || content.length === 0) {
+            return "";
+          }
+          return (
+            <Tag color="geekblue" className="cursor-pointer mt-2" onClick={() => showModal(content,"Tables Analysis")}>
+              View Analysis
+            </Tag>
+          );
+        }
+      },
+      {field:"supplementary_analysis",headerName:"Supplementary Analysis",flex:2, cellRenderer: (params) => {
+        const content = params.value;
+        if (!content) {
+          return "";
+        }
+        return (
+          <Tag color="geekblue" className="cursor-pointer mt-2" onClick={() => showModal(content, "Supplementary Analysis")}>
+            View Analysis
+          </Tag>
+        );
+      }}
     ],
     []
   );
@@ -275,6 +318,35 @@ const Literature = ({ indications }) => {
           </div>
         </>
       )}
+      <Modal title={modalTitle} open={isModalVisible}  onCancel={handleCancel} footer={false} width={800} >
+        {typeof modalContent === 'string' ? (
+          <p>{modalContent}</p>
+        ) : (
+          Array.isArray(modalContent) && (modalContent as string[]).map((item, index) => {
+            const [desc, inference] = item.replace("Description:", "").split("| Inference:");
+        
+            // detect "Table X"
+            const tableMatch = desc.match(/^(Table\s*\d+)/i);
+            const restDesc = tableMatch ? desc.replace(tableMatch[0], "").trim() : desc.trim();
+        
+            return (
+              <p
+                className={`mb-2 pb-2 whitespace-pre-line ${index !== (modalContent as string[]).length - 1 ? 'border-b-2' : ''}`}
+                key={index}
+              >
+                {/* Render Table X in bold */}
+                {tableMatch && <strong>{tableMatch[0]}</strong>} {restDesc}
+                {inference && (
+                  <>
+                    <br />
+                    <strong>Inference:</strong> {inference.trim()}
+                  </>
+                )}
+              </p>
+            );
+          })
+        )}
+      </Modal>
     </section>
   );
 };
