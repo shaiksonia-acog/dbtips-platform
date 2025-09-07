@@ -1,19 +1,20 @@
 services:
-  # web:
-  #   container_name: 'dbtips-dossier'
-  #   build:
-  #     context: frontend
-  #     dockerfile: Dockerfile
-  #     args:
-  #       - VITE_API_URI=${VITE_API_URI}
-  #       - VITE_TARGET_DOSSIER_URI=${VITE_TARGET_DOSSIER_URI}
-  #   restart: always
-  #   labels:
-  #     - "description=DBTips Dossier Frontend"
-  #     - "user=${USER}"  # Changed from ${username} to ${USER}
+  web:
+    container_name: 'dbtips-mrl'
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URI=${VITE_API_URI}
+        - VITE_TARGET_DOSSIER_URI=${VITE_TARGET_DOSSIER_URI}
+    restart: always
+    labels:
+      - "description=DBTips Dossier Frontend"
+      - "user=${USER}"  # Changed from ${username} to ${USER}
+      - "security=none"
 
   backend:
-    container_name: 'dbtips-merge-backend'
+    container_name: 'dbtips-mrl-backend'
     build:
       context: backend
       dockerfile: Dockerfile
@@ -53,6 +54,8 @@ services:
       - OPEN_CITATIONS_API=${OPEN_CITATIONS_API}
       - PATIENT_STORIES_URL=${PATIENT_STORIES_URL}
       - MEDGEMMA_MODEL_URL=${MEDGEMMA_MODEL_URL}
+      - EMAIL_ADDRESS=${EMAIL_ADDRESS}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
     volumes:
       - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json:/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json
       - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/literature_enhancement:/app/res-immunology-automation/res_immunology_automation/src/scripts/literature_enhancement
@@ -65,43 +68,43 @@ services:
       postgres:
         condition: service_healthy
 
-  # backend-llm:
-  #   container_name: 'dbtips-merge-backend-llm'
-  #   build:
-  #     context: disease-dossier-backend-llm/backend-llm
-  #     dockerfile: Dockerfile
-  #   restart: always
-  #   volumes:
-  #     - ./disease-dossier-backend-llm/backend-llm/static:/app/static
-  #   environment:
-  #     - OPENAI_API_KEY=${OPENAI_API_KEY}
-  #     - REDIS_HOST=redis-llm
-  #     - REDIS_PORT=6379
-  #     - PERPLEXITY_KEY=${PERPLEXITY_KEY}
-  #     - AACT_DB_NAME=${AACT_DB_NAME}
-  #     - AACT_DB_USER=${AACT_DB_USER}
-  #     - AACT_DB_PASSWORD=${AACT_DB_PASSWORD}
-  #     - AACT_DB_HOST=${AACT_DB_HOST}
-  #     - AACT_DB_PORT=${AACT_DB_PORT}
-  #     - username=${username}
-  #     - password=${password}
-  #     - PATIENT_STORIES_URL=${PATIENT_STORIES_URL}
-  #   labels:
-  #     - "description=DBTips Dossier Backend LLM"
-  #     - "user=${USER}"  # Changed from ${username} to ${USER}
+  backend-llm:
+    container_name: 'dbtips-mrl-backend-llm'
+    build:
+      context: disease-dossier-backend-llm/backend-llm
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ./disease-dossier-backend-llm/backend-llm/static:/app/static
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - REDIS_HOST=redis-llm
+      - REDIS_PORT=6379
+      - PERPLEXITY_KEY=${PERPLEXITY_KEY}
+      - AACT_DB_NAME=${AACT_DB_NAME}
+      - AACT_DB_USER=${AACT_DB_USER}
+      - AACT_DB_PASSWORD=${AACT_DB_PASSWORD}
+      - AACT_DB_HOST=${AACT_DB_HOST}
+      - AACT_DB_PORT=${AACT_DB_PORT}
+      - username=${username}
+      - password=${password}
+      - PATIENT_STORIES_URL=${PATIENT_STORIES_URL}
+    labels:
+      - "description=DBTips Dossier Backend LLM"
+      - "user=${USER}"  # Changed from ${username} to ${USER}
 
-  # redis-llm:
-  #   image: redis:latest
-  #   container_name: 'dbtips-merge-redis-llm'
-  #   restart: always
-  #   volumes:
-  #     - ./disease-dossier-backend-llm/backend-llm/redis/redis-data:/data
-  #   labels:
-  #     - "exclude=true"  # Keep this excluded - it's an internal service
-  #     - "user=${USER}"  # Changed from ${username} to ${USER}
+  redis-llm:
+    image: redis:latest
+    container_name: 'dbtips-mrl-redis-llm'
+    restart: always
+    volumes:
+      - ./disease-dossier-backend-llm/backend-llm/redis/redis-data:/data
+    labels:
+      - "exclude=true"  # Keep this excluded - it's an internal service
+      - "user=${USER}"  # Changed from ${username} to ${USER}
 
   redis:
-    container_name: 'dbtips-merge-dossier-redis'
+    container_name: 'dbtips-mrl-redis'
     build:
       context: backend/redis
       dockerfile: Dockerfile
@@ -115,7 +118,7 @@ services:
       - "user=${USER}"  # Changed from ${username} to ${USER}
 
   postgres:
-    container_name: 'dbtips-merge-postgres'
+    container_name: 'dbtips-mrl-postgres'
     image: postgres:13
     restart: always
     environment:
@@ -134,7 +137,7 @@ services:
       - "user=${USER}"  # Changed from ${username} to ${USER}
 
   pgadmin:
-    container_name: 'dbtips-merge-pgadmin'
+    container_name: 'dbtips-mrl-pgadmin'
     image: dpage/pgadmin4:latest
     restart: always
     environment:
