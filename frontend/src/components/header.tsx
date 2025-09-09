@@ -508,7 +508,6 @@ const Header = ({ app_state }) => {
                  )}
                </Dropdown>
                <div style={{ display: "flex", justifyContent: "flex-end", padding: "0 16px" }}>
-     {email && <UserDropdown email={email} onLogout={handleLogout} />}
    </div>
              </div>
             
