@@ -532,12 +532,12 @@ const Header = ({ app_state }) => {
        ):
        <div className="flex items-center gap-2 mr-2">
            
-   <NavLink
+           { location.pathname !== "/login" && <NavLink
 				to="/notification"
 				
-			><NotificationBell data={app_state.indications} /></NavLink>
+			><NotificationBell data={app_state.indications} /></NavLink>}
         <div  >
-     {!email && <UserDropdown email={email} onLogout={handleLogout} />}
+     {email && <UserDropdown email={email} onLogout={handleLogout} />}
    </div>
 
 
