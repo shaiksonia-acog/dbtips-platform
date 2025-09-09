@@ -36,3 +36,4 @@ ldap3
 pydantic[email]
 passlib[bcrypt]
 email-validator
+google-generativeai

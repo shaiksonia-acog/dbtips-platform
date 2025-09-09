@@ -1,6 +1,6 @@
 services:
   web:
-    container_name: 'dbtips-mrl'
+    container_name: 'dbtips-mrl-test-amani'
     build:
       context: frontend
       dockerfile: Dockerfile
@@ -14,7 +14,7 @@ services:
       - "security=none"
 
   backend:
-    container_name: 'dbtips-mrl-backend'
+    container_name: 'dbtips-mrl-backend-amani'
     build:
       context: backend
       dockerfile: Dockerfile
@@ -53,15 +53,18 @@ services:
       - NCBI_API_KEY=${NCBI_API_KEY}
       - OPEN_CITATIONS_API=${OPEN_CITATIONS_API}
       - PATIENT_STORIES_URL=${PATIENT_STORIES_URL}
+      - FIGURE_ANALYSIS_MODEL=${FIGURE_ANALYSIS_MODEL}
       - MEDGEMMA_MODEL_URL=${MEDGEMMA_MODEL_URL}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
       - EMAIL_ADDRESS=${EMAIL_ADDRESS}
       - EMAIL_PASSWORD=${EMAIL_PASSWORD}
     volumes:
       - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json:/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json
-      - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/literature_enhancement:/app/res-immunology-automation/res_immunology_automation/src/scripts/literature_enhancement
+      # - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/literature_enhancement:/app/res-immunology-automation/res_immunology_automation/src/scripts/literature_enhancement
       - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/db:/app/res-immunology-automation/res_immunology_automation/src/scripts/db
       - ./backend/data:/app/database
       - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/logs:/app/res-immunology-automation/res_immunology_automation/src/scripts/logs
+      # - ./backend/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
     depends_on:
       redis:
         condition: service_started
@@ -104,7 +107,7 @@ services:
       - "user=${USER}"  # Changed from ${username} to ${USER}
 
   redis:
-    container_name: 'dbtips-mrl-redis'
+    container_name: 'dbtips-mrl-redis-amani'
     build:
       context: backend/redis
       dockerfile: Dockerfile
@@ -118,7 +121,7 @@ services:
       - "user=${USER}"  # Changed from ${username} to ${USER}
 
   postgres:
-    container_name: 'dbtips-mrl-postgres'
+    container_name: 'dbtips-mrl-postgres-amani'
     image: postgres:13
     restart: always
     environment:
@@ -137,7 +140,7 @@ services:
       - "user=${USER}"  # Changed from ${username} to ${USER}
 
   pgadmin:
-    container_name: 'dbtips-mrl-pgadmin'
+    container_name: 'dbtips-mrl-pgadmin-amani'
     image: dpage/pgadmin4:latest
     restart: always
     environment:
