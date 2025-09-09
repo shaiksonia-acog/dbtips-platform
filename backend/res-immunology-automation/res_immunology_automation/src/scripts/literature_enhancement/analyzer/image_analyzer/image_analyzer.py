@@ -17,12 +17,12 @@ def log_prefix(disease: str, target: str) -> str:
     """Generate consistent log prefix"""
     return f"[Disease: {disease}, Target: {target}]"
 
-def get_normalized_values(disease: str, target: str) -> tuple:
-    """Get normalized disease and target values with defaults"""
-    return (
-        disease or "no-disease",
-        target or "no-target"
-    )
+# def get_normalized_values(disease: str, target: str) -> tuple:
+#     """Get normalized disease and target values with defaults"""
+#     return (
+#         disease or "no-disease",
+#         target or "no-target"
+#     )
 
 async def should_skip_analysis(disease: str, target: str) -> bool:
     """Check if image analysis should be skipped (already completed)"""
@@ -217,89 +217,6 @@ async def update_image_analysis(image_analysis_data: ImageDataAnalysisResult, im
         # Re-raise database errors as they might indicate bigger issues
         raise RuntimeError(f"Database update failed: {str(e)}") from e
 
-async def check_medgemma_server_health():
-    """
-    Check if MedGemma server is responsive and has available memory
-    Returns tuple: (is_healthy, error_message)
-    """
-    try:
-        import httpx
-        
-        username = os.getenv('username')
-        password = os.getenv('password')
-        
-        if not username or not password:
-            return False, "LDAP credentials not found"
-        
-        base_url = "https://medgemma-server.own4.aganitha.ai:8443"
-        auth = httpx.BasicAuth(username, password)
-        
-        async with httpx.AsyncClient(timeout=httpx.Timeout(10.0)) as client:  # Short timeout for health check
-            response = await client.get(f"{base_url}/health", auth=auth)
-            response.raise_for_status()
-            result = response.json()
-            
-            # Check memory status
-            memory_info = result.get("memory_info", {})
-            if memory_info:
-                allocated = memory_info.get("allocated_gb", 0)
-                reserved = memory_info.get("reserved_gb", 0)
-                total_used = allocated + reserved
-                
-                logger.info(f"GPU Memory Status - Allocated: {allocated}GB, Reserved: {reserved}GB, Total Used: {total_used}GB")
-                
-                # If GPU memory is very high (>22GB), it might be problematic
-                if total_used > 22:
-                    return False, f"GPU memory critically high: {total_used}GB used"
-            
-            return True, "Server healthy"
-            
-    except httpx.TimeoutException:
-        return False, "Server not responding (timeout)"
-    except httpx.HTTPStatusError as e:
-        return False, f"Server returned HTTP {e.response.status_code}"
-    except Exception as e:
-        return False, f"Server check failed: {str(e)}"
-
-async def preload_medgemma_model():
-    """
-    Preload the MedGemma model before starting processing
-    This helps avoid initial GPU memory allocation issues
-    """
-    try:
-        import httpx
-        
-        # Get credentials from environment
-        username = os.getenv('username')
-        password = os.getenv('password')
-        
-        if not username or not password:
-            logger.warning("LDAP credentials not found - skipping model preload")
-            return False
-        
-        base_url = "https://medgemma-server.own4.aganitha.ai:8443"
-        auth = httpx.BasicAuth(username, password)
-        
-        logger.info("Preloading MedGemma model before processing...")
-        
-        async with httpx.AsyncClient(timeout=httpx.Timeout(120.0)) as client:
-            response = await client.post(f"{base_url}/preload", auth=auth)
-            response.raise_for_status()
-            result = response.json()
-            
-            if result.get("status") == "success":
-                logger.info("MedGemma model preloaded successfully")
-                memory_info = result.get("memory_info", {})
-                if memory_info:
-                    logger.info(f"GPU Memory Status: {memory_info}")
-                return True
-            else:
-                logger.error(f"Model preload failed: {result}")
-                return False
-                
-    except Exception as e:
-        logger.error(f"Failed to preload MedGemma model: {str(e)}")
-        return False
 
 async def main(disease: str, target: str = None, record_status: str = "extracted"):
     """
@@ -320,26 +237,7 @@ async def main(disease: str, target: str = None, record_status: str = "extracted
         if await should_skip_analysis(disease, target):
             return True
 
-        # SECOND: Check MedGemma server health before proceeding
-        logger.info(f"{prefix} Checking MedGemma server health...")
-        is_healthy, health_message = await check_medgemma_server_health()
-        if not is_healthy:
-            logger.error(f"{prefix} MedGemma server is not healthy: {health_message}")
-            if "timeout" in health_message.lower() or "memory" in health_message.lower():
-                raise RuntimeError(f"MedGemma server is not ready for processing: {health_message}")
-            else:
-                logger.warning(f"{prefix} Server health check failed but continuing: {health_message}")
-
-        # THIRD: Preload MedGemma model to avoid initial memory allocation issues
-        logger.info(f"{prefix} Preloading MedGemma model...")
-        preload_success = await preload_medgemma_model()
-        if not preload_success:
-            logger.error(f"{prefix} Model preload failed - this may cause processing issues")
-            # Do a final health check after preload failure
-            is_healthy, health_message = await check_medgemma_server_health()
-            if not is_healthy:
-                raise RuntimeError(f"MedGemma server not ready after preload failure: {health_message}")
-
+        
         # # FOURTH: Check prerequisites (extraction and segregation must be completed)
         # if not await check_prerequisites(disease, target):
         #     raise RuntimeError("Prerequisites not met - extraction and segregation must be completed first")
@@ -404,7 +302,7 @@ async def main(disease: str, target: str = None, record_status: str = "extracted
 
 if __name__ == "__main__":
     try:
-        asyncio.run(main("phenylketonuria"))
+        asyncio.run(main("non-alcoholic steatohepatitis"))
     except RuntimeError as e:
         logger.error(f"Pipeline execution failed: {str(e)}")
         sys.exit(1)  # Exit with error code

@@ -3,7 +3,7 @@ import asyncio
 from typing import Dict
 import sys
 from literature_enhancement.analyzer.image_analyzer.openai_filter_client import OpenAIPathwayFilter
-from literature_enhancement.analyzer.image_analyzer.analyzer_client import MedGemmaAnalyzer, ImageDataModel, ImageDataAnalysisResult
+from literature_enhancement.analyzer.image_analyzer.analyzer_client import ImageDataModel, ImageDataAnalysisResult, get_image_analyzer_client
 from literature_enhancement.analyzer.image_analyzer.gene_validator import validate_genes_async
 import logging
 import os
@@ -11,20 +11,27 @@ module_name = os.path.splitext(os.path.basename(__file__))[0].upper()
 from literature_enhancement.config import LOGGING_LEVEL
 logging.basicConfig(level=LOGGING_LEVEL)
 logger = logging.getLogger(module_name)
+FIGURE_ANALYSIS_MODEL = os.getenv("FIGURE_ANALYSIS_MODEL")
 
 class ThreeStageHybridAnalysisPipeline:
     """
     Three-stage hybrid analysis pipeline:
     Stage 1: OpenAI GPT-4o-mini caption filtering
-    Stage 2: MedGemma content analysis 
+    Stage 2: Image Analysis using MedGemma or Gemini 
     Stage 3: Gene validation with NCBI
     Enhanced with comprehensive error handling and retry mechanisms
     """
     
     def __init__(self):
-        self.openai_filter = OpenAIPathwayFilter()
-        self.medgemma_analyzer = MedGemmaAnalyzer()
-    
+        try:
+            self.openai_filter = OpenAIPathwayFilter()
+            # self.medgemma_analyzer = MedGemmaAnalyzer()
+            self.analyzer = get_image_analyzer_client()
+        
+        except Exception as e:
+            logger.error(f"Failed to initialize Image Analysis Pipeline components: {e}")
+            raise e
+
     async def process_single_image(self, image_data: ImageDataModel) -> Dict:
         """
         Process a single image through the three-stage pipeline
@@ -99,22 +106,22 @@ class ThreeStageHybridAnalysisPipeline:
             logger.error(f"Stage 1 unexpected error: {pmcid} - {str(e)}")
             raise RuntimeError(f"Unexpected Stage 1 error: {str(e)}") from e
         
-        # STAGE 2: MedGemma analysis
+        # STAGE 2: Image Analysis
         try:
-            logger.info(f"Stage 2 - MedGemma analysis: {pmcid}")
-            analysis_result = await self.medgemma_analyzer.analyze_content(image_data)
+            logger.info(f"Stage 2 - Analysing Image using {FIGURE_ANALYSIS_MODEL.upper()}: {pmcid}")
+            analysis_result = await self.analyzer.analyze_content(image_data)
             analysis_result["is_disease_pathway"] = True
             
             if analysis_result.get("status") == "analysis_timeout":
-                # Timeout from MedGemma - continue to next record
-                logger.warning(f"MedGemma analysis timed out for {pmcid} - skipping record")
+                # Timeout from the Model - continue to next record
+                logger.warning(f"Time out while processing {pmcid} - skipping record")
                 return {
                     "keywords": "not mentioned", "insights": "not mentioned",
                     "genes": "not mentioned", "drugs": "not mentioned",
                     "process": "not mentioned", "is_disease_pathway": True,
-                    "error_message": f"MedGemma analysis timeout: {analysis_result.get('error_message')}",
+                    "error_message": f"Analysis timeout: {analysis_result.get('error_message')}",
                     # "status": "analysis_timeout"
-                    "error_type": "MedGemma Timeout",
+                    "error_type": "Model Timeout",
                     "status": "error"
                 }
             
@@ -124,16 +131,16 @@ class ThreeStageHybridAnalysisPipeline:
                 logger.info(f"Stage 2 completed: {pmcid}")
 
             elif analysis_result.get("status") == "analysis_error":
-                # Analysis error from MedGemma - stop pipeline
-                logger.error(f"MedGemma analysis failed critically for {pmcid}")
-                raise RuntimeError(f"MedGemma analysis failed: {analysis_result.get('error_message')}")
+                # Analysis error from Image Analysis Client - stop pipeline
+                logger.error(f"Analysis failed critically for {pmcid}")
+                raise RuntimeError(f"Analysis failed: {analysis_result.get('error_message')}")
             else:
                 logger.warning(f"Stage 2 partial completion: {pmcid} - status: {analysis_result.get('status')}")
             
         except RuntimeError as e:
-            # Pipeline stopping error from MedGemma analysis
+            # Pipeline stopping error from Image Analysis Client
             logger.error(f"Stage 2 critical error: {pmcid} - {str(e)}")
-            raise RuntimeError(f"MedGemma analysis failed critically: {str(e)}") from e
+            raise RuntimeError(f"Analysis failed critically: {str(e)}") from e
             
         except Exception as e:
             # Unexpected error in Stage 2
