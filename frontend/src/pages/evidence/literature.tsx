@@ -14,6 +14,7 @@ import ColumnSelector from "../../components/columnFilter";
 import { filterByDiseases } from "../../utils/filterDisease";
 import Exportbutton from "../../components/exportButton";
 import DiseaseFilter from "../../components/diseaseFilter";
+import { ExternalLink } from "lucide-react";
 
 const Literature = ({ indications }) => {
   const [selectedIndication, setSelectedIndication] = useState(indications);
@@ -31,10 +32,12 @@ const Literature = ({ indications }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [modalTitle, setModalTitle] = useState("");
+  const [url, setUrl] = useState("");
 
-  const showModal = (content,title) => {
+  const showModal = (content,title,url) => {
     setModalContent(content);
     setModalTitle(title);
+    setUrl(url);
     setIsModalVisible(true);
   };
 
@@ -72,7 +75,7 @@ const Literature = ({ indications }) => {
       {
         field: "Title",
         headerName: "Title",
-        flex: 8,
+        flex:5,
         cellRenderer: (params) => {
           return (
             <a href={params.data.PubMedLink} target="_blank">
@@ -126,19 +129,19 @@ const Literature = ({ indications }) => {
             return "";
           }
           return (
-            <Tag color="geekblue" className="cursor-pointer mt-2" onClick={() => showModal(content,"Tables Analysis")}>
+            <Tag color="geekblue" className="cursor-pointer mt-2" onClick={() => showModal(content,"Tables Analysis",params.data.pmc_url)}>
               View Analysis
             </Tag>
           );
         }
       },
-      {field:"supplementary_analysis",headerName:"Supplementary Analysis",flex:2, cellRenderer: (params) => {
+      {field:"supplementary_analysis",headerName:"Supplementary file availability",flex:2, cellRenderer: (params) => {
         const content = params.value;
         if (!content) {
           return "";
         }
         return (
-          <Tag color="geekblue" className="cursor-pointer mt-2" onClick={() => showModal(content, "Supplementary Analysis")}>
+          <Tag color="geekblue" className="cursor-pointer mt-2" onClick={() => showModal(content, "Supplementary Analysis",params.data.pmc_url)}>
             View Analysis
           </Tag>
         );
@@ -318,7 +321,19 @@ const Literature = ({ indications }) => {
           </div>
         </>
       )}
-      <Modal title={modalTitle} open={isModalVisible}  onCancel={handleCancel} footer={false} width={800} >
+      <Modal  title={
+    <div className="flex gap-2">
+      <span>{modalTitle}</span>
+      <a
+        href={url}
+        className="text-blue-600 hover:underline text-sm"
+        target="_blank" // optional, opens in new tab
+        rel="noopener noreferrer"
+      >
+<ExternalLink />
+      </a>
+    </div>
+  } open={isModalVisible}  onCancel={handleCancel} footer={false} width={800} >
         {typeof modalContent === 'string' ? (
           <p>{modalContent}</p>
         ) : (
