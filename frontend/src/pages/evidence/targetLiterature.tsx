@@ -11,6 +11,7 @@ import { useChatStore } from "chatbot-component";
 import BotIcon from "../../assets/bot.svg?react";
 import Exportbutton from "../../components/exportButton";
 import { preprocessLiteratureData } from "../../utils/llmUtils";
+import { ExternalLink } from "lucide-react";
 const { Option } = Select;
 
 function convertToArray(data) {
@@ -30,9 +31,11 @@ const Evidence = ({target,indications}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [modalTitle, setModalTitle] = useState("");
+  const [url,setUrl] = useState("");
 
-  const showModal = (content,title) => {
+  const showModal = (content,title,url) => {
     setModalContent(content);
+    setUrl(url);
     setModalTitle(title);
     setIsModalVisible(true);
   };
@@ -269,7 +272,7 @@ const Evidence = ({target,indications}) => {
                   {
                     field: 'Title',
                     headerName: 'Title',
-                    flex: 6,
+                    flex: 5,
                     cellRenderer: (params) => {
                       return (
                         <a href={params.data.PubMedLink} target='_blank'>
@@ -327,19 +330,19 @@ const Evidence = ({target,indications}) => {
                         return "";
                       }
                       return (
-                        <Tag color="geekblue" className="cursor-pointer mt-2" onClick={() => showModal(content,"Tables Analysis")}>
+                        <Tag color="geekblue" className="cursor-pointer mt-2" onClick={() => showModal(content,"Tables Analysis",params.data.pmc_url)}>
                           View Analysis
                         </Tag>
                       );
                     }
                   },
-                  {field:"supplementary_analysis",headerName:"Supplementary File ",flex:2, cellRenderer: (params) => {
+                  {field:"supplementary_analysis",headerName:"Supplementary File Availability",flex:2, cellRenderer: (params) => {
                     const content = params.value;
                     if (!content) {
                       return "";
                     }
                     return (
-                      <Tag color="geekblue" className="cursor-pointer mt-2" onClick={() => showModal(content, "Supplementary Analysis")}>
+                      <Tag color="geekblue" className="cursor-pointer mt-2" onClick={() => showModal(content, "Supplementary Analysis",params.data.pmc_url)}>
                         View Analysis
                       </Tag>
                     );
@@ -348,7 +351,7 @@ const Evidence = ({target,indications}) => {
                 rowData={rowData}
                 rowSelection="multiple"
                 pagination={true}
-                rowMultiSelectWithClick={true}
+                // rowMultiSelectWithClick={true}
                 onSelectionChanged={onSelectionChanged}
 				    enableCellTextSelection={true}
 
@@ -368,7 +371,23 @@ const Evidence = ({target,indications}) => {
 
         {/* <AskLLM target={target} indications={indications} /> */}
       </section>
-      <Modal title={modalTitle} open={isModalVisible}  onCancel={handleCancel} footer={false} width={800} >
+      <Modal  title={
+    <div className="flex gap-2">
+      <span>{modalTitle}</span>
+      <a
+        href={url}
+        className="text-blue-600 hover:underline text-sm"
+        target="_blank" // optional, opens in new tab
+        rel="noopener noreferrer"
+      >
+<ExternalLink />
+      </a>
+    </div>
+  } open={isModalVisible}  onCancel={handleCancel}   footer={
+   null
+  }
+  
+ width={800} >
         {typeof modalContent === 'string' ? (
           <p>{modalContent}</p>
         ) :(
