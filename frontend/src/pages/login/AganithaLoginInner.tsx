@@ -162,7 +162,7 @@ function AganithaLoginInner() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 via-blue-600 to-blue-800 px-4">
+        <div className="min-h-[88vh] flex items-center justify-center bg-gradient-to-br from-blue-400 via-blue-600 to-blue-800 px-4">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-xl p-12 border border-blue-100">
                 {renderCurrentView()}
             </div>
