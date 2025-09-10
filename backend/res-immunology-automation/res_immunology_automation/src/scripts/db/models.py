@@ -1,5 +1,5 @@
 #models.py
-from sqlalchemy import Column, Sequence, String,Integer, DateTime, PrimaryKeyConstraint, Text, Boolean, UniqueConstraint, func
+from sqlalchemy import Column, Sequence, String,Integer, DateTime, PrimaryKeyConstraint, Text, Boolean, UniqueConstraint
 from .database import Base
 
 
@@ -67,8 +67,9 @@ class DossierEndpointStatus(Base):
     endpoint_name = Column(String, nullable=False)
     status = Column(String, nullable=False)  # submitted, processing, processed, error
     error_count = Column(Integer, default=0, nullable=False)
-    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
-    creation_time = Column(DateTime(timezone=True), default=func.now())
+    start_at = Column(DateTime(timezone=True), nullable=True)
+    processed_at = Column(DateTime(timezone=True), nullable=True)
+    creation_time = Column(DateTime(timezone=True))
 
     __table_args__ = (
         UniqueConstraint('target', 'disease', 'endpoint_name', name='unique_target_disease_endpoint'),
