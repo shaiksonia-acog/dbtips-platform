@@ -577,7 +577,7 @@ def search_pubmed_target(target_name: str, disease_name: str,target_terms_file: 
 
     terms: List[str] = target_data.get(target_name.lower(), [])
 
-     article_types = [
+    article_types = [
     "Case Reports",
     "Clinical Study",
     "Clinical Trial",
