@@ -53,14 +53,14 @@ export function InProgressWidget({
 
       <div className="divide-y divide-gray-100 overflow-y-auto flex-1">
         {paginatedLeft.length > 0 ? (
-          paginatedLeft.map((d: any) => {
+          paginatedLeft.map((d: any,index:number) => {
             const isExpandable =
               d.status === "processing" || d.status === "error";
             const isExpanded = expandedRow === d.id;
 
             return (
               <div
-                key={d.id}
+                key={index}
                 className={`px-6 py-5 transition-all duration-200 ${
                   isExpandable
                     ? "hover:bg-gray-50 cursor-pointer"
@@ -96,7 +96,7 @@ export function InProgressWidget({
                       <div className="flex items-center gap-2 text-sm text-gray-500">
                         <Clock className="h-4 w-4" />
                         <span>
-                          Submitted {formatTime(d.submission_time)}
+                          Submitted {formatTime(d.creation_time)}
                         </span>
                       </div>
                     </div>

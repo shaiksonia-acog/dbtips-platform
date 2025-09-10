@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { capitalizeFirstLetter } from "../../utils/helper";
 
 export const fetchData = async () => {
@@ -24,6 +23,7 @@ export const buildUrlWithIndications = (baseUrl: string, target: string, indicat
 };
 
 export const formatTime = (timeString: string) => {
+  if(!timeString) return "";
   const date = new Date(timeString);
   return date.toLocaleDateString("en-US", {
     month: "short",
@@ -34,6 +34,7 @@ export const formatTime = (timeString: string) => {
 };
 
 export const formatStartTime = (timeString: string) => {
+  if(!timeString) return "";
   const date = new Date(timeString);
   return (
     date.toLocaleDateString("en-US", { month: "short", day: "numeric" }) +
@@ -55,11 +56,13 @@ export const calculateDuration = (startTime: string, endTime: string) => {
 };
 
 export const renderDiseaseTarget = (disease?: string, target?: string) => {
+  
   if (target && disease) {
     return disease === "no-disease"
-      ? capitalizeFirstLetter(target)
+      ? target?.toUpperCase()
       : `${target?.toUpperCase()} - ${capitalizeFirstLetter(disease)}`;
   }
+  
   return target?.toUpperCase() || capitalizeFirstLetter(disease || "");
 };
 
