@@ -14,7 +14,7 @@ services:
       - "security=none"
 
   backend:
-    container_name: 'dbtips-mrl-backend-amani'
+    container_name: 'dbtips-mrl'
     build:
       context: backend
       dockerfile: Dockerfile
@@ -110,7 +110,7 @@ services:
       - "user=${USER}"  # Changed from ${username} to ${USER}
 
   redis:
-    container_name: 'dbtips-mrl-redis-amani'
+    container_name: 'dbtips-mrl-redis'
     build:
       context: backend/redis
       dockerfile: Dockerfile
@@ -124,7 +124,7 @@ services:
       - "user=${USER}"  # Changed from ${username} to ${USER}
 
   postgres:
-    container_name: 'dbtips-mrl-postgres-amani'
+    container_name: 'dbtips-mrl-postgres'
     image: postgres:13
     restart: always
     environment:
@@ -143,7 +143,7 @@ services:
       - "user=${USER}"  # Changed from ${username} to ${USER}
 
   pgadmin:
-    container_name: 'dbtips-mrl-pgadmin-amani'
+    container_name: 'dbtips-mrl-pgadmin'
     image: dpage/pgadmin4:latest
     restart: always
     environment:
