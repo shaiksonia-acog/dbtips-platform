@@ -2203,28 +2203,28 @@ async def get_mouse_studies(request: DiseasesRequest, redis: Redis = Depends(get
         raise HTTPException(status_code=500, detail=str(e))
 
 semaphore = asyncio.Semaphore(1)
-@app.post("/evidence/network-biology-semaphore/", tags=["Evidence"])
-async def get_network_biology_semaphore(request: DiseasesRequest,
+@app.post("/evidence/disease-pathway-semaphore/", tags=["Evidence"])
+async def get_disease_pathway_semaphore(request: DiseasesRequest,
                             db: Session = Depends(get_db), build_cache=False):
     try:
         async with semaphore:  # This will block concurrent requests
             print(f"lock applied and processing {request.diseases}")
-            response =  await get_network_biology(request, db, build_cache)
+            response =  await get_disease_pathway(request, db, build_cache)
             print("lock removed")
     except Exception as e:
         raise e
     return response
 
-    
-@app.post("/evidence/network-biology/", tags=["Evidence"])
-async def get_network_biology(request: DiseasesRequest,
+
+@app.post("/evidence/disease-pathway/", tags=["Evidence"])
+async def get_disease_pathway(request: DiseasesRequest,
                             db: Session = Depends(get_db),
                             build_cache=False):
     diseases: List[str] = request.diseases
     diseases = [s.strip().lower().replace(" ", "_") for s in diseases]
     diseases_str = "-".join(diseases)
-    key: str = f"/evidence/network-biology/:{diseases_str}"
-    endpoint: str = "/evidence/network-biology/"
+    key: str = f"/evidence/disease-pathway/:{diseases_str}"
+    endpoint: str = "/evidence/disease-pathway/"
 
     # Directory to store the cached JSON file
     cache_dir: str = "cached_data_json/disease"
@@ -2306,7 +2306,7 @@ async def get_literature_images_evidence(request: DiseasesRequest,
         diseases_str = "-".join(diseases)
         key: str = f"/evidence/literature-images/:{diseases_str}"
         endpoint: str = "/evidence/literature-images/"
-        network_biology_endpoint: str = "/evidence/network-biology/"
+        network_biology_endpoint: str = "/evidence/disease-pathway/"
         
         # Directory to store the cached JSON file
         cache_dir: str = "cached_data_json/disease"
@@ -2419,8 +2419,8 @@ async def get_literature_images_evidence(request: DiseasesRequest,
 
                 # Store the combined response
                 cached_responses[f"{endpoint}"] = disease_data
-                
-                # Only update network-biology cache if we fetched new data for this disease
+
+                # Only update disease-pathway cache if we fetched new data for this disease
                 if disease in diseases_needing_network_biology:
                     network_biology_only = network_biology_data.get(disease_key, [])
                     cached_responses[f"{network_biology_endpoint}"] = {"results": network_biology_only}
