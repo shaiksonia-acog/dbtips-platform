@@ -14,7 +14,7 @@ services:
       - "security=none"
 
   backend:
-    container_name: 'dbtips-mrl'
+    container_name: 'dbtips-mrl-backend'
     build:
       context: backend
       dockerfile: Dockerfile
