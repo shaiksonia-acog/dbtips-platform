@@ -498,17 +498,54 @@ def search_pubmed(disease_name: str) -> List[str]:
     current_year = datetime.now().year
     start_year = current_year - 5
 
+    # params = {
+    #     "db": "pubmed",
+    #     "term": f"{disease_name}[MAJR]",  # Added filter for review articles
+    #     "retmode": "json",
+    #     "retmax": MAX_RESULTS,  # Maximum number of records to retrieve
+    #     "sort": "relevance",  # Sort by relevance
+    #     "mindate": f"{start_year}/01/01",  # Start date for filtering
+    #     "maxdate": f"{current_year}/12/31",  # End date for filtering
+    #     "datetype": "pdat",  # Search by publication date
+    #     "api_key": NCBI_API_KEY
+    # }
+    article_types = [
+    "Case Reports",
+    "Clinical Study",
+    "Clinical Trial",
+    "Dataset",
+    "Journal Article",
+    "Preprint",
+    "Research Support, American Recovery and Reinvestment Act",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, N.I.H., Intramural", 
+    "Research Support, Non-U.S. Gov't",
+    "Research Support, U.S. Gov't, Non-P.H.S.",
+    "Research Support, U.S. Gov't, P.H.S.",
+    "Research Support, U.S. Gov't",
+    "Review",
+    "Systematic Review",
+    "Technical Report"
+    ]
+
+    # Build the article types filter part
+    article_types_query = " OR ".join([f'"{atype}"[Publication Type]' for atype in article_types])
+
+    # Final term combining disease name and article type filters
+    term = f'({disease_name}[MAJR]) AND ({article_types_query})'
+
     params = {
         "db": "pubmed",
-        "term": f"{disease_name}[MAJR] AND (review[PTYP])",  # Added filter for review articles
+        "term": term,
         "retmode": "json",
-        "retmax": MAX_RESULTS,  # Maximum number of records to retrieve
-        "sort": "pub_date",  # Sort by relevance
-        "mindate": f"{start_year}/01/01",  # Start date for filtering
-        "maxdate": f"{current_year}/12/31",  # End date for filtering
-        "datetype": "pdat",  # Search by publication date
+        "retmax": MAX_RESULTS,
+        "sort": "relevance",
+        "mindate": f"{start_year}/01/01",
+        "maxdate": f"{current_year}/12/31",
+        "datetype": "pdat",
         "api_key": NCBI_API_KEY
     }
+
     try:
 
         url = BASE_URL + "esearch.fcgi"
@@ -540,6 +577,28 @@ def search_pubmed_target(target_name: str, disease_name: str,target_terms_file: 
 
     terms: List[str] = target_data.get(target_name.lower(), [])
 
+     article_types = [
+    "Case Reports",
+    "Clinical Study",
+    "Clinical Trial",
+    "Dataset",
+    "Journal Article",
+    "Preprint",
+    "Research Support, American Recovery and Reinvestment Act",
+    "Research Support, N.I.H., Extramural",
+    "Research Support, N.I.H., Intramural", 
+    "Research Support, Non-U.S. Gov't",
+    "Research Support, U.S. Gov't, Non-P.H.S.",
+    "Research Support, U.S. Gov't, P.H.S.",
+    "Research Support, U.S. Gov't",
+    "Review",
+    "Systematic Review",
+    "Technical Report"
+    ]
+
+    # Build the article types filter part
+    article_types_query = " OR ".join([f'"{atype}"[Publication Type]' for atype in article_types])
+
     # Build the target query
     if terms:
         target_query = " OR ".join([f'"{term}"[Title/Abstract]' for term in terms])
@@ -556,10 +615,10 @@ def search_pubmed_target(target_name: str, disease_name: str,target_terms_file: 
         mesh_query = f'"{mesh_major_term}"[MeSH Major Topic]'
 
         # Combine everything into the final query
-        query = f'(({target_query}) AND ({mesh_query}))'
+        query = f'(({target_query}) AND ({mesh_query}) AND ({article_types_query}))'
 
     else:
-        query = target_query
+        query = f'{target_query} AND ({article_types_query})'
 
     print(query)
 
@@ -573,7 +632,7 @@ def search_pubmed_target(target_name: str, disease_name: str,target_terms_file: 
         "retmax": MAX_RESULTS,  # Maximum number of records to retrieve
         "mindate": f"{start_year}/01/01",  # Start date for filtering
         "maxdate": f"{current_year}/12/31",  # End date for filtering
-        "sort": "pub_date",  # Sort by publication date
+        "sort": "relevance",  # Sort by relevance
         "datetype": "pdat",  # Search by publication date
         "api_key": NCBI_API_KEY
     }
