@@ -177,7 +177,7 @@ def combine_literature_and_network_biology_data(literature_data: Dict[str, Dict[
                         "keywords": "",
                         "process": "",
                         "insights": "",
-                        "data_source": "network_biology"
+                        "data_source": "disease_pathway"
                     }
                     combined_results.append(normalized_item)
             
