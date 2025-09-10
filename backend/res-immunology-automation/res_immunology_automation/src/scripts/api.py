@@ -194,6 +194,11 @@ SESSION_EXPIRY = 604800  # 1 week
 def is_valid_email_domain(email: str) -> bool:
     """Add basic domain validation if needed"""
     # You can add domain whitelist/blacklist logic here
+    email_domain = email.split('@')[-1]
+    allowed_domains = os.getenv("allowed_domains")# Example domains
+    if email_domain not in allowed_domains:
+        return False
+
     return True
 
 def generate_secure_otp() -> str:

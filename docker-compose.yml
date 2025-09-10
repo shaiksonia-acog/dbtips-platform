@@ -60,6 +60,7 @@ services:
       - EMAIL_PASSWORD=${EMAIL_PASSWORD}
       - LDAP_SERVER=${LDAP_SERVER}
       - LDAP_USER_DN=${LDAP_USER_DN}
+      - allowed_domains=${allowed_domains}
     volumes:
       - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json:/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json
       # - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/literature_enhancement:/app/res-immunology-automation/res_immunology_automation/src/scripts/literature_enhancement
