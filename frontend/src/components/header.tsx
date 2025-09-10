@@ -494,7 +494,6 @@ const Header = ({ app_state }) => {
               </div>
             ))}
             <div className="flex items-center justify-center gap-3 ">
-              frfrf
               <NavLink
                 to={buildUrlWithIndications(
                   `/notification`,
