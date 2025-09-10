@@ -154,8 +154,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-LDAP_SERVER = "ldap://ldap.aganitha.ai"
-LDAP_USER_DN = "ou=people,dc=aganitha,dc=ai"
+LDAP_SERVER = os.getenv("LDAP_SERVER")
+LDAP_USER_DN = os.getenv("LDAP_USER_DN")
 def authenticate_user(username: str, password: str):
     """
     Authenticate user against LDAP server
