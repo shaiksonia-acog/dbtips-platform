@@ -22,6 +22,7 @@ import uvicorn
 import logging
 from graphrag_service import get_redis
 from fastapi.responses import JSONResponse
+from email.mime.text import MIMEText
 from redis import Redis
 import json, csv
 import requests
@@ -153,8 +154,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-LDAP_SERVER = "ldap://ldap.aganitha.ai"
-LDAP_USER_DN = "ou=people,dc=aganitha,dc=ai"
+LDAP_SERVER = os.getenv("LDAP_SERVER")
+LDAP_USER_DN = os.getenv("LDAP_USER_DN")
 def authenticate_user(username: str, password: str):
     """
     Authenticate user against LDAP server
@@ -217,29 +218,43 @@ def set_rate_limit_login(email: str, redis_client: Redis):
 
 # ---------- FUNCTIONS ----------
 def send_email(receiver_email: str, otp: str):
-    """Send OTP via Gmail SMTP with better error handling"""
+    """Send OTP via Gmail SMTP with HTML formatting and better error handling"""
     try:
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
             server.starttls()
             server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-            
-            subject = "Your OTP Code - Do Not Share"
-            body = f"""Your OTP code is: {otp}
 
-This code will expire in 10 minutes.
-If you didn't request this code, please ignore this email.
+            subject = "Your Aganitha Login Code"
 
-Do not share this code with anyone."""
-            
-            msg = f"Subject: {subject}\n\n{body}"
-            server.sendmail(EMAIL_ADDRESS, receiver_email, msg)
-            
+            html_body = f"""
+            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+                <h1 style="color: #333; text-align: center;">Your Aganitha Login Code</h1>
+                <p style="font-size: 18px; text-align: center;">
+                  Your login code is:
+                </p>
+                <p style="font-size: 32px; font-weight: bold; text-align: center; letter-spacing: 8px; margin: 24px 0;">
+                  {otp}
+                </p>
+                <p style="color: #666; text-align: center;">
+                  This code will expire in 10 minutes.
+                </p>
+            </div>
+            """
+
+            msg = MIMEText(html_body, "html")
+            msg["Subject"] = subject
+            msg["From"] = EMAIL_ADDRESS
+            msg["To"] = receiver_email
+
+            server.sendmail(EMAIL_ADDRESS, receiver_email, msg.as_string())
+
     except smtplib.SMTPAuthenticationError:
         raise HTTPException(status_code=500, detail="Email authentication failed")
-    except smtplib.SMTPException as e:
+    except smtplib.SMTPException:
         raise HTTPException(status_code=500, detail="Failed to send email")
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Email service temporarily unavailable")
+    
 @app.on_event("startup")
 async def startup():
     # This will create the tables for all models defined with Base

@@ -1,6 +1,6 @@
 services:
   web:
-    container_name: 'dbtips-mrl-test-amani'
+    container_name: 'dbtips-mrl'
     build:
       context: frontend
       dockerfile: Dockerfile
@@ -58,6 +58,8 @@ services:
       - GEMINI_API_KEY=${GEMINI_API_KEY}
       - EMAIL_ADDRESS=${EMAIL_ADDRESS}
       - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - LDAP_SERVER=${LDAP_SERVER}
+      - LDAP_USER_DN=${LDAP_USER_DN}
     volumes:
       - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json:/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json
       # - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/literature_enhancement:/app/res-immunology-automation/res_immunology_automation/src/scripts/literature_enhancement
@@ -92,6 +94,7 @@ services:
       - username=${username}
       - password=${password}
       - PATIENT_STORIES_URL=${PATIENT_STORIES_URL}
+
     labels:
       - "description=DBTips Dossier Backend LLM"
       - "user=${USER}"  # Changed from ${username} to ${USER}

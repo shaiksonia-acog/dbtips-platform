@@ -20,7 +20,7 @@ export default function Notification() {
     "progression-tracker-dashboard",
     async () => {  setLastFetchTime(new Date()); return fetchData(); },
     {
-      refetchInterval: 1000*60*2,
+      refetchInterval: 1000*60*5,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       retry: 3,
