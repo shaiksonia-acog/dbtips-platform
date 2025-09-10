@@ -31,12 +31,13 @@ class OpenAIPathwayFilter:
         """System prompt for pathway classification based on captions only"""
         return """You are given captions of figures from biomedical/clinical publications. Your task is to classify each caption into one of the following categories:
 
-* **Pathway figures** → captions describing molecular mechanisms, biological signaling pathways, disease mechanisms, or interactions between genes, proteins, metabolites, or drugs (e.g., "Proposed signaling pathway of TGF-β in fibrosis").
+* **Pathway figures** → captions describing molecular mechanisms, biological signaling pathways, disease mechanisms, or interactions between genes, proteins, metabolites, or drugs (e.g., "Proposed signaling pathway of TGF-β in fibrosis"). It should not cover only result oriented figures. 
 
 * **Others** → captions that do not describe pathways (e.g., imaging data, clinical results, charts, survival curves, histology, structural models, experimental results, graphs, plots, bar graph, box plot, panels, etc.).
 
 Examples:
 * Caption: "Schematic representation of the NF-κB signaling pathway in inflammatory bowel disease." → **Pathway figures**
+* Caption: "Inulin ameliorated NASH through modulating Chemokine signaling and triacylglyceride synthesis pathway." → **Others**
 * Caption: "Kaplan–Meier survival curve of patients with stage III colorectal cancer." → **Others**
 * Caption: "Diagram illustrating the crosstalk between PI3K/AKT and MAPK pathways in breast cancer." → **Pathway figures**
 * Caption: "Representative MRI scans showing liver fibrosis progression." → **Others**

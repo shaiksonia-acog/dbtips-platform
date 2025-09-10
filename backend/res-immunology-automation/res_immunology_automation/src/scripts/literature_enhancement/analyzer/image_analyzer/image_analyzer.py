@@ -226,7 +226,7 @@ async def main(disease: str, target: str = None, record_status: str = "extracted
     - Only creates pipeline status record if successful
     """
     # Normalize inputs
-    disease, target = get_normalized_values(disease, target)
+    # disease, target = get_normalized_values(disease, target)
     prefix = log_prefix(disease, target)
     logger.info("=" * 80)
     logger.info(f"IMAGE ANALYSIS PIPELINE INITIATED for {prefix}")

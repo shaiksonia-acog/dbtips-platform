@@ -177,7 +177,6 @@ class GeminiAnalyzer(BaseFigureAnalyzer):
             system_prompt = self.get_system_prompt()
             user_prompt = self.get_user_prompt(caption)
             full_prompt = f"{system_prompt}\n\n{user_prompt}"
-            print("calling gemini")
             # Generate response
             response = await asyncio.to_thread(
                 self.model.generate_content,
@@ -187,7 +186,6 @@ class GeminiAnalyzer(BaseFigureAnalyzer):
                     "max_output_tokens": 8192,
                 }
             )
-            print("Response generated here")
 
             # Check response
             if response.prompt_feedback.block_reason:
@@ -201,7 +199,6 @@ class GeminiAnalyzer(BaseFigureAnalyzer):
             generated_text = response.candidates[0].content.parts[0].text
             logger.debug(f"Gemini response: {generated_text[:200]}...")
             
-            print("Response returneded here")
             return {
                 "status": "success",
                 "content": generated_text
@@ -388,6 +385,8 @@ class MedGemmaAnalyzer(BaseFigureAnalyzer):
         if not self.username or not self.password or not self.base_url:
             raise ValueError("LDAP credentials or MedGemma model URL not found in environment variables")
 
+    async def initialize(self):
+        """Initialize the MedGemmaAnalyzer"""
         # First: Check MedGemma server health before proceeding
         is_healthy, health_message = await self.check_medgemma_server_health()
         if not is_healthy:
@@ -974,7 +973,9 @@ class ModelClientFactory:
         if model == FigureAnalyzer.MedGemma.value:
             
             try:
-                return MedGemmaAnalyzer()
+                analyzer = MedGemmaAnalyzer()
+                asyncio.run(analyzer.initialize())
+                return analyzer
             except Exception as e:
                 logger.error(f"Failed to initialize MedGemma client: {e}")
                 raise e
