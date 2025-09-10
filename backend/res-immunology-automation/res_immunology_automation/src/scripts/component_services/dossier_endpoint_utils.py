@@ -17,7 +17,7 @@ def get_endpoints_for_job_type(target: str, disease: str) -> List[str]:
         disease_endpoints = [
             'get_evidence_literature_semaphore',
             'get_mouse_studies',
-            'get_network_biology_semaphore',
+            'get_disease_pathway_semaphore',
             'get_top_10_literature',
             'get_diseases_profiles',
             'get_indication_pipeline_semaphore',
@@ -91,7 +91,7 @@ def get_friendly_endpoint_name(endpoint_name: str) -> str:
         'get_literature_supplementary_materials_analysis': 'Literature Supplementary Analysis',
         'get_literature_table_analysis': 'Literature Table Analysis',
         'get_mouse_studies': 'Animal Models',
-        'get_network_biology_semaphore': 'Disease Pathways',
+        'get_disease_pathway_semaphore': 'Disease Pathways',
         'get_rna_sequence_semaphore': 'RNA Seq Data',
         'get_top_10_literature': 'Top 10 Literature',
         'pgs_catalog_data': 'PGS Catalog',
@@ -148,7 +148,8 @@ def fetch_records_by_status(db: Session, job_type, record_status: str) -> List[D
                 endpoint_status[friendly_name] = {
                     'status': endpoint_record.status,
                     'creation_time': endpoint_record.creation_time,
-                    'updated_at': endpoint_record.updated_at
+                    'started_at': endpoint_record.start_at,
+                    'updated_at': endpoint_record.processed_at
                 }
             
             if endpoint_status:
