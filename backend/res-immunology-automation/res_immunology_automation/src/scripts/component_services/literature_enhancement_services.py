@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from db.models import LiteratureTablesAnalysis, LiteratureSupplementaryMaterialsAnalysis
 from typing import List, Dict, Any, Optional
 import logging
+import json
 
 
 def fetch_literature_table_analysis(target: str = None, 
@@ -50,18 +51,34 @@ def fetch_literature_table_analysis(target: str = None,
         # Convert to dictionary format with only required fields
         results = []
         for record in records:
+            # Extract table title from table_schema
+            table_title = ""
+            if record.table_schema:
+                try:
+                    # Parse table_schema JSON to extract title
+                    table_schema = json.loads(record.table_schema) if isinstance(record.table_schema, str) else record.table_schema
+                    table_title = table_schema.get("title", "")
+                except (json.JSONDecodeError, AttributeError) as e:
+                    logging.warning(f"Error parsing table_schema for PMID {record.pmid}: {e}")
+                    table_title = ""
+            
+            # Combine table title with analysis
+            enhanced_analysis = record.analysis
+            if table_title:
+                enhanced_analysis = f"{table_title} | {record.analysis}"
+            
             result_dict = {
                 "pmid": record.pmid,
                 "url": record.url,
                 "pmcid": record.pmcid,
                 "table_description": record.table_description,
-                "analysis": record.analysis,
+                "analysis": enhanced_analysis,
                 "keywords": record.keywords
             }
             results.append(result_dict)
         
         filter_info = f"target: {target}, diseases: {diseases}"
-        logging.info(f"Found {len(results)} literature table analysis records for {filter_info}")
+        # print(f"Found {len(results)} literature table analysis records for {filter_info}")
         return results
         
     except Exception as e:
@@ -121,7 +138,7 @@ def fetch_literature_supplementary_materials_analysis(target: str = None,
             results.append(result_dict)
         
         filter_info = f"target: {target}, diseases: {diseases}"
-        logging.info(f"Found {len(results)} literature supplementary materials analysis records for {filter_info}")
+        # print(f"Found {len(results)} literature supplementary materials analysis records for {filter_info}")
         return results
         
     except Exception as e:
