@@ -20,7 +20,7 @@ async def update_literature_caches_with_analysis(
     # Models passed as parameters
     Disease,
     TargetDisease
-):
+    ):
     """
     Update literature caches with table and supplementary analysis data
     analysis_type: "table" or "supplementary"
@@ -122,13 +122,11 @@ async def update_literature_caches_with_analysis(
                     continue
                 
                 # Initialize analysis fields if they don't exist
-                if "tables_analysis" not in lit_item:
-                    lit_item["tables_analysis"] = []
-                if "supplementary_analysis" not in lit_item:
-                    lit_item["supplementary_analysis"] = ""
-                if "pmc_url" not in lit_item:
-                    lit_item["pmc_url"] = ""
                 
+                lit_item["tables_analysis"] = []
+                lit_item["supplementary_analysis"] = ""
+                lit_item["pmc_url"] = ""
+
                 # Update with matching analysis
                 for analysis_item in analysis_data["results"]:
                     analysis_pmid = analysis_item.get("pmid") or analysis_item.get("PMID")
