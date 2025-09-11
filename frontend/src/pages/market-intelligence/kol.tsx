@@ -1,133 +1,136 @@
-import { useState, useEffect, useMemo } from "react";
-import { useQuery } from "react-query";
-import { fetchData } from "../../utils/fetchData";
-import { capitalizeFirstLetter } from "../../utils/helper";
+// import { useState, useEffect, useMemo } from "react";
+// import { useQuery } from "react-query";
+// import { fetchData } from "../../utils/fetchData";
+// import { capitalizeFirstLetter } from "../../utils/helper";
 import SiteInvestigators from "./siteInvestigators";
-import { filterByDiseases } from "../../utils/filterDisease";
-import DiseaseFilter from "../../components/diseaseFilter";
-import DataTableWrapper from "../../components/dataTableWrapper";
+// import { filterByDiseases } from "../../utils/filterDisease";
+import { Empty} from "antd";
 
-function convertToArray(data) {
-  const result = [];
-  Object.keys(data).forEach((disease) => {
-    data[disease].forEach((record) => {
-      result.push({
-        Disease: disease, // Add the disease key
-        name: record.name,
-        expertise: record.expertise,
-        affiliation: record.affiliation,
-        notable_talks: {
-          text: record?.notable_talks?.text || "",
-          url: record?.notable_talks?.url || "",
-        },
-        publications: {
-          text: record?.publications ? "View Publication" : "",
-          url: record?.publications?.length ? record.publications[0] : "",
-        },
-      });
-    });
-  });
-  return result;
-}
+// import DiseaseFilter from "../../components/diseaseFilter";
+// import DataTableWrapper from "../../components/dataTableWrapper";
 
-const TrialIDLink = ({ value }) => {
-  return (
-    <a href={`${value.url}`} target="_blank" rel="noopener noreferrer">
-      {value.text}
-    </a>
-  );
-};
+// function convertToArray(data) {
+//   const result = [];
+//   Object.keys(data).forEach((disease) => {
+//     data[disease].forEach((record) => {
+//       result.push({
+//         Disease: disease, // Add the disease key
+//         name: record.name,
+//         expertise: record.expertise,
+//         affiliation: record.affiliation,
+//         notable_talks: {
+//           text: record?.notable_talks?.text || "",
+//           url: record?.notable_talks?.url || "",
+//         },
+//         publications: {
+//           text: record?.publications ? "View Publication" : "",
+//           url: record?.publications?.length ? record.publications[0] : "",
+//         },
+//       });
+//     });
+//   });
+//   return result;
+// }
+
+// const TrialIDLink = ({ value }) => {
+//   return (
+//     <a href={`${value.url}`} target="_blank" rel="noopener noreferrer">
+//       {value.text}
+//     </a>
+//   );
+// };
 
 const Kol = ({ indications }) => {
-  const [selectedDisease, setSelectedDisease] = useState(indications);
-  const selectedColumns = [
-    "Disease",
-    "name",
-    "affiliation",
-    "expertise",
-    "notable_talks",
-    "publications",
-  ];
-  const payload = { diseases: indications };
+  // const [selectedDisease, setSelectedDisease] = useState(indications);
+  console.log("indications", indications);
+  // const selectedColumns = [
+  //   "Disease",
+  //   "name",
+  //   "affiliation",
+  //   "expertise",
+  //   "notable_talks",
+  //   "publications",
+  // ];
+  // const payload = { diseases: indications };
 
-  const {
-    data: influencersData,
-    error: influencerError,
-    isLoading: influencerLoading,
-  } = useQuery(
-    ["influencerDetails", payload],
-    () => fetchData(payload, "/market-intelligence/key-influencers/"),
-    {
-      enabled: !!indications.length,
-      refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000,
-      refetchOnMount: false,
-    }
-  );
+  // const {
+  //   data: influencersData,
+  //   error: influencerError,
+  //   isLoading: influencerLoading,
+  // } = useQuery(
+  //   ["influencerDetails", payload],
+  //   () => fetchData(payload, "/market-intelligence/key-influencers/"),
+  //   {
+  //     enabled: !!indications.length,
+  //     refetchOnWindowFocus: false,
+  //     staleTime: 5 * 60 * 1000,
+  //     refetchOnMount: false,
+  //   }
+  // );
 
   // Effect to automatically select the first disease when data is loaded
 
-  const columnDefs = useMemo(
-    () => [
-      {
-        field: "Disease",
-        headerName: "Disease",
-        cellRenderer: (params) => {
-          return capitalizeFirstLetter(params.value);
-        },
-      },
-      {
-        headerName: "Name",
-        field: "name",
-        sortable: true,
-        filter: true,
-        flex: 1,
-      },
-      {
-        headerName: "Affiliation",
-        field: "affiliation",
-        sortable: true,
-        filter: true,
-        flex: 1,
-      },
-      {
-        headerName: "Expertise",
-        field: "expertise",
-        sortable: true,
-        filter: true,
-        flex: 1.5,
-      },
-      {
-        headerName: "Notable talks",
-        field: "notable_talks",
-        cellRenderer: TrialIDLink,
-        flex: 1,
-      },
-      {
-        headerName: "Publications",
-        field: "publications",
-        cellRenderer: TrialIDLink,
-        flex: 1,
-      },
-    ],
-    []
-  );
+  // const columnDefs = useMemo(
+  //   () => [
+  //     {
+  //       field: "Disease",
+  //       headerName: "Disease",
+  //       cellRenderer: (params) => {
+  //         return capitalizeFirstLetter(params.value);
+  //       },
+  //     },
+  //     {
+  //       headerName: "Name",
+  //       field: "name",
+  //       sortable: true,
+  //       filter: true,
+  //       flex: 1,
+  //     },
+  //     {
+  //       headerName: "Affiliation",
+  //       field: "affiliation",
+  //       sortable: true,
+  //       filter: true,
+  //       flex: 1,
+  //     },
+  //     {
+  //       headerName: "Expertise",
+  //       field: "expertise",
+  //       sortable: true,
+  //       filter: true,
+  //       flex: 1.5,
+  //     },
+  //     {
+  //       headerName: "Notable talks",
+  //       field: "notable_talks",
+  //       cellRenderer: TrialIDLink,
+  //       flex: 1,
+  //     },
+  //     {
+  //       headerName: "Publications",
+  //       field: "publications",
+  //       cellRenderer: TrialIDLink,
+  //       flex: 1,
+  //     },
+  //   ],
+  //   []
+  // );
 
-  useEffect(() => {
-    if (indications && indications.length > 0) {
-      setSelectedDisease([...indications]);
-    }
-  }, [indications]);
+  // useEffect(() => {
+  //   if (indications && indications.length > 0) {
+  //     setSelectedDisease([...indications]);
+  //   }
+  // }, [indications]);
 
-  const processedData = useMemo(() => {
-    if (influencersData) {
-      return convertToArray(influencersData);
-    }
-    return [];
-  }, [influencersData]);
-  const rowData = useMemo(() => {
-    return filterByDiseases(processedData, selectedDisease, indications);
-  }, [processedData, selectedDisease, indications]);
+  // const processedData = useMemo(() => {
+  //   if (influencersData) {
+  //     return convertToArray(influencersData);
+  //   }
+  //   return [];
+  // }, [influencersData]);
+  // const rowData = useMemo(() => {
+  //   return filterByDiseases(processedData, selectedDisease, indications);
+  // }, [processedData, selectedDisease, indications]);
 
   return (
     <article>
@@ -142,7 +145,7 @@ const Kol = ({ indications }) => {
         Key influential leaders
       </h2>
 
-      <DataTableWrapper
+      {/* <DataTableWrapper
         isLoading={influencerLoading}
         error={influencerError}
         data={processedData}
@@ -163,7 +166,10 @@ const Kol = ({ indications }) => {
             width={500}
           />
         }
-      />
+      /> */}
+        <div className="h-[40vh] flex items-center justify-center">
+              <Empty description="Available on demand" />
+            </div>
     </article>
   );
 };
