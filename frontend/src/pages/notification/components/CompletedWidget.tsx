@@ -50,19 +50,21 @@ console.log("paginatedRight", paginatedRight);
       <div className="divide-y divide-gray-100 overflow-y-auto flex-1">
         {paginatedRight.length > 0 ? (
           paginatedRight.map((d: any, index: number) => (
+          
             <div
               key={`${index}`}
               className="px-6 py-5 hover:bg-gray-50 transition-colors duration-200 cursor-pointer group"
             >
-              <div className="flex items-start justify-between mb-2">
                 <Link
-                  to={buildUrlWithIndications("/", d.target, d.disease)}
-                  className="flex items-center gap-x-2 hover:text-black "
-                >
+            to={buildUrlWithIndications("/", d.target, d.disease)}
+            className=" gap-x-2 hover:text-black "
+          >
+              <div className="flex items-start justify-between mb-2">
+               
                   <h4 className="text-base font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-200 leading-tight">
                     {renderDiseaseTarget(d.disease, d.target)}
                   </h4>
-                </Link>
+                
                 <StatusTag status="processed" />
               </div>
 
@@ -80,6 +82,7 @@ console.log("paginatedRight", paginatedRight);
                   </span>
                 </div>
               </div>
+            </Link>
             </div>
           ))
         ) : (
