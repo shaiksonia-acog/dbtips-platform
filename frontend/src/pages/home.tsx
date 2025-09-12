@@ -46,8 +46,8 @@ const HighlightText = (text: string, searchTerm: string) => {
 };
 
 const fetchGeneData = async (
-  input: string
-): Promise<{ data: GeneSuggestion[] }> => {
+input: string): Promise<{ data: GeneSuggestion[] }> => {
+  
   const response = await fetch(
     `${import.meta.env.VITE_API_URI}/genes/lexical?query=${input}`,
     {
@@ -165,7 +165,7 @@ const Home = ({ setAppState }: { setAppState: (prev: any) => any }) => {
       const requestId = ++requestIdRef.current;
       const searchTerm = geneInput;
 
-      fetchGeneData(searchTerm, controller.signal)
+      fetchGeneData(searchTerm)
         .then((response) => {
           if (requestId !== requestIdRef.current) {
             return;
