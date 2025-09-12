@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Empty, Select, Collapse, theme } from "antd";
+import { Empty, Select, Collapse, theme, Pagination } from "antd";
 import { CaretRightOutlined } from "@ant-design/icons";
 import { useQuery } from "react-query";
 import LoadingButton from "../../components/loading";
@@ -47,6 +47,7 @@ const DiseasePathways: React.FC<NetworkBiologyProps> = ({ indications, target })
   const [filteredData, setFilteredData] = useState<FilteredDiseaseData[]>([]);
   const [geneSet, setGeneSet] = useState<string[]>([]);
   const [summary, setSummary] = useState<React.ReactNode>(null);
+  const [currentPage, setCurrentPage] = useState<{ [key: string]: number }>({});
 
   // Set initial target when component mounts or target prop changes
   useEffect(() => {
@@ -188,6 +189,10 @@ const DiseasePathways: React.FC<NetworkBiologyProps> = ({ indications, target })
     setSelectedTarget(target);
   };
 
+  const handlePageChange = (disease: string, page: number) => {
+    setCurrentPage((prev) => ({ ...prev, [disease]: page }));
+  };
+
   useEffect(() => {
     if (!networkBiologyData) {
       setSummary("");
@@ -306,7 +311,26 @@ const DiseasePathways: React.FC<NetworkBiologyProps> = ({ indications, target })
                 header={capitalizeFirstLetter(diseaseData.disease)}
                 style={panelStyle}
               >
-                <CarouselComponent networkBiologyData={diseaseData} />
+                <CarouselComponent
+                  networkBiologyData={{
+                    ...diseaseData,
+                    results: diseaseData.results.slice(
+                      ((currentPage[diseaseData.disease] || 1) - 1) * 3,
+                      (currentPage[diseaseData.disease] || 1) * 3
+                    ),
+                  }}
+                  
+                />
+                <Pagination
+                  className="mt-4"
+                  align="center"
+                  current={currentPage[diseaseData.disease] || 1}
+                  total={diseaseData.results.length}
+                  pageSize={3}
+                  showSizeChanger={false}
+                  
+                  onChange={(page) => handlePageChange(diseaseData.disease, page)}
+                />
               </Collapse.Panel>
             ))}
           </Collapse>
