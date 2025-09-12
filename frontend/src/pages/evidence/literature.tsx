@@ -28,6 +28,8 @@ const Literature = ({ indications }) => {
     "Title",
     "authors",
     "citedby",
+    "tables_analysis",
+    "supplementary_analysis",
   ]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState("");
