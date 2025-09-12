@@ -138,6 +138,7 @@ const Header = ({ app_state }) => {
       children: [
         { key: "approvedDrug", label: "Approved drugs" },
         { key: "pipeline-by-indications", label: "Therapeutic pipeline" },
+        {key:"publicSentimentAnalysis", label:"Public sentiment analysis"},
         {
           key: "opinionLeaders",
           label: "Opinion leaders",

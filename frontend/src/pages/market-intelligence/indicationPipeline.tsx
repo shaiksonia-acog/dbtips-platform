@@ -19,8 +19,9 @@ import { convertToArray } from "../../utils/helper";
 import DiseaseFilter from "../../components/diseaseFilter";
 import CustomHeader from "./customHeader";
 const { Option } = Select;
+import DrugInformation from "./drugInformation";
 
-const indicationPipeline = ({ indications }) => {
+const IndicationPipeline = ({ indications }) => {
   const [selectedDisease, setSelectedDisease] = useState(indications);
   const [selectedModality, setSelectedModality] = useState("All");
   const { register, invoke } = useChatStore();
@@ -330,8 +331,11 @@ const indicationPipeline = ({ indications }) => {
           </div>
         )}
       </section>
+      <DrugInformation
+        
+         />
     </div>
   );
 };
 
-export default indicationPipeline;
+export default IndicationPipeline;
