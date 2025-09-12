@@ -282,7 +282,7 @@ console.log("indications", indications);
   // };
 
   return (
-    <div className="px-[5vw] py-16 bg-gray-50" id="patientStories">
+    <div className="px-[5vw] py-16 " id="patientStories">
       <div className="flex gap-2">
         <h1 className="text-xl subHeading font-semibold mb-5">
           Patient stories
@@ -345,7 +345,7 @@ console.log("indications", indications);
         </div>
       )} */}
           <div className="h-[40vh] flex items-center justify-center">
-              <Empty description="Available on demand" />
+              <Empty description="Available on request" />
             </div>
     </div>
   );
