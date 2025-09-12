@@ -115,37 +115,45 @@ const Home = ({ setAppState }: { setAppState: (prev: any) => any }) => {
   useEffect(() => {
     const controller = new AbortController();
 
-    if (!input.length) return;
+    if (!input) {
+      setIndications(IndicationsDefaultState);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
-    const HOST = `${import.meta.env.VITE_API_URI}`;
 
-    axios
-      .get(`${HOST}/phenotypes/lexical?query=${input}`, {
-        signal: controller.signal,
-      })
-      .then((response) => {
-        setIndications(response.data.data ?? []);
-      })
-      .catch((error) => {
-        if (axios.isCancel(error)) {
-          console.log("Request canceled:", error.message);
-        } else {
-          console.error(
-            "Error while fetching suggestions/indications: ",
-            error.message
-          );
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    const debounceTimeout = setTimeout(() => {
+      const HOST = `${import.meta.env.VITE_API_URI}`;
+      axios
+        .get(`${HOST}/phenotypes/lexical?query=${input}`, {
+          signal: controller.signal,
+        })
+        .then((response) => {
+          setIndications(response.data.data ?? []);
+        })
+        .catch((error) => {
+          if (axios.isCancel(error)) {
+            console.log("Request canceled:", error.message);
+          } else {
+            console.error(
+              "Error while fetching suggestions/indications: ",
+              error.message
+            );
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }, 300);
 
     return () => {
+      clearTimeout(debounceTimeout);
       controller.abort();
     };
   }, [input]);
 
   useEffect(() => {
+    const controller = new AbortController();
     if (!geneInput.length) {
       setTargetOptions([]);
       return;
@@ -153,35 +161,37 @@ const Home = ({ setAppState }: { setAppState: (prev: any) => any }) => {
 
     setGeneLoading(true);
 
-    // Generate unique ID for this request
-    const requestId = ++requestIdRef.current;
+    const handler = setTimeout(() => {
+      const requestId = ++requestIdRef.current;
+      const searchTerm = geneInput;
 
-    // Use this specific search term throughout this request lifecycle
-    const searchTerm = geneInput;
+      fetchGeneData(searchTerm, controller.signal)
+        .then((response) => {
+          if (requestId !== requestIdRef.current) {
+            return;
+          }
+          setTargetOptions(response.data);
+        })
+        .catch((error) => {
+          if (error.name === 'AbortError') {
+            console.log('Fetch aborted for gene data');
+            return;
+          }
+          if (requestId === requestIdRef.current) {
+            console.error(`Error in request #${requestId}:`, error.message);
+          }
+        })
+        .finally(() => {
+          if (requestId === requestIdRef.current) {
+            setGeneLoading(false);
+          }
+        });
+    }, 300); // 300ms debounce delay
 
-    fetchGeneData(searchTerm)
-      .then((response) => {
-        // Only process if this is still the latest request
-        if (requestId !== requestIdRef.current) {
-          return;
-        }
-
-        // Filter and sort results
-
-        setTargetOptions(response.data);
-      })
-      .catch((error) => {
-        if (requestId === requestIdRef.current) {
-          // Only handle errors for current request
-          console.error(`Error in request #${requestId}:`, error.message);
-        }
-      })
-      .finally(() => {
-        if (requestId === requestIdRef.current) {
-          // Only update loading state for current request
-          setGeneLoading(false);
-        }
-      });
+    return () => {
+      clearTimeout(handler);
+      controller.abort();
+    };
   }, [geneInput]);
 
   const handleIndicationSelect = (value: string) => {
