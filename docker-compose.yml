@@ -63,11 +63,11 @@ services:
       - allowed_domains=${allowed_domains}
     volumes:
       - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json:/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json
-      - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/literature_enhancement:/app/res-immunology-automation/res_immunology_automation/src/scripts/literature_enhancement
+      # - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/literature_enhancement:/app/res-immunology-automation/res_immunology_automation/src/scripts/literature_enhancement
       - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/db:/app/res-immunology-automation/res_immunology_automation/src/scripts/db
       - ./backend/data:/app/database
       - ./backend/res-immunology-automation/res_immunology_automation/src/scripts/logs:/app/res-immunology-automation/res_immunology_automation/src/scripts/logs
-      # - ./backend/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
+      - ./backend/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
     depends_on:
       redis:
         condition: service_started
