@@ -66,11 +66,11 @@ const PatientAdvocacyGroup = ({ indications }) => {
   // }, [processedData, selectedDisease, indications]);
 
   return (
-    <div className="px-[5vw] py-10" id="patientAdvocacyGroup">
+    <div className="px-[5vw] py-20 bg-gray-50" id="patientAdvocacyGroup">
       <h1 className="text-3xl font-semibold my-3">Patient advocacy groups</h1>
       <p className="my-1 font-medium">Profiles of patient advocacy organisations engaged in disease awareness, patient support and healthcare policy advocacy.</p>
       <div className="h-[40vh] flex items-center justify-center">
-              <Empty description="Available on demand" />
+              <Empty description="Available on request" />
             </div>
     </div>
   );

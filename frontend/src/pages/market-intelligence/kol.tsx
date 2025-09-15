@@ -168,7 +168,7 @@ const Kol = ({ indications }) => {
         }
       /> */}
         <div className="h-[40vh] flex items-center justify-center">
-              <Empty description="Available on demand" />
+              <Empty description="Available on request" />
             </div>
     </article>
   );

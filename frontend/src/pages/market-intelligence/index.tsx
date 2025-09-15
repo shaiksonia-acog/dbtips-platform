@@ -6,6 +6,7 @@ import PatientStories from "./patientStories";
 import PatientAdvocacyGroup from "./patientAdvocacyGroup";
 import IndicationPipeline from "./indicationPipeline";
 import TargetPipeline from "./targetPipeline";
+
 const CompetitiveLandscape = () => {
   const location = useLocation();
   // const [target, setTarget] = useState('');
@@ -31,7 +32,7 @@ const CompetitiveLandscape = () => {
       {
         !showTargetPipeline && <div><section
         id="opinionLeaders"
-        className="mt-12 min-h-[80vh] mb-10  px-[5vw]"
+        className="mt-12 min-h-[80vh] mb-10  bg-gray-50 py-20 px-[5vw]"
       >
         <KOL indications={indications} />
       </section>

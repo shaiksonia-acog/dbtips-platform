@@ -1014,7 +1014,7 @@ def process_literature_excel(data,selectedLiteratureData):
     workbook = load_workbook(template_path)
     workbook.template = False
     ws = workbook["Review_repository"]
-    selectedLiteratureWorkbook = workbook["Select_reviews"]
+    # selectedLiteratureWorkbook = workbook["Select_reviews"]
     for row in ws.iter_rows(min_row=2):  # Keep the first row (headers)
         for cell in row:
             cell.value = None
@@ -1028,8 +1028,10 @@ def process_literature_excel(data,selectedLiteratureData):
             author = ", ".join(study["authors"])
             title = study["Title"]
             pubmedLink = study["PubMedLink"]
+            tableAnalysis = ", ".join(study["tables_analysis"])
+            supplementary_analysis = study["supplementary_analysis"]
             row_data = [
-                disease, year,category,title,author,citedBy
+                disease, year,category,title,author,citedBy,tableAnalysis,supplementary_analysis
             ]
             for col, value in enumerate(row_data, start=1):
                 ws.cell(row=row, column=col, value=value)
@@ -1040,28 +1042,28 @@ def process_literature_excel(data,selectedLiteratureData):
             ws.cell(row=row, column=4).style = "Hyperlink"
 
             row += 1  # Move to the next row after filling
-    for row in selectedLiteratureWorkbook.iter_rows(min_row=2):  # Keep the first row (headers)
-        for cell in row:
-            cell.value = None
-    row=2
-    for disease, disease_data in selectedLiteratureData.items():
-        for study in disease_data: 
-            disease=disease
-            year = study["year"]
-            title = study["title_text"]
-            pubmedLink = study["title_url"]
-            row_data = [
-                disease, year,title
-            ]
-            for col, value in enumerate(row_data, start=1):
-                selectedLiteratureWorkbook.cell(row=row, column=col, value=value)
+    # for row in selectedLiteratureWorkbook.iter_rows(min_row=2):  # Keep the first row (headers)
+    #     for cell in row:
+    #         cell.value = None
+    # row=2
+    # for disease, disease_data in selectedLiteratureData.items():
+    #     for study in disease_data: 
+    #         disease=disease
+    #         year = study["year"]
+    #         title = study["title_text"]
+    #         pubmedLink = study["title_url"]
+    #         row_data = [
+    #             disease, year,title
+    #         ]
+    #         for col, value in enumerate(row_data, start=1):
+    #             selectedLiteratureWorkbook.cell(row=row, column=col, value=value)
 
-            selectedLiteratureWorkbook.cell(row=row, column=3, value=title)
+    #         selectedLiteratureWorkbook.cell(row=row, column=3, value=title)
 
-            selectedLiteratureWorkbook.cell(row=row, column=3).hyperlink = pubmedLink
-            selectedLiteratureWorkbook.cell(row=row, column=3).style = "Hyperlink"
+    #         selectedLiteratureWorkbook.cell(row=row, column=3).hyperlink = pubmedLink
+    #         selectedLiteratureWorkbook.cell(row=row, column=3).style = "Hyperlink"
 
-            row += 1  # Move to the next row after filling
+    #         row += 1  # Move to the next row after filling
 
     try:
         workbook.save(output_path)
@@ -1090,8 +1092,10 @@ def process_target_literature_excel(data):
             author = ", ".join(study["authors"])
             title = study["Title"]
             pubmedLink = study["PubMedLink"]
+            tableAnalysis = ", ".join(study["tables_analysis"])
+            supplementary_analysis = study["supplementary_analysis"]
             row_data = [
-                disease, year,category,title,author,citedBy
+                disease, year,category,title,author,citedBy,tableAnalysis,supplementary_analysis
             ]
             for col, value in enumerate(row_data, start=1):
                 ws.cell(row=row, column=col, value=value)
