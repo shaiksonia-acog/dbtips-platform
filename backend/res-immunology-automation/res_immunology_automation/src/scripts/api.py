@@ -2518,21 +2518,10 @@ async def get_target_literature_images_evidence(request: TargetRequest,
         
         endpoint: str = "/evidence/target-literature-images/"
         
-        # Set cache directory and model based on request type
-        if is_disease_only:
-            cache_dir = "cached_data_json/disease"
-            cache_items = processed_diseases
-            table_model = Disease
-        elif is_target_only:
-            cache_dir = "cached_data_json/target"
-            cache_items = [processed_target]
-            table_model = Target
-        else:  # combination or both no-target and no-disease
-            cache_dir = "cached_data_json/target_disease"
-            # Create cache items in the format: target-disease
-            cache_items = [f"{processed_target}-{disease}" for disease in processed_diseases]
-            table_model = TargetDisease
-        
+        cache_dir = "cached_data_json/target_disease"
+        # Create cache items in the format: target-disease
+        cache_items = [f"{processed_target}:{disease}" for disease in processed_diseases]
+        table_model = TargetDisease
         os.makedirs(cache_dir, exist_ok=True)
         
         cached_data: Dict[str, Any] = {}
@@ -2551,13 +2540,8 @@ async def get_target_literature_images_evidence(request: TargetRequest,
                     if endpoint in cached_responses:
                         if is_combination:
                             # For combinations, extract disease name from target-disease format
-                            disease_name = clean_item.split('-')[1].replace("_", " ")
+                            disease_name = clean_item.split(':')[-1].replace("_", " ")
                             cached_data[disease_name] = cached_responses[endpoint]
-                        elif is_disease_only:
-                            key = clean_item.replace("_", " ")
-                            cached_data[key] = cached_responses[endpoint]
-                        else:  # target_only
-                            cached_data[clean_item] = cached_responses[endpoint]
                         continue
                 except Exception as cache_error:
                     print(f"Error loading cache for {item}: {cache_error}")
@@ -2570,46 +2554,39 @@ async def get_target_literature_images_evidence(request: TargetRequest,
 
         print(f"Processing items not in cache: {items_to_process}")
 
-        # Fetch literature data for items that need processing
-        for item in items_to_process:
-            clean_item = item.strip().lower().replace(" ", "_")
-            
-            # Determine query parameters based on cache type
-            if is_disease_only:
-                query_target, query_diseases = "no-target", [item]
-                key = item.replace("_", " ")
-            elif is_target_only:
-                query_target, query_diseases = item, ["no-disease"]
-                key = item
-            else:  # combination - parse target-disease format
-                parts = clean_item.split('-')
-                query_target, query_diseases = parts[0], [parts[1]]
-                key = parts[1].replace("_", " ")  # Use disease name as response key
-            
-            # Fetch literature data with specific target and diseases
-            literature_data = fetch_literature_images_data(
-                db, 
-                target=query_target, 
-                diseases=query_diseases
-            )
-            
-            # Map literature data to network biology format
-            literature_network_biology_format = map_literature_to_network_biology_format(literature_data)
-            
-            # Store the data using the appropriate key
-            if is_combination:
-                cached_data[key] = literature_network_biology_format.get(key, {"results": []})
-            else:
-                # For single target or disease queries, the mapping might return data with a different key
-                if literature_network_biology_format:
-                    # Get the first (and likely only) entry
-                    first_key = next(iter(literature_network_biology_format))
-                    cached_data[key] = literature_network_biology_format[first_key]
+        
+        if build_cache:
+            # Fetch literature data for items that need processing
+            for item in items_to_process:
+                clean_item = item.strip().lower().replace(" ", "_")
+                parts = clean_item.split(':')
+                query_target, query_diseases = parts[0], [parts[-1]]
+                key = parts[1].replace("_", " ")
+
+                # Fetch literature data with specific target and diseases
+                literature_data = fetch_literature_images_data(
+                    db, 
+                    target=query_target, 
+                    diseases=query_diseases
+                )
+                
+                # Map literature data to network biology format
+                literature_network_biology_format = map_literature_to_network_biology_format(literature_data)
+                
+                # Store the data using the appropriate key
+                if is_combination:
+                    cached_data[key] = literature_network_biology_format.get(key, {"results": []})
                 else:
-                    cached_data[key] = {"results": []}
-            
+                    # For single target or disease queries, the mapping might return data with a different key
+                    if literature_network_biology_format:
+                        # Get the first (and likely only) entry
+                        first_key = next(iter(literature_network_biology_format))
+                        cached_data[key] = literature_network_biology_format[first_key]
+                    else:
+                        cached_data[key] = {"results": []}
+                
             # Handle file caching
-            if build_cache:
+            
                 print(f"Caching response for item: {clean_item}")
                 try:
                     record = db.query(table_model).filter_by(id=clean_item).first()
@@ -2633,13 +2610,14 @@ async def get_target_literature_images_evidence(request: TargetRequest,
                     
                 except Exception as cache_error:
                     print(f"Error caching response for {clean_item}: {cache_error}")
-        
+
         print("Target-literature-images endpoint completed successfully")
         return cached_data
         
     except Exception as e:
         print(f"Error in target-literature-images endpoint: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
 
 @app.post("/evidence/literature-table-analysis/", tags=["Evidence"])
 async def get_literature_table_analysis(request: TargetRequest,
