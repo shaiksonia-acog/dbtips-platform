@@ -385,16 +385,19 @@ async def get_dossier_status(request: TargetRequest, db: Session = Depends(get_d
                             logging.info(f"Creating new target record for '{target}' with disease '{disease}'")
                             new_target_record = TargetDossierStatus(target=target, disease=disease, status="submitted", creation_time=local_time)
                             db.add(new_target_record)
-                            
+                            db.commit()
+
                         if disease_record is None:
                             logging.info(f"Creating new disease record for '{disease}'")
                             new_disease_record = DiseaseDossierStatus(disease=f"{disease}", status="submitted", creation_time=local_time)
                             db.add(new_disease_record)
-                        
+                            db.commit()
+
                         if target_only_record is None:
                             logging.info(f"Creating target-only record for '{target}'")
                             target_only_record = TargetDossierStatus(target=target, disease='no-disease', status="submitted", creation_time=local_time)
                             db.add(target_only_record)
+                            db.commit()
                             
                             # Create endpoint records for target-only
                             target_only_endpoints = get_endpoints_for_job_type(target, 'no-disease')
