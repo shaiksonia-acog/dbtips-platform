@@ -132,8 +132,17 @@ class ThreeStageHybridAnalysisPipeline:
 
             elif analysis_result.get("status") == "analysis_error":
                 # Analysis error from Image Analysis Client - stop pipeline
-                logger.error(f"Analysis failed critically for {pmcid}")
-                raise RuntimeError(f"Analysis failed: {analysis_result.get('error_message')}")
+                logger.error(f"Analysis failed due to invalid response from {FIGURE_ANALYSIS_MODEL.upper()} for {pmcid} due to {analysis_result.get('error_message')}")
+                # raise RuntimeError(f"Analysis failed: {analysis_result.get('error_message')}")
+                return {
+                    "keywords": "not mentioned", "insights": "not mentioned",
+                    "genes": "not mentioned", "drugs": "not mentioned",
+                    "process": "not mentioned", "is_disease_pathway": True,
+                    "error_message": f"Analysis Error: {analysis_result.get('error_message')}",
+                    # "status": "analysis_timeout"
+                    "error_type": "analysis_error",
+                    "status": "error"
+                }
             else:
                 logger.warning(f"Stage 2 partial completion: {pmcid} - status: {analysis_result.get('status')}")
             

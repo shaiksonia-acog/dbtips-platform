@@ -101,14 +101,14 @@ async def process_images_hybrid(images_data: List[ImageDataModel], disease: str,
                 gpu_memory_errors += 1
                 logger.warning(f"{prefix} GPU memory error (recovery attempted): {pmcid}")
                 
-            elif result.get("error_type") in ["OpenAI Parsing Error"] or status == "analysis_error":
+            elif result.get("error_type") in ["OpenAI Parsing Error", "analysis_error"] or status == "error":
                 # Critical errors that should have stopped the pipeline
-                critical_errors += 1
-                logger.error(f"{prefix} Critical error occurred but not raised: {pmcid} - {status}")
+                errors += 1
+                logger.error(f"{prefix} Critical error occurred: {pmcid} - {status}")
                 # This shouldn't happen if pipeline is working correctly
                 # but we'll treat it as a pipeline error
-                raise RuntimeError(f"Critical error not properly handled by pipeline: {status} for {pmcid}")
-                
+                # raise RuntimeError(f"Critical error not properly handled by pipeline: {status} for {pmcid}")
+                errors += 1
             else:
                 errors += 1
                 logger.error(f"{prefix} Unknown status: {pmcid} - {status}")
@@ -199,6 +199,10 @@ async def process_images_hybrid(images_data: List[ImageDataModel], disease: str,
     logger.info(f"Other errors: {errors}")
     logger.info(f"Critical errors: {critical_errors}")
     logger.info("=" * 50)
+
+    if critical_errors > 0 or gpu_memory_errors > 0 or errors > 0 or timeout_errors > 0:
+        raise RuntimeError(f"Pipeline completed with critical issues - check logs for details")
+
 
 async def update_image_analysis(image_analysis_data: ImageDataAnalysisResult, image_metadata: ImageDataModel):
     """
