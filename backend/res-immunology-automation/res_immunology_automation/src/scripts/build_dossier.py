@@ -38,7 +38,7 @@ logging.basicConfig(
 )
 
 task_started = False
-WAIT_TIME = 200
+WAIT_TIME = 3000
 
 POSTGRES_USER: str = os.getenv("POSTGRES_USER")
 POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD")
