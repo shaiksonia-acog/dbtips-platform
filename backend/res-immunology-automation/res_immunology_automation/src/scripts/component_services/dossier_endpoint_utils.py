@@ -66,16 +66,22 @@ def create_endpoint_records(db: Session, target_key: str, disease_key: str, endp
     local_time = datetime.now(tzlocal.get_localzone())
     
     for endpoint_name in endpoints:
-        endpoint_record = DossierEndpointStatus(
-            target=target_key,
-            disease=disease_key,
-            endpoint_name=endpoint_name,
-            status="submitted",
-            creation_time=local_time
-        )
-        db.add(endpoint_record)
-
-
+        try:
+            endpoint_record = DossierEndpointStatus(
+                target=target_key,
+                disease=disease_key,
+                endpoint_name=endpoint_name,
+                status="submitted",
+                creation_time=local_time
+            )
+            db.add(endpoint_record)
+            db.commit()
+            
+        except:
+            db.rollback()
+            logging.error(f"Failed to create endpoint record for {endpoint_name} - target: {target_key}, disease: {disease_key}")
+            continue
+            
 def get_friendly_endpoint_name(endpoint_name: str) -> str:
     """Convert technical endpoint names to user-friendly display names"""
     endpoint_mapping = {
