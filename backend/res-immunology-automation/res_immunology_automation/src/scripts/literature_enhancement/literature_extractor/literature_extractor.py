@@ -82,9 +82,10 @@ def fetch_cache(file_path: str, endpoint: str) -> List[Dict[str, Any]]:
     
       # Debugging line to check the file path
     cache = load_response_from_file(file_path)
-    literature_data = cache.get(endpoint, {}).get("literature", [])
+    if endpoint in cache:
+        literature_data = cache.get(endpoint).get("literature")
     
-    if not literature_data:
+    if endpoint not in cache:
         raise ValueError(f"No literature data found in cache for endpoint {endpoint}")
     
     return literature_data
@@ -165,6 +166,10 @@ async def extract_literature(disease: str , target: str) -> bool:
             literature = fetch_cache(record.file_path, endpoint)
             logging.info(f"{prefix} Loaded {len(literature)} literature entries from cache")
 
+            if len(literature) == 0:
+                await create_pipeline_status(disease, target, "extraction", "completed")
+                return True  # Nothing to process, but not an error
+                
             # Get top PMID-title pairs
             top_pmid_title_pairs = get_top_n_literature(literature, MAX_PMIDS_TO_PROCESS)
             if not top_pmid_title_pairs:
