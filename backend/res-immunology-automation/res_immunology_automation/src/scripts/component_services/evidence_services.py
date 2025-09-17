@@ -26,10 +26,13 @@ import io
 from fastapi import HTTPException
 from Bio.Entrez import HTTPError
 from .pubmed_utils import get_data_from_pubmed
+import logging
 
 MAX_RESULTS=500
 # NCBI API Base URL
 BASE_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
+
+logging.basicConfig(level=logging.INFO)
 NCBI_API_KEY = os.getenv('NCBI_API_KEY')
 RATE_LIMIT_RETRY_PERIOD = 300
 EMAIL = os.getenv('NCBI_EMAIL')
@@ -717,13 +720,14 @@ def get_cited_by_count(pmid: str) -> int:
     HTTP_HEADERS = {"authorization": OPEN_CITATIONS_API}
 
     try:
-        response = requests.get(API_CALL, headers=HTTP_HEADERS)
+        response = requests.get(API_CALL, headers=HTTP_HEADERS, timeout=100)
         if response.status_code == 200:
             time.sleep(0.1)
             return response.json()[0]['count']
         
     except Exception as e:
-        raise e
+        logging.error(f"Error fetching citation count from Open Citations for PMID {pmid}: {e}")
+        return 0
 
 
 def get_journal_rank(journal_issn: str) -> Optional[int]:
@@ -1711,7 +1715,6 @@ def add_sample_type(data: Dict[str, List[Dict[str, Any]]]) -> Dict[str, List[Dic
     Adds a new field 'SampleType' to each record with additional debug logging.
     Modified to only use 'Diseased' and 'Both' categories based on specific criteria.
     """
-    import logging
     logging.info("Starting add_sample_type function")
     
     try:
