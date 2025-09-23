@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Carousel,
   Card,
@@ -10,6 +10,7 @@ import {
   Modal,
 } from "antd";
 import { ExternalLinkIcon } from "lucide-react";
+import { CarouselRef } from "antd/es/carousel";
 
 const isPresent = (val: any) => val !== null && val !== undefined && val !== "";
 
@@ -21,14 +22,21 @@ const chunkImages = (images: any[], chunkSize: number) => {
   return result;
 };
 
-const CarouselComponent = ({ networkBiologyData }) => {
+const CarouselComponent = ({ networkBiologyData,currentPage = 1,onSlideChange }) => {
+  const carouselRef = useRef<CarouselRef>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<any>(null);
+  const [internalSlide, setInternalSlide] = useState(currentPage - 1);
 
-  if (networkBiologyData && !networkBiologyData.results.length) {
-    return <Empty />;
-  }
+  useEffect(() => {
+    const targetIndex = currentPage - 1;
+    if (carouselRef.current && targetIndex !== internalSlide) {
+      carouselRef.current.goTo(targetIndex, false);
+      setInternalSlide(targetIndex);
+    }
+  }, [currentPage, internalSlide]);
 
+ 
   const imageChunks =
     networkBiologyData && Array.isArray(networkBiologyData.results)
       ? chunkImages(networkBiologyData.results, 3)
@@ -40,6 +48,9 @@ const CarouselComponent = ({ networkBiologyData }) => {
     setSelectedImage(image);
     setIsModalOpen(true);
   };
+  if (networkBiologyData && !networkBiologyData.results.length) {
+    return <Empty />;
+  }
 
   return (
     <>
@@ -53,7 +64,13 @@ const CarouselComponent = ({ networkBiologyData }) => {
           },
         }}
       >
-        <Carousel infinite={false}>
+        <Carousel infinite={false} arrows={true} ref={carouselRef}   afterChange={(newSlideIndex) => {
+  setInternalSlide(newSlideIndex);
+  if (onSlideChange) {
+    onSlideChange(newSlideIndex + 1);
+  }
+}}
+        >
           {imageChunks.map((chunk, index) => (
             <div key={index}>
               <Row gutter={[16, 16]}>

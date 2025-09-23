@@ -311,16 +311,13 @@ const DiseasePathways: React.FC<NetworkBiologyProps> = ({ indications, target })
                 header={capitalizeFirstLetter(diseaseData.disease)}
                 style={panelStyle}
               >
-                <CarouselComponent
-                  networkBiologyData={{
-                    ...diseaseData,
-                    results: diseaseData.results.slice(
-                      ((currentPage[diseaseData.disease] || 1) - 1) * 3,
-                      (currentPage[diseaseData.disease] || 1) * 3
-                    ),
-                  }}
-                  
-                />
+              <CarouselComponent
+  networkBiologyData={diseaseData}
+  currentPage={currentPage[diseaseData.disease] || 1}
+  onSlideChange={(page) => handlePageChange(diseaseData.disease, page)}
+/>
+
+
                 <Pagination
                   className="mt-4"
                   align="center"
