@@ -98,7 +98,7 @@ const AssociatePlot = ({ indications }) => {
     "CI",
     "Mapped gene(s)",
   ]);
-  const gwasColumnDefs = [
+  const gwasColumnDefs = useMemo(()=>[
     {
       headerName: "Disease",
       field: "disease",
@@ -159,8 +159,8 @@ const AssociatePlot = ({ indications }) => {
         } else return "Not available";
       },
     },
-  ];
-  const associationColumnDefs = [
+  ],[]);
+  const associationColumnDefs = useMemo(() => [
     {
       headerName: "Disease",
       field: "diseaseName",
@@ -194,7 +194,7 @@ const AssociatePlot = ({ indications }) => {
       headerName: "Mapped Gene",
       field: "Mapped gene(s)",
     },
-  ];
+  ], []);
   const visibleColumns = useMemo(() => {
     if (activeTab === "studies") {
       return gwasColumnDefs.filter((col) =>
