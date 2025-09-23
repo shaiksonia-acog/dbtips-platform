@@ -154,7 +154,7 @@ const IndicationPipeline = ({ indications }) => {
     []
   );
   const payload = {
-    diseases: ["Primary Progressive Multiple Sclerosis"],
+    diseases: indications,
   };
 
   const {
@@ -233,7 +233,7 @@ const IndicationPipeline = ({ indications }) => {
           approvedDrugData={processedData}
           loading={isLoading}
           error={indicationError}
-          indications={["primary progressive multiple scleros"]}
+          indications={indications}
           isFetchingData={isFetching}
         />
       </section>
