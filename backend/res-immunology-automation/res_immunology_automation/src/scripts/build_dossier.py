@@ -205,12 +205,35 @@ async def update_endpoint_status(db, endpoint: str, status: str, target_key: str
         await db.rollback()
         raise e
 
+async def clear_processing_dossiers(db):
+    try:
+        processing_records = await fetch_processing_records(db)
+        if processing_records:
+            for job in processing_records:
+                local_time = datetime.now(tzlocal.get_localzone()) 
+                values = {'status': 'error', 'creation_time': local_time, 'processed_time': local_time}
+                if job['target'] is None:
+                    job_type = DiseaseDossierStatus
+                    values['disease'] = job['disease']
+                else:
+                    job_type = TargetDossierStatus
+                    values['target'] = job['target']
+                    values['disease'] = job['disease']
+            await update_record_status(db, job_type, **values)
+    except Exception as e:
+        logging.error(f"Error clearing processing dossiers: {e}")
+        await db.rollback()
+
 async def build_dossier():
     logging.info("dossier started")
     global task_started
     if task_started:
         return  # Prevent multiple instances from starting
     task_started = True
+
+    # If any dossier was in processing state at the start of the build dossier, change it to error state
+    async with SessionLocal() as db:
+        await clear_processing_dossiers(db)
 
     # db = get_db()
     while True:
@@ -472,6 +495,7 @@ async def run_endpoints(db_session, job_data):
 async def main():
     """Main entry point to initialize database and start dossier processing."""
     await create_models()
+
     await build_dossier()
 
 
