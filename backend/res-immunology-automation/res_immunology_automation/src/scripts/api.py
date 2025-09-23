@@ -52,7 +52,7 @@ from services import (
     # parse_safety_events,
 )
 from api_models import TargetRequest, GraphRequest, DiseaseRequest, SearchQueryModel, DiseasesRequest, \
-    SearchRequest, TargetOnlyRequest,ExcelExportRequest, DiseaseDrugsMapping, DiseaseRequestOnto, DiseaseRequest
+    SearchRequest, TargetOnlyRequest,ExcelExportRequest, DiseaseDrugsMapping, DiseaseRequestOnto, DiseaseRequest, DossierRequest
 from utils import format_for_cytoscape, get_efo_id, find_disease_id_by_name, send_graphql_request, \
     save_response_to_file, load_response_from_file, calculate_expiry_date, add_years, \
     save_big_response_to_file, \
@@ -345,10 +345,11 @@ async def download_file(file_path: str):
 #################################### Build Dossier ##############################################
 
 @app.post("/dossier/dossier-status/", tags=["Dossier Status"])
-async def get_dossier_status(request: TargetRequest, db: Session = Depends(get_db)):
+async def get_dossier_status(request: DossierRequest, db: Session = Depends(get_db)):
     try:
         diseases = [disease.lower() for disease in request.diseases]
         target = request.target.lower().strip()
+        created_by = request.created_by if request.created_by else "anonymous"
 
         cached_records = []
         building_dossier = []
@@ -383,19 +384,19 @@ async def get_dossier_status(request: TargetRequest, db: Session = Depends(get_d
                         # Create missing records and endpoint records
                         if target_record is None:
                             logging.info(f"Creating new target record for '{target}' with disease '{disease}'")
-                            new_target_record = TargetDossierStatus(target=target, disease=disease, status="submitted", creation_time=local_time)
+                            new_target_record = TargetDossierStatus(target=target, disease=disease, status="submitted", created_by=created_by, creation_time=local_time)
                             db.add(new_target_record)
                             db.commit()
 
                         if disease_record is None:
                             logging.info(f"Creating new disease record for '{disease}'")
-                            new_disease_record = DiseaseDossierStatus(disease=f"{disease}", status="submitted", creation_time=local_time)
+                            new_disease_record = DiseaseDossierStatus(disease=f"{disease}", status="submitted", created_by=created_by, creation_time=local_time)
                             db.add(new_disease_record)
                             db.commit()
 
                         if target_only_record is None:
                             logging.info(f"Creating target-only record for '{target}'")
-                            target_only_record = TargetDossierStatus(target=target, disease='no-disease', status="submitted", creation_time=local_time)
+                            target_only_record = TargetDossierStatus(target=target, disease='no-disease', status="submitted", created_by=created_by, creation_time=local_time)
                             db.add(target_only_record)
                             db.commit()
                             

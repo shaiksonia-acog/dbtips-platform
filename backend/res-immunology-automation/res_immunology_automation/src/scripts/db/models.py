@@ -28,6 +28,7 @@ class DiseaseDossierStatus(Base):
 
     job_id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     disease = Column(String, nullable=False, unique=True)
+    created_by = Column(String, nullable=True)  # New field for created_by
     status = Column(String, nullable=False)
     error_count = Column(Integer, default=0, nullable=False)
     creation_time = Column(DateTime(timezone=True), nullable=True)  
@@ -49,6 +50,7 @@ class TargetDossierStatus(Base):
     job_id = Column(Integer, Sequence('job_id_seq'),  nullable=False, autoincrement=True, index=True)
     target = Column(String, nullable=False)
     disease = Column(String, nullable=True)
+    created_by = Column(String, nullable=True)  # New field for created_by
     status = Column(String, nullable=False)
     error_count = Column(Integer, default=0)
     creation_time = Column(DateTime(timezone=True), nullable=True)  

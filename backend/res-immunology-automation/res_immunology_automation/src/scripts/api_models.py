@@ -6,6 +6,11 @@ class TargetRequest(BaseModel):
     target: str
     diseases: List[str] = Field(default_factory=list)
 
+class DossierRequest(BaseModel):
+    target: str
+    disease: str
+    created_by: Optional[str] = None  # Optional field for created_by
+
 class TargetOnlyRequest(BaseModel):
     target: constr(min_length=1)  # Requires at least one character
 
