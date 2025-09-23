@@ -131,6 +131,7 @@ def fetch_records_by_status(db: Session, job_type, record_status: str) -> List[D
         if job_type.__tablename__ == "target_dossier_status":
             data['target'] = record.target
         data['disease'] = record.disease
+        data['created_by'] = record.created_by
         data['creation_time'] = record.creation_time
         data['submission_time'] = record.submission_time
         data['processed_time'] = record.processed_time
