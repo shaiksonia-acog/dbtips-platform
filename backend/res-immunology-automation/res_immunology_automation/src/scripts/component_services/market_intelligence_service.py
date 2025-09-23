@@ -12,6 +12,7 @@ from requests.auth import HTTPBasicAuth
 from openai import OpenAI
 from openai._exceptions import OpenAIError, RateLimitError
 from .pubmed_utils import get_data_from_pubmed
+import re
 PATIENT_STORIES_URL = os.getenv('PATIENT_STORIES_URL')
 username = os.getenv('username')
 password = os.getenv('password')
@@ -542,7 +543,7 @@ def fetch_pubmed_article_data(pmids: List[str]) -> List[Dict[str, Any]]:
         #     raise HTTPException(status_code=429, detail=f"Rate limit exceeded. Try again after {RATE_LIMIT_RETRY_PERIOD} seconds.")
 
         # response.raise_for_status()
-        url = NCBI_BASE_URL + "esearch.fcgi"
+        url = NCBI_BASE_URL + "efetch.fcgi"
         response = get_data_from_pubmed(url, params)
 
     except HTTPException as e:
@@ -1131,6 +1132,114 @@ def get_outcome_status(pubmed_ids: List[str],disease_name: str) -> str:
     except Exception as e:
         raise e
     
+def add_outcome_status_gemma3(pubmed_ids: List[str], disease_name: str, llm_client) -> Tuple[str, str]:
+    """
+    Returns a tuple: (classification, reason)
+    """
+    try:
+        if not pubmed_ids or not disease_name:
+            return "Not Known", "Missing PubMed IDs or disease name"
+
+        pmids_string = ",".join(pubmed_ids)
+        conclusion = get_combined_conclusions(pubmed_ids=pubmed_ids)
+
+        if not conclusion:
+            print(f"No conclusion found for PMIDs: {pmids_string}")
+            return "Not Known", f"No conclusion found for PMIDs: {pmids_string}"
+
+        prompt = f"""
+        The conclusion of the PubMed articles with Pubmed ID {pmids_string} is as follows:
+        {conclusion}
+
+        The article is associated with the disease: {disease_name}.
+
+        Based on this conclusion, classify it into one of the following categories:
+
+        1. **Success**: The study indicates clear positive outcomes or advancements related to the disease's treatment, management, or understanding.
+        2. **Failed**: The study reports negative results, lack of significant outcomes, or setbacks in addressing the disease.
+        3. **Indeterminate**: The study provides ambiguous or inconclusive results, or the conclusion lacks sufficient evidence to determine success or failure.
+
+        Provide the classification in the following JSON format:
+        {{ "classification": "<Success/Failed/Indeterminate>" }}
+        """
+
+        response = llm_client.extract_drugs(prompt)
+        print(f"LLM Response: {response}")
+
+        
+        clean = re.sub(r"^```(?:json)?\s*|\s*```$", "", response.strip(), flags=re.MULTILINE)
+
+        # Step 2: run regex
+        match = re.search(r'\{.*"classification"\s*:\s*".*?".*}', clean, re.DOTALL)
+        if match:
+            classification_json = match.group(0)
+            classification = json.loads(classification_json).get("classification", "Indeterminate")
+        else:
+            print(f"LLM did not return valid JSON. Raw response: {response}")
+            return "Not Known", f"LLM did not return valid JSON. Response: {response}"
+
+        classification = classification.strip().capitalize()
+        if classification in ["Success", "Failed", "Indeterminate"]:
+            reason = f"\n{conclusion.strip()}"
+            return classification, reason
+        else:
+            return "Not Known", f"Unexpected classification value: {classification}"
+
+    except Exception as e:
+        return "Not Known", f"Exception during classification: {e}"
+def add_outcome_status_ollama(records: Dict[str, List[Dict]], llm_client) -> Dict[str, List[Dict]]:
+    try:
+        for disease, entries in records.items():
+            print(f"Adding outcome status for: {disease}")
+            for entry in entries:
+                status = entry.get("Status", "").strip().lower()
+                pmids = entry.get("PMIDs", [])
+                
+                if status in ["terminated", "withdrawn", "suspended"]:
+                    # Set OutcomeStatus to Failed
+                    entry["OutcomeStatus"] = "Failed"
+                    # Do NOT set OutcomeReason
+                    # WhyStopped is already set in enrich_trial_data
+                elif status == "completed":
+                    classification, reason = add_outcome_status_gemma3(pmids, disease, llm_client)
+                    entry["OutcomeStatus"] = classification
+                    # Only provide OutcomeReason if classification is "Failed"
+                    if classification == "Failed":
+                        entry["OutcomeReason"] = reason.strip()[:200]
+                    else:
+                        entry["OutcomeReason"] = ""
+                else:
+                    entry["OutcomeStatus"] = "Not Known"
+                    entry["OutcomeReason"] = ""
+    except Exception as e:
+        print(f"Exception in outcome status processing: {e}")
+        raise e
+
+    return records
+
+# not using yet
+def classify_why_stopped_with_llm(why_stopped: str, llm_client) -> str:
+    """
+    Uses LLM to classify why_stopped reason as 'Failed' or 'Indeterminate'.
+    """
+    if not why_stopped or why_stopped.strip() == "":
+        return "Indeterminate"
+    prompt = f"""
+    Classify the following reason for trial termination as either "Failed" (if the reason is unmet endpoints, safety concerns, or similar critical issues related to the intervention):
+
+    Reason: "{why_stopped}"
+
+    Respond with only one word: Failed.
+    """
+    response = llm_client.extract_drugs(prompt)
+    # Extract the word from the response (be robust to extra text)
+    if "failed" in response.lower():
+        return "Failed"
+    elif "indeterminate" in response.lower():
+        return "Indeterminate"
+    else:
+        return "Indeterminate"
+
 
 def add_outcome_status(records: Dict[str, List[Dict[str, Any]]]) -> Dict[str, List[Dict[str, Any]]]:
     """
@@ -1438,7 +1547,7 @@ def get_disease_pmid_nct_mapping(diseases: List[str]) -> Dict[str, Dict[int, Lis
 
 
 def remove_duplicates(pipeline):
-    """
+    """₹
     Removes duplicate entries in the pipeline based on specific unique fields.
     The comparison is case-insensitive for strings and lists of strings.
     Keeps the latest entry if duplicates are found.

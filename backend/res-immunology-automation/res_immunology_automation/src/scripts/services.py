@@ -3,7 +3,8 @@ from target_analyzer import TargetAnalyzer
 from helper import get_disease_descendants
 import requests
 from typing import *
-from utils import fetch_all_publications
+from utils import fetch_all_publications, fetch_nct_titles, get_pmids_for_nct_ids, get_chembl_id_exact, get_moa_short, fetch_approval_status, fetch_moa_targets_for_ids, format_multi_drug_output, fetch_molecule_type,get_target_type
+from component_services.market_intelligence_service import add_outcome_status_ollama, get_why_stopped, classify_why_stopped_with_llm 
 from datetime import datetime
 
 
@@ -128,6 +129,64 @@ def parse_targetability(response, exact_target):
             return target_data
 
     return {"error": f"No exact match found for target '{exact_target}'."}
+
+
+def format_indication_pipeline_data(data_array):
+    """
+    Parses clinical trial data by creating a separate, processed record for each drug.
+    This version uses helper functions for clarity and efficiency.
+    """
+    parsed_rows = []
+
+    def _parse_field(text, filter_empty=False):
+        """Splits a pipe-delimited string, strips whitespace, and optionally removes empty items."""
+        if not text:
+            return []
+        items = [item.strip() for item in text.split("|")]
+        return [item for item in items if item] if filter_empty else items
+
+    def _safe_get(lst, index, default=""):
+        """Safely gets an item from a list by index, returning a default value if out of bounds."""
+        return lst[index] if index < len(lst) else default
+
+    for trial_index, data in enumerate(data_array):
+        # Use the helper function to parse all relevant fields from the JSON
+        drugs = _parse_field(data.get("Drug"), filter_empty=True)
+        targets = _parse_field(data.get("Target"))
+        mechanisms = _parse_field(data.get("Mechanism of Action"))
+        chembl_ids = _parse_field(data.get("ChemblIds"), filter_empty=True)
+        modalities = _parse_field(data.get("Modality"), filter_empty=True)
+        approval_statuses = _parse_field(data.get("ApprovalStatus"))
+        target_types = _parse_field(data.get("TargetType"))
+
+        # Using a set for allowed types provides a minor performance boost for lookups
+        allowed_target_types = {"ORGANISM", "CELL-LINE", "TISSUE", "SUBCELLULAR", "UNKNOWN"}
+
+        for drug_index, drug in enumerate(drugs):
+            target_type = _safe_get(target_types, drug_index)
+            filter_target = any(allowed in target_type for allowed in allowed_target_types)
+
+            # Prepare a dictionary of the new/overwritten fields
+            updated_fields = {
+                'trialIndex': trial_index + 1,
+                'drugIndex': drug_index + 1,
+                'uniqueId': f"{trial_index}-{drug_index}",
+                'Drug': drug.capitalize(),
+                'Target': "" if filter_target else _safe_get(targets, drug_index),
+                'MechanismOfAction': "" if filter_target else _safe_get(mechanisms, drug_index),
+                'Modality': "" if filter_target else _safe_get(modalities, drug_index),
+                'TargetType': "" if filter_target else target_type,
+                # Note: ChemblIds and ApprovalStatus are not affected by the filter_target logic
+                'ChemblIds': _safe_get(chembl_ids, drug_index),
+                'ApprovalStatus': _safe_get(approval_statuses, drug_index),
+            }
+
+            # Create the new row by merging the original data with the updated fields
+            new_row = {**data, **updated_fields}
+            parsed_rows.append(new_row)
+            
+    return parsed_rows
+
 
 
 def parse_tractability(api_response):
@@ -1231,3 +1290,243 @@ def parse_knowndrugs_all(api_response, disease_list):
         })
 
     return known_drugs_list
+def normalize_phase(phase: str) -> str:
+    """
+    Normalize phase strings like 'PHASE3', 'PHASE II', 'phase1', etc. to 'Phase 3', 'Phase 2', etc.
+    """
+    if not phase or not isinstance(phase, str):
+        return "NA"
+    phase = phase.strip().upper().replace(" ", "")
+    if phase.startswith("PHASE"):
+        num = phase.replace("PHASE", "")
+        if num == "I":
+            return "Phase 1"
+        elif num == "II":
+            return "Phase 2"
+        elif num == "III":
+            return "Phase 3"
+        elif num == "IV":
+            return "Phase 4"
+        elif num.isdigit():
+            return f"Phase {num}"
+    return phase.title()
+
+
+import logging
+import time
+
+# Set up logger
+logger = logging.getLogger(__name__)
+
+def enrich_trial_data(trials: List[Dict], disease_name: str, llm_client) -> List[Dict]:
+    import time
+    start_time = time.time()
+    logger.info("Starting enrich_trial_data for disease: %s", disease_name)
+    
+    if not trials:
+        logger.warning("No trials provided. Returning empty list.")
+        return []
+
+    trials = trials[:5] # for limit
+    logger.info("Limiting to %d trials for testing purposes.", len(trials))
+
+    enriched_trials = []
+
+    # Step 1: Extract drug info and map to ChEMBL
+    logger.info("Step 1: Starting drug-to-ChEMBL mapping gcgcgcg")
+    step_start = time.time()
+
+    for item in trials:
+        logger.info(item["nct_id"])
+        logger.info(item["extracted_drugs"])
+        logger.info("-----")
+        nct_id = item["nct_id"]
+        original_drug_names = item.get("original_drug_names", "")
+        drugs = item["extracted_drugs"]
+
+        chembl_ids = []
+        moa_list = []
+        mol_types = []
+        approvals = []
+        drug_info = []
+        target_names = set()
+        target_type_blocks = []
+
+        for drug in drugs:
+            cid = get_chembl_id_exact(drug)
+            if cid:
+                chembl_id = cid[0]
+                mol_type = fetch_molecule_type(chembl_id)
+                approval = fetch_approval_status(chembl_id, disease_name)
+                moa_targets = fetch_moa_targets_for_ids([chembl_id])
+                
+
+                chembl_ids.append(chembl_id)
+                mol_types.append(mol_type)
+                approvals.append(approval)
+                moa_list.extend(moa_targets)
+
+                for _, _, _, target in moa_targets:
+                    logger.info(f"target loop {target}")
+                    if target and target != "NA":
+                        target_names.add(target)
+
+                drug_info.append((drug, chembl_id, mol_type, approval))
+      
+        moa_str = get_moa_short(moa_list)
+        target_type_list = []
+        for mt in moa_list:
+            if len(mt) == 4:
+                tgt_id = mt[3]
+                if tgt_id:
+                    ttype = get_target_type(tgt_id)
+                    if ttype and ttype != "NA":
+                        target_type_list.append(ttype)
+        if not target_type_list:
+            target_type_list = ["NA"]
+        target_type_blocks.append(target_type_list)
+        logger.info(f"target type {target_type_blocks}")
+        
+
+
+        enriched_trial = {
+            "Disease": disease_name,
+            "OriginalDrugNames": original_drug_names,
+            "NctId": nct_id,
+            "Source URLs": [f"https://clinicaltrials.gov/ct2/show/{nct_id}"],
+            "Status": item.get("overall_status", "NA"),
+            "Phase": normalize_phase(item.get("phase", "NA")),
+            "Sponsor": item.get("sponsor", "NA"),
+            "Target": [t.upper() for t in target_names],
+            "Source type": item.get("source_class", "NA"),
+            "__raw": {
+                "drug_names": drugs,
+                "chembl_ids": chembl_ids,
+                "mol_types": mol_types,
+                "approvals": approvals,
+                "moa_list": moa_list,
+                "moa_short": moa_str,
+                "target_type_blocks": target_type_blocks,
+            }
+        }
+        # Add why_stopped and outcome status if trial is stopped
+        trial_status = item.get("overall_status", "NA")
+        if trial_status.strip().lower() in ["terminated", "withdrawn", "suspended"]:
+            why_stopped = get_why_stopped(nct_id)
+            enriched_trial["WhyStopped"] = why_stopped
+            enriched_trial["OutcomeStatus"] = "Failed"
+        enriched_trials.append(enriched_trial)
+
+    logger.info("Step 1 completed in %.2f seconds", time.time() - step_start)
+
+    logger.info("Step 2: Formatting multi-drug output")
+    step_start = time.time()
+
+    for trial in enriched_trials:
+        raw = trial.pop("__raw")
+        logger.info(f"raw data before formatting {raw}")
+        drug_names = raw["drug_names"]
+        n_drugs = len(drug_names)
+
+        # Prepare aligned lists for each property
+        modalities = raw["mol_types"]
+        chembl_ids = raw["chembl_ids"]
+        approvals = raw["approvals"]
+        target_type_blocks = raw["target_type_blocks"]
+
+        # MoA and Target alignment
+        # moa_list: list of (chembl_id, moa, target)
+        moa_targets = raw["moa_list"]
+        moa_short_per_drug = []
+        target_per_drug = []
+
+        for i in range(n_drugs):
+            # Find all moa/target tuples for this drug's chembl_id
+            chembl_id = chembl_ids[i] if i < len(chembl_ids) else ""
+            # Filter moa_targets for this chembl_id
+            moa_tuples = [mt for mt in moa_targets if mt[0] == chembl_id]
+            # MoA short
+            moa_short = get_moa_short(moa_tuples).upper() if moa_tuples else "NA"
+            moa_short_per_drug.append(moa_short)
+            # Target(s)
+            targets = [mt[2].upper() for mt in moa_tuples if mt[2] and mt[2] != "NA"]
+            target_per_drug.append(", ".join(targets) if targets else "NA")
+
+        # Now format all columns
+        trial["Drug"] = format_multi_drug_output([[d] for d in drug_names])
+        trial["Mechanism of Action"] = format_multi_drug_output([[m] for m in moa_short_per_drug])
+        trial["Modality"] = format_multi_drug_output([[m] for m in modalities])
+        trial["ChemblIds"] = format_multi_drug_output([[c] for c in chembl_ids])
+        trial["ApprovalStatus"] = format_multi_drug_output([[a] for a in approvals])
+        trial["Target"] = format_multi_drug_output([[t] for t in target_per_drug])
+        logger.info(f"target type blocks before formatting {target_type_blocks}")
+        trial["TargetType"] = format_multi_drug_output([[t] for t in target_type_blocks[0]])
+
+        logger.info(f"trial after multi drug formatting ")
+        logger.info(trial["TargetType"])
+
+
+
+    logger.info("Step 2 completed in %.2f seconds", time.time() - step_start)
+
+    # Step 3: Add NCT Titles
+    logger.info("Step 3: Fetching NCT Titles")
+    step_start = time.time()
+    nct_ids = [t["NctId"] for t in enriched_trials if t.get("NctId")]
+    title_map = fetch_nct_titles(nct_ids)
+    for trial in enriched_trials:
+        trial["OfficialTitle"] = title_map.get(trial["NctId"], "")
+
+    logger.info("Step 3 completed in %.2f seconds", time.time() - step_start)
+
+    # Step 4: Wrap in dict per disease (required by get_pmids_for_nct_ids)
+    logger.info("Step 4: Wrapping trials by disease for PMID linking")
+    trials_by_disease = {disease_name: enriched_trials}
+    logger.info("Step 4 completed")
+
+    # Step 5: Link PMIDs
+    logger.info("Step 5: Starting PMID linking")
+    step_start = time.time()
+    trials_with_pmids = get_pmids_for_nct_ids(trials_by_disease)
+    logger.info("Step 5 completed in %.2f seconds", time.time() - step_start)
+
+    # Step 6: Add Outcome Status for all trials (batch)
+    logger.info("Step 6: Adding Outcome Status for all trials")
+    step_start = time.time()
+    trials_with_outcome = add_outcome_status_ollama(trials_with_pmids, llm_client)
+    logger.info("Step 6 completed in %.2f seconds", time.time() - step_start)
+
+
+    # Step 7: Create a set from trials with outcome doing trial-disease-drug
+    deduped_response = {}
+
+    for disease_name, trials in trials_with_outcome.items():
+        seen = set()
+        unique_trials = []
+        for trial in trials:
+            key = (
+                trial.get("NctId", ""),
+                trial.get("Disease", ""),
+                trial.get("Drug", "")
+            )
+            if key not in seen:
+                seen.add(key)
+                unique_trials.append(trial)
+        deduped_response[disease_name] = unique_trials
+    logger.info(f"Deduped trials for {disease_name}: {deduped_response}")
+
+  
+    logger.info("Step 7: Processing clinical trial data to separate drugs")
+    step_start = time.time()
+    processed_response = {}
+    for disease_name, trials in deduped_response.items():
+        processed_trials = format_indication_pipeline_data(trials)
+        processed_response[disease_name] = processed_trials
+    logger.info("Step 8 completed in %.2f seconds", time.time() - step_start)
+    # Update the final return to use processed_response
+    logger.info(f"Finalizing deduped response {processed_response}")
+    deduped_response = processed_response
+    logger.info("enrich_trial_data completed in %.2f seconds", time.time() - start_time)
+
+
+    return deduped_response[disease_name]
