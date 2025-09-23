@@ -170,11 +170,11 @@ const ApprovedDrug = ({
             ) && data.ApprovalStatus === "Approved"
         );
     const uniqueKeys = new Set(
-      filtered.map((item) => `${item.Target}-${item.Disease}-${item.Drug}`)
+      filtered.map((item) => `${item.Disease}-${item.Drug}`)
     );
     return Array.from(uniqueKeys).map((key) =>
       filtered.find(
-        (item) => `${item.Target}-${item.Disease}-${item.Drug}` === key
+        (item) => `${item.Disease}-${item.Drug}` === key
       )
     );
   }, [selectedDisease, approvedDrugData]);

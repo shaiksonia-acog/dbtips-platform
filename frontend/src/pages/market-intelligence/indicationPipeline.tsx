@@ -3,8 +3,6 @@ import { fetchData } from "../../utils/fetchData";
 import { useEffect, useState, useMemo } from "react";
 import { Empty, Select, Button, message } from "antd";
 import { capitalizeFirstLetter } from "../../utils/helper";
-import parse from "html-react-parser";
-import he from "he";
 import LoadingButton from "../../components/loading";
 import ExportButton from "../../components/exportButton";
 import IndicationsSummary from "./indicationsSummary";
@@ -21,22 +19,21 @@ import CustomHeader from "./customHeader";
 const { Option } = Select;
 import DrugInformation from "./drugInformation";
 
+
 const IndicationPipeline = ({ indications }) => {
   const [selectedDisease, setSelectedDisease] = useState(indications);
   const [selectedModality, setSelectedModality] = useState("All");
   const { register, invoke } = useChatStore();
   const [selectedColumns, setSelectedColumns] = useState([
-    "Drug",
     "Disease",
-    "Phase",
-    "Status",
-    "Type",
-    "Sponsor",
-    "Mechanism of Action",
     "Target",
-    "OutcomeStatus",
-    "WhyStopped",
     "Source URLs",
+    "Drug",
+    "Modality",
+    "OutcomeStatus",
+    "OutcomeReason",
+    "Phase",
+    "Mechanism of Action",
   ]);
   useEffect(() => {
     if (indications && indications.length > 0) {
@@ -46,53 +43,40 @@ const IndicationPipeline = ({ indications }) => {
   const columnDefs = useMemo(
     () => [
       {
-        field: "NctIdTitleMapping",
-        headerName: "Trial summary",
-        flex: 8,
-        minWidth: 300,
-        valueGetter: (params) => {
-          if (params.data.NctIdTitleMapping) {
-            return Object.entries(params.data.NctIdTitleMapping)
-              .map(
-                ([key, value]) =>
-                  `<div><span className="font-semibold">${key}:</span> ${
-                    value ? value : "No official title available"
-                  }</div>`
-              )
-              .join("\n\n");
-          }
-          return "";
-        },
-        cellStyle: { whiteSpace: "pre-wrap" },
-        filter: true,
-        cellRenderer: (params) => {
-          return parse(params.value);
-        },
-      },
-
-      {
+        headerName: "Disease",
         field: "Disease",
-        cellRenderer: (params) => {
-          return capitalizeFirstLetter(params.value);
-        },
+        width: 200,
       },
       {
+        headerName: "Target",
         field: "Target",
+        width: 200,
       },
       {
         field: "Source URLs",
         headerName: "Trial id",
-        flex: 2,
+        flex: 1,
         cellRenderer: (params) =>
           params.value.map((value, index) => (
             <a key={index} className="mr-2" href={value} target="_blank">
-              {value.replace("https://clinicaltrials.gov/study/", "")}
+              {value.replace("https://clinicaltrials.gov/ct2/show/", "")}
               {params.value.length - 1 !== index ? "," : ""}
             </a>
           )),
       },
       {
+        headerName: "Drug Name",
+        field: "Drug",
+        width: 180,
+      },
+      {
+        headerName: "Modality",
+        field: "Modality",
+        width: 140,
+      },
+      {
         field: "OutcomeStatus",
+        headerName: "Trial outcome",
         headerComponent: CustomHeader,
         headerComponentParams: {
           displayName: "Trial outcome",
@@ -101,6 +85,8 @@ const IndicationPipeline = ({ indications }) => {
           return capitalizeFirstLetter(params.value);
         },
       },
+     
+      
       {
         field: "OutcomeReason",
         headerName: "Outcome reason",
@@ -138,27 +124,37 @@ const IndicationPipeline = ({ indications }) => {
           return `${pmids} ${whyStopped}`;
         },
       },
-      { field: "Drug" },
-      { field: "Phase" },
-      { field: "Status" },
-      { field: "MoleculeTypes", headerName: "Modality" },
+      
+    
       {
-        field: "Sponsor",
-        flex: 2,
-        cellRenderer: (params) => {
-          return he.decode(params.value);
-        },
+        headerName: "Phase",
+        field: "Phase",
+        width: 100,
       },
       {
+        headerName: "Mechanism of Action",
         field: "MechanismOfAction",
-        headerName: "Mechanism of action",
-        flex: 2,
+        width: 250,
       },
+      {
+        headerName: "Status",
+        field: "Status",
+        width: 120,
+      },
+      
+      {
+        headerName: "Sponsor",
+        field: "Sponsor",
+        width: 120,
+      },
+     
+
+      { headerName: "Source Class", field: "Source type" },
     ],
     []
   );
   const payload = {
-    diseases: indications,
+    diseases: ["Primary Progressive Multiple Sclerosis"],
   };
 
   const {
@@ -168,7 +164,7 @@ const IndicationPipeline = ({ indications }) => {
     isFetching,
   } = useQuery(
     ["marketIntelligenceIndications", payload],
-    () => fetchData(payload, "/market-intelligence/indication-pipeline/"),
+    () => fetchData(payload, "/market-intelligence/indication-pipeline-new/"),
     {
       enabled: !!indications.length,
       refetchOnWindowFocus: false,
@@ -196,7 +192,7 @@ const IndicationPipeline = ({ indications }) => {
 
     return selectedModality === "All"
       ? diseaseFiltered
-      : diseaseFiltered.filter((item) => item.Type === selectedModality);
+      : diseaseFiltered.filter((item) => item.Modality === selectedModality);
   }, [processedData, selectedDisease, selectedModality, indications]);
   const showLoading = isLoading || isFetching;
 
@@ -219,8 +215,10 @@ const IndicationPipeline = ({ indications }) => {
   }, [filteredData]);
 
   const handleLLMCall = () => {
-    if(processedData.length===0){
-      message.warning("This feature requires context to be passed to LLM. As there is no data available, this feature cannot be used");
+    if (processedData.length === 0) {
+      message.warning(
+        "This feature requires context to be passed to LLM. As there is no data available, this feature cannot be used"
+      );
       return;
     }
     invoke("pipeline_indications", { send: false });
@@ -235,7 +233,7 @@ const IndicationPipeline = ({ indications }) => {
           approvedDrugData={processedData}
           loading={isLoading}
           error={indicationError}
-          indications={indications}
+          indications={["primary progressive multiple scleros"]}
           isFetchingData={isFetching}
         />
       </section>
@@ -282,13 +280,13 @@ const IndicationPipeline = ({ indications }) => {
                     <Option key="All" value="All">
                       All
                     </Option>
-                    {[...new Set(processedData.map((item) => item.Type))].map(
-                      (type) => (
-                        <Option key={type} value={type}>
-                          {type}
-                        </Option>
-                      )
-                    )}
+                    {[
+                      ...new Set(processedData.map((item) => item.Modality)),
+                    ].map((type) => (
+                      <Option key={type} value={type}>
+                        {type}
+                      </Option>
+                    ))}
                   </Select>
                 </div>
               </div>
@@ -331,9 +329,7 @@ const IndicationPipeline = ({ indications }) => {
           </div>
         )}
       </section>
-      <DrugInformation
-        
-         />
+      <DrugInformation />
     </div>
   );
 };
