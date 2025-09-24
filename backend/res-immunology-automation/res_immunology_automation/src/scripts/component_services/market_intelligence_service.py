@@ -1404,13 +1404,14 @@ def get_indication_pipeline_strapi(disease_name: str) -> List[Dict[str, Any]]:
                 filtered_data.append({
                     "Disease": item.get("disease", "").lower(),
                     "Drug": item.get("drug", ""),
-                    "Type": item.get("type", ""),
+                    "Modality": item.get("type", ""),
                     "Mechanism of Action": item.get("MoA", ""),
                     "Phase": f"Phase {phase}" if phase else "N/A",
                     "Status": trial_status,
                     "Target": item.get("target", ""),
                     "Source URLs": source_url,
                     "Sponsor": item.get("sponsor", ""),
+                    "NctId": trial_id[0] if trial_id else "",
                     "ApprovalStatus": approval_status,
                     "WhyStopped":get_why_stopped(nct_id=trial_id[0]) if trial_id else ""
                 })
@@ -1547,7 +1548,7 @@ def get_disease_pmid_nct_mapping(diseases: List[str]) -> Dict[str, Dict[int, Lis
 
 
 def remove_duplicates(pipeline):
-    """₹
+    """
     Removes duplicate entries in the pipeline based on specific unique fields.
     The comparison is case-insensitive for strings and lists of strings.
     Keeps the latest entry if duplicates are found.
