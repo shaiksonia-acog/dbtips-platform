@@ -8,7 +8,7 @@ class TargetRequest(BaseModel):
 
 class DossierRequest(BaseModel):
     target: str
-    disease: str
+    diseases: List[str] = Field(default_factory=list)
     created_by: Optional[str] = None  # Optional field for created_by
 
 class TargetOnlyRequest(BaseModel):
