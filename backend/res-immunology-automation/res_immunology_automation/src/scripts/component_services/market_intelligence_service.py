@@ -446,7 +446,7 @@ def get_nctids_from_pmid_efetch(pmid_list: List[str]) -> Dict[str, List[str]]:
     base_url = f"{NCBI_BASE_URL}/efetch.fcgi"
     
     # If the list is very large, process in chunks to avoid memory issues
-    max_chunk_size = 200  # Adjust based on your needs
+    max_chunk_size = 30  # Adjust based on your needs
     pmid_nct_dict: Dict[str, List[str]] = {}
     
     try:
@@ -454,7 +454,7 @@ def get_nctids_from_pmid_efetch(pmid_list: List[str]) -> Dict[str, List[str]]:
         for i in range(0, len(pmid_list), max_chunk_size):
             chunk = pmid_list[i:i + max_chunk_size]
             pmid_str = ",".join(chunk)
-            
+            print(f"PMID str: {i}, {pmid_str}")
             # Prepare data for POST request body
             post_data = {
                 "db": "pubmed",
@@ -484,7 +484,7 @@ def get_nctids_from_pmid_efetch(pmid_list: List[str]) -> Dict[str, List[str]]:
             # Alternative: use your existing rate-limited function
             # response = get_data_from_pubmed(base_url, post_data, method='POST')
             
-            time.sleep(0.2)  # Rate limiting
+            time.sleep(0.3)  # Rate limiting
             
             if response.status_code == 200:
                 root = ET.fromstring(response.content)
@@ -519,7 +519,7 @@ def get_nctids_from_pmid_efetch(pmid_list: List[str]) -> Dict[str, List[str]]:
     
     except Exception as e:
         pmid_str = ",".join(pmid_list[:5]) + "..." if len(pmid_list) > 5 else ",".join(pmid_list)
-        print(f"An error occurred while fetching NCT IDs for PMIDs '{pmid_str}': {e}")
+        print(f"An error occurred while fetching NCT IDs for PMIDs '{pmid_str}': {e}, {len(pmid_str)}")
         raise e
     
     return pmid_nct_dict
@@ -776,7 +776,7 @@ def get_pmids_for_nct_ids(disease_data: Dict[str, List[Dict]]) -> Dict[str, List
 def get_pmids_for_nct_ids_target_pipeline(
     disease_data: List[Dict[str, Any]],
     disease_pmid_nct_mapping: Dict[str, Dict[str, List[str]]]
-) -> List[Dict[str, Any]]:
+    ) -> List[Dict[str, Any]]:
     """
     Processes a list of records, retrieves PMIDs for each disease using a precomputed mapping,
     and adds matching PMIDs for completed studies to each record.
@@ -820,6 +820,54 @@ def get_pmids_for_nct_ids_target_pipeline(
         #     record["PMIDs"] = []
 
     return disease_data
+
+# def get_pmids_for_nct_ids_target_pipeline_new(
+#     disease_data: List[Dict[str, Any]],
+#     disease_pmid_nct_mapping: Dict[str, Dict[str, List[str]]]
+#     ) -> List[Dict[str, Any]]:
+#     """
+#     Processes a list of records, retrieves PMIDs for each disease using a precomputed mapping,
+#     and adds matching PMIDs for completed studies to each record.
+
+#     Args:
+#         disease_data (List[Dict[str, Any]]): A list of records, each containing information about drugs,
+#                                               diseases, and associated clinical trials.
+#         disease_pmid_nct_mapping (Dict[str, Dict[str, List[str]]]): A dictionary mapping diseases to a 
+#                                                                      dictionary of PMIDs and their associated NCT IDs.
+
+#     Returns:
+#         List[Dict[str, Any]]: The updated list of records with added PMIDs for completed studies.
+#     """
+#     # Iterate over each record and update it with matching PMIDs
+#     for record in disease_data:
+#         # Extract disease name and ensure it's in the mapping
+#         disease_name = record.get("Indication", "").lower()
+#         pmid_nct_dict = disease_pmid_nct_mapping.get(disease_name, {})
+        
+
+#         # Check if the record has a "Completed" status
+#         # if record.get("Status", "") == "Completed":
+#         # Extract NCT IDs from the record's "Source URLs"
+#         # nct_ids = [url.split("/")[-1] for url in record.get("Source URLs", [])]
+#         nctids = record.get("nct_id", [])
+#         # Collect unique PMIDs associated with these NCT IDs
+#                         # Initialize a set to collect unique PMIDs associated with the NCT IDs
+#         matching_pmids = set()
+
+#         # For each NCT ID, collect the corresponding PMIDs that have it
+#         for nct_id in nct_ids:
+#             for pmid, associated_nct_ids in pmid_nct_dict.items():
+#                 if nct_id in associated_nct_ids:
+#                     # Add the PMID to the set if it matches
+#                     matching_pmids.add(pmid)
+
+#         # Add the matching PMIDs as a new key in the record
+#         record["PMIDs"] = list(matching_pmids)
+#         # else:
+#         #     # For non-completed statuses, add an empty list for PMIDs
+#         #     record["PMIDs"] = []
+
+#     return disease_data
 
 def get_conclusion(pubmed_id: str) -> Optional[str]:
     """
@@ -1267,11 +1315,12 @@ def add_outcome_status(records: Dict[str, List[Dict[str, Any]]]) -> Dict[str, Li
                         entry["OutcomeStatus"] = "Not Known"
                     else:
                         pubmed_ids = entry.get("PMIDs", [])
-                        if len(pubmed_ids) > 4:
-                            entry["OutcomeStatus"] = get_outcome_status_openai_batches(pubmed_ids, entry.get("Disease", "").lower())
-                        else:
-                            entry["OutcomeStatus"] = get_outcome_status_openai(pubmed_ids, entry.get("Disease", "").lower())
-                        time.sleep(1)
+                        if len(pubmed_ids) > 0:
+                            if len(pubmed_ids) > 4:
+                                entry["OutcomeStatus"] = get_outcome_status_openai_batches(pubmed_ids, entry.get("Disease", "").lower())
+                            else:
+                                entry["OutcomeStatus"] = get_outcome_status_openai(pubmed_ids, entry.get("Disease", "").lower())
+                            time.sleep(1)
 
     except HTTPException as e:
         raise e
@@ -1307,11 +1356,12 @@ def add_outcome_status_target_pipeline(records: List[Dict[str, Any]]) -> List[Di
                 else:
                     # Call the get_outcome_status function to populate OutcomeStatus
                     pubmed_ids = entry.get("PMIDs", [])
-                    if len(pubmed_ids) > 4:
-                        entry["OutcomeStatus"] = get_outcome_status_openai_batches(pubmed_ids, entry.get("Disease", "").lower())
-                    else:
-                        entry["OutcomeStatus"] = get_outcome_status_openai(pubmed_ids, entry.get("Disease", "").lower())
-                    time.sleep(1)
+                    if len(pubmed_ids) > 0:
+                        if len(pubmed_ids) > 4:
+                            entry["OutcomeStatus"] = get_outcome_status_openai_batches(pubmed_ids, entry.get("Disease", "").lower())
+                        else:
+                            entry["OutcomeStatus"] = get_outcome_status_openai(pubmed_ids, entry.get("Disease", "").lower())
+                        time.sleep(1)
 
     except HTTPException as e:
         print("exception raised here")
@@ -1323,6 +1373,7 @@ def add_outcome_status_target_pipeline(records: List[Dict[str, Any]]) -> List[Di
     return records
 
 def get_why_stopped(nct_id: str) -> str:
+    nct_id = nct_id.strip(",")
     api_url = f"https://clinicaltrials.gov/api/int/studies/{nct_id}?history=true"
 
     try:

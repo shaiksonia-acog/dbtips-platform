@@ -1494,6 +1494,7 @@ async def get_indication_pipeline_semaphore(request: DiseasesRequest,
     except Exception as e:
         raise e
     return response    
+
 @app.post("/market-intelligence/indication-pipeline-new/", tags=["Market Intelligence"])
 async def get_indication_pipeline_new(request: DiseasesRequest, db: Session = Depends(get_db),build_cache: bool = False,db_client: DBClient = Depends(get_aact_db)):
     diseases = request.diseases
@@ -1590,26 +1591,47 @@ async def get_indication_pipeline_new(request: DiseasesRequest, db: Session = De
             set_rate_limit(RATE_LIMIT)
         raise HTTPException(status_code=status_code, detail=str(e))
 
+semaphore = asyncio.Semaphore(1)
+@app.post("/market-intelligence/target-pipeline-semaphore-new/", tags=["Market Intelligence"])
+async def get_target_pipeline_semaphore(request: TargetRequest,
+                                  redis: Redis = Depends(get_redis),
+                                  db: Session = Depends(get_db),
+                                  build_cache: bool = False
+    ):
+    try:
+        async with semaphore:  # This will block concurrent requests
+            print(f"lock applied and processing {request.target} and {request.diseases}")
+            response =  await target_pipeline_new(request, db, db_client, build_cache)
+        print("lock removed")
+    except Exception as e:
+        raise e
+    return response 
+
 @app.post("/market-intelligence/target-pipeline-new/", tags=["Market Intelligence"])
 async def target_pipeline_new(
     request: TargetRequest,
+
     db: Session = Depends(get_db),
-    db_client: DBClient = Depends(get_aact_db)
-):
+    db_client: DBClient = Depends(get_aact_db),
+    build_cache: bool=False
+    ):
     target_input = request.target.strip()
     endpoint: str = "/market-intelligence-new/target-pipeline/"
-    cache_dir: str = "cached_data_json/target_new"
+    cache_dir: str = "cached_data_json/target-new"
     os.makedirs(cache_dir, exist_ok=True)
 
+    response = {}
     # --- Check cache ---
     cached_response_api: Dict = {"target_pipeline": {}}
-    disease_record = db.query(Disease).filter_by(id=target_input.lower()).first()
-    if disease_record and disease_record.file_path:
-        cached_responses = load_response_from_file(disease_record.file_path)
+    target_record = db.query(Target).filter_by(id=target_input.lower()).first()
+    if target_record and target_record.file_path:
+        cached_responses = load_response_from_file(target_record.file_path)
         if endpoint in cached_responses:
-            logging.info(f"Cache hit for {target_input}")
-            return cached_responses[endpoint]
-
+            logging.info(f"Cache hit for {target_input}, {cached_responses[endpoint]}")
+            available_diseases = list(set([r["Disease"].strip().lower().replace(" ", "_") for r in cached_responses[endpoint]['target_pipeline'] if r.get("Disease") and r["Disease"] != "NA"]))
+            response = {"target_pipeline": cached_responses[endpoint],
+                        "available_diseases": ["all"] + list(available_diseases)}
+            return response
     # --- Rate limiting ---
     if is_rate_limited():
         remaining_time = int(rate_limited_until - time.time())
@@ -1619,125 +1641,32 @@ async def target_pipeline_new(
         )
 
     try:
-        # Get ChEMBL target ID
-        target_chembl_id = drug_extraction.get_target_chembl_id(target_input)
-        if not target_chembl_id:
-            raise HTTPException(status_code=404, detail=f"Could not find ChEMBL target ID for {target_input}")
+        if build_cache == True:
+            # Get ChEMBL target ID
+            from services import enrich_target_trials
+            results, available_diseases = enrich_target_trials(target_input, db_client)
+            response = {"target_pipeline": results}
+            logger.info("Saving and Updating Cache")
+            # --- Save to cache & DB ---
+            file_path = os.path.join(cache_dir, f"{target_input.lower()}.json")
+            cached_responses = {}
+            if target_record and target_record.file_path:
+                cached_responses = load_response_from_file(target_record.file_path)
 
-        # Get drugs for target
-        drugs = drug_extraction.get_drugs_for_target(target_chembl_id)
-        if not drugs:
-            logger.warning(f"No drugs found for target {target_chembl_id}")
-            return {"target_pipeline": {target_input: []}}
-        logger.info(f"Found {len(drugs)} drugs for target {target_chembl_id}")
+            cached_responses[endpoint] = response
 
-        results = []
-        for drug in drugs:
-            chembl_id = drug["molecule_chembl_id"]
-            drug_name = drug.get("pref_name") or chembl_id
-            modality = drug_extraction.fetch_molecule_type(chembl_id)
-            moa_targets = drug_extraction.fetch_moa_targets_for_ids([chembl_id], filter_target=target_chembl_id)
-            moa_short = drug_extraction.get_moa_short(moa_targets)
-            indications = drug_extraction.get_indications_for_drug(chembl_id)
-
-            if not indications:
-                results.append({
-                    "Target Symbol": target_input,
-                    "Drug Name": drug_name,
-                    "MoA": moa_short,
-                    "Indication": "NA",
-                    "Approval Status": "NA",
-                    "Modality": modality,
-                    "nct_id": "",
-                    "phase": "",
-                    "overall_status": "",
-                    "sponsor": "",
-                    "source_class": "",
-                    "official_title": "",
-                    "intervention_types": ""
-                })
+            if target_record is None:
+                save_response_to_file(file_path, cached_responses)
+                new_record = Target(id=target_input.lower(), file_path=file_path)
+                db.add(new_record)
+                db.commit()
+                db.refresh(new_record)
+                logger.info("Added record in DB")
             else:
-                for ind in indications:
-                    approval = drug_extraction.get_approval_status_from_indication(ind)
-                    trials = db_client.fetch_trials_for_drug_and_indication(drug_name, ind.get("indication_name", ""))
-                    all_trials = []
-                    seen_nct_ids = set()
-
-                    if trials:
-                        for trial in trials:
-                            nct_id = trial.get("nct_id")
-                            if nct_id and nct_id not in seen_nct_ids:
-                                all_trials.append(trial)
-                                seen_nct_ids.add(nct_id)
-                    else:
-                        # Try all synonyms if no trials found with preferred name
-                        drug_synonyms = drug_extraction.get_drug_synonyms(chembl_id)
-                        for drug_syn in drug_synonyms:
-                            if drug_syn.lower() == (drug_name or "").lower():
-                                continue  # already tried preferred name
-                            syn_trials = db_client.fetch_trials_for_drug_and_indication(drug_syn, ind.get("indication_name", ""))
-                            if syn_trials:
-                                for trial in syn_trials:
-                                    nct_id = trial.get("nct_id")
-                                    if nct_id and nct_id not in seen_nct_ids:
-                                        all_trials.append(trial)
-                                        seen_nct_ids.add(nct_id)
-
-                    if not all_trials:
-                        # If no trial for any synonym, still output the row
-                        results.append({
-                            "Target Symbol": target_input,
-                            "Drug Name": drug_name,
-                            "MoA": moa_short,
-                            "Indication": ind.get("indication_name", "NA"),
-                            "Approval Status": approval,
-                            "Modality": modality,
-                            "nct_id": "",
-                            "phase": "",
-                            "overall_status": "",
-                            "sponsor": "",
-                            "source_class": "",
-                            "official_title": "",
-                            "intervention_types": ""
-                        })
-                    else:
-                        for trial in all_trials:
-                            results.append({
-                                "Target Symbol": target_input,
-                                "Drug Name": drug_name,
-                                "MoA": moa_short,
-                                "Indication": ind.get("indication_name", "NA"),
-                                "Approval Status": approval,
-                                "Modality": modality,
-                                "nct_id": trial.get("nct_id", ""),
-                                "phase": trial.get("phase", ""),
-                                "overall_status": trial.get("overall_status", ""),
-                                "sponsor": trial.get("sponsor", ""),
-                                "source_class": trial.get("source_class", ""),
-                                "official_title": trial.get("official_title", ""),
-                                "intervention_types": trial.get("intervention_types", "")
-                            })
-
-
-        response = {"target_pipeline": {target_input: results}}
-
-        # --- Save to cache & DB ---
-        file_path = os.path.join(cache_dir, f"{target_input.lower()}.json")
-        cached_responses = {}
-        if disease_record and disease_record.file_path:
-            cached_responses = load_response_from_file(disease_record.file_path)
-
-        cached_responses[endpoint] = response
-
-        if disease_record is None:
-            save_response_to_file(file_path, cached_responses)
-            new_record = Disease(id=target_input.lower(), file_path=file_path)
-            db.add(new_record)
-            db.commit()
-            db.refresh(new_record)
-        else:
-            save_response_to_file(disease_record.file_path, cached_responses)
-
+                save_response_to_file(target_record.file_path, cached_responses)
+        
+            response['available_diseases'] = available_diseases
+        logger.info("Returning response")
         return response
 
     except Exception as e:

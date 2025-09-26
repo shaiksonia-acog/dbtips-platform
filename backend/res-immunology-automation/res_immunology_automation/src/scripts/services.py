@@ -4,8 +4,15 @@ from helper import get_disease_descendants
 import requests
 from typing import *
 from utils import fetch_all_publications, fetch_nct_titles, get_pmids_for_nct_ids, get_chembl_id_exact, get_moa_short, fetch_approval_status, fetch_moa_targets_for_ids, format_multi_drug_output, fetch_molecule_type,get_target_type
-from component_services.market_intelligence_service import add_outcome_status_ollama, get_why_stopped, classify_why_stopped_with_llm 
+from component_services.market_intelligence_service import add_outcome_status_ollama, get_why_stopped, classify_why_stopped_with_llm , \
+                                                            get_target_pipeline_strapi_all, get_disease_pmid_nct_mapping, get_pmids_for_nct_ids_target_pipeline, \
+                                                            add_outcome_status_target_pipeline, remove_duplicates
+
+from component_services import drug_extraction
+from component_services.aact_db_client import get_aact_db,DBClient
 from datetime import datetime
+from fastapi import HTTPException
+
 
 
 
@@ -821,6 +828,7 @@ def parse_disease_known_drugs(api_response,disease_exact_synonyms:List[str]):
         }.get(status, -1)
 
     def get_sponsor_name(nct_id):
+        nct_id = nct_id.strip(',')
         api_url = f"https://clinicaltrials.gov/api/int/studies/{nct_id}?history=true"
         try:
             response = requests.get(api_url,timeout=5)
@@ -919,6 +927,7 @@ def parse_disease_known_drugs(api_response,disease_exact_synonyms:List[str]):
         return combined_list
 
     def get_why_stopped(nct_id: str) -> str:
+        nct_id = nct_id.strip(',')
         api_url = f"https://clinicaltrials.gov/api/int/studies/{nct_id}?history=true"
 
         try:
@@ -1189,7 +1198,7 @@ def parse_knowndrugs_all(api_response, disease_list):
         nct_id = url.split('/')[-1] if 'clinicaltrials.gov' in url else None
         if not nct_id:
             return "URL Invalid or Not Applicable"
-
+        nct_id = nct_id.strip()
         api_url = f"https://clinicaltrials.gov/api/int/studies/{nct_id}?history=true"
         try:
             response = requests.get(api_url)
@@ -1218,6 +1227,7 @@ def parse_knowndrugs_all(api_response, disease_list):
         return "Not Known"
 
     def get_why_stopped(nct_id: str) -> str:
+        nct_id = nct_id.strip(',')
         api_url = f"https://clinicaltrials.gov/api/int/studies/{nct_id}?history=true"
         try:
             response = requests.get(api_url)
@@ -1314,9 +1324,13 @@ def normalize_phase(phase: str) -> str:
 
 import logging
 import time
-
+import os
+import requests
+import xml.etree.ElementTree as ET
+from target_analyzer import TargetAnalyzer
 # Set up logger
 logger = logging.getLogger(__name__)
+NCBI_API_KEY = os.getenv('NCBI_API_KEY')
 
 def enrich_trial_data(trials: List[Dict], disease_name: str, llm_client) -> List[Dict]:
     import time
@@ -1530,3 +1544,209 @@ def enrich_trial_data(trials: List[Dict], disease_name: str, llm_client) -> List
 
 
     return deduped_response[disease_name]
+
+def get_pmids_from_nctid(nct_id: str):
+    """
+    Given an NCT ID, query PubMed via NCBI E-utilities and return a list of PMIDs.
+    """
+    base_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
+    params = {
+        "db": "pubmed",
+        "term": f"{nct_id}[si]",
+        "retmode": "xml",
+        "api_key": NCBI_API_KEY
+    }
+    
+    response = requests.get(base_url, params=params)
+    response.raise_for_status()  # raise error if request failed
+    
+    # Parse XML response
+    root = ET.fromstring(response.text)
+    pmids = [id_elem.text for id_elem in root.findall(".//Id")]
+    
+    return pmids
+
+def enrich_target_trials(target_input: str, db_client: DBClient):
+    """
+    Generate target pipeline results given target
+    """
+    # Map Target Input to ChemblID
+    # Case A:
+    # 1. Use OT to fetch Uniprot Id given target input
+    # 2. Convert UniprotID to Chembl ID 
+    # 3. Use ChemblID for down stream process, if ChemblID exists
+
+    # CaseB:
+    # 1. If chemblID doesn't exists, use OT to fetch drugs
+
+    # Step1: Get Target Details from ChemBl
+
+    # target_chembl_id = drug_extraction.get_target_chembl_id(target_input)
+    target_chembl_id = drug_extraction.map_target_to_chembl(target_input) 
+
+    if not target_chembl_id:
+        analyzer = TargetAnalyzer(target_input)
+        ot_response = analyzer.get_known_drugs()
+        diseases = None
+        results = parse_knowndrugs_all(ot_response, diseases)
+
+        # raise HTTPException(status_code=404, detail=f"Could not find ChEMBL target ID for {target_input}")
+    else:
+        target_chembl_id = target_chembl_id[0]
+        target_type = get_target_type(target_chembl_id)
+
+        # Step2: Get drugs for target
+        drugs = drug_extraction.get_drugs_for_target(target_chembl_id)
+        if not drugs:
+            logger.warning(f"No drugs found for target {target_chembl_id}")
+            return [], []
+        logger.info(f"Found {len(drugs)} drugs for target {target_chembl_id}")
+
+        # Step3: Get Drug details
+        results = []
+        logger.info("Fetching additional details for each drug")
+        for drug in drugs:
+            chembl_id = drug["molecule_chembl_id"]
+            drug_name = drug.get("pref_name") or chembl_id
+            modality = drug_extraction.fetch_molecule_type(chembl_id)
+            moa_targets = drug_extraction.fetch_moa_targets_for_ids([chembl_id], filter_target=target_chembl_id)
+            moa_short = drug_extraction.get_moa_short(moa_targets)
+            indications = drug_extraction.get_indications_for_drug(chembl_id)
+
+            
+            if not indications:
+                results.append({
+                    "Target": target_input,
+                    "Drug": drug_name,
+                    "Mechanism of Action": moa_short,
+                    "Disease": "NA",
+                    "ApprovalStatus": "NA",
+                    "Modality": modality,
+                    "Source URLs": [],
+                    "nct_id": "",
+                    "Phase": "",
+                    "Status": "",
+                    "Sponsor": "",
+                    "Source type": "",
+                    "OfficialTitle": "",
+                    "intervention_types": "",
+                    "WhyStopped": "",
+                    "NctIdTitleMapping": {},
+                    "PMIDs": [],
+                    "OutcomeStatus": ""
+                })
+            else:
+                logger.info("Fetching trials for each indication...")
+                for ind in indications:
+                    logger.info(f"Indication: {ind}")
+                    # Step 4: Get Approval Status
+                    approval = drug_extraction.get_approval_status_from_indication(ind)
+                    #Step 5: Get Trials for each indicaton
+                    trials = db_client.fetch_trials_for_drug_and_indication(drug_name, ind.get("indication_name", ""))
+                    all_trials = []
+                    seen_nct_ids = set()
+
+                    if trials:
+                        for trial in trials:
+                            nct_id = trial.get("nct_id")
+                            if nct_id and nct_id not in seen_nct_ids:
+                                all_trials.append(trial)
+                                seen_nct_ids.add(nct_id)
+                    else:
+                        # Try all synonyms if no trials found with preferred name
+                        drug_synonyms = drug_extraction.get_drug_synonyms(chembl_id)
+                        for drug_syn in drug_synonyms:
+                            if drug_syn.lower() == (drug_name or "").lower():
+                                continue  # already tried preferred name
+                            syn_trials = db_client.fetch_trials_for_drug_and_indication(drug_syn, ind.get("indication_name", ""))
+                            if syn_trials:
+                                for trial in syn_trials:
+                                    nct_id = trial.get("nct_id")
+                                    if nct_id and nct_id not in seen_nct_ids:
+                                        all_trials.append(trial)
+                                        seen_nct_ids.add(nct_id)
+
+                    if not all_trials:
+                        # If no trial for any synonym, still output the row
+                        results.append({
+                            "Target": target_input,
+                            "Drug": drug_name,
+                            "Method of Action": moa_short,
+                            "Disease": ind.get("indication_name", "NA"),
+                            "ApprovalStatus": approval,
+                            "Modality": modality,
+                            "nct_id": "",
+                            "Phase": "",
+                            "Status": "",
+                            "Sponsor": "",
+                            "Source type": "",
+                            "OfficialTitle": "",
+                            "intervention_types": ""
+                        })
+                    else:
+                        for trial in all_trials:
+                            results.append({
+                                "Target": target_input,
+                                "Drug": drug_name,
+                                "Mechanism of Action": moa_short,
+                                "Disease": ind.get("indication_name", "NA"),
+                                "Source URLs": [f'https://clinicaltrials.gov/api/v2/studies/{trial.get("nct_id", "")}'],
+                                "ApprovalStatus": approval,
+                                "Modality": modality,
+                                "nct_id": trial.get("nct_id", ""),
+                                "Phase": trial.get("phase", ""),
+                                "Status": trial.get("overall_status", "").capitalize(),
+                                "Sponsor": trial.get("sponsor", ""),
+                                "Source type": trial.get("source_class", ""),
+                                "OfficialTitle": trial.get("official_title", ""),
+                                "intervention_types": trial.get("intervention_types", "")
+                            })
+        
+    # with open(f"pipeline_test_{target_input}.json", "r") as f:
+    #     import json
+    #     results = json.load(f)
+    #     logger.info(f"number of results: {len(results)}")
+    if len(results):
+        with open(f"pipeline_test_{target_input}.json", "w") as f:
+            import json
+            json.dump(results, f, indent=2)
+        
+        diseases = list(set([r["Disease"].strip().lower().replace(" ", "_") for r in results if r.get("Disease") and r["Disease"] != "NA"]))
+        logger.info("Fetching entries from Strapi")
+        strapi_entries = get_target_pipeline_strapi_all(diseases, target_input)
+        results.extend(strapi_entries)
+
+        logger.info("Fetching NCT Titles if doesn't exist")
+        no_title_nct_ids = [t["nct_id"].strip(',').strip() for t in results if t.get("nct_id", "")!="" if t.get("OfficialTitle", "")==""]
+        logger.info(f"nct_ids: {len(no_title_nct_ids)}")
+        if len(no_title_nct_ids):
+            title_map = fetch_nct_titles(no_title_nct_ids)
+            logger.info("Mapping titles...")
+            for trial in results:
+                if trial.get('nct_id', "") in no_title_nct_ids:
+                    print("mapping...")
+                    trial["OfficialTitle"] = title_map.get(trial["nct_id"], "")
+        
+        logger.info("Getting NCT ids for PMIDs for diseases")
+        # pmid_map = get_disease_pmid_nct_mapping(list(set([d['Disease'].replace("_", " ") for d in results if d['Disease'] != "NA"])))
+        # logger.info("MApping PMID with NCT ID")
+        # all_entries = get_pmids_for_nct_ids_target_pipeline(results, pmid_map)
+        for entry in results:
+            if 'nct_id' in entry:
+                entry['PMIDs'] = get_pmids_from_nctid(entry['nct_id'])
+                print("pmid: ",entry['nct_id'], entry['PMIDs'])
+                time.sleep(0.2)
+        logger.info("Generating outcome status")
+        all_entries = add_outcome_status_target_pipeline(results)
+        print("len: ", len(all_entries))
+        with open("before_duplication.json", "w") as f:
+            import json
+            json.dump(all_entries, f, indent=2)
+        logger.info("Removing Duplicates")
+        all_entries = remove_duplicates(all_entries)
+        print("len after: ", len(all_entries))
+        available = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in results if r.get("Disease") and r["Disease"] != "NA"])))
+
+        return all_entries, available
+    return [], []
+            

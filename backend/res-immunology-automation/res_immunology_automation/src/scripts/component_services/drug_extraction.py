@@ -2,6 +2,106 @@ import requests
 import logging
 import os
 import json
+
+OT_GRAPHQL_URL = "https://api.platform.opentargets.org/api/v4/graphql"
+CHEMBL_API_URL = "https://www.ebi.ac.uk/chembl/api/data/target"
+
+
+def get_ensg_from_symbol(gene_symbol: str) -> str:
+    
+    query = """
+    query searchGene($queryString: String!) {
+      search(queryString: $queryString) {
+        hits {
+          id
+          name
+        }
+      }
+    }
+    """
+    variables = {"queryString": gene_symbol}
+    response = requests.post(OT_GRAPHQL_URL, json={"query": query, "variables": variables})
+    response.raise_for_status()
+    data = response.json()
+    
+    hits = data["data"]["search"]["hits"]
+    if hits:
+        print("hits: ", hits[0]["id"])
+        return hits[0]["id"]  # ENSG ID
+    else:
+        return None
+
+def fetch_uniprot_from_ot(ensembl_id: str):
+    """
+    Fetch UniProt IDs from Open Targets given Ensembl ID.
+    Returns a list of UniProt accessions.
+    """
+    query = f"""
+    {{
+      target(ensemblId: "{ensembl_id}") {{
+        approvedSymbol
+        id
+        proteinIds {{
+          id
+          source
+        }}
+      }}
+    }}
+    """
+    response = requests.post(OT_GRAPHQL_URL, json={"query": query})
+    response.raise_for_status()
+    data = response.json()
+    print(f"datas: {data}")
+    if "errors" in data:
+        raise ValueError(f"OT error: {data['errors']}")
+
+    protein_ids = data.get("data", {}).get("target", {}).get("proteinIds", [])
+    if not protein_ids:
+        return None
+    
+    # Prefer Swiss-Prot
+    swissprot = next((p for p in protein_ids if p["source"] == "uniprot_swissprot"), None)
+    if swissprot:
+        print(swissprot)
+        return swissprot
+    
+    # Fallback: TrEMBL
+    trembl = next((p for p in protein_ids if p["source"] == "uniprot_trembl"), None)
+    return trembl
+
+
+def fetch_chembl_from_uniprot(uniprot_id: str):
+    """
+    Fetch ChEMBL target IDs for a given UniProt accession.
+    Returns a list of ChEMBL IDs (could be empty if no mapping).
+    """
+    url = f"{CHEMBL_API_URL}/search.json?q={uniprot_id}"
+    response = requests.get(url)
+    response.raise_for_status()
+    # print("response: ", response.content)
+    data = response.json()
+    chembl_ids = [t["target_chembl_id"] for t in data.get("targets", [])]
+    print("chembl_ids: ", chembl_ids)
+    return chembl_ids
+
+
+def map_target_to_chembl(target: str):
+    """
+    Full pipeline:
+    - Take gene symbol (e.g., BRCA2)
+    - Resolve to Ensembl ID
+    - Fetch UniProt IDs from Open Targets
+    - Map each UniProt ID to ChEMBL IDs
+    Returns dict of UniProt -> ChEMBL mappings
+    """
+    ensembl_id = get_ensg_from_symbol(target)
+    uniprot_id_dict = fetch_uniprot_from_ot(ensembl_id)
+    result = {}
+    
+    chembl_ids = fetch_chembl_from_uniprot(uniprot_id_dict['id'])
+    
+    return chembl_ids
+
 def get_target_chembl_id(target_input):
     """
     Given a gene symbol or ChEMBL target ID, returns the ChEMBL target ID.

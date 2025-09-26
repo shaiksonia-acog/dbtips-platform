@@ -740,6 +740,7 @@ def fetch_nct_titles(nct_ids: List[str]) -> Dict[str, str]:
         try:
             # Construct the API URL for the specific NCT ID
             url = f"{base_url}/{nct_id}"
+            logger.info(f"Generating Trials for: {url}")
             # Make a GET request to the API
             response = requests.get(url)
             # Raise an exception if the response status code is not 200
@@ -934,8 +935,10 @@ def get_target_type(target_id):
     Returns 'NA' if not found or on error.
     """
     url = f"https://www.ebi.ac.uk/chembl/api/data/target/{target_id}.json"
+    print("url: ", url)
     resp = requests.get(url)
     if resp.status_code == 200:
+
         return resp.json().get("target_type", "NA")
     else:
         print(f"[WARN] Failed to fetch target type ({resp.status_code}) for {target_id}")
