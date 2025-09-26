@@ -27,6 +27,8 @@ from fastapi import HTTPException
 from Bio.Entrez import HTTPError
 from .pubmed_utils import get_data_from_pubmed
 import logging
+import socket
+from urllib.error import URLError
 
 MAX_RESULTS=500
 # NCBI API Base URL
@@ -372,6 +374,7 @@ def get_geo_metadata(gse_id: str,experiment_type: str,gse_summary: str) -> Dict[
     Returns:
         Dict[str, Any]: A dictionary containing the GSE metadata and GSM details.
     """
+    socket.setdefaulttimeout(120) 
     try:
         # Load GEO dataset by GEO Series ID
         gse = GEOparse.get_GEO(geo=gse_id)
@@ -426,6 +429,9 @@ def get_geo_metadata(gse_id: str,experiment_type: str,gse_summary: str) -> Dict[
         os.remove(f"{gse_id}_family.soft.gz")
 
         return result
+
+    except (URLError, socket.timeout, Exception) as e:
+        logging.error(f"Faile to download {gse_id}_family.soft.gz due to {e}")
     except Exception as e:
         print(f"An unexpected error occurred for {gse_id}: {e}")
         return None  # Return None to indicate failure
