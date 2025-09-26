@@ -339,28 +339,28 @@ async def run_endpoints(db_session, job_data):
         ]
 
         target_only_endpoints = [
-            # get_target_details,
-            # get_ontology,
-            # get_protein_expressions,
-            # get_subcellular,
-            # get_anatomy,
-            # get_protein_structure,
-            # get_target_mouse_studies,
-            # get_targetability,
-            # get_gene_essentiality_map,
-            # get_tractability,
-            # get_paralogs
+            get_target_details,
+            get_ontology,
+            get_protein_expressions,
+            get_subcellular,
+            get_anatomy,
+            get_protein_structure,
+            get_target_mouse_studies,
+            get_targetability,
+            get_gene_essentiality_map,
+            get_tractability,
+            get_paralogs
         ]
 
         target_disease_endpoints = [
-            # get_target_pipeline_semaphore,
             get_target_pipeline_semaphore,
-            # get_evidence_target_literature,
-            # search_patents,
-            # run_enhancement_pipeline,
-            # get_target_literature_images_evidence,
-            # get_literature_table_analysis,
-            # get_literature_supplementary_materials_analysis
+            get_target_pipeline_semaphore,
+            get_evidence_target_literature,
+            search_patents,
+            run_enhancement_pipeline,
+            get_target_literature_images_evidence,
+            get_literature_table_analysis,
+            get_literature_supplementary_materials_analysis
         ]
         
         target = job_data.get('target', None)
