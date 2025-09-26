@@ -10,7 +10,7 @@ from api import get_evidence_literature_semaphore, get_mouse_studies, \
                 get_ontology, get_protein_expressions, get_subcellular, \
                 get_anatomy, get_protein_structure, get_target_mouse_studies, \
                 get_targetability, get_gene_essentiality_map, get_tractability, \
-                get_paralogs, get_target_pipeline_all_semaphore, get_evidence_target_literature, \
+                get_paralogs, get_target_pipeline_all_semaphore, get_target_pipeline_semaphore, get_evidence_target_literature, \
                 search_patents, get_complete_indication_pipeline, get_disease_gtr_data_semaphore, \
                 pgs_catalog_data, get_literature_images_evidence, get_target_literature_images_evidence, \
                 get_literature_table_analysis, get_literature_supplementary_materials_analysis
@@ -207,18 +207,26 @@ async def update_endpoint_status(db, endpoint: str, status: str, target_key: str
 
 async def clear_processing_dossiers(db):
     try:
-        processing_records = await fetch_processing_records(db)
-        if processing_records:
-            for job in processing_records:
-                local_time = datetime.now(tzlocal.get_localzone()) 
-                values = {'status': 'error', 'creation_time': local_time, 'processed_time': local_time}
-                if job['target'] is None:
-                    job_type = DiseaseDossierStatus
-                    values['disease'] = job['disease']
-                else:
-                    job_type = TargetDossierStatus
-                    values['target'] = job['target']
-                    values['disease'] = job['disease']
+        target = None
+        processing_record = await fetch_processing_records(db)
+        if processing_record:
+            if '_' in processing_record:
+                target, disease = processing_record.split("_", 1)
+            else:
+                disease = processing_record 
+            print("processing records: ", processing_record)
+        
+            # for job in processing_records:
+            
+            local_time = datetime.now(tzlocal.get_localzone()) 
+            values = {'status': 'error', 'creation_time': local_time, 'processed_time': local_time}
+            if target is None:
+                job_type = DiseaseDossierStatus
+                values['disease'] = job['disease']
+            else:
+                job_type = TargetDossierStatus
+                values['target'] = target
+                values['disease'] = disease
             await update_record_status(db, job_type, **values)
     except Exception as e:
         logging.error(f"Error clearing processing dossiers: {e}")
@@ -295,7 +303,7 @@ async def build_dossier():
             finally:
                 await db.close()
                 logging.info("connection closed")
-        break
+        
 
 async def run_endpoints(db_session, job_data):
     
@@ -331,28 +339,28 @@ async def run_endpoints(db_session, job_data):
         ]
 
         target_only_endpoints = [
-            get_target_details,
-            get_ontology,
-            get_protein_expressions,
-            get_subcellular,
-            get_anatomy,
-            get_protein_structure,
-            get_target_mouse_studies,
-            get_targetability,
-            get_gene_essentiality_map,
-            get_tractability,
-            get_paralogs
+            # get_target_details,
+            # get_ontology,
+            # get_protein_expressions,
+            # get_subcellular,
+            # get_anatomy,
+            # get_protein_structure,
+            # get_target_mouse_studies,
+            # get_targetability,
+            # get_gene_essentiality_map,
+            # get_tractability,
+            # get_paralogs
         ]
 
         target_disease_endpoints = [
             # get_target_pipeline_semaphore,
-            get_target_pipeline_all_semaphore,
-            get_evidence_target_literature,
-            search_patents,
-            run_enhancement_pipeline,
-            get_target_literature_images_evidence,
-            get_literature_table_analysis,
-            get_literature_supplementary_materials_analysis
+            get_target_pipeline_semaphore,
+            # get_evidence_target_literature,
+            # search_patents,
+            # run_enhancement_pipeline,
+            # get_target_literature_images_evidence,
+            # get_literature_table_analysis,
+            # get_literature_supplementary_materials_analysis
         ]
         
         target = job_data.get('target', None)
@@ -387,6 +395,7 @@ async def run_endpoints(db_session, job_data):
                     await update_endpoint_status(db_session, disease_key=disease, endpoint=endpoint.__name__, status='processed', processed_at=datetime.now(tzlocal.get_localzone()))
                 except Exception as e:
                     if isinstance(e, HTTPException) and e.status_code == 404 and 'EFO ID not found' in e.detail:
+                        await update_endpoint_status(db_session, disease_key=disease, endpoint=endpoint.__name__, status='processed', processed_at=datetime.now(tzlocal.get_localzone()))
                         continue 
                     logging.error(f"\t\t\t\tError calling {endpoint.__name__} for {unique_diseases}: {e}")
                     await update_endpoint_status(db_session, disease_key=disease, endpoint=endpoint.__name__, status='error', processed_at=datetime.now(tzlocal.get_localzone()))
@@ -447,7 +456,7 @@ async def run_endpoints(db_session, job_data):
                 try:
                     # update endpoint status to processing
                     await update_endpoint_status(db_session, target_key=target, disease_key=disease, endpoint=endpoint.__name__, status='processing', start_at=datetime.now(tzlocal.get_localzone()))
-                    if endpoint.__name__ == "get_target_pipeline_all_semaphore":
+                    if endpoint.__name__ == "get_target_pipeline_semaphore":
                         request_data = TargetRequest(target=target, diseases=pipeline_inp)
                         logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target} and disease: {pipeline_inp}")
                     elif endpoint.__name__ == 'get_target_literature_images_evidence':
@@ -472,7 +481,9 @@ async def run_endpoints(db_session, job_data):
                         logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target} and disease: {disease}")
                         response = await endpoint(disease=disease, target=target)
                     else:
+                        # response = await endpoint(request_data, redis=redis, db=db, build_cache=True)
                         response = await endpoint(request_data, redis=redis, db=db, build_cache=True)
+
                     # update endpoint status to processed
                     await update_endpoint_status(db_session, target_key=target, disease_key=disease, endpoint=endpoint.__name__, status='processed', processed_at=datetime.now(tzlocal.get_localzone()))
                 except Exception as e:
@@ -500,5 +511,5 @@ async def main():
 
 
 if __name__ == "__main__":
-    time.sleep(100)
+    # time.sleep(100)
     asyncio.run(main())
