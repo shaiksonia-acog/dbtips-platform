@@ -37,3 +37,4 @@ pydantic[email]
 passlib[bcrypt]
 email-validator
 google-generativeai
+tenacity
