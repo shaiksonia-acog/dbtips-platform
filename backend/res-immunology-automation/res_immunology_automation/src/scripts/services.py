@@ -12,6 +12,16 @@ from component_services import drug_extraction
 from component_services.aact_db_client import get_aact_db,DBClient
 from datetime import datetime
 from fastapi import HTTPException
+from tenacity import *
+import logging
+import time
+import os
+import requests
+import xml.etree.ElementTree as ET
+from target_analyzer import TargetAnalyzer
+# Set up logger
+logger = logging.getLogger(__name__)
+NCBI_API_KEY = os.getenv('NCBI_API_KEY')
 
 
 
@@ -1300,6 +1310,7 @@ def parse_knowndrugs_all(api_response, disease_list):
         })
 
     return known_drugs_list
+
 def normalize_phase(phase: str) -> str:
     """
     Normalize phase strings like 'PHASE3', 'PHASE II', 'phase1', etc. to 'Phase 3', 'Phase 2', etc.
@@ -1321,19 +1332,7 @@ def normalize_phase(phase: str) -> str:
             return f"Phase {num}"
     return phase.title()
 
-
-import logging
-import time
-import os
-import requests
-import xml.etree.ElementTree as ET
-from target_analyzer import TargetAnalyzer
-# Set up logger
-logger = logging.getLogger(__name__)
-NCBI_API_KEY = os.getenv('NCBI_API_KEY')
-
 def enrich_trial_data(trials: List[Dict], disease_name: str, llm_client) -> List[Dict]:
-    import time
     start_time = time.time()
     logger.info("Starting enrich_trial_data for disease: %s", disease_name)
     
@@ -1501,7 +1500,16 @@ def enrich_trial_data(trials: List[Dict], disease_name: str, llm_client) -> List
     # Step 5: Link PMIDs
     logger.info("Step 5: Starting PMID linking")
     step_start = time.time()
-    trials_with_pmids = get_pmids_for_nct_ids(trials_by_disease)
+    # trials_with_pmids = get_pmids_for_nct_ids(trials_by_disease)
+    for disease, records in disease_data.items():
+        for entry in records:
+            nct_ids = [url.split("/")[-1] for url in record.get("Source URLs", [])]
+            matching_pmids = set()
+            for nct_id in nct_ids:
+                pmid = get_pmids_from_nctid(nct_id)
+                matching_pmids.add(pmid)            
+            entry["PMIDs"] = list(matching_pmids)
+
     logger.info("Step 5 completed in %.2f seconds", time.time() - step_start)
 
     # Step 6: Add Outcome Status for all trials (batch)
@@ -1545,26 +1553,33 @@ def enrich_trial_data(trials: List[Dict], disease_name: str, llm_client) -> List
 
     return deduped_response[disease_name]
 
+@retry(
+    stop=stop_after_attempt(3),  # max 3 retries
+    wait=wait_exponential(multiplier=60, min=60, max=600)  # 1min, 2min, 4min (capped at 10min)
+)
 def get_pmids_from_nctid(nct_id: str):
     """
     Given an NCT ID, query PubMed via NCBI E-utilities and return a list of PMIDs.
     """
-    base_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
-    params = {
-        "db": "pubmed",
-        "term": f"{nct_id}[si]",
-        "retmode": "xml",
-        "api_key": NCBI_API_KEY
-    }
-    
-    response = requests.get(base_url, params=params)
-    response.raise_for_status()  # raise error if request failed
-    
-    # Parse XML response
-    root = ET.fromstring(response.text)
-    pmids = [id_elem.text for id_elem in root.findall(".//Id")]
-    
-    return pmids
+    try:
+        base_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
+        params = {
+            "db": "pubmed",
+            "term": f"{nct_id}[si]",
+            "retmode": "xml",
+            "api_key": NCBI_API_KEY
+        }
+        
+        response = requests.get(base_url, params=params, timeout=300)
+        response.raise_for_status()  # raise error if request failed
+        
+        # Parse XML response
+        root = ET.fromstring(response.text)
+        pmids = [id_elem.text for id_elem in root.findall(".//Id")]
+        
+        return pmids
+    except Exception as e:
+        return []
 
 def enrich_target_trials(target_input: str, db_client: DBClient):
     """
@@ -1671,7 +1686,7 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
                         results.append({
                             "Target": target_input,
                             "Drug": drug_name,
-                            "Method of Action": moa_short,
+                            "Mechanism of Action": moa_short,
                             "Disease": ind.get("indication_name", "NA"),
                             "ApprovalStatus": approval,
                             "Modality": modality,
@@ -1702,29 +1717,33 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
                                 "intervention_types": trial.get("intervention_types", "")
                             })
         
-    # with open(f"pipeline_test_{target_input}.json", "r") as f:
-    #     import json
-    #     results = json.load(f)
-    #     logger.info(f"number of results: {len(results)}")
     if len(results):
-        with open(f"pipeline_test_{target_input}.json", "w") as f:
-            import json
-            json.dump(results, f, indent=2)
-        
         diseases = list(set([r["Disease"].strip().lower().replace(" ", "_") for r in results if r.get("Disease") and r["Disease"] != "NA"]))
         logger.info("Fetching entries from Strapi")
         strapi_entries = get_target_pipeline_strapi_all(diseases, target_input)
-        results.extend(strapi_entries)
+        serialized_strapi_entries = []
+        for entry in strapi_entries:
+            if "Source URLs" in entry:
+                if len(entry["Source URLs"]) == 1:
+                    entry['nct_id'] = entry["Source URLs"][0].split("/")[-1]
+                    serialized_strapi_entries.append(entry)
+                elif len(entry["Source URLs"]) > 1:
+                    for url in entry["Source URLs"]:
+                        splitted_results = {k:v for k,v in entry.items() if k!='Source URLs'}
+                        splitted_results['Source URLs'] = [url]
+                        splitted_results['nct_id'] = splitted_results["Source URLs"][0].split("/")[-1]
+                        serialized_strapi_entries.append(splitted_results)
+        results.extend(serialized_strapi_entries)
 
         logger.info("Fetching NCT Titles if doesn't exist")
         no_title_nct_ids = [t["nct_id"].strip(',').strip() for t in results if t.get("nct_id", "")!="" if t.get("OfficialTitle", "")==""]
         logger.info(f"nct_ids: {len(no_title_nct_ids)}")
         if len(no_title_nct_ids):
             title_map = fetch_nct_titles(no_title_nct_ids)
+            
             logger.info("Mapping titles...")
             for trial in results:
                 if trial.get('nct_id', "") in no_title_nct_ids:
-                    print("mapping...")
                     trial["OfficialTitle"] = title_map.get(trial["nct_id"], "")
         
         logger.info("Getting NCT ids for PMIDs for diseases")
@@ -1732,16 +1751,12 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
         # logger.info("MApping PMID with NCT ID")
         # all_entries = get_pmids_for_nct_ids_target_pipeline(results, pmid_map)
         for entry in results:
-            if 'nct_id' in entry:
-                entry['PMIDs'] = get_pmids_from_nctid(entry['nct_id'])
-                print("pmid: ",entry['nct_id'], entry['PMIDs'])
-                time.sleep(0.2)
+            entry['PMIDs'] = get_pmids_from_nctid(entry['nct_id'])
+            time.sleep(0.2)
+        
         logger.info("Generating outcome status")
         all_entries = add_outcome_status_target_pipeline(results)
-        print("len: ", len(all_entries))
-        with open("before_duplication.json", "w") as f:
-            import json
-            json.dump(all_entries, f, indent=2)
+        
         logger.info("Removing Duplicates")
         all_entries = remove_duplicates(all_entries)
         print("len after: ", len(all_entries))
