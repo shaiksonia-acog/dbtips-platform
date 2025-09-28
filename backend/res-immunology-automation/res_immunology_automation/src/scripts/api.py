@@ -1548,6 +1548,7 @@ async def get_indication_pipeline_new(request: DiseasesRequest, db: Session = De
                 for trial in raw_data[:3]:
                     print(json.dumps(trial, indent=2))
                 extracted_drugs = extractor.extract_drug_names(raw_data)
+                time.sleep(0.3)
 
                 for t in extracted_drugs[:3]:
                     print(json.dumps(t, indent=2))
