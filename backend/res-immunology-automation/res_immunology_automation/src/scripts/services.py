@@ -4,12 +4,7 @@ from helper import get_disease_descendants
 import requests
 from typing import *
 from utils import fetch_all_publications, fetch_nct_titles, get_pmids_for_nct_ids, get_chembl_id_exact, get_moa_short, fetch_approval_status, fetch_moa_targets_for_ids, format_multi_drug_output, fetch_molecule_type,get_target_type
-from component_services.market_intelligence_service import add_outcome_status_ollama, get_why_stopped, classify_why_stopped_with_llm , \
-                                                            get_target_pipeline_strapi_all, get_disease_pmid_nct_mapping, get_pmids_for_nct_ids_target_pipeline, \
-                                                            add_outcome_status_target_pipeline, remove_duplicates
-
-from component_services import drug_extraction
-from component_services.aact_db_client import get_aact_db,DBClient
+from component_services.market_intelligence_service import add_outcome_status_ollama, get_why_stopped, classify_why_stopped_with_llm , get_indication_pipeline_strapi
 from datetime import datetime
 from fastapi import HTTPException
 from tenacity import *
@@ -1340,7 +1335,7 @@ def enrich_trial_data(trials: List[Dict], disease_name: str, llm_client) -> List
         logger.warning("No trials provided. Returning empty list.")
         return []
 
-    trials = trials[:5] # for limit
+    # trials = trials[:1] # for limit
     logger.info("Limiting to %d trials for testing purposes.", len(trials))
 
     enriched_trials = []
@@ -1484,6 +1479,12 @@ def enrich_trial_data(trials: List[Dict], disease_name: str, llm_client) -> List
 
     # Step 3: Add NCT Titles
     logger.info("Step 3: Fetching NCT Titles")
+    strapiEntry = get_indication_pipeline_strapi(disease_name)
+    
+    logger.info(f"strapiEntry for {disease_name}: {strapiEntry}")
+    if strapiEntry:
+        enriched_trials.extend(strapiEntry)
+    logger.info(f"enriched_trials after adding strapiEntry: {enriched_trials}")
     step_start = time.time()
     nct_ids = [t["NctId"] for t in enriched_trials if t.get("NctId")]
     title_map = fetch_nct_titles(nct_ids)
@@ -1491,6 +1492,7 @@ def enrich_trial_data(trials: List[Dict], disease_name: str, llm_client) -> List
         trial["OfficialTitle"] = title_map.get(trial["NctId"], "")
 
     logger.info("Step 3 completed in %.2f seconds", time.time() - step_start)
+
 
     # Step 4: Wrap in dict per disease (required by get_pmids_for_nct_ids)
     logger.info("Step 4: Wrapping trials by disease for PMID linking")
@@ -1544,7 +1546,7 @@ def enrich_trial_data(trials: List[Dict], disease_name: str, llm_client) -> List
     for disease_name, trials in deduped_response.items():
         processed_trials = format_indication_pipeline_data(trials)
         processed_response[disease_name] = processed_trials
-    logger.info("Step 8 completed in %.2f seconds", time.time() - step_start)
+    logger.info("Step 7 completed in %.2f seconds", time.time() - step_start)
     # Update the final return to use processed_response
     logger.info(f"Finalizing deduped response {processed_response}")
     deduped_response = processed_response
