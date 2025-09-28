@@ -57,7 +57,8 @@ class GeneValidator:
             
         except requests.exceptions.Timeout as e:
             # Convert to requests timeout for consistent handling
-            raise requests.exceptions.Timeout(f"NCBI search timeout for gene {gene_name}") from e
+            # raise requests.exceptions.Timeout(f"NCBI search timeout for gene {gene_name}") from e
+            return 
         except requests.exceptions.HTTPError as e:
             # Re-raise HTTP errors for retry handling
             raise
@@ -115,7 +116,8 @@ class GeneValidator:
             # Use retry-wrapped search API call
             time.sleep(0.4)  # NCBI rate limit
             search_result = self._call_ncbi_search_api(gene_name)
-            
+            if not search_result:
+                return gene_name
             gene_ids = search_result.get("esearchresult", {}).get("idlist", [])
             if not gene_ids:
                 logger.debug(f"No gene IDs found for: {gene_name}")
