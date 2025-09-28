@@ -431,7 +431,7 @@ def get_geo_metadata(gse_id: str,experiment_type: str,gse_summary: str) -> Dict[
         return result
 
     except (URLError, socket.timeout, Exception) as e:
-        logging.error(f"Faile to download {gse_id}_family.soft.gz due to {e}")
+        logging.error(f"Failed to download {gse_id}_family.soft.gz due to {e}")
     except Exception as e:
         print(f"An unexpected error occurred for {gse_id}: {e}")
         return None  # Return None to indicate failure
