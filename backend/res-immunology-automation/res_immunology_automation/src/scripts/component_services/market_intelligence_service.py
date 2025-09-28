@@ -1256,9 +1256,11 @@ def add_outcome_status_ollama(records: Dict[str, List[Dict]], llm_client) -> Dic
                         entry["OutcomeReason"] = reason.strip()[:200]
                     else:
                         entry["OutcomeReason"] = ""
+                    time.sleep(0.3)
                 else:
                     entry["OutcomeStatus"] = "Not Known"
                     entry["OutcomeReason"] = ""
+
     except Exception as e:
         print(f"Exception in outcome status processing: {e}")
         raise e
