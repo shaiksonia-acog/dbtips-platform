@@ -1481,8 +1481,8 @@ async def get_indication_pipeline(request: DiseasesRequest,
         raise HTTPException(status_code=500, detail=str(e))
 
 semaphore = asyncio.Semaphore(1)
-@app.post("/market-intelligence/indication-pipeline-semaphore-new/", tags=["Market Intelligence"])
-async def get_indication_pipeline_semaphore(request: DiseasesRequest,
+@app.post("/market-intelligence/indication-pipeline-new-semaphore/", tags=["Market Intelligence"])
+async def get_indication_pipeline_new_semaphore(request: DiseasesRequest,
                                   db: Session = Depends(get_db),
                                   build_cache: bool = False
     ):
@@ -1593,8 +1593,8 @@ async def get_indication_pipeline_new(request: DiseasesRequest, db: Session = De
         raise HTTPException(status_code=status_code, detail=str(e))
 
 semaphore = asyncio.Semaphore(1)
-@app.post("/market-intelligence/target-pipeline-semaphore-new/", tags=["Market Intelligence"])
-async def get_target_pipeline_semaphore(request: TargetRequest,
+@app.post("/market-intelligence/target-pipeline-new-semaphore/", tags=["Market Intelligence"])
+async def get_target_pipeline_new_semaphore(request: TargetRequest,
                                   redis: Redis = Depends(get_redis),
                                   db: Session = Depends(get_db),
                                   build_cache: bool = False

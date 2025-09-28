@@ -13,7 +13,8 @@ from api import get_evidence_literature_semaphore, get_mouse_studies, \
                 get_paralogs, get_target_pipeline_all_semaphore, get_target_pipeline_semaphore, get_evidence_target_literature, \
                 search_patents, get_complete_indication_pipeline, get_disease_gtr_data_semaphore, \
                 pgs_catalog_data, get_literature_images_evidence, get_target_literature_images_evidence, \
-                get_literature_table_analysis, get_literature_supplementary_materials_analysis
+                get_literature_table_analysis, get_literature_supplementary_materials_analysis, \
+                get_indication_pipeline_new_semaphore, get_target_pipeline_new_semaphore
 
 from literature_enhancement.enhancement_runner import run_enhancement_pipeline
                 
@@ -318,7 +319,8 @@ async def run_endpoints(db_session, job_data):
             get_diseases_profiles,
             get_diseases_profiles_llm,
             get_disease_gtr_data_semaphore,
-            get_indication_pipeline_semaphore, 
+            # get_indication_pipeline_semaphore, 
+            get_indication_pipeline_new_semaphore,
             get_evidence_literature_semaphore, 
             get_top_10_literature, 
             get_disease_pathway_semaphore, 
@@ -349,12 +351,12 @@ async def run_endpoints(db_session, job_data):
             get_targetability,
             get_gene_essentiality_map,
             get_tractability,
-            get_paralogs
+            get_paralogs,
+            get_target_pipeline_new_semaphore
         ]
 
         target_disease_endpoints = [
-            get_target_pipeline_semaphore,
-            get_target_pipeline_semaphore,
+            # get_target_pipeline_semaphore,
             get_evidence_target_literature,
             search_patents,
             run_enhancement_pipeline,
@@ -429,9 +431,14 @@ async def run_endpoints(db_session, job_data):
             # Target-only endpoints
             for endpoint in target_only_endpoints:
                 try:
+                    
                     # update endpoint status to processing
                     await update_endpoint_status(db_session, target_key=target, endpoint=endpoint.__name__, status='processing', start_at=datetime.now(tzlocal.get_localzone()))
-                    request_data = TargetOnlyRequest(target=target)
+                    if endpoint.__name__ == "get_target_pipeline_semaphore":
+                        request_data = TargetRequest(target=target, diseases=[])
+                        logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target}")
+                    else:
+                        request_data = TargetOnlyRequest(target=target)
                     logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target}")
                     response = await endpoint(request_data, redis=redis, db=db)
                 except Exception as e:
@@ -456,10 +463,7 @@ async def run_endpoints(db_session, job_data):
                 try:
                     # update endpoint status to processing
                     await update_endpoint_status(db_session, target_key=target, disease_key=disease, endpoint=endpoint.__name__, status='processing', start_at=datetime.now(tzlocal.get_localzone()))
-                    if endpoint.__name__ == "get_target_pipeline_semaphore":
-                        request_data = TargetRequest(target=target, diseases=pipeline_inp)
-                        logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target} and disease: {pipeline_inp}")
-                    elif endpoint.__name__ == 'get_target_literature_images_evidence':
+                    if endpoint.__name__ == 'get_target_literature_images_evidence':
                         # Skip target-literature-images endpoint if it's target only (no-disease)
                         if disease == 'no-disease':
                             logging.info(f"\t\t\tSkipping {endpoint.__name__} for target-only case: {target}")
