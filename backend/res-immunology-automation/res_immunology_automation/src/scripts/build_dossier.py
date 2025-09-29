@@ -10,7 +10,7 @@ from api import get_evidence_literature_semaphore, get_mouse_studies, \
                 get_ontology, get_protein_expressions, get_subcellular, \
                 get_anatomy, get_protein_structure, get_target_mouse_studies, \
                 get_targetability, get_gene_essentiality_map, get_tractability, \
-                get_paralogs, get_target_pipeline_all_semaphore, get_target_pipeline_semaphore, get_evidence_target_literature, \
+                get_paralogs, get_target_pipeline_all_semaphore, get_evidence_target_literature, \
                 search_patents, get_complete_indication_pipeline, get_disease_gtr_data_semaphore, \
                 pgs_catalog_data, get_literature_images_evidence, get_target_literature_images_evidence, \
                 get_literature_table_analysis, get_literature_supplementary_materials_analysis, \
@@ -434,19 +434,22 @@ async def run_endpoints(db_session, job_data):
                     
                     # update endpoint status to processing
                     await update_endpoint_status(db_session, target_key=target, endpoint=endpoint.__name__, status='processing', start_at=datetime.now(tzlocal.get_localzone()))
-                    if endpoint.__name__ == "get_target_pipeline_semaphore":
+                    if endpoint.__name__ == "get_target_pipeline_new_semaphore":
                         request_data = TargetRequest(target=target, diseases=[])
                         logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target}")
+                        response = await endpoint(request_data, redis=redis, db=db, build_cache=True)
+
                     else:
                         request_data = TargetOnlyRequest(target=target)
-                    logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target}")
-                    response = await endpoint(request_data, redis=redis, db=db)
+                        logging.info(f"\t\t\tCalling {endpoint.__name__} for target: {target}")
+                        response = await endpoint(request_data, redis=redis, db=db)
                 except Exception as e:
                     logging.error(f"\t\t\t\tError calling {endpoint.__name__} for target {target}: {e}")
                     # update endpoint status to error
                     await update_endpoint_status(db_session, target_key=target, endpoint=endpoint.__name__, status='error', processed_at=datetime.now(tzlocal.get_localzone()))
                     return 'error', endpoint.__name__ if callable(endpoint) else str(endpoint), str(e)
-
+                
+                await update_endpoint_status(db_session, target_key=target, endpoint=endpoint.__name__, status='processed', processed_at=datetime.now(tzlocal.get_localzone()))
                 await asyncio.sleep(5)
 
             if disease == 'no-disease':
