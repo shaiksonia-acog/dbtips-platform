@@ -196,23 +196,26 @@ def fetch_clinical_study_data(nct_id: str) -> List[Dict[str, Optional[str]]]:
     Returns:
         List[Dict[str, Optional[str]]]: List of dictionaries containing extracted location info for each facility.
     """
-    url: str = f"https://clinicaltrials.gov/api/v2/studies/{nct_id}"
-    response = requests.get(url)
-    response.raise_for_status()  # Raises HTTPError for bad responses
+    try:
+        url: str = f"https://clinicaltrials.gov/api/v2/studies/{nct_id}"
+        response = requests.get(url, timeout=300)
+        response.raise_for_status()  # Raises HTTPError for bad responses
 
-    data: Dict = response.json()
+        data: Dict = response.json()
 
-    # Accessing protocolSection and contactsLocationsModule
-    locations_module: List[Dict] = data.get('protocolSection', {}).get('contactsLocationsModule', {}).get('locations',
-                                                                                                          [])
+        # Accessing protocolSection and contactsLocationsModule
+        locations_module: List[Dict] = data.get('protocolSection', {}).get('contactsLocationsModule', {}).get('locations',
+                                                                                                            [])
 
-    # Extracting location information
-    extracted_info: List[Dict[str, Optional[str]]] = []
-    for location in locations_module:
-        location_info = extract_location_info(location)
-        if location_info is not None:
-            extracted_info.append(location_info)
-    return extracted_info
+        # Extracting location information
+        extracted_info: List[Dict[str, Optional[str]]] = []
+        for location in locations_module:
+            location_info = extract_location_info(location)
+            if location_info is not None:
+                extracted_info.append(location_info)
+        return extracted_info
+    except Exception as e:
+        return []
 
 def fetch_data_for_diseases(disease_dict: Dict[str, List[Tuple[str, str]]]) -> Dict[
     str, Dict[str, List[Dict[str, Optional[str]]]]]:
