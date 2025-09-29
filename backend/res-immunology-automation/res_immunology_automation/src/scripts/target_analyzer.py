@@ -15,6 +15,8 @@ from tqdm import tqdm
 import pandas as pd
 from utils import get_efo_id
 from typing import *
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 
 class TargetAnalyzer:
@@ -511,11 +513,35 @@ class TargetAnalyzer:
             "worm": "6239",
             "zebrafish": "7955"
         }
+        session = requests.Session()
+
+        # polite headers (some servers close connections for default "python-requests" UA)
+        headers = {
+            "User-Agent": "my-script/1.0 (your-email@domain.example)",
+            "Referer": "https://www.flyrnai.org",
+            # "X-Requested-With": "XMLHttpRequest",
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+        }
+
+        # Retry strategy — allow retries for POST + GET and for common server errors / rate limits
+        retry_strategy = Retry(
+            total=5,
+            backoff_factor=5,
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["GET", "POST"],
+            raise_on_status=False
+        )
+        retry_strategy.retry_on_exception = is_retryable_exception
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        session.mount("https://", adapter)
+        session.mount("http://", adapter)
+        initial_url = "https://www.flyrnai.org/tools/paralogs/web/getTableJsonData"
+
         results = {}
         for species_name, species_code in species_codes.items():
             #print(f"Fetching data for {species_name} ({species_code}) with gene {gene_name}")
-            initial_url = "https://www.flyrnai.org/tools/paralogs/web/getTableJsonData"
-            headers = {"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"}
+            # headers = {"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"}
             data = {
                 "species": species_code,
                 "id_type": "gene1",
@@ -523,25 +549,53 @@ class TargetAnalyzer:
                 "diopt": "1",
                 "rpkm": "2"
             }
-            initial_response = requests.post(initial_url, headers=headers, data=data)
-            if initial_response.status_code == 200:
+            # initial_response = requests.post(initial_url, headers=headers, data=data)
+            try:
+                initial_response = session.post(initial_url, headers=headers, data=data, timeout=30)
+                initial_response.raise_for_status()
+
+                # defensive: some servers return empty body and then close — treat that as an error
+                if not initial_response.content:
+                    raise requests.exceptions.ConnectionError("Empty response body from initial POST")
+
                 initial_data = initial_response.json()
-                if 'run_id' in initial_data:
-                    run_id = initial_data['run_id']
-                    #print(f"Retrieved run_id {run_id}, fetching detailed data...")
-                    detailed_url = f"https://www.flyrnai.org/tools/paralogs/web/paralogDataSlice/{run_id}"
-                    detailed_response = requests.get(detailed_url)
-                    if detailed_response.status_code == 200:
-                        detailed_data = detailed_response.json()
-                        results[species_name] = detailed_data
-                    else:
-                        results[species_name] = {
-                            'error': f"Failed to retrieve detailed data: Status Code {detailed_response.status_code}"}
-                else:
-                    results[species_name] = {'error': 'No run_id found in initial data'}
-            else:
+            except requests.exceptions.RequestException as e:
+                # include useful debug info
                 results[species_name] = {
-                    'error': f"Failed to retrieve initial data: Status Code {initial_response.status_code}"}
+                    "error": "Initial request failed",
+                    "exception": str(e),
+                    "status_code": getattr(e.response, "status_code", None)
+                }
+                # short sleep to avoid hammering
+                time.sleep(1)
+                continue
+            except json.JSONDecodeError:
+                results[species_name] = {
+                    "error": "Failed to decode JSON from initial response",
+                    "raw": resp.text[:1000]  # truncated for debugging
+                }
+                continue
+            # if initial_response.status_code == 200:
+            #     initial_data = initial_response.json()
+            time.sleep(2)
+            if 'run_id' in initial_data:
+                run_id = initial_data['run_id']
+                #print(f"Retrieved run_id {run_id}, fetching detailed data...")
+                detailed_url = f"https://www.flyrnai.org/tools/paralogs/web/paralogDataSlice/{run_id}"
+                # detailed_response = requests.get(detailed_url)
+                detailed_response = session.get(detailed_url, headers=headers, timeout=30)
+                if detailed_response.status_code == 200:
+                    detailed_data = detailed_response.json()
+                    results[species_name] = detailed_data
+                else:
+                    results[species_name] = {
+                        'error': f"Failed to retrieve detailed data: Status Code {detailed_response.status_code}"}
+            else:
+                results[species_name] = {'error': 'No run_id found in initial data'}
+            # else:
+            #     results[species_name] = {
+            #         'error': f"Failed to retrieve initial data: Status Code {initial_response.status_code}"}
+            time.sleep(2)
         return results
 
     def get_differential_rna_and_protein_expression(self, target: str = None):
@@ -592,6 +646,36 @@ class TargetAnalyzer:
 
         return api_response
 
+    # def get_target_topology_features(self, target: str = None):
+    #     if target is not None:
+    #         uniprot_id = self.get_uniprotkb_id(target)
+    #     else:
+    #         uniprot_id = self.uniprot_id
+    #     if not uniprot_id:
+    #         print("Uniprot ID not found.")
+    #         return None
+
+    #     fetch_url = f"https://www.ebi.ac.uk/proteins/api/features?offset=0&size=100&accession={uniprot_id}"
+    #     response = requests.get(fetch_url, headers={"Accept": "application/json"})
+    #     if response.status_code != 200:
+    #         print(f"Failed to retrieve data: HTTP {response.status_code}")
+    #         return None
+
+    #     try:
+    #         api_response = response.json()
+    #     except json.JSONDecodeError:
+    #         print("Failed to decode the response")
+    #         return None
+
+    #     if 'errors' in api_response:
+    #         print("Error in API response:", api_response['errors'])
+    #         return None
+
+    #     return api_response
+
+  
+
+
     def get_target_topology_features(self, target: str = None):
         if target is not None:
             uniprot_id = self.get_uniprotkb_id(target)
@@ -602,9 +686,30 @@ class TargetAnalyzer:
             return None
 
         fetch_url = f"https://www.ebi.ac.uk/proteins/api/features?offset=0&size=100&accession={uniprot_id}"
-        response = requests.get(fetch_url, headers={"Accept": "application/json"})
-        if response.status_code != 200:
-            print(f"Failed to retrieve data: HTTP {response.status_code}")
+
+        headers = {
+            "Accept": "application/json",
+            "User-Agent": "my-script/1.0 (contact@example.com)"  # helps avoid silent drops
+        }
+
+        # Retry strategy (exponential backoff)
+        retry_strategy = Retry(
+            total=3,                # retry max 3 times
+            backoff_factor=10,      # wait: 10s, 20s, 40s
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["GET"]
+        )
+
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        session = requests.Session()
+        session.mount("https://", adapter)
+        session.mount("http://", adapter)
+
+        try:
+            response = session.get(fetch_url, headers=headers, timeout=60)
+            response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            print(f"Request failed: {e}")
             return None
 
         try:
@@ -613,7 +718,7 @@ class TargetAnalyzer:
             print("Failed to decode the response")
             return None
 
-        if 'errors' in api_response:
+        if isinstance(api_response, dict) and 'errors' in api_response:
             print("Error in API response:", api_response['errors'])
             return None
 
