@@ -17,7 +17,7 @@ from component_services.disease_profile_services import (
     find_ancestors, find_descendants, 
     extract_data_by_ids, fetch_gtr_records
 )
-from component_services.aact_db_client import get_aact_db,DBClient
+from component_services.aact_db_client import DBClient
 from ldap3 import Server, Connection, ALL
 import uvicorn
 import logging
@@ -126,6 +126,10 @@ from component_services.dossier_endpoint_utils import (
 from component_services.drug_extraction import DrugExtractor
 from component_services.ollama_llm_client import LLMClient
 from component_services import drug_extraction
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+
+
 class LoginRequest(BaseModel):
     username: str
     password: str
@@ -142,7 +146,7 @@ app = FastAPI()
 
 client = TestClient(app)
 
-db_client = DBClient()
+# db_client = DBClient()
 
 
 SERP_API_KEY: str = os.getenv('SERP_API_KEY')
@@ -929,9 +933,33 @@ async def get_protein_structure(request: TargetOnlyRequest, redis: Redis = Depen
         ebi_protein_api_url: str = "https://www.ebi.ac.uk/proteins/api/proteins/"
         request_url: str = f"{ebi_protein_api_url}{uniprot_id}"
 
-        # Make a POST request to the GraphQL API
-        response = requests.get(request_url)
-        response = response.json()
+        headers = {
+        "Accept": "application/json",
+        "User-Agent": "my-script/1.0 (contact@example.com)"  # helps avoid silent drops
+    }
+
+        # Retry strategy (exponential backoff)
+        retry_strategy = Retry(
+            total=3,                # retry max 3 times
+            backoff_factor=10,      # wait: 10s, 20s, 40s
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["GET"]
+        )
+
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        session = requests.Session()
+        session.mount("https://", adapter)
+        session.mount("http://", adapter)
+
+        try:
+            # Make a POST request to the GraphQL API
+            response = session.get(request_url, headers=headers, timeout=60)
+            response.raise_for_status()
+            response = response.json()
+
+        except requests.exceptions.RequestException as e:
+            print(f"Request failed: {e}")
+            response = None
 
         await set_cached_response(redis, key, response)
 
@@ -1496,7 +1524,7 @@ async def get_indication_pipeline_new_semaphore(request: DiseasesRequest,
     return response    
 
 @app.post("/market-intelligence/indication-pipeline-new/", tags=["Market Intelligence"])
-async def get_indication_pipeline_new(request: DiseasesRequest, db: Session = Depends(get_db),build_cache: bool = False,db_client: DBClient = Depends(get_aact_db)):
+async def get_indication_pipeline_new(request: DiseasesRequest, db: Session = Depends(get_db),build_cache: bool = False):
     diseases = request.diseases
     diseases: List[str] = [d.strip().lower().replace(" ", "_") for d in request.diseases]
     diseases_str = "-".join(diseases)
@@ -1533,6 +1561,7 @@ async def get_indication_pipeline_new(request: DiseasesRequest, db: Session = De
     try:
         response = {"indication_pipeline": {}}
         if build_cache:
+            db_client: DBClient = DBClient()
             if is_rate_limited():
                 remaining_time = int(rate_limited_until - time.time())
                 raise HTTPException(status_code=429, detail=f"Rate limit in effect. Try again after {remaining_time} seconds.")
@@ -1559,6 +1588,8 @@ async def get_indication_pipeline_new(request: DiseasesRequest, db: Session = De
             # --- Save to Cache & DB ---
             response = {"indication_pipeline": all_trials}
 
+            # close AACT DB connection
+            db_client.close()
             for disease, value in response["indication_pipeline"].items():
                 disease_clean = disease.strip().lower().replace(" ", "_")
                 disease_record = db.query(Disease).filter_by(id=disease_clean).first()
@@ -1602,7 +1633,7 @@ async def get_target_pipeline_new_semaphore(request: TargetRequest,
     try:
         async with semaphore:  # This will block concurrent requests
             print(f"lock applied and processing {request.target} and {request.diseases}")
-            response =  await target_pipeline_new(request, db, db_client, build_cache)
+            response =  await target_pipeline_new(request, db, build_cache)
         print("lock removed")
     except Exception as e:
         raise e
@@ -1611,14 +1642,14 @@ async def get_target_pipeline_new_semaphore(request: TargetRequest,
 @app.post("/market-intelligence/target-pipeline-new/", tags=["Market Intelligence"])
 async def target_pipeline_new(
     request: TargetRequest,
-
     db: Session = Depends(get_db),
-    db_client: DBClient = Depends(get_aact_db),
     build_cache: bool=False
     ):
+    db_client: DBClient = DBClient()
+
     target_input = request.target.strip()
-    endpoint: str = "/market-intelligence-new/target-pipeline/"
-    cache_dir: str = "cached_data_json/target-new"
+    endpoint: str = "/market-intelligence/target-pipeline/"
+    cache_dir: str = "cached_data_json/target"
     os.makedirs(cache_dir, exist_ok=True)
 
     response = {}
@@ -4008,7 +4039,6 @@ async def get_paralogs(request: TargetOnlyRequest, redis: Redis = Depends(get_re
         return cached_response_redis
 
     analyzer = TargetAnalyzer(target)
-
     try:
         paralogs_data = analyzer.get_paralogs()
         parsed_paralogs = parse_paralogs(paralogs_data)
