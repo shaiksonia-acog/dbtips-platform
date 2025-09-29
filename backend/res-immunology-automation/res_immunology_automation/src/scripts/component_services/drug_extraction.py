@@ -2,9 +2,41 @@ import requests
 import logging
 import os
 import json
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 OT_GRAPHQL_URL = "https://api.platform.opentargets.org/api/v4/graphql"
 CHEMBL_API_URL = "https://www.ebi.ac.uk/chembl/api/data/target"
+
+def chembl_sessions_request(url, headers=None, params=None):
+    if not headers:
+        headers = {
+        "Accept": "application/json",
+        "User-Agent": "my-script/1.0 (amani@aganitha.ai)"
+        }
+
+    # Configure retry strategy
+    retry_strategy = Retry(
+        total=5,                # total retries
+        backoff_factor=2,       # wait time between retries (exponential backoff)
+        status_forcelist=[429, 500, 502, 503, 504],  # retry on these errors
+        allowed_methods=["GET"]
+    )
+
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    http = requests.Session()
+    http.mount("https://", adapter)
+    http.mount("http://", adapter)
+
+    try:
+        if params:
+            response = http.get(url, headers=headers, params=params, timeout=30)
+        else:
+            response = http.get(url, headers=headers, timeout=30)
+        response.raise_for_status()
+        return response
+    except requests.exceptions.RequestException as e:
+        return response
 
 
 def get_ensg_from_symbol(gene_symbol: str) -> str:
@@ -76,13 +108,17 @@ def fetch_chembl_from_uniprot(uniprot_id: str):
     Returns a list of ChEMBL IDs (could be empty if no mapping).
     """
     url = f"{CHEMBL_API_URL}/search.json?q={uniprot_id}"
-    response = requests.get(url)
-    response.raise_for_status()
-    # print("response: ", response.content)
-    data = response.json()
-    chembl_ids = [t["target_chembl_id"] for t in data.get("targets", [])]
-    print("chembl_ids: ", chembl_ids)
-    return chembl_ids
+    # response = requests.get(url)
+    try:
+        response = chembl_sessions_request(url)
+        response.raise_for_status()
+        # print("response: ", response.content)
+        data = response.json()
+        chembl_ids = [t["target_chembl_id"] for t in data.get("targets", [])]
+        print("chembl_ids: ", chembl_ids)
+        return chembl_ids
+    except Exception as e:
+        return []
 
 
 def map_target_to_chembl(target: str):
@@ -109,7 +145,8 @@ def get_target_chembl_id(target_input):
     if target_input.upper().startswith("CHEMBL"):
         return target_input
     url = f"https://www.ebi.ac.uk/chembl/api/data/target.json?target_components__target_component_synonyms__component_synonym__iexact={target_input}&limit=1"
-    resp = requests.get(url)
+    # resp = requests.get(url)
+    resp = chembl_sessions_request(url)
     if resp.status_code == 200:
         targets = resp.json().get("targets", [])
         if targets:
@@ -121,7 +158,8 @@ def get_drugs_for_target(target_chembl_id):
     Returns a list of drugs (dicts) that act on the given target (from ChEMBL).
     """
     url = f"https://www.ebi.ac.uk/chembl/api/data/mechanism.json?target_chembl_id={target_chembl_id}&limit=1000"
-    resp = requests.get(url)
+    # resp = requests.get(url)
+    resp = chembl_sessions_request(url)
     drugs = []
     if resp.status_code == 200:
         seen = set()
@@ -131,7 +169,8 @@ def get_drugs_for_target(target_chembl_id):
                 seen.add(mol)
                 # Optionally fetch pref_name
                 mol_url = f"https://www.ebi.ac.uk/chembl/api/data/molecule/{mol}.json"
-                mol_resp = requests.get(mol_url)
+                # mol_resp = requests.get(mol_url)
+                mol_resp = chembl_sessions_request(url)
                 pref_name = mol_resp.json().get("pref_name") if mol_resp.status_code == 200 else None
                 drugs.append({"molecule_chembl_id": mol, "pref_name": pref_name})
     return drugs
@@ -142,7 +181,8 @@ def fetch_molecule_type(chembl_id):
     Returns 'NA' if not found or on error.
     """
     url = f"https://www.ebi.ac.uk/chembl/api/data/molecule/{chembl_id}.json"
-    resp = requests.get(url)
+    # resp = requests.get(url)
+    resp = chembl_sessions_request(url)
     if resp.status_code == 200:
         return resp.json().get("molecule_type", "NA")
     return "NA"
@@ -156,7 +196,8 @@ def fetch_moa_targets_for_ids(chembl_ids, filter_target=None):
     mechanisms = []
     for chembl_id in chembl_ids:
         url = f"https://www.ebi.ac.uk/chembl/api/data/mechanism.json?molecule_chembl_id={chembl_id}&limit=1000"
-        resp = requests.get(url)
+        # resp = requests.get(url)
+        resp = chembl_sessions_request(url)
         if resp.status_code == 200:
             for mech in resp.json().get("mechanisms", []):
                 tgt_id = mech.get("target_chembl_id")
@@ -173,7 +214,8 @@ def fetch_target_symbol(target_chembl_id):
     Falls back to the preferred name if no gene symbol is found.
     """
     url = f"https://www.ebi.ac.uk/chembl/api/data/target/{target_chembl_id}.json"
-    resp = requests.get(url)
+    # resp = requests.get(url)
+    resp = chembl_sessions_request(url)
     if resp.status_code == 200:
         target = resp.json()
         for comp in target.get("target_components", []):
@@ -211,7 +253,8 @@ def get_indications_for_drug(chembl_id):
     Each dict contains at least 'indication_name' and 'max_phase_for_ind'.
     """
     url = f"https://www.ebi.ac.uk/chembl/api/data/drug_indication.json?molecule_chembl_id={chembl_id}&limit=1000"
-    resp = requests.get(url)
+    # resp = requests.get(url)
+    resp = chembl_sessions_request(url)
     indications = []
     if resp.status_code == 200:
         for ind in resp.json().get("drug_indications", []):
@@ -240,7 +283,8 @@ def get_drug_synonyms(chembl_id):
     Returns a list of all synonyms (including pref_name) for a given ChEMBL drug ID.
     """
     url = f"https://www.ebi.ac.uk/chembl/api/data/molecule/{chembl_id}.json"
-    resp = requests.get(url)
+    # resp = requests.get(url)
+    resp = chembl_sessions_request(url)
     names = set()
     if resp.status_code == 200:
         data = resp.json()
