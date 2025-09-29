@@ -5,7 +5,7 @@ from component_services.market_intelligence_service import get_mesh_term_for_dis
 import logging
 
 load_dotenv()
-print("host: ", os.getenv("AACT_DB_HOST"), os.getenv("AACT_DB_PORT"), os.getenv("AACT_DB_USER"))
+
 class DBClient:
     def __init__(self):
         self.host = os.getenv("AACT_DB_HOST")
@@ -172,9 +172,9 @@ if __name__ == "__main__":
     except Exception as e:
         print("Error while testing DBClient:", e)
 
-def get_aact_db():
-    db = DBClient()
-    try:
-        yield db
-    finally:
-        db.close()
+# def get_aact_db():
+#     db = DBClient()
+#     try:
+#         yield db
+#     finally:
+#         db.close()
