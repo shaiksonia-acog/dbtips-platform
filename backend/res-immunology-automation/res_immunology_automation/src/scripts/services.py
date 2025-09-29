@@ -4,22 +4,53 @@ from helper import get_disease_descendants
 import requests
 from typing import *
 from utils import fetch_all_publications, fetch_nct_titles, get_pmids_for_nct_ids, get_chembl_id_exact, get_moa_short, fetch_approval_status, fetch_moa_targets_for_ids, format_multi_drug_output, fetch_molecule_type,get_target_type
-from component_services.market_intelligence_service import add_outcome_status_ollama, get_why_stopped, classify_why_stopped_with_llm , get_indication_pipeline_strapi
+from component_services.market_intelligence_service import add_outcome_status_ollama, get_why_stopped, classify_why_stopped_with_llm , get_indication_pipeline_strapi, get_target_pipeline_strapi_all, add_outcome_status_target_pipeline, remove_duplicates
+from component_services.aact_db_client import DBClient
 from datetime import datetime
 from fastapi import HTTPException
 from tenacity import *
 import logging
 import time
 import os
-import requests
 import xml.etree.ElementTree as ET
 from target_analyzer import TargetAnalyzer
+from component_services import drug_extraction
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+
 # Set up logger
 logger = logging.getLogger(__name__)
 NCBI_API_KEY = os.getenv('NCBI_API_KEY')
 
 
+def chembl_sessions_request(url, headers=None, params=None):
+    headers = {
+    "Accept": "application/json",
+    "User-Agent": "my-script/1.0 (amani@aganitha.ai)"
+    }
 
+    # Configure retry strategy
+    retry_strategy = Retry(
+        total=5,                # total retries
+        backoff_factor=2,       # wait time between retries (exponential backoff)
+        status_forcelist=[429, 500, 502, 503, 504],  # retry on these errors
+        allowed_methods=["GET"]
+    )
+
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    http = requests.Session()
+    http.mount("https://", adapter)
+    http.mount("http://", adapter)
+
+    try:
+        if params:
+            response = http.get(url, headers=headers, params=params, timeout=30)
+        else:
+            response = http.get(url, headers=headers, timeout=30)
+        response.raise_for_status()
+        return response
+    except requests.exceptions.RequestException as e:
+        return response
 
 def parse_target_introduction(api_response):
     """
@@ -750,7 +781,8 @@ def fetch_publication_info(literature_id):
     Fetches publication information from Europe PMC for the given literature ID.
     """
     url = f"https://www.ebi.ac.uk/europepmc/webservices/rest/search?query={literature_id}&format=json"
-    response = requests.get(url)
+    # response = requests.get(url)
+    response = chembl_sessions_request(url)
     if response.status_code == 200:
         data = response.json()
         if data['hitCount'] > 0:
@@ -1106,8 +1138,10 @@ def fetch_disease_profile(diseases_and_id):
         api_url = f"https://www.ebi.ac.uk/ols4/api/v2/ontologies/efo/classes/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252F{id}?includeObsoleteEntities=true"
 
         try:
-            response = requests.get(api_url)
+            # response = requests.get(api_url)
+            response = chembl_sessions_request(url)
             response.raise_for_status()
+
             data = response.json()
 
             definition = data.get('definition', {})
@@ -1718,7 +1752,8 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
                                 "OfficialTitle": trial.get("official_title", ""),
                                 "intervention_types": trial.get("intervention_types", "")
                             })
-        
+
+    db_client.close()  
     if len(results):
         diseases = list(set([r["Disease"].strip().lower().replace(" ", "_") for r in results if r.get("Disease") and r["Disease"] != "NA"]))
         logger.info("Fetching entries from Strapi")
