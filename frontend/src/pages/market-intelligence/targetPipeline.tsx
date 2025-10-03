@@ -44,7 +44,7 @@ const CompetitiveLandscape = ({target,indications}) => {
   const payload = {
     target:target?.toLowerCase(),
     diseases: [
-      ""
+      "no-disease"
     ],
   };
 
@@ -56,7 +56,7 @@ const CompetitiveLandscape = ({target,indications}) => {
     isFetched: targetDataFetched,
   } = useQuery(
     ["marketIntelligenceTarget", payload],
-    () => fetchData(payload, "/market-intelligence/target-pipeline-all/"),
+    () => fetchData(payload, "/market-intelligence/target-pipeline-new/"),
     {
       enabled: !!target ,
       refetchOnWindowFocus: false,
@@ -65,7 +65,7 @@ const CompetitiveLandscape = ({target,indications}) => {
       keepPreviousData: true,
     }
   );
-  const columnDefs = [
+  const columnDefs = useMemo(() => [
     {
       field: "NctIdTitleMapping",
       headerName: "Trial summary",
@@ -156,11 +156,11 @@ const CompetitiveLandscape = ({target,indications}) => {
 
     { field: "Sponsor", flex: 2 },
     { field: "Mechanism of Action", flex: 3 },
-  ];
+  ], []);
   const processedData = useMemo(() => {
     if (targetData && Object.keys(targetData).length > 0) {
       console.log("targetData", targetData);
-      return targetData.target_pipeline;
+      return targetData.target_pipeline.target_pipeline;
     }
     return [];
   }, [targetData]);
@@ -182,8 +182,8 @@ const CompetitiveLandscape = ({target,indications}) => {
   }, [processedData, selectedDisease,selectedModality]);
 
   useEffect(() => {
-    if (targetData?.target_pipeline) {
-      const llmData = preprocessTargetData(targetData.target_pipeline);
+    if (targetData?.target_pipeline?.target_pipeline) {
+      const llmData = preprocessTargetData(targetData.target_pipeline.target_pipeline);
       // console.log(llmData);
       register("pipeline_target", {
         target: target,
