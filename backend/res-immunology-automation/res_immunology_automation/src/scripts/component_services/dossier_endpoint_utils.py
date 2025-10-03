@@ -124,7 +124,7 @@ def get_friendly_endpoint_name(endpoint_name: str) -> str:
 def fetch_records_by_status(db: Session, job_type, record_status: str) -> List[Dict[str, str]]:
     """Fetch records by status for progression tracker"""
     all_records = []
-    records = db.query(job_type).filter_by(status=record_status).all()
+    records = db.query(job_type).filter_by(status=record_status).order_by(job_type.processed_time.desc()).all()
     
     for record in records:
         data = {'target': None, 'disease': None}
