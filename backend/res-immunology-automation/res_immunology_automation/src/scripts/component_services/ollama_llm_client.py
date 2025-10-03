@@ -3,62 +3,94 @@ import time
 import random
 import google.generativeai as genai
 from dotenv import load_dotenv
-from google.api_core.exceptions import ResourceExhausted # Import the specific exception
+import logging
+from retry import retry
+def is_rate_limit_error(exception):
+    """Check if the exception is a rate limit error"""
+    error_str = str(exception).lower()
+    return any(keyword in error_str for keyword in ["429", "quota", "rate", "limit", "too many requests"])
 
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 load_dotenv()
 
 class LLMClient:
     def __init__(self, model=None, api_key=None):
-        # Correctly load the API key from the environment variable
-        self.api_key = api_key or os.getenv("GEMINI_API_KEY")
+        os.environ["GRPC_VERBOSITY"] = "ERROR"
+        os.environ["GRPC_LOG_SEVERITY_LEVEL"] = "ERROR"
+        
+        # Load API key
+        self.api_key ="REMOVED_GOOGLE_API_KEY"
         if not self.api_key:
             raise ValueError("GEMINI_API_KEY must be set in an environment file or passed in")
 
-        # Note: 'gemini-2.5-flash' is not a valid model name as of now.
-        # I'm using 'gemini-1.5-flash' which is a common and valid model.
-        self.model =  "gemini-2.5-flash"
+        # Use the latest model name
+        self.model = model or "gemini-2.5-flash"  # Latest Gemini model
 
         # Configure Gemini client
         genai.configure(api_key=self.api_key)
         self.client = genai.GenerativeModel(self.model)
+        self.generation_config = {
+        "temperature": 0.1,
+        "max_output_tokens": 8192,
+        }
 
+    @retry(
+    exceptions=Exception,
+    tries=5,
+    delay=10,        # Fixed delay of 10 seconds
+    backoff=1,       # No exponential backoff
+    jitter=0,        # No random jitter
+    logger=logger
+)
     def extract_drugs(self, prompt: str) -> str:
-        max_retries = 5  # Maximum number of times to retry
-        base_wait_time = 2  # Initial wait time in seconds
+        # logger.info("Waiting 10 seconds before first API call...")
+        # time.sleep(10)  # Fixed latency before the first attempt
 
-        for attempt in range(max_retries):
-            try:
-                # This is the original API call
-                response = self.client.generate_content(prompt)
+        try:
+            response = self.client.generate_content(prompt, generation_config=self.generation_config)
+            logger.info("LLM response received")
+            logger.info(f"Full response: {response}")
 
-                # Safely parse the response (your original logic)
-                try:
-                    return response.text.strip()
-                except AttributeError:
-                # Handles cases where the response might be empty or malformed
-                    return ""
+            if response and response.candidates:
+                candidate = response.candidates[0]
 
-            except ResourceExhausted as e:
-                # This exception is raised for 429 errors (rate limiting)
-                print(f"Rate limit exceeded. Retrying in {base_wait_time ** attempt}s... (Attempt {attempt + 1}/{max_retries})")
-                
-                # Exponential backoff with jitter
-                wait_time = (base_wait_time ** attempt) + random.uniform(0, 1)
-                time.sleep(wait_time)
+                if hasattr(candidate, 'finish_reason'):
+                    logger.info(f"Finish reason: {candidate.finish_reason}")
+                    if candidate.finish_reason in [3, 4]:  # SAFETY, RECITATION
+                        logger.warning("Response blocked by safety filters")
+                        return "Response blocked due to safety concerns"
 
-            except Exception as e:
-                # Handle other potential errors
-                print(f"An unexpected error occurred: {e}")
-                break # Exit loop on other errors
+                if candidate.content and candidate.content.parts:
+                    text_parts = []
+                    for part in candidate.content.parts:
+                        if hasattr(part, 'text') and part.text:
+                            text_parts.append(part.text)
 
-        # If all retries fail, raise the last exception or a custom one
-        raise Exception("Failed to get a response from the API after several retries.")
+                    if text_parts:
+                        return response.text.strip()
+
+                logger.warning("No text content found in response")
+                return "No content generated."
+
+            logger.warning("No candidates in response")
+            return "No content generated."
+
+        except Exception as e:
+            if is_rate_limit_error(e):
+                logger.warning(f"Rate limit or quota error: {e}")
+            else:
+                logger.error(f"Unexpected error occurred: {e}")
+            raise  # Re-raise to trigger retry
 
 
 # Usage
 if __name__ == "__main__":
-    client = LLMClient()
-    result = client.extract_drugs(
-        "List all drugs mentioned in the following text: Aspirin reduces fever. Paracetamol relieves pain."
-    )
-    print("\nExtracted drugs:", result)
+    try:
+        client = LLMClient()
+        result = client.extract_drugs(
+            "List all drugs mentioned in the following text: Aspirin reduces fever. Paracetamol relieves pain."
+        )
+        print("\nExtracted drugs:", result)
+    except Exception as e:
+        print(f"Error: {e}")
