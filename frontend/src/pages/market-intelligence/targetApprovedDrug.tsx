@@ -161,7 +161,7 @@ const ApprovedDrug = ({
     const data=approvedDrugData?.target_pipeline;
     const filtered =selectedDisease.length===0
       ? approvedDrugData?.target_pipeline?.target_pipeline?.filter((data) => data.ApprovalStatus === "Approved")
-      : approvedDrugData?.target_pipeline?.filter(
+      : approvedDrugData?.target_pipeline?.target_pipeline.filter(
           (data) =>
             selectedDisease.some(
               (disease) => disease.toLowerCase() === data.Disease.toLowerCase()
