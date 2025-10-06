@@ -10,7 +10,7 @@ from gql_variables import DiseaseAssociationQueryVariables, TargetAssociationQue
     TargetabilityVariables, PublicationVariables,GeneEssentialityMapTargetVariable
 from typing import Dict, List
 import requests
-import json
+import json, time
 from tqdm import tqdm
 import pandas as pd
 from utils import get_efo_id
