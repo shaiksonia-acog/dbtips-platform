@@ -1,7 +1,7 @@
 import requests
 import logging
 import os
-import json,
+import json,time
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
@@ -135,7 +135,8 @@ def map_target_to_chembl(target: str):
     ensembl_id = get_ensg_from_symbol(target)
     uniprot_id_dict = fetch_uniprot_from_ot(ensembl_id)
     result = {}
-    
+    if not uniprot_id_dict or 'id' not in uniprot_id_dict:
+        return []
     chembl_ids = fetch_chembl_from_uniprot(uniprot_id_dict['id'])
     
     return chembl_ids
