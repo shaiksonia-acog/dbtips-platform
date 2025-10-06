@@ -105,7 +105,7 @@ useEffect(() => {
     });
     console.log("filtered", filtered);
     setFilteredData(filtered);
-  }, [countryFilter, statusFilter, rowData, selectedDisease]);
+  }, [countryFilter, statusFilter, rowData, selectedDisease, indications.length]);
 
   const handleCountryChange = (value) => setCountryFilter(value);
   const handleStatusChange = (value) => setStatusFilter(value);
