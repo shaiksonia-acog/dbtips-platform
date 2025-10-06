@@ -231,4 +231,4 @@ async def extract_literature(disease: str , target: str) -> bool:
         # Log the error and re-raise so build_dossier can handle it
         error_msg = f"Literature extraction failed for {disease}-{target}: {str(e)}"
         logging.error(f"{prefix} {error_msg}")
-        raise RuntimeError(error_msg) from e
+        raise RuntimeError(error_msg)

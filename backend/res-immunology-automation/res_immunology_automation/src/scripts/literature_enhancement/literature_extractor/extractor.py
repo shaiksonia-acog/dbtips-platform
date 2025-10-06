@@ -208,13 +208,13 @@ class LiteratureExtractor:
                             error_count += 1
                             error_msg = f"LITERATURE EXTRACTOR: Failed to store article PMID {pmid}"
                             log.error(error_msg, exc_info=True)
-                            raise RuntimeError(error_msg) from e
+                            raise RuntimeError(error_msg)
                             
                     except Exception as e:
                         error_count += 1
                         error_msg = f"LITERATURE EXTRACTOR: Error processing PMID {pmid}: {e}"
                         log.error(error_msg, exc_info=True)
-                        raise RuntimeError(error_msg) from e
+                        raise RuntimeError(error_msg)
 
             except Exception as e:
                 error_count = len(pmids)
