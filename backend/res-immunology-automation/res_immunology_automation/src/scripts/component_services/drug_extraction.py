@@ -1,7 +1,7 @@
 import requests
 import logging
 import os
-import json
+import json, time
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
@@ -99,8 +99,11 @@ def fetch_uniprot_from_ot(ensembl_id: str):
     
     # Fallback: TrEMBL
     trembl = next((p for p in protein_ids if p["source"] == "uniprot_trembl"), None)
-    return trembl
+    if trembl:
+        return trembl
 
+    
+    return None
 
 def fetch_chembl_from_uniprot(uniprot_id: str):
     """
@@ -131,12 +134,14 @@ def map_target_to_chembl(target: str):
     Returns dict of UniProt -> ChEMBL mappings
     """
     ensembl_id = get_ensg_from_symbol(target)
-    uniprot_id_dict = fetch_uniprot_from_ot(ensembl_id)
-    result = {}
-    
-    chembl_ids = fetch_chembl_from_uniprot(uniprot_id_dict['id'])
-    
-    return chembl_ids
+    if ensembl_id:
+        uniprot_id_dict = fetch_uniprot_from_ot(ensembl_id)
+        result = {}
+        if uniprot_id_dict:
+            chembl_ids = fetch_chembl_from_uniprot(uniprot_id_dict['id'])
+            return chembl_ids
+
+    return None
 
 def get_target_chembl_id(target_input):
     """
@@ -161,6 +166,7 @@ def get_drugs_for_target(target_chembl_id):
     # resp = requests.get(url)
     resp = chembl_sessions_request(url)
     drugs = []
+    time.sleep(1)
     if resp.status_code == 200:
         seen = set()
         for mech in resp.json().get("mechanisms", []):
@@ -170,9 +176,11 @@ def get_drugs_for_target(target_chembl_id):
                 # Optionally fetch pref_name
                 mol_url = f"https://www.ebi.ac.uk/chembl/api/data/molecule/{mol}.json"
                 # mol_resp = requests.get(mol_url)
-                mol_resp = chembl_sessions_request(url)
+                mol_resp = chembl_sessions_request(mol_url)
                 pref_name = mol_resp.json().get("pref_name") if mol_resp.status_code == 200 else None
+                logging.info(f"drug name: {pref_name}")
                 drugs.append({"molecule_chembl_id": mol, "pref_name": pref_name})
+                time.sleep(1)
     return drugs
 
 def fetch_molecule_type(chembl_id):
@@ -431,3 +439,7 @@ class DrugExtractor:
 
         logging.info(f"All rows processed. Total extracted: {len(all_results)}")
         return all_results
+
+
+if __name__ == "__main__":
+    chemblid = map_target_to_chembl("GUCY1B2")
