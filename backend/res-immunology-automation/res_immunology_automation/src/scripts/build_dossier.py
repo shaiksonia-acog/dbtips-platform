@@ -39,7 +39,7 @@ logging.basicConfig(
 )
 
 task_started = False
-WAIT_TIME = 3000
+WAIT_TIME = 300
 
 POSTGRES_USER: str = os.getenv("POSTGRES_USER")
 POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD")
@@ -223,7 +223,7 @@ async def clear_processing_dossiers(db):
             values = {'status': 'error', 'creation_time': local_time, 'processed_time': local_time}
             if target is None:
                 job_type = DiseaseDossierStatus
-                values['disease'] = job['disease']
+                values['disease'] = disease
             else:
                 job_type = TargetDossierStatus
                 values['target'] = target
@@ -245,66 +245,71 @@ async def build_dossier():
         await clear_processing_dossiers(db)
 
     # db = get_db()
-    while True:
+    try:
+        while True:
 
-        async with SessionLocal() as db:
-            logging.info("connection created")
-            processing_records = await fetch_processing_records(db)
+            async with SessionLocal() as db:
+                logging.info("connection created")
+                processing_records = await fetch_processing_records(db)
 
-            # processing_records = [record for record in processing_records if record]
-            logging.info(f"Processing jobs: {processing_records}")
+                # processing_records = [record for record in processing_records if record]
+                logging.info(f"Processing jobs: {processing_records}")
+                
+                try:
+                    if not processing_records:
+                        pending_jobs = await fetch_pending_jobs(db)
+                        logging.info(f"pending jobs: {pending_jobs}")
+                        if not pending_jobs:
+                            await asyncio.sleep(WAIT_TIME)
+                        for job_id, job in pending_jobs.items():
+                            local_time = datetime.now(tzlocal.get_localzone())    
+                            values = {'status': 'processing', 'submission_time': local_time}
+                            
+                            if job['target'] is None:
+                                job_type = DiseaseDossierStatus
+                                values['disease'] = job['disease']
+                            else:
+                                job_type = TargetDossierStatus
+                                values['target'] = job['target']
+                                values['disease'] = job['disease']
+                            logging.info(f"processing jobs: {job}")
+
+                            #change the status of current building disease to processing and processing_time
+                            await update_record_status(db, job_type, **values)
+                            
+                            # run all endpoints for the disease
+                            build_status, endpoint, e= await run_endpoints(db, values)
+                            local_time = datetime.now(tzlocal.get_localzone())
+
+                            # update the status and processed_time according to the build status
+                            if build_status != 'error':
+                                values.update({'status':build_status, 'processed_time':local_time})
+                                await update_record_status(db, job_type, **values)
+                                
+                            else:
+                                # update the corresponding status record to error
+                                error_count = job['error_count'] + 1
+                                values.update({'status':build_status, 'processed_time':local_time, 'error_count': error_count})
+                                await update_record_status(db, job_type, **values)
+                                
+                                # make an entry in error management table
+                                new_record = ErrorManagement(job_details=job_id,
+                                        endpoint=endpoint, error_description=e, error_encountered_time=local_time)  # Create a new instance of the identified model
+                                db.add(new_record)  # Add the new record to the session
+
+                                await db.commit()
+                            logging.info(f"updated status: {job}")
+
+
+                except Exception as e:
+                    logging.error(f"Error in build_dossier: {e}")
+
+                
+
+    finally:
+        await db.close()
+        logging.info("connection closed")
             
-            try:
-                if not processing_records:
-                    pending_jobs = await fetch_pending_jobs(db)
-                    logging.info(f"pending jobs: {pending_jobs}")
-                    for job_id, job in pending_jobs.items():
-                        local_time = datetime.now(tzlocal.get_localzone())    
-                        values = {'status': 'processing', 'submission_time': local_time}
-                        
-                        if job['target'] is None:
-                            job_type = DiseaseDossierStatus
-                            values['disease'] = job['disease']
-                        else:
-                            job_type = TargetDossierStatus
-                            values['target'] = job['target']
-                            values['disease'] = job['disease']
-                        logging.info(f"processing jobs: {job}")
-
-                        #change the status of current building disease to processing and processing_time
-                        await update_record_status(db, job_type, **values)
-                        
-                        # run all endpoints for the disease
-                        build_status, endpoint, e= await run_endpoints(db, values)
-                        local_time = datetime.now(tzlocal.get_localzone())
-
-                        # update the status and processed_time according to the build status
-                        if build_status != 'error':
-                            values.update({'status':build_status, 'processed_time':local_time})
-                            await update_record_status(db, job_type, **values)
-                            
-                        else:
-                            # update the corresponding status record to error
-                            error_count = job['error_count'] + 1
-                            values.update({'status':build_status, 'processed_time':local_time, 'error_count': error_count})
-                            await update_record_status(db, job_type, **values)
-                            
-                            # make an entry in error management table
-                            new_record = ErrorManagement(job_details=job_id,
-                                    endpoint=endpoint, error_description=e, error_encountered_time=local_time)  # Create a new instance of the identified model
-                            db.add(new_record)  # Add the new record to the session
-
-                            await db.commit()
-                        logging.info(f"updated status: {job}")
-
-                await asyncio.sleep(WAIT_TIME)
-            except Exception as e:
-                logging.error(f"Error in build_dossier: {e}")
-
-            finally:
-                await db.close()
-                logging.info("connection closed")
-        
 
 async def run_endpoints(db_session, job_data):
     
@@ -380,7 +385,7 @@ async def run_endpoints(db_session, job_data):
                     # updating endpoint status to processing
                     await update_endpoint_status(db_session, disease_key=disease, endpoint=endpoint.__name__, status='processing', start_at=datetime.now(tzlocal.get_localzone()))
                     
-                    if endpoint.__name__ in ['get_disease_pathway_semaphore', 'get_indication_pipeline_semaphore']:
+                    if endpoint.__name__ in ['get_disease_pathway_semaphore', 'get_indication_pipeline_new_semaphore']:
                         response = await endpoint(request_data, db=db, build_cache=True)
                     elif endpoint.__name__ in ["get_top_10_literature", 'get_key_influencers']:
                         response = await endpoint(request_data)
