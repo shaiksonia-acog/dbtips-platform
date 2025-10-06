@@ -20,7 +20,7 @@ class LLMClient:
         os.environ["GRPC_LOG_SEVERITY_LEVEL"] = "ERROR"
         
         # Load API key
-        self.api_key ="REMOVED_GOOGLE_API_KEY"
+        self.api_key =os.getenv("GEMINI_API_KEY") if api_key is None else api_key
         if not self.api_key:
             raise ValueError("GEMINI_API_KEY must be set in an environment file or passed in")
 
