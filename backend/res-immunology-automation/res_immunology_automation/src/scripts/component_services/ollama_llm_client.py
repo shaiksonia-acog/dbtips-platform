@@ -71,10 +71,10 @@ class LLMClient:
                         return response.text.strip()
 
                 logger.warning("No text content found in response")
-                return "No content generated."
+                return ""
 
             logger.warning("No candidates in response")
-            return "No content generated."
+            return ""
 
         except Exception as e:
             if is_rate_limit_error(e):
