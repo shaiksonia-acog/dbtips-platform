@@ -584,9 +584,17 @@ async def get_target_details(request: TargetOnlyRequest, redis: Redis = Depends(
         description = analyzer.get_target_description()
         taxonomy = analyzer.get_target_introduction()
 
-        parsed_introduction = parse_target_introduction(introduction)
-        parsed_description = parse_target_description(description)
-        parsed_taxonomy = parse_taxonomy(taxonomy)
+        parsed_introduction = None
+        if introduction:
+            parsed_introduction = parse_target_introduction(introduction)
+        
+        parsed_description = None
+        if description:
+            parsed_description = parse_target_description(description)
+        
+        parsed_taxonomy = None
+        if taxonomy:
+            parsed_taxonomy = parse_taxonomy(taxonomy)
 
         target_details = {
             "ensembl_id": analyzer.ensembl_id,
