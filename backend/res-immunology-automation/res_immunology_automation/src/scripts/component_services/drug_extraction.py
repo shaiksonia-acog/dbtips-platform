@@ -1,9 +1,11 @@
 import requests
 import logging
 import os
-import json
+import json,
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+
+
 
 OT_GRAPHQL_URL = "https://api.platform.opentargets.org/api/v4/graphql"
 CHEMBL_API_URL = "https://www.ebi.ac.uk/chembl/api/data/target"
@@ -161,6 +163,7 @@ def get_drugs_for_target(target_chembl_id):
     # resp = requests.get(url)
     resp = chembl_sessions_request(url)
     drugs = []
+    time.sleep(1)
     if resp.status_code == 200:
         seen = set()
         for mech in resp.json().get("mechanisms", []):
@@ -170,9 +173,11 @@ def get_drugs_for_target(target_chembl_id):
                 # Optionally fetch pref_name
                 mol_url = f"https://www.ebi.ac.uk/chembl/api/data/molecule/{mol}.json"
                 # mol_resp = requests.get(mol_url)
-                mol_resp = chembl_sessions_request(url)
+                mol_resp = chembl_sessions_request(mol_url)
                 pref_name = mol_resp.json().get("pref_name") if mol_resp.status_code == 200 else None
+                print("drug name: ", pref_name)
                 drugs.append({"molecule_chembl_id": mol, "pref_name": pref_name})
+                time.sleep(1)
     return drugs
 
 def fetch_molecule_type(chembl_id):
