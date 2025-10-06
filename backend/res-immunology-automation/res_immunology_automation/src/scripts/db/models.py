@@ -96,7 +96,7 @@ class ArticlesMetadata(Base):
     raw_full_text = Column(Text)
 
     __table_args__ = (
-        PrimaryKeyConstraint('disease', 'pmid'),
+        PrimaryKeyConstraint('disease', 'pmid', 'target'),
     )
 
 class LiteratureImagesAnalysis(Base):
