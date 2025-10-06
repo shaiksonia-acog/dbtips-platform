@@ -10,7 +10,7 @@ from gql_variables import DiseaseAssociationQueryVariables, TargetAssociationQue
     TargetabilityVariables, PublicationVariables,GeneEssentialityMapTargetVariable
 from typing import Dict, List
 import requests
-import json
+import json, time
 from tqdm import tqdm
 import pandas as pd
 from utils import get_efo_id
@@ -532,6 +532,9 @@ class TargetAnalyzer:
             allowed_methods=["GET", "POST"],
             raise_on_status=False
         )
+        def is_retryable_exception(e):
+            return isinstance(e, (requests.exceptions.ConnectionError, ProtocolError))
+
         retry_strategy.retry_on_exception = is_retryable_exception
         adapter = HTTPAdapter(max_retries=retry_strategy)
         session.mount("https://", adapter)
