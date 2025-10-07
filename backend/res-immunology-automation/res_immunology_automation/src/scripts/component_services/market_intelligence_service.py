@@ -13,6 +13,8 @@ from openai import OpenAI
 from openai._exceptions import OpenAIError, RateLimitError
 from .pubmed_utils import get_data_from_pubmed
 import re
+from component_services.drug_extraction import chembl_sessions_request
+
 PATIENT_STORIES_URL = os.getenv('PATIENT_STORIES_URL')
 username = os.getenv('username')
 password = os.getenv('password')
@@ -1383,7 +1385,7 @@ def get_why_stopped(nct_id: str) -> str:
 
     try:
         # Send a GET request to the API
-        response = requests.get(api_url)
+        response = chembl_sessions_request(api_url)
         
         # Raise an error if the response code is not 200
         response.raise_for_status()

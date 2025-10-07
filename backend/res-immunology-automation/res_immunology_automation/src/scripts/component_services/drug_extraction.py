@@ -5,6 +5,8 @@ import json, time
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
+
+
 OT_GRAPHQL_URL = "https://api.platform.opentargets.org/api/v4/graphql"
 CHEMBL_API_URL = "https://www.ebi.ac.uk/chembl/api/data/target"
 
@@ -163,6 +165,7 @@ def get_drugs_for_target(target_chembl_id):
     # resp = requests.get(url)
     resp = chembl_sessions_request(url)
     drugs = []
+    time.sleep(1)
     time.sleep(1)
     if resp.status_code == 200:
         seen = set()

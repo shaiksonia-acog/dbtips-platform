@@ -15,6 +15,7 @@ import os
 import xml.etree.ElementTree as ET
 from target_analyzer import TargetAnalyzer
 from component_services import drug_extraction
+from component_services.drug_extraction import chembl_sessions_request
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from component_services.disease_area_mapping_utils import efoid_to_meshid_mapper, map_mesh_to_disease_area
@@ -24,35 +25,6 @@ from utils import get_efo_id, disease_to_mesh_id
 logger = logging.getLogger(__name__)
 NCBI_API_KEY = os.getenv('NCBI_API_KEY')
 
-
-def chembl_sessions_request(url, headers=None, params=None):
-    headers = {
-    "Accept": "application/json",
-    "User-Agent": "my-script/1.0 (amani@aganitha.ai)"
-    }
-
-    # Configure retry strategy
-    retry_strategy = Retry(
-        total=5,                # total retries
-        backoff_factor=2,       # wait time between retries (exponential backoff)
-        status_forcelist=[429, 500, 502, 503, 504],  # retry on these errors
-        allowed_methods=["GET"]
-    )
-
-    adapter = HTTPAdapter(max_retries=retry_strategy)
-    http = requests.Session()
-    http.mount("https://", adapter)
-    http.mount("http://", adapter)
-
-    try:
-        if params:
-            response = http.get(url, headers=headers, params=params, timeout=30)
-        else:
-            response = http.get(url, headers=headers, timeout=30)
-        response.raise_for_status()
-        return response
-    except requests.exceptions.RequestException as e:
-        return response
 
 def parse_target_introduction(api_response):
     """
@@ -105,8 +77,11 @@ def parse_taxonomy(api_response):
     """
     Extracts organism taxonomy details from an API response and formats them into JSON.
     """
-    if 'results' not in api_response or not api_response['results']:
+    if api_response is None:
         return {"error": "Invalid or empty API response."}
+
+    if 'results' not in api_response or not api_response['results']:
+        return {}
 
     result = api_response['results'][0]
     organism_info = result['organism']
@@ -209,7 +184,7 @@ def format_indication_pipeline_data(data_array):
 
         for drug_index, drug in enumerate(drugs):
             target_type = _safe_get(target_types, drug_index)
-            filter_target = any(allowed in target_type for allowed in allowed_target_types)
+            filter_target = not any(allowed in target_type for allowed in allowed_target_types)
 
             # Prepare a dictionary of the new/overwritten fields
             updated_fields = {
@@ -971,7 +946,8 @@ def parse_disease_known_drugs(api_response,disease_exact_synonyms:List[str]):
 
         try:
             # Send a GET request to the API
-            response = requests.get(api_url)
+            response = chembl_sessions_request(api_url)
+
             
             # Raise an error if the response code is not 200
             response.raise_for_status()
@@ -1383,7 +1359,6 @@ def enrich_trial_data(trials: List[Dict], disease_name: str, llm_client) -> List
     for item in trials:
         logger.info(item["nct_id"])
         logger.info(item["extracted_drugs"])
-        logger.info("-----")
         nct_id = item["nct_id"]
         original_drug_names = item.get("original_drug_names", "")
         drugs = item["extracted_drugs"]
@@ -1400,7 +1375,7 @@ def enrich_trial_data(trials: List[Dict], disease_name: str, llm_client) -> List
             cid = get_chembl_id_exact(drug)
             if cid:
                 chembl_id = cid[0]
-                mol_type = fetch_molecule_type(chembl_id)
+                mol_type = drug_extraction.fetch_molecule_type(chembl_id)
                 approval = fetch_approval_status(chembl_id, disease_name)
                 moa_targets = fetch_moa_targets_for_ids([chembl_id])
                 
@@ -1411,7 +1386,6 @@ def enrich_trial_data(trials: List[Dict], disease_name: str, llm_client) -> List
                 moa_list.extend(moa_targets)
 
                 for _, _, _, target in moa_targets:
-                    logger.info(f"target loop {target}")
                     if target and target != "NA":
                         target_names.add(target)
 
@@ -1429,7 +1403,6 @@ def enrich_trial_data(trials: List[Dict], disease_name: str, llm_client) -> List
         if not target_type_list:
             target_type_list = ["NA"]
         target_type_blocks.append(target_type_list)
-        logger.info(f"target type {target_type_blocks}")
         
 
 
@@ -1618,8 +1591,28 @@ def get_pmids_from_nctid(nct_id: str):
         return pmids
     except Exception as e:
         return []
+def serialize_results(results):
+    serialized = []
+    for entry in results:
+        urls = entry.get("Source URLs", [])
 
-def enrich_target_trials(target_input: str, db_client: DBClient = None):
+        # Case 1: No Source URLs → keep entry, but mark nct_id = None
+        if not urls:
+            serialized.append({**entry, "nct_id": ""})
+
+        # Case 2: Exactly one Source URL → add nct_id
+        elif len(urls) == 1:
+            serialized.append({**entry, "nct_id": urls[0].split("/")[-1]})
+
+        # Case 3: Multiple Source URLs → split into multiple entries
+        else:
+            for url in urls:
+                splitted = {**entry, "Source URLs": [url], "nct_id": url.split("/")[-1]}
+                serialized.append(splitted)
+
+    return serialized
+
+def enrich_target_trials(target_input: str, db_client: DBClient):
     """
     Generate target pipeline results given target
     """
@@ -1636,6 +1629,7 @@ def enrich_target_trials(target_input: str, db_client: DBClient = None):
 
     target_chembl_id = drug_extraction.get_target_chembl_id(target_input)
     drugs_available_from_chembl = False
+    results = [] 
     target_chembl_id = drug_extraction.map_target_to_chembl(target_input) 
 
         # raise HTTPException(status_code=404, detail=f"Could not find ChEMBL target ID for {target_input}")
@@ -1645,6 +1639,7 @@ def enrich_target_trials(target_input: str, db_client: DBClient = None):
 
         # Step2: Get drugs for target
         drugs = drug_extraction.get_drugs_for_target(target_chembl_id)
+        
         if not drugs:
             logger.warning(f"No drugs found for target {target_chembl_id} from Chembl")
 
@@ -1790,7 +1785,6 @@ def enrich_target_trials(target_input: str, db_client: DBClient = None):
 
         logger.info("Fetching NCT Titles if doesn't exist")
         no_title_nct_ids = [t["nct_id"].strip(',').strip() for t in results if t.get("nct_id", "")!="" if t.get("OfficialTitle", "")==""]
-        logger.info(f"nct_ids: {len(no_title_nct_ids)}")
         if len(no_title_nct_ids):
             title_map = fetch_nct_titles(no_title_nct_ids)
             
@@ -1803,7 +1797,7 @@ def enrich_target_trials(target_input: str, db_client: DBClient = None):
         # pmid_map = get_disease_pmid_nct_mapping(list(set([d['Disease'].replace("_", " ") for d in results if d['Disease'] != "NA"])))
         # logger.info("MApping PMID with NCT ID")
         # all_entries = get_pmids_for_nct_ids_target_pipeline(results, pmid_map)
-        for entry in results:
+        for entry in results:           
             entry['PMIDs'] = get_pmids_from_nctid(entry['nct_id'])
             time.sleep(0.2)
         

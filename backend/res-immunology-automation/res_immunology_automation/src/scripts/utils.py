@@ -19,6 +19,8 @@ import os
 from component_services.evidence_services import get_network_biology_strapi
 from component_services.market_intelligence_service import get_pmids_for_nct_ids,add_outcome_status,get_indication_pipeline_strapi
 import logging
+from component_services.drug_extraction import chembl_sessions_request
+
 
 # Set up logger
 logger = logging.getLogger(__name__)
@@ -700,7 +702,7 @@ def fetch_nct_data(nct_ids: List[str]) -> List[Dict[str, str]]:
             # Construct the API URL for the specific NCT ID
             url = f"{base_url}/{nct_id}"
             # Make a GET request to the API
-            response = requests.get(url)
+            response = chembl_sessions_request(url)
             # Raise an exception if the response status code is not 200
             response.raise_for_status()
             # Parse the JSON response
@@ -771,7 +773,7 @@ def fetch_nct_titles(nct_ids: List[str]) -> Dict[str, str]:
             url = f"{base_url}/{nct_id}"
             logger.info(f"Generating Trials for: {url}")
             # Make a GET request to the API
-            response = requests.get(url)
+            response = chembl_sessions_request(url)
             # Raise an exception if the response status code is not 200
             response.raise_for_status()
             # Parse the JSON response
@@ -807,7 +809,7 @@ def get_chembl_id_exact(drug_name):
     ]
     for params in params_list:
         params.update({"limit": 200, "offset": 0})
-        resp = requests.get(base, params=params)
+        resp = chembl_sessions_request(base, params=params)
         if resp.status_code == 200:
             molecules = resp.json().get("molecules", [])
             if molecules:
@@ -821,7 +823,7 @@ def get_chembl_id_exact(drug_name):
     ]
     for params in params_list_partial:
         params.update({"limit": 200, "offset": 0})
-        resp = requests.get(base, params=params)
+        resp = chembl_sessions_request(base, params=params)
         if resp.status_code == 200:
             molecules = resp.json().get("molecules", [])
             if molecules:
@@ -835,7 +837,7 @@ def fetch_molecule_type(chembl_id):
     Returns 'NA' if not found or on error.
     """
     url = f"https://www.ebi.ac.uk/chembl/api/data/molecule/{chembl_id}.json"
-    resp = requests.get(url)
+    resp = chembl_sessions_request(url)
     if resp.status_code == 200:
         return resp.json().get("molecule_type", "NA")
     else:
@@ -849,7 +851,7 @@ def fetch_approval_status(chembl_id, disease_name):
     'Not Approved' if found but not phase 4, or 'NA' if not found.
     """
     url = f"https://www.ebi.ac.uk/chembl/api/data/drug_indication.json?molecule_chembl_id={chembl_id}&limit=1000"
-    resp = requests.get(url)
+    resp = chembl_sessions_request(url)
     if resp.status_code == 200:
         for ind in resp.json().get("drug_indications", []):
             # Safely handle None values for efo_term and mesh_heading
@@ -879,7 +881,7 @@ def fetch_moa_targets_for_ids(chembl_ids):
             "https://www.ebi.ac.uk/chembl/api/data/mechanism.json"
             f"?molecule_chembl_id={chembl_id}&limit=1000&offset=0"
         )
-        resp = requests.get(mech_url)
+        resp = chembl_sessions_request(mech_url)
         found_mechanism = False
         if resp.status_code == 200:
             for mech in resp.json().get("mechanisms", []):
@@ -894,7 +896,7 @@ def fetch_moa_targets_for_ids(chembl_ids):
         # Fallback: If no mechanism found, try activity endpoint for target_chembl_id
         if not found_mechanism:
             act_url = f"https://www.ebi.ac.uk/chembl/api/data/activity.json?molecule_chembl_id={chembl_id}&limit=1"
-            act_resp = requests.get(act_url)
+            act_resp = chembl_sessions_request(act_url)
             if act_resp.status_code == 200:
                 activities = act_resp.json().get("activities", [])
                 if activities:
@@ -911,7 +913,7 @@ def fetch_target_name(target_chembl_id):
     Returns 'NA' if not found or on error.
     """
     url = f"https://www.ebi.ac.uk/chembl/api/data/target/{target_chembl_id}.json"
-    resp = requests.get(url)
+    resp = chembl_sessions_request(url)
     if resp.status_code == 200:
         target = resp.json()
         # Search for GENE_SYMBOL in target_components
@@ -965,7 +967,7 @@ def get_target_type(target_id):
     """
     url = f"https://www.ebi.ac.uk/chembl/api/data/target/{target_id}.json"
     print("url: ", url)
-    resp = requests.get(url)
+    resp = chembl_sessions_request(url)
     if resp.status_code == 200:
 
         return resp.json().get("target_type", "NA")
