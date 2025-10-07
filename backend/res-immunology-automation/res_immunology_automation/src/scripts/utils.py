@@ -159,6 +159,35 @@ def request_open_targets_api(disease_name: str) -> Optional[str]:
     
     return data
 
+def disease_to_mesh_id(disease_name: str):
+    """
+    Convert a disease name to its corresponding MeSH ID using NCBI E-utilities.
+    """
+    base_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
+    params = {
+        "db": "mesh",
+        "term": disease_name,
+        "retmode": "json"
+    }
+
+    try:
+        response = requests.get(base_url, params=params)
+        response.raise_for_status()
+        data = response.json()
+
+        id_list = data.get("esearchresult", {}).get("idlist", [])
+        if not id_list:
+            print(f"No MeSH ID found for disease: {disease_name}")
+            return None
+
+        mesh_id = id_list[0]
+        print(f"{disease_name} → MeSH ID: {mesh_id}")
+        return mesh_id
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
+        
 def get_efo_id(disease_name: str)-> Optional[str]:
     open_t_data = request_open_targets_api(disease_name)
     if open_t_data:

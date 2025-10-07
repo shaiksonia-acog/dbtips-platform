@@ -17,6 +17,8 @@ from target_analyzer import TargetAnalyzer
 from component_services import drug_extraction
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+from component_services.disease_area_mapping_utils import efoid_to_meshid_mapper, map_mesh_to_disease_area
+from utils import get_efo_id, disease_to_mesh_id
 
 # Set up logger
 logger = logging.getLogger(__name__)
@@ -1632,7 +1634,7 @@ def enrich_target_trials(target_input: str, db_client: DBClient = None):
 
     # Step1: Get Target Details from ChemBl
 
-    # target_chembl_id = drug_extraction.get_target_chembl_id(target_input)
+    target_chembl_id = drug_extraction.get_target_chembl_id(target_input)
     drugs_available_from_chembl = False
     target_chembl_id = drug_extraction.map_target_to_chembl(target_input) 
 
@@ -1660,13 +1662,15 @@ def enrich_target_trials(target_input: str, db_client: DBClient = None):
                 moa_targets = drug_extraction.fetch_moa_targets_for_ids([chembl_id], filter_target=target_chembl_id)
                 moa_short = drug_extraction.get_moa_short(moa_targets)
                 indications = drug_extraction.get_indications_for_drug(chembl_id)
-                continue
+                
                 if not indications:
                     results.append({
                         "Target": target_input,
                         "Drug": drug_name,
                         "Mechanism of Action": moa_short,
                         "Disease": "NA",
+                        "efo_id": "",
+                        "mesh_id": "",
                         "ApprovalStatus": "NA",
                         "Modality": modality,
                         "Source URLs": [],
@@ -1680,7 +1684,9 @@ def enrich_target_trials(target_input: str, db_client: DBClient = None):
                         "WhyStopped": "",
                         "NctIdTitleMapping": {},
                         "PMIDs": [],
-                        "OutcomeStatus": ""
+                        "OutcomeStatus": "",
+                        "efo_id": "",
+                        "mesh_id": ""
                     })
                 else:
                     logger.info("Fetching trials for each indication...")
@@ -1720,6 +1726,8 @@ def enrich_target_trials(target_input: str, db_client: DBClient = None):
                                 "Drug": drug_name,
                                 "Mechanism of Action": moa_short,
                                 "Disease": ind.get("indication_name", "NA"),
+                                "efo_id": ind.get("efo_id", ""),
+                                "mesh_id": ind.get("mesh_id", ""),
                                 "ApprovalStatus": approval,
                                 "Modality": modality,
                                 "nct_id": "",
@@ -1737,6 +1745,8 @@ def enrich_target_trials(target_input: str, db_client: DBClient = None):
                                     "Drug": drug_name,
                                     "Mechanism of Action": moa_short,
                                     "Disease": ind.get("indication_name", "NA"),
+                                    "efo_id": ind.get("efo_id", ""),
+                                    "mesh_id": ind.get("mesh_id", ""),
                                     "Source URLs": [f'https://clinicaltrials.gov/ct2/show/{trial.get("nct_id", "")}'],
                                     "ApprovalStatus": approval,
                                     "Modality": modality,
@@ -1802,11 +1812,45 @@ def enrich_target_trials(target_input: str, db_client: DBClient = None):
         
         logger.info("Removing Duplicates")
         all_entries = remove_duplicates(all_entries)
-        print("len after: ", len(all_entries))
-        available = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in results if r.get("Disease") and r["Disease"] != "NA"])))
+        # print("len after: ", len(all_entries))
+        available = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries if r.get("Disease") and r["Disease"] != "NA"])))
+        
+    # with open("fgf1.json", "r") as f:
+    #     import json
+    #     all_entries = json.load(f)
+    #     available = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries if r.get("Disease") and r["Disease"] != "NA"])))
 
-        return all_entries, available
-    return [], []
+        # Generate Disease Areas
+        disease_areas = {} 
+        disease_areas_list = []
+        for entry in all_entries:
+            disease = entry['Disease']
+            if disease not in disease_areas and disease!="NA":
+                logger.info("Fetching Disease Area")
+                if 'efo_id' not in entry or 'mesh_id' not in entry:
+                    logger.debug("Fetch efo and esh id if not available")
+                    efo_id = get_efo_id(disease)
+                    mesh_id = disease_to_mesh_id(disease)
 
+                    entry['efo_id'] = efo_id if efo_id else ""
+                    entry['mesh_id'] = mesh_id if mesh_id else ""
+
+                if entry["mesh_id"] != "":
+                    disease_areas[disease] = map_mesh_to_disease_area([entry["mesh_id"]])
+
+                elif entry["efo_id"] != "" or disease_areas[disease] == []:
+                    disease_areas[disease] = map_mesh_to_disease_area(efoid_to_meshid_mapper(entry["efo_id"]))
+                
+                time.sleep(0.1)
+            entry['disease_areas'] = disease_areas[disease]
+            disease_areas_list.extend(disease_areas[disease])
+        return all_entries, available, list(set(disease_areas_list))
+    return [], [], []
+
+if __name__ == "__main__":
+    with open("fgf1_op.json", "w") as f:
+        import json
+        results = enrich_target_trials("fgf1", DBClient())
+        json.dump(results, f, indent=2)
     
             

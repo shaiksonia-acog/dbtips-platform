@@ -52,6 +52,7 @@ from services import (
     # fetch_disease_profile,
     # parse_disease_association,
     # parse_safety_events,
+    enrich_target_trials
 )
 from api_models import TargetRequest, GraphRequest, DiseaseRequest, SearchQueryModel, DiseasesRequest, \
     SearchRequest, TargetOnlyRequest,ExcelExportRequest, DiseaseDrugsMapping, DiseaseRequestOnto, DiseaseRequest, DossierRequest
@@ -1633,7 +1634,7 @@ async def get_indication_pipeline_new(request: DiseasesRequest, db: Session = De
 
 semaphore = asyncio.Semaphore(1)
 @app.post("/market-intelligence/target-pipeline-new-semaphore/", tags=["Market Intelligence"])
-async def get_target_pipeline_new_semaphore(request: TargetRequest,
+async def get_target_pipeline_new_semaphore(request: TargetOnlyRequest,
                                   redis: Redis = Depends(get_redis),
                                   db: Session = Depends(get_db),
                                   build_cache: bool = False
@@ -1649,7 +1650,7 @@ async def get_target_pipeline_new_semaphore(request: TargetRequest,
 
 @app.post("/market-intelligence/target-pipeline-new/", tags=["Market Intelligence"])
 async def target_pipeline_new(
-    request: TargetRequest,
+    request: TargetOnlyRequest,
     db: Session = Depends(get_db),
     build_cache: bool=False
     ):
@@ -1669,8 +1670,13 @@ async def target_pipeline_new(
         if endpoint in cached_responses:
             logging.info(f"Cache hit for {target_input}, {cached_responses[endpoint]}")
             available_diseases = list(set([r["Disease"].strip().lower().replace(" ", "_") for r in cached_responses[endpoint]['target_pipeline'] if r.get("Disease") and r["Disease"] != "NA"]))
+            disease_areas = []
+            for entry in cached_responses[endpoint]:
+                print("entry: ", entry)
+                disease_areas.append(entry['disease_areas'])
             response = {"target_pipeline": cached_responses[endpoint],
-                        "available_diseases": ["all"] + list(available_diseases)}
+                        "available_diseases": ["all"] + list(available_diseases),
+                        "disease_areas": list(set(disease_areas))}
             return response
     # --- Rate limiting ---
     if is_rate_limited():
@@ -1683,8 +1689,8 @@ async def target_pipeline_new(
     try:
         if build_cache == True:
             # Get ChEMBL target ID
-            from services import enrich_target_trials
-            results, available_diseases = enrich_target_trials(target_input, db_client)
+            
+            results, available_diseases, disease_areas = enrich_target_trials(target_input, db_client)
             response = {"target_pipeline": results}
             logger.info("Saving and Updating Cache")
             # --- Save to cache & DB ---
@@ -1706,6 +1712,7 @@ async def target_pipeline_new(
                 save_response_to_file(target_record.file_path, cached_responses)
         
             response['available_diseases'] = available_diseases
+            response['disease_areas'] = disease_areas
         logger.info("Returning response")
         return response
 

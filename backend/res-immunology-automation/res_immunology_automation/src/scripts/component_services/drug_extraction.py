@@ -58,7 +58,6 @@ def get_ensg_from_symbol(gene_symbol: str) -> str:
     
     hits = data["data"]["search"]["hits"]
     if hits:
-        print("hits: ", hits[0]["id"])
         return hits[0]["id"]  # ENSG ID
     else:
         return None
@@ -83,7 +82,6 @@ def fetch_uniprot_from_ot(ensembl_id: str):
     response = requests.post(OT_GRAPHQL_URL, json={"query": query})
     response.raise_for_status()
     data = response.json()
-    print(f"datas: {data}")
     if "errors" in data:
         raise ValueError(f"OT error: {data['errors']}")
 
@@ -94,7 +92,6 @@ def fetch_uniprot_from_ot(ensembl_id: str):
     # Prefer Swiss-Prot
     swissprot = next((p for p in protein_ids if p["source"] == "uniprot_swissprot"), None)
     if swissprot:
-        print(swissprot)
         return swissprot
     
     # Fallback: TrEMBL
@@ -118,7 +115,7 @@ def fetch_chembl_from_uniprot(uniprot_id: str):
         # print("response: ", response.content)
         data = response.json()
         chembl_ids = [t["target_chembl_id"] for t in data.get("targets", [])]
-        print("chembl_ids: ", chembl_ids)
+        logging.info(f"Found chembl_ids: {chembl_ids}... Using {chembl_ids[0]}")
         return chembl_ids
     except Exception as e:
         return []
@@ -270,7 +267,9 @@ def get_indications_for_drug(chembl_id):
             name = (ind.get("efo_term") or ind.get("mesh_heading") or "NA")
             indications.append({
                 "indication_name": name,
-                "max_phase_for_ind": ind.get("max_phase_for_ind", "NA")
+                "max_phase_for_ind": ind.get("max_phase_for_ind", "NA"),
+                "efo_id": ind.get("efo_id", ""),
+                "mesh_id": ind.get("mesh_id", "")
             })
     return indications
 
