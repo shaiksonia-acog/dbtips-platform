@@ -79,7 +79,7 @@ from component_services.fetch_images import (
     fetch_literature_images_data,
     map_literature_to_network_biology_format,
     combine_literature_and_network_biology_data,
-    process_target_literature_request
+    process_target_literature_request, add_mapped_diseases_to_literature
 )  
 from component_services.literature_enhancement_services import fetch_literature_table_analysis, fetch_literature_supplementary_materials_analysis
 from component_services.literature_cache_update import update_literature_caches_with_analysis
@@ -2764,7 +2764,7 @@ async def get_target_literature_images_evidence(request: TargetRequest,
         is_combination = processed_target != "no-target" and processed_diseases != ["no-disease"]
         
         endpoint: str = "/evidence/target-literature-images/"
-        
+        literature_endpoint: str = "/evidence/target-literature/"
         cache_dir = "cached_data_json/target_disease"
         # Create cache items in the format: target-disease
         cache_items = [f"{processed_target}:{disease}" for disease in processed_diseases]
@@ -2779,7 +2779,8 @@ async def get_target_literature_images_evidence(request: TargetRequest,
         # Check for cached data
         for item in cache_items:
             clean_item = item.strip().lower().replace(" ", "_")
-            record = db.query(table_model).filter_by(id=clean_item).first()
+            file_name = clean_item.replace(":", "-")
+            record = db.query(table_model).filter_by(id=file_name).first()
             
             if record and os.path.exists(record.file_path):
                 try:
@@ -2806,6 +2807,7 @@ async def get_target_literature_images_evidence(request: TargetRequest,
             # Fetch literature data for items that need processing
             for item in items_to_process:
                 clean_item = item.strip().lower().replace(" ", "_")
+                file_name = clean_item.replace(":", "-")
                 parts = clean_item.split(':')
                 query_target, query_diseases = parts[0], [parts[-1]]
                 key = parts[1].replace("_", " ")
@@ -2816,21 +2818,28 @@ async def get_target_literature_images_evidence(request: TargetRequest,
                     target=query_target, 
                     diseases=query_diseases
                 )
-                # Annotate literature data with mapped diseases from the target-literature cache
-                literature_data = add_mapped_diseases_to_literature(literature_data)
 
                 # Map literature data to network biology format
                 literature_network_biology_format = map_literature_to_network_biology_format(literature_data)
-                
+
+                logger.info(f"Fetching articles from target-literature cache:")
+                file_path = os.path.join(cache_dir, f"{file_name}.json")
+                if os.path.exists(file_path):
+                    cached_responses = load_response_from_file(file_path)
+                    literature_articles = cached_responses[literature_endpoint]['literature'] if literature_endpoint in cached_responses else []
+
+                # Annotate literature data with mapped diseases from the target-literature cache
+                literature_network_biology_format['results'] = add_mapped_diseases_to_literature(literature_network_biology_format['results'], literature_articles)
+                logger.info("Mapped diseases added to literature data")
                 # Store the data using the appropriate key
                 if is_combination:
-                    cached_data[key] = literature_network_biology_format.get(key, {"results": []})
+                    cached_data[key] = literature_network_biology_format 
                 else:
                     # For single target or disease queries, the mapping might return data with a different key
                     if literature_network_biology_format:
                         # Get the first (and likely only) entry
-                        first_key = next(iter(literature_network_biology_format))
-                        cached_data[key] = literature_network_biology_format[first_key]
+                        # first_key = next(iter(literature_network_biology_format))
+                        cached_data[key] = literature_network_biology_format
                     else:
                         cached_data[key] = {"results": []}
                 
@@ -2838,13 +2847,14 @@ async def get_target_literature_images_evidence(request: TargetRequest,
             
                 print(f"Caching response for item: {clean_item}")
                 try:
-                    record = db.query(table_model).filter_by(id=clean_item).first()
-                    file_path = os.path.join(cache_dir, f"{clean_item}.json")
+                    record = db.query(table_model).filter_by(id=file_name).first()
+                    file_path = os.path.join(cache_dir, f"{file_name}.json")
                     
                     if record and os.path.exists(record.file_path):
                         cached_responses = load_response_from_file(record.file_path)
                         cached_responses[endpoint] = cached_data[key]
                         save_response_to_file(record.file_path, cached_responses)
+                    
                     else:
                         cached_responses = {endpoint: cached_data[key]}
                         save_response_to_file(file_path, cached_responses)

@@ -100,14 +100,10 @@ def map_literature_to_network_biology_format(literature_data: List[Dict[str, Any
     try:
         print("Mapping literature data to network biology format")
         
-        grouped_data = {}
+        grouped_data = {"results": []}
         
         for item in literature_data:
             disease = item.get("disease", "unknown").replace("_", " ")
-            
-            # Initialize disease group if not exists
-            if disease not in grouped_data:
-                grouped_data[disease] = {"results": []}
             
             # Map fields according to the specification
             mapped_item = {
@@ -126,9 +122,9 @@ def map_literature_to_network_biology_format(literature_data: List[Dict[str, Any
                 "data_source": "literature_images"
             }
             
-            grouped_data[disease]["results"].append(mapped_item)
-        
-        print(f"Mapped literature data for {len(grouped_data)} diseases")
+            grouped_data["results"].append(mapped_item)
+
+        print(f"Mapped literature data for {len(grouped_data['results'])} diseases")
         return grouped_data
         
     except Exception as e:
@@ -215,3 +211,28 @@ def process_target_literature_request(target: str, diseases: List[str] = None) -
             processed_diseases = ["no-disease"]
     
     return processed_target, processed_diseases
+
+def add_mapped_diseases_to_literature(literature_data: List[Dict[str, Any]], articles: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """
+    Add mapped disease areas to each literature record based on PMID from Literature Endpoint Data.
+    
+    Args:
+        literature_data: List of literature records
+    
+    Returns:
+        Updated list of literature records with 'disease_areas' field added
+    """
+    updated_literature = []
+    print("len of records: %d", len(literature_data))
+    for record in literature_data:
+        for article in articles:
+            if record.get("pmid") == article.get("PMID"):
+                record["mapped_diseases"] = article.get("mapped_diseases", [])
+                break
+        if "mapped_diseases" not in record:
+            record["mapped_diseases"] = []
+        updated_literature.append(record)
+
+    return updated_literature
+
+
