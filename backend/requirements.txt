@@ -38,3 +38,4 @@ passlib[bcrypt]
 email-validator
 google-generativeai
 tenacity
+retry
