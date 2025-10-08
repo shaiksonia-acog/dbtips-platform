@@ -19,7 +19,8 @@ from component_services.drug_extraction import chembl_sessions_request
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from component_services.disease_area_mapping_utils import efoid_to_meshid_mapper, map_mesh_to_disease_area
-from utils import get_efo_id, disease_to_mesh_id
+                                                        
+from utils import get_efo_id
 
 # Set up logger
 logger = logging.getLogger(__name__)
@@ -1591,6 +1592,7 @@ def get_pmids_from_nctid(nct_id: str):
         return pmids
     except Exception as e:
         return []
+
 def serialize_results(results):
     serialized = []
     for entry in results:
@@ -1822,12 +1824,12 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
             if disease not in disease_areas and disease!="NA":
                 logger.info("Fetching Disease Area")
                 if 'efo_id' not in entry or 'mesh_id' not in entry:
-                    logger.debug("Fetch efo and esh id if not available")
+                    logger.debug("Fetch efo and mesh uid if not available")
                     efo_id = get_efo_id(disease)
-                    mesh_id = disease_to_mesh_id(disease)
+                    # mesh_uid = disease_to_mesh_uid(disease)
 
                     entry['efo_id'] = efo_id if efo_id else ""
-                    entry['mesh_id'] = mesh_id if mesh_id else ""
+                    entry['mesh_id'] =  ""
 
                 if entry["mesh_id"] != "":
                     disease_areas[disease] = map_mesh_to_disease_area([entry["mesh_id"]])
