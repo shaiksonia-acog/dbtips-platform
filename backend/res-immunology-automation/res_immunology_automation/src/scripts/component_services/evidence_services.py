@@ -29,6 +29,7 @@ from .pubmed_utils import get_data_from_pubmed
 import logging
 import socket
 from urllib.error import URLError
+from .disease_area_mapping_utils import get_mesh_tree_numbers_of_disease
 
 MAX_RESULTS=500
 # NCBI API Base URL
@@ -838,6 +839,29 @@ def generate_articles_hindex(articles: List[Dict[str, Any]]) -> List[Dict[str, A
     df.iloc[:25] = top_df.values
     return df.where(pd.notna(df), 0).to_dict('records')
 
+def get_mesh_terms_in_article(article_content):
+    mesh_details = {}
+
+    for mesh_heading in article_content.findall(".//MeshHeading"):
+        descriptor = mesh_heading.find("DescriptorName")
+        qualifiers = mesh_heading.findall("QualifierName")
+
+        descriptor_major = descriptor is not None and descriptor.attrib.get("MajorTopicYN") == "Y"
+        qualifier_major = any(q.attrib.get("MajorTopicYN") == "Y" for q in qualifiers)
+
+        # Include if either descriptor or any qualifier is a major topic
+        if descriptor_major or qualifier_major:
+            if descriptor is not None:
+                mesh_details[descriptor.text] = descriptor.attrib.get("UI")
+
+            # # Include qualifiers that are major topics (optional: comment out if not needed)
+            # for q in qualifiers:
+            #     if q.attrib.get("MajorTopicYN") == "Y":
+            #         mesh_terms.append(f"{descriptor.text}")
+            #         mesh_ids.append(q.attrib.get("UI"))
+
+    return mesh_details
+
 def fetch_literature_details_with_abstracts(disease_name: str,pmids: List[str]) -> List[Dict]:
     """
     Fetches detailed information including abstracts and publication type for a list of PMIDs.
@@ -925,14 +949,13 @@ def fetch_literature_details_with_abstracts(disease_name: str,pmids: List[str]) 
                     if index == len(authors_ent) - 1:
                         last_author = auth_name
 
-                
-
             # Create PubMed link using the PMID
             pubmed_link = f"https://pubmed.ncbi.nlm.nih.gov/{pmid_text}/" if pmid_text else ""
             
             # If no publication types, default to empty list
             publication_type_texts = publication_type_texts if publication_type_texts else []
-            
+
+            mesh_details = get_mesh_terms_in_article(article)
             # Append article details with default values
             articles.append({
                 "PMID": pmid_text,
@@ -942,6 +965,7 @@ def fetch_literature_details_with_abstracts(disease_name: str,pmids: List[str]) 
                 "PublicationType": publication_type_texts,
                 "PubMedLink": pubmed_link,
                 "Qualifers":extract_qualifiers_for_disease(mesh_heading,disease_name),
+                "mesh_details": mesh_details,
                 "citedby": citedby_count,
                 "last_author": last_author,
                 "authors": authors_list,
@@ -1009,6 +1033,35 @@ def fetch_literature_details_in_batches(disease_name:str,pmids: List[str], batch
     
     except Exception as e:
         raise e
+
+def generate_mapped_diseases_for_disease_area(disease_area, articles_data):
+    """
+    Annotate each article with the diseases falling under given disease area
+    """
+    disease_area_mesh_tree_numbers = get_mesh_tree_numbers_of_disease(disease_area)
+    tree_numbers_dict = {}
+    print("disease_area_mesh_tree_numbers: ", disease_area_mesh_tree_numbers)
+    for article in articles_data:
+        mapped_diseases = []
+        for mesh_term, mesh_id in article.get("mesh_details", {}).items():
+            # print("mesh_term, mesh_id: ", mesh_term, mesh_id)
+            if mesh_term in tree_numbers_dict:
+                tree_numbers = tree_numbers_dict[mesh_term]
+            else:
+                time.sleep(0.1)
+                tree_numbers = get_mesh_tree_numbers_of_disease(mesh_term, mesh_id)
+                print("tree_numbers: ", tree_numbers)
+                tree_numbers_dict[mesh_term] = tree_numbers
+            
+            for da_tn in disease_area_mesh_tree_numbers:
+                for tn in tree_numbers:
+                    if da_tn in tn:
+                        print(f"Adding Mesh Term {mesh_term} for disease area {disease_area}, with tree number {tn}")
+                        mapped_diseases.append(mesh_term)
+        
+        article["mapped_diseases"] = list(set(mapped_diseases))
+
+    return articles_data
 
 def fetch_mouse_models(query: str) -> Dict[str, Any]:
     """

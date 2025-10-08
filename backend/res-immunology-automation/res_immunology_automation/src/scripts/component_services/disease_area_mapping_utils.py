@@ -2,6 +2,8 @@ import requests
 import xml.etree.ElementTree as ET
 import re
 import time
+import os
+NCBI_API_KEY = os.getenv("NCBI_API_KEY")
 
 MESH_TREE_TO_AREA = {
     'C01': 'Bacterial Infections',
@@ -81,7 +83,8 @@ def pmid_to_meshid_mapper(pmid):
     params = {
         'db': 'pubmed',
         'id': pmid,
-        'retmode': 'xml'
+        'retmode': 'xml',
+        "api_key": NCBI_API_KEY   
     }
     response = requests.get(url, params=params)
     #print (response.text)
@@ -112,11 +115,44 @@ def fetch_mesh_tree_numbers_batch(mesh_ids):
             data = response.json()
             # Tree numbers are directly under 'treeNumber' key
             tree_numbers = data.get('treeNumber', [])
+            if isinstance(tree_numbers, str):
+                tree_numbers = [tree_numbers]
             result[mesh_id] = tree_numbers
+
         except:
             result[mesh_id] = []
         time.sleep(0.1)
     return result
+
+def disease_to_mesh_uid(disease_name: str):
+    """
+    Convert a disease name to its corresponding MeSH ID using NCBI E-utilities.
+    """
+    base_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
+    params = {
+        "db": "mesh",
+        "term": disease_name,
+        "retmode": "json",
+        "api_key": NCBI_API_KEY   
+    }
+
+    try:
+        response = requests.get(base_url, params=params)
+        response.raise_for_status()
+        data = response.json()
+
+        id_list = data.get("esearchresult", {}).get("idlist", [])
+        if not id_list:
+            print(f"No MeSH ID found for disease: {disease_name}")
+            return None
+
+        mesh_id = id_list[0]
+        print(f"{disease_name} → MeSH ID: {mesh_id}")
+        return mesh_id
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
 
 def map_mesh_to_disease_area(mesh_ids):
     """Map MeSH terms to disease areas using tree numbers"""
@@ -135,6 +171,59 @@ def map_mesh_to_disease_area(mesh_ids):
                     areas.add(area)
     return list(areas)
 
+def mesh_uid_to_tree_numbers(mesh_uid):
+    """
+    Fetch tree numbers for a given MeSH ID from NCBI using Eutils
+    """
+    try:
+        base_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
+        summary_url = f"{base_url}esummary.fcgi"
+        summary_params = {
+            "db": "mesh",
+            "id": mesh_uid,
+            "retmode": "xml",
+            "rettype": "full",
+            "api_key": NCBI_API_KEY   
+        }
+        
+        summary_response = requests.get(summary_url, params=summary_params)
+        summary_response.raise_for_status()
+        
+        # Parse XML
+        root = ET.fromstring(summary_response.content)
+        
+        # Get all Tree Numbers
+        tree_numbers = []
+        for item in root.findall(".//Item[@Name='TreeNum']"):
+            if item.text:
+                tree_numbers.append(item.text)
+        
+        return tree_numbers if tree_numbers else None
+    
+    except requests.exceptions.RequestException as e:
+        print(f"Network error occurred: {e}")
+        return None
+    except ET.ParseError as e:
+        print(f"XML parsing error: {e}")
+        return None
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        import traceback
+        traceback.print_exc()
+        return None
+
+
+
+def get_mesh_tree_numbers_of_disease(disease_term, mesh_id = None):
+    if not mesh_id: 
+        mesh_uid =  disease_to_mesh_uid(disease_term)
+        print("mesh_uid: ", mesh_uid)
+        tree_numbers = mesh_uid_to_tree_numbers(mesh_uid)
+        print("tree_numbers: ", tree_numbers)
+        return tree_numbers
+    else:
+        tree_numbers = fetch_mesh_tree_numbers_batch([mesh_id])
+        return tree_numbers[mesh_id]
 
 # if __name__ == "__main__":
 #     # In market intelligence section, for each trial record, do the following. 

@@ -55,7 +55,8 @@ from services import (
     enrich_target_trials
 )
 from api_models import TargetRequest, GraphRequest, DiseaseRequest, SearchQueryModel, DiseasesRequest, \
-    SearchRequest, TargetOnlyRequest,ExcelExportRequest, DiseaseDrugsMapping, DiseaseRequestOnto, DiseaseRequest, DossierRequest
+    SearchRequest, TargetOnlyRequest,ExcelExportRequest, DiseaseDrugsMapping, DiseaseRequestOnto, DiseaseRequest, DossierRequest, \
+    LoginRequest, EmailRequest, VerifyRequest
 from utils import format_for_cytoscape, get_efo_id, find_disease_id_by_name, send_graphql_request, \
     save_response_to_file, load_response_from_file, calculate_expiry_date, add_years, \
     save_big_response_to_file, \
@@ -93,7 +94,7 @@ from login_utils import create_access_token,authenticate_user,ACCESS_TOKEN_EXPIR
 from fastapi import status
 from datetime import datetime, timedelta
 from component_services.evidence_services import search_pubmed,search_pubmed_target, \
-    fetch_literature_details_in_batches,get_network_biology_strapi
+    fetch_literature_details_in_batches,get_network_biology_strapi, generate_mapped_diseases_for_disease_area
 from component_services.disease_profile_services import get_disease_description_strapi
 from component_services.excel_export import process_data_and_return_file_rna,process_pipeline_data, \
     process_mouse_studies,process_patent_data,process_model_studies,process_target_pipeline, \
@@ -130,25 +131,9 @@ from component_services import drug_extraction
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-
-class LoginRequest(BaseModel):
-    username: str
-    password: str
-class EmailRequest(BaseModel):
-    email: EmailStr  # Better email validation
-
-class VerifyRequest(BaseModel):
-    email: EmailStr
-    otp: str
-
-
-
 app = FastAPI()
 
 client = TestClient(app)
-
-# db_client = DBClient()
-
 
 SERP_API_KEY: str = os.getenv('SERP_API_KEY')
 SERP_API_URL: str = "https://serpapi.com/search.json"
@@ -167,6 +152,14 @@ app.add_middleware(
 )
 LDAP_SERVER = os.getenv("LDAP_SERVER")
 LDAP_USER_DN = os.getenv("LDAP_USER_DN")
+SMTP_SERVER = "smtp.gmail.com"
+SMTP_PORT = 587
+EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+OTP_COOLDOWN = 60  # seconds between OTP requests
+OTP_EXPIRY = 1000   # 10 minutes
+SESSION_EXPIRY = 604800  # 1 week 
+
 def authenticate_user(username: str, password: str):
     """
     Authenticate user against LDAP server
@@ -182,7 +175,7 @@ def authenticate_user(username: str, password: str):
             conn.unbind()
             return True
     except Exception as e:
-        print("LDAP error:", str(e))
+        logger.error(f"LDAP error: {str(e)}")
         return False
 
     return False
@@ -190,17 +183,9 @@ def authenticate_user(username: str, password: str):
 app.mount("/gwas-data", StaticFiles(directory=GWAS_DATA_DIR), name="gwas-data")
 
 
-SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT = 587
-EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
-EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
-
 if not EMAIL_ADDRESS or not EMAIL_PASSWORD:
     raise Exception("EMAIL_ADDRESS and EMAIL_PASSWORD must be set in environment variables")
 
-OTP_COOLDOWN = 60  # seconds between OTP requests
-OTP_EXPIRY = 1000   # 10 minutes
-SESSION_EXPIRY = 604800  # 1 week 
 
 def is_valid_email_domain(email: str) -> bool:
     """Add basic domain validation if needed"""
@@ -1671,12 +1656,13 @@ async def target_pipeline_new(
             logging.info(f"Cache hit for {target_input}, {cached_responses[endpoint]}")
             available_diseases = list(set([r["Disease"].strip().lower().replace(" ", "_") for r in cached_responses[endpoint]['target_pipeline'] if r.get("Disease") and r["Disease"] != "NA"]))
             disease_areas = []
-            for entry in cached_responses[endpoint]:
+            for entry in cached_responses[endpoint]['target_pipeline']:
                 print("entry: ", entry)
-                disease_areas.append(entry['disease_areas'])
-            response = {"target_pipeline": cached_responses[endpoint],
-                        "available_diseases": ["all"] + list(available_diseases),
-                        "disease_areas": list(set(disease_areas))}
+                disease_areas.extend(entry['disease_areas'])
+            response = cached_responses[endpoint]
+            
+            response["available_diseases"] = ["all"] + list(available_diseases),
+            response["disease_areas"] = list(set(disease_areas))
             return response
     # --- Rate limiting ---
     if is_rate_limited():
@@ -2159,23 +2145,23 @@ async def get_evidence_target_literature(request: TargetRequest,
         # 1. Check if the cached JSON file exists
         if target_disease_record is not None:
             cached_file_path: str = target_disease_record.file_path
-            print(f"Loading cached response from file: {cached_file_path}")
+            logger.info(f"Loading cached response from file: {cached_file_path}")
             cached_responses: Dict = load_response_from_file(cached_file_path)
 
             # Check if the endpoint response exists in the cached data
             if f"{endpoint}" in cached_responses:
                 cached_diseases.add(disease)
-                print(f"Returning cached response from file: {cached_file_path}")
+                logger.info(f"Returning cached response from file: {cached_file_path}")
                 cached_data[disease.replace("_"," ")]=cached_responses[f"{endpoint}"]
 
     # filtering diseases whose response is not present in the json file
     filtered_diseases = [disease for disease in diseases if disease not in cached_diseases]
 
     if len(filtered_diseases) == 0:  # all disease already present in the json file
-        print("All diseases already present in cached json files,returning cached response")
+        logger.info("All diseases already present in cached json files,returning cached response")
         return cached_data
 
-    print("filtered diseases: ", filtered_diseases)
+    logger.info("filtered diseases: ", filtered_diseases)
     # Check if cached response exists in Redis
     target_terms_file: str = "../target_data/target_terms.json"
 
@@ -2202,8 +2188,13 @@ async def get_evidence_target_literature(request: TargetRequest,
                 mesh_term = get_mesh_term_for_disease(disease.replace("_"," "))
                 pmids=search_pubmed_target(target,disease.replace("_"," "),target_terms_file,mesh_term)
                 print("pmids: ",len(pmids))
+                logger.info("Fecthing literature metadata")
                 all_literature_details: List[Dict[str,Any]] = fetch_literature_details_in_batches(disease.replace("_"," "),pmids)
                 print("all_literature_details: ",len(all_literature_details))
+                
+                # Map the diseases of each article given disease/disease area
+                logger.info("Annotating each article with diseases of given disease area")
+                all_literature_details = generate_mapped_diseases_for_disease_area(disease.replace("_"," "), all_literature_details)
                 cached_data[disease.replace("_"," ")] = {"literature": all_literature_details}
                 cached_responses[f"{endpoint}"]={"literature": all_literature_details}
 

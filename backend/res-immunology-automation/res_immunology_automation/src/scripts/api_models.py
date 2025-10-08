@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, constr
+from pydantic import BaseModel, Field, constr, EmailStr
 from typing import List, Optional, Dict, Literal
 
 
@@ -56,5 +56,16 @@ class DiseaseDrugsMapping(BaseModel):
 class DiseasesTarget(BaseModel):
     disease: List[str] | str = "no-disease"
     target: str = "no-target"
+
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+class EmailRequest(BaseModel):
+    email: EmailStr  # Better email validation
+
+class VerifyRequest(BaseModel):
+    email: EmailStr
+    otp: str
 
 
