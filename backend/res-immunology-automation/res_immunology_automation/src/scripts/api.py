@@ -1660,9 +1660,10 @@ async def target_pipeline_new(
             # for entry in cached_responses[endpoint]['target_pipeline']:
             #     print("entry: ", entry)
             #     disease_areas.extend(entry['disease_areas'])
-            for disease in diseases_input:
-                disease_tree_numbers[disease] = get_mesh_tree_numbers_of_disease(disease.replace("_", " "))
-                time.sleep(0.1)
+            if len(diseases_input):
+                for disease in diseases_input:
+                    disease_tree_numbers[disease] = get_mesh_tree_numbers_of_disease(disease.replace("_", " "))
+                    time.sleep(0.1)
             response = cached_responses[endpoint]
 
             response["available_diseases"] = ["all"] + list(available_diseases)
