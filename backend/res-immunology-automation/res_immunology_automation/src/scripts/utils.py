@@ -160,36 +160,7 @@ def request_open_targets_api(disease_name: str) -> Optional[str]:
         return None
     
     return data
-
-def disease_to_mesh_id(disease_name: str):
-    """
-    Convert a disease name to its corresponding MeSH ID using NCBI E-utilities.
-    """
-    base_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
-    params = {
-        "db": "mesh",
-        "term": disease_name,
-        "retmode": "json"
-    }
-
-    try:
-        response = requests.get(base_url, params=params)
-        response.raise_for_status()
-        data = response.json()
-
-        id_list = data.get("esearchresult", {}).get("idlist", [])
-        if not id_list:
-            print(f"No MeSH ID found for disease: {disease_name}")
-            return None
-
-        mesh_id = id_list[0]
-        print(f"{disease_name} → MeSH ID: {mesh_id}")
-        return mesh_id
-
-    except Exception as e:
-        print(f"Error: {e}")
-        return None
-        
+  
 def get_efo_id(disease_name: str)-> Optional[str]:
     open_t_data = request_open_targets_api(disease_name)
     if open_t_data:
@@ -974,3 +945,20 @@ def get_target_type(target_id):
     else:
         print(f"[WARN] Failed to fetch target type ({resp.status_code}) for {target_id}")
         return "NA"
+
+
+
+def generate_mapped_diseases_for_disease_area(disease_area, articles_data):
+    """
+    Annotate each article with the diseases falling under given disease area
+    """
+    disease_area_mesh_tree_numbers = get_mesh_tree_numbers(disease_area)
+    parent_tns = [tn.split('.')[0] for tn in disease_area_mesh_tree_number]
+    for article in articles_data:
+        article["mapped_diseases"] = []
+        for mesh_term in article['mesh_terms']:
+            tree_number = get_mesh_tree_number(mesh_term)
+            if any(tree_number.startswith(parent_tn) for parent_tn in parent_tns):
+                article["mapped_diseases"].append(mesh_term)
+
+    return articles_data
