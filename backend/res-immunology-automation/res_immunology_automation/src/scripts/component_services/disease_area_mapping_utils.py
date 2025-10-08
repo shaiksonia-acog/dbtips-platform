@@ -133,6 +133,7 @@ def disease_to_mesh_uid(disease_name: str):
         "db": "mesh",
         "term": disease_name,
         "retmode": "json",
+        "sort": "relevance",
         "api_key": NCBI_API_KEY   
     }
 
