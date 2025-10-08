@@ -18,7 +18,7 @@ from component_services import drug_extraction
 from component_services.drug_extraction import chembl_sessions_request
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-from component_services.disease_area_mapping_utils import efoid_to_meshid_mapper, map_mesh_to_disease_area
+from component_services.disease_area_mapping_utils import efoid_to_meshid_mapper, map_mesh_to_disease_area, get_mesh_tree_numbers_of_disease
                                                         
 from utils import get_efo_id
 
@@ -1817,31 +1817,31 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
     #     available = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries if r.get("Disease") and r["Disease"] != "NA"])))
 
         # Generate Disease Areas
-        disease_areas = {} 
-        disease_areas_list = []
+        disease_tree_numbers = {} 
+        # disease_areas_list = []
         for entry in all_entries:
             disease = entry['Disease']
-            if disease not in disease_areas and disease!="NA":
-                logger.info("Fetching Disease Area")
+            if disease not in disease_tree_numbers and disease!="NA":
+                logger.info("Fetching Disease Tree Numbers")
                 if 'efo_id' not in entry or 'mesh_id' not in entry:
                     logger.debug("Fetch efo and mesh uid if not available")
                     efo_id = get_efo_id(disease)
-                    # mesh_uid = disease_to_mesh_uid(disease)
+                    mesh_uid = disease_to_mesh_uid(disease)
 
                     entry['efo_id'] = efo_id if efo_id else ""
                     entry['mesh_id'] =  ""
 
                 if entry["mesh_id"] != "":
-                    disease_areas[disease] = map_mesh_to_disease_area([entry["mesh_id"]])
+                    disease_tree_numbers[disease] = [tn.split('/')[-1] for tn in get_mesh_tree_numbers_of_disease(disease, entry["mesh_id"])]
 
-                elif entry["efo_id"] != "" or disease_areas[disease] == []:
-                    disease_areas[disease] = map_mesh_to_disease_area(efoid_to_meshid_mapper(entry["efo_id"]))
-                
+                elif entry["efo_id"] != "" or disease_tree_numbers[disease] == []:
+                    disease_tree_numbers[disease] = [tn.split('/')[-1] for tn in get_mesh_tree_numbers_of_disease(efoid_to_meshid_mapper(disease, entry["efo_id"]))]
+
                 time.sleep(0.1)
-            entry['disease_areas'] = disease_areas[disease]
-            disease_areas_list.extend(disease_areas[disease])
-        return all_entries, available, list(set(disease_areas_list))
-    return [], [], []
+            entry['disease_tree_numbers'] = disease_tree_numbers[disease]
+            # disease_areas_list.extend(disease_areas[disease])
+        return all_entries, available
+    return [], []
 
 if __name__ == "__main__":
     with open("fgf1_op.json", "w") as f:

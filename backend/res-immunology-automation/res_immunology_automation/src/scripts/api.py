@@ -126,6 +126,7 @@ from component_services.dossier_endpoint_utils import (
     fetch_records_by_status
 )
 from component_services.drug_extraction import DrugExtractor
+from component_services.disease_area_mapping_utils import get_mesh_tree_numbers_of_disease
 from component_services.ollama_llm_client import LLMClient
 from component_services import drug_extraction
 from requests.adapters import HTTPAdapter
@@ -1619,7 +1620,7 @@ async def get_indication_pipeline_new(request: DiseasesRequest, db: Session = De
 
 semaphore = asyncio.Semaphore(1)
 @app.post("/market-intelligence/target-pipeline-new-semaphore/", tags=["Market Intelligence"])
-async def get_target_pipeline_new_semaphore(request: TargetOnlyRequest,
+async def get_target_pipeline_new_semaphore(request: TargetRequest,
                                   redis: Redis = Depends(get_redis),
                                   db: Session = Depends(get_db),
                                   build_cache: bool = False
@@ -1635,12 +1636,12 @@ async def get_target_pipeline_new_semaphore(request: TargetOnlyRequest,
 
 @app.post("/market-intelligence/target-pipeline-new/", tags=["Market Intelligence"])
 async def target_pipeline_new(
-    request: TargetOnlyRequest,
+    request: TargetRequest,
     db: Session = Depends(get_db),
     build_cache: bool=False
     ):
     db_client: DBClient = DBClient()
-
+    diseases_input = request.diseases
     target_input = request.target.strip()
     endpoint: str = "/market-intelligence/target-pipeline/"
     cache_dir: str = "cached_data_json/target"
@@ -1655,14 +1656,17 @@ async def target_pipeline_new(
         if endpoint in cached_responses:
             logging.info(f"Cache hit for {target_input}, {cached_responses[endpoint]}")
             available_diseases = list(set([r["Disease"].strip().lower().replace(" ", "_") for r in cached_responses[endpoint]['target_pipeline'] if r.get("Disease") and r["Disease"] != "NA"]))
-            disease_areas = []
-            for entry in cached_responses[endpoint]['target_pipeline']:
-                print("entry: ", entry)
-                disease_areas.extend(entry['disease_areas'])
+            disease_tree_numbers = {}
+            # for entry in cached_responses[endpoint]['target_pipeline']:
+            #     print("entry: ", entry)
+            #     disease_areas.extend(entry['disease_areas'])
+            for disease in diseases_input:
+                disease_tree_numbers[disease] = get_mesh_tree_numbers_of_disease(disease.replace("_", " "))
+                time.sleep(0.1)
             response = cached_responses[endpoint]
-            
-            response["available_diseases"] = ["all"] + list(available_diseases),
-            response["disease_areas"] = list(set(disease_areas))
+
+            response["available_diseases"] = ["all"] + list(available_diseases)
+            response["disease_tree_numbers"] = disease_tree_numbers
             return response
     # --- Rate limiting ---
     if is_rate_limited():
@@ -1676,7 +1680,7 @@ async def target_pipeline_new(
         if build_cache == True:
             # Get ChEMBL target ID
             
-            results, available_diseases, disease_areas = enrich_target_trials(target_input, db_client)
+            results, available_diseases = enrich_target_trials(target_input, db_client)
             response = {"target_pipeline": results}
             logger.info("Saving and Updating Cache")
             # --- Save to cache & DB ---
@@ -2161,7 +2165,7 @@ async def get_evidence_target_literature(request: TargetRequest,
         logger.info("All diseases already present in cached json files,returning cached response")
         return cached_data
 
-    logger.info("filtered diseases: ", filtered_diseases)
+    logger.info(f"filtered diseases: { filtered_diseases}")
     # Check if cached response exists in Redis
     target_terms_file: str = "../target_data/target_terms.json"
 
@@ -2812,7 +2816,9 @@ async def get_target_literature_images_evidence(request: TargetRequest,
                     target=query_target, 
                     diseases=query_diseases
                 )
-                
+                # Annotate literature data with mapped diseases from the target-literature cache
+                literature_data = add_mapped_diseases_to_literature(literature_data)
+
                 # Map literature data to network biology format
                 literature_network_biology_format = map_literature_to_network_biology_format(literature_data)
                 
