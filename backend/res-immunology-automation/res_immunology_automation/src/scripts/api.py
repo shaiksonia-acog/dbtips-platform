@@ -3630,13 +3630,13 @@ async def gwas_studies_data(request: DiseasesRequest, redis: Redis = Depends(get
         await set_cached_response(redis, key, response)
         return response
 
-    print("filtered diseases: ", filtered_diseases)
+   
     # Check if cached response exists in Redis
     cached_response_redis: dict = await get_cached_response(redis, key)
     if cached_response_redis:
         print("Returning chached response")
         return cached_response_redis
-
+    print("filtered diseases: ", filtered_diseases)
     try:
         
         diseases_and_efo: Dict[str, str] = {}  # Dictionary to store disease names and their corresponding EFO IDs
@@ -3653,8 +3653,8 @@ async def gwas_studies_data(request: DiseasesRequest, redis: Redis = Depends(get
             else:
                 cached_responses = {}
             
-            # Fetch PGS CAtalog data using EFO IDs
             efo_id: str = get_efo_id(disease_name.replace('_', ' ').lower())
+            print("efo_id: ", efo_id)
             if efo_id:
                 diseases_and_efo[disease_name] = efo_id.replace(':', '_')
                 genomics_data = get_gwas_studies(efo_id)
@@ -3684,15 +3684,38 @@ async def gwas_studies_data(request: DiseasesRequest, redis: Redis = Depends(get
     except Exception as e:
         # Raise a 500 HTTPException if an error occurs during the request
         raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/genomics/locus-zoom-new", tags=["Genomics"])
 async def plot_locus_zoom(request: DiseaseRequest, redis: Redis = Depends(get_redis),
                             db: Session = Depends(get_db)):
     try:
         disease: str = request.disease
-        efo_id: str = get_efo_id(disease.lower())
-        gwas_disease_file_path = os.path.join(GWAS_DATA_DIR, f'{efo_id}.tsv')
+        efo_ids = []
+        requested_efo = get_efo_id(disease.lower())
+        gwas_disease_file_path = os.path.join(GWAS_DATA_DIR, f'{requested_efo}.tsv')
         if not os.path.exists(gwas_disease_file_path):
-            gwas_disease_file_path = load_data(efo_id)
+            print("requested_efo: ", requested_efo)
+            request_data = DiseasesRequest(diseases=[disease])
+            # Make the POST request to the internal API endpoint
+            response = client.post("/genomics/gwas-studies", json=request_data.dict())
+            if response.status_code != 200:
+                raise HTTPException(status_code=response.status_code, detail=response.json())
+            
+            gwas_studies = response.json()
+            gwas_studies = gwas_studies[disease.replace(" ", "_")]
+            print("gwas_studies: ", gwas_studies)
+            related_traits = list(set([item["Trait(s)"] for item in gwas_studies if "Trait(s)" in item]))
+            print("related_traits: ", related_traits)
+            for trait in related_traits:
+                efo_id = get_efo_id(trait.lower())
+                if efo_id:
+                    efo_ids.append(efo_id)
+                else:
+                    print(f"EFO ID not found for trait: {trait}")
+                time.sleep(1)
+            print("efo_ids: ", efo_ids)
+            
+            gwas_disease_file_path = load_data(efo_ids, requested_efo)
         return gwas_disease_file_path
 
     except FileNotFoundError as e:
@@ -3700,7 +3723,11 @@ async def plot_locus_zoom(request: DiseaseRequest, redis: Redis = Depends(get_re
         return None
 
     except Exception as e:
+        print(f"Unexpected error in /genomics/locus-zoom-new: {e}")
+        import traceback
+        traceback.print_exc()
         return None
+
 @app.post("/genomics/locus-zoom", tags=["Genomics"])
 async def plot_locus_zoom(request: DiseasesRequest, redis: Redis = Depends(get_redis),
                             db: Session = Depends(get_db)):

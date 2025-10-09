@@ -1,12 +1,13 @@
 import pandas as pd
 import numpy as np
 import os, csv
+from typing import List
 # from populate_gwas_asso_data import filter_asso_by_efo_id, prepare_variants_data, fetch_ld_data
 
 gwas_data_path = '/app/res-immunology-automation/res_immunology_automation/src/gwas_data'
 
 # # load Asso data Filter Asso data by EFOId and generate a variant df
-def filter_asso_by_efo_id(efo_id: str):
+def filter_asso_by_efo_id(efo_ids: List[str]):
     """
     Filter the GWAS Association data for given efo_id
     """
@@ -16,7 +17,7 @@ def filter_asso_by_efo_id(efo_id: str):
     if os.path.exists(associations_file_path):
         with open(associations_file_path, 'r') as file:
             reader = csv.DictReader(file, delimiter='\t')
-            filtered_rows = [row for row in reader if efo_id in row.get('MAPPED_TRAIT_URI', '')]
+            filtered_rows = [row for row in reader if any(efo_id in row.get('MAPPED_TRAIT_URI', '') for efo_id in efo_ids)]
 
         if len(filtered_rows) > 0:
             filtered_df = pd.DataFrame(filtered_rows)
@@ -61,13 +62,13 @@ def prepare_variants_data(df):
         new_df[v] = df[k]
     return new_df.sort_values("Chromosome")
 
-def load_data(efo_id: str):
+def load_data(efo_ids: List[str], requested_efo:str) -> str:
 
     df = None
     try:
-        variants_associate_path = os.path.join(gwas_data_path, f'{efo_id}.tsv')
+        variants_associate_path = os.path.join(gwas_data_path, f'{requested_efo}.tsv')
         if not os.path.exists(variants_associate_path):
-            df = filter_asso_by_efo_id(efo_id)
+            df = filter_asso_by_efo_id(efo_ids)
             if df.empty:
                 return None
             df = prepare_variants_data(df)
