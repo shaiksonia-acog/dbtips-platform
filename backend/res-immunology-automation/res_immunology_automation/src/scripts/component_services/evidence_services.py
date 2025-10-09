@@ -25,12 +25,12 @@ import pandas as pd
 import io
 from fastapi import HTTPException
 from Bio.Entrez import HTTPError
-from pubmed_utils import get_data_from_pubmed
+from .pubmed_utils import get_data_from_pubmed
 import logging
 import socket
 from urllib.error import URLError
-from disease_area_mapping_utils import get_mesh_tree_numbers_of_disease, pmid_to_meshid_mapper
-from ollama_llm_client import LLMClient
+from .disease_area_mapping_utils import get_mesh_tree_numbers_of_disease, pmid_to_meshid_mapper
+from .ollama_llm_client import LLMClient
 
 MAX_RESULTS=500
 # NCBI API Base URL
