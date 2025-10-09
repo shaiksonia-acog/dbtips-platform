@@ -26,17 +26,10 @@ import io
 from fastapi import HTTPException
 from Bio.Entrez import HTTPError
 from .pubmed_utils import get_data_from_pubmed
-import logging
-import socket
-from urllib.error import URLError
-from .disease_area_mapping_utils import get_mesh_tree_numbers_of_disease, pmid_to_meshid_mapper
-from .ollama_llm_client import LLMClient
 
 MAX_RESULTS=500
 # NCBI API Base URL
 BASE_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
-
-logging.basicConfig(level=logging.INFO)
 NCBI_API_KEY = os.getenv('NCBI_API_KEY')
 RATE_LIMIT_RETRY_PERIOD = 300
 EMAIL = os.getenv('NCBI_EMAIL')
@@ -376,7 +369,6 @@ def get_geo_metadata(gse_id: str,experiment_type: str,gse_summary: str) -> Dict[
     Returns:
         Dict[str, Any]: A dictionary containing the GSE metadata and GSM details.
     """
-    socket.setdefaulttimeout(120) 
     try:
         # Load GEO dataset by GEO Series ID
         gse = GEOparse.get_GEO(geo=gse_id)
@@ -431,9 +423,6 @@ def get_geo_metadata(gse_id: str,experiment_type: str,gse_summary: str) -> Dict[
         os.remove(f"{gse_id}_family.soft.gz")
 
         return result
-
-    except (URLError, socket.timeout, Exception) as e:
-        logging.error(f"Failed to download {gse_id}_family.soft.gz due to {e}")
     except Exception as e:
         print(f"An unexpected error occurred for {gse_id}: {e}")
         return None  # Return None to indicate failure
@@ -509,54 +498,17 @@ def search_pubmed(disease_name: str) -> List[str]:
     current_year = datetime.now().year
     start_year = current_year - 5
 
-    # params = {
-    #     "db": "pubmed",
-    #     "term": f"{disease_name}[MAJR]",  # Added filter for review articles
-    #     "retmode": "json",
-    #     "retmax": MAX_RESULTS,  # Maximum number of records to retrieve
-    #     "sort": "relevance",  # Sort by relevance
-    #     "mindate": f"{start_year}/01/01",  # Start date for filtering
-    #     "maxdate": f"{current_year}/12/31",  # End date for filtering
-    #     "datetype": "pdat",  # Search by publication date
-    #     "api_key": NCBI_API_KEY
-    # }
-    article_types = [
-    "Case Reports",
-    "Clinical Study",
-    "Clinical Trial",
-    "Dataset",
-    "Journal Article",
-    "Preprint",
-    "Research Support, American Recovery and Reinvestment Act",
-    "Research Support, N.I.H., Extramural",
-    "Research Support, N.I.H., Intramural", 
-    "Research Support, Non-U.S. Gov't",
-    "Research Support, U.S. Gov't, Non-P.H.S.",
-    "Research Support, U.S. Gov't, P.H.S.",
-    "Research Support, U.S. Gov't",
-    "Review",
-    "Systematic Review",
-    "Technical Report"
-    ]
-
-    # Build the article types filter part
-    article_types_query = " OR ".join([f'"{atype}"[Publication Type]' for atype in article_types])
-
-    # Final term combining disease name and article type filters
-    term = f'({disease_name}[MAJR]) AND ({article_types_query})'
-
     params = {
         "db": "pubmed",
-        "term": term,
+        "term": f"{disease_name}[MAJR] AND (review[PTYP])",  # Added filter for review articles
         "retmode": "json",
-        "retmax": MAX_RESULTS,
-        "sort": "relevance",
-        "mindate": f"{start_year}/01/01",
-        "maxdate": f"{current_year}/12/31",
-        "datetype": "pdat",
+        "retmax": MAX_RESULTS,  # Maximum number of records to retrieve
+        "sort": "pub_date",  # Sort by relevance
+        "mindate": f"{start_year}/01/01",  # Start date for filtering
+        "maxdate": f"{current_year}/12/31",  # End date for filtering
+        "datetype": "pdat",  # Search by publication date
         "api_key": NCBI_API_KEY
     }
-
     try:
 
         url = BASE_URL + "esearch.fcgi"
@@ -588,28 +540,6 @@ def search_pubmed_target(target_name: str, disease_name: str,target_terms_file: 
 
     terms: List[str] = target_data.get(target_name.lower(), [])
 
-    article_types = [
-    "Case Reports",
-    "Clinical Study",
-    "Clinical Trial",
-    "Dataset",
-    "Journal Article",
-    "Preprint",
-    "Research Support, American Recovery and Reinvestment Act",
-    "Research Support, N.I.H., Extramural",
-    "Research Support, N.I.H., Intramural", 
-    "Research Support, Non-U.S. Gov't",
-    "Research Support, U.S. Gov't, Non-P.H.S.",
-    "Research Support, U.S. Gov't, P.H.S.",
-    "Research Support, U.S. Gov't",
-    "Review",
-    "Systematic Review",
-    "Technical Report"
-    ]
-
-    # Build the article types filter part
-    article_types_query = " OR ".join([f'"{atype}"[Publication Type]' for atype in article_types])
-
     # Build the target query
     if terms:
         target_query = " OR ".join([f'"{term}"[Title/Abstract]' for term in terms])
@@ -626,10 +556,10 @@ def search_pubmed_target(target_name: str, disease_name: str,target_terms_file: 
         mesh_query = f'"{mesh_major_term}"[MeSH Major Topic]'
 
         # Combine everything into the final query
-        query = f'(({target_query}) AND ({mesh_query}) AND ({article_types_query}))'
+        query = f'(({target_query}) AND ({mesh_query}))'
 
     else:
-        query = f'{target_query} AND ({article_types_query})'
+        query = target_query
 
     print(query)
 
@@ -643,7 +573,7 @@ def search_pubmed_target(target_name: str, disease_name: str,target_terms_file: 
         "retmax": MAX_RESULTS,  # Maximum number of records to retrieve
         "mindate": f"{start_year}/01/01",  # Start date for filtering
         "maxdate": f"{current_year}/12/31",  # End date for filtering
-        "sort": "relevance",  # Sort by relevance
+        "sort": "pub_date",  # Sort by publication date
         "datetype": "pdat",  # Search by publication date
         "api_key": NCBI_API_KEY
     }
@@ -728,14 +658,13 @@ def get_cited_by_count(pmid: str) -> int:
     HTTP_HEADERS = {"authorization": OPEN_CITATIONS_API}
 
     try:
-        response = requests.get(API_CALL, headers=HTTP_HEADERS, timeout=100)
+        response = requests.get(API_CALL, headers=HTTP_HEADERS)
         if response.status_code == 200:
             time.sleep(0.1)
             return response.json()[0]['count']
         
     except Exception as e:
-        logging.error(f"Error fetching citation count from Open Citations for PMID {pmid}: {e}")
-        return 0
+        raise e
 
 
 def get_journal_rank(journal_issn: str) -> Optional[int]:
@@ -840,29 +769,6 @@ def generate_articles_hindex(articles: List[Dict[str, Any]]) -> List[Dict[str, A
     df.iloc[:25] = top_df.values
     return df.where(pd.notna(df), 0).to_dict('records')
 
-def get_mesh_terms_in_article(article_content):
-    mesh_details = {}
-
-    for mesh_heading in article_content.findall(".//MeshHeading"):
-        descriptor = mesh_heading.find("DescriptorName")
-        qualifiers = mesh_heading.findall("QualifierName")
-
-        descriptor_major = descriptor is not None and descriptor.attrib.get("MajorTopicYN") == "Y"
-        qualifier_major = any(q.attrib.get("MajorTopicYN") == "Y" for q in qualifiers)
-
-        # Include if either descriptor or any qualifier is a major topic
-        if descriptor_major or qualifier_major:
-            if descriptor is not None:
-                mesh_details[descriptor.text] = descriptor.attrib.get("UI")
-
-            # # Include qualifiers that are major topics (optional: comment out if not needed)
-            # for q in qualifiers:
-            #     if q.attrib.get("MajorTopicYN") == "Y":
-            #         mesh_terms.append(f"{descriptor.text}")
-            #         mesh_ids.append(q.attrib.get("UI"))
-
-    return mesh_details
-
 def fetch_literature_details_with_abstracts(disease_name: str,pmids: List[str]) -> List[Dict]:
     """
     Fetches detailed information including abstracts and publication type for a list of PMIDs.
@@ -950,13 +856,14 @@ def fetch_literature_details_with_abstracts(disease_name: str,pmids: List[str]) 
                     if index == len(authors_ent) - 1:
                         last_author = auth_name
 
+                
+
             # Create PubMed link using the PMID
             pubmed_link = f"https://pubmed.ncbi.nlm.nih.gov/{pmid_text}/" if pmid_text else ""
             
             # If no publication types, default to empty list
             publication_type_texts = publication_type_texts if publication_type_texts else []
-
-            mesh_details = get_mesh_terms_in_article(article)
+            
             # Append article details with default values
             articles.append({
                 "PMID": pmid_text,
@@ -966,7 +873,6 @@ def fetch_literature_details_with_abstracts(disease_name: str,pmids: List[str]) 
                 "PublicationType": publication_type_texts,
                 "PubMedLink": pubmed_link,
                 "Qualifers":extract_qualifiers_for_disease(mesh_heading,disease_name),
-                "mesh_details": mesh_details,
                 "citedby": citedby_count,
                 "last_author": last_author,
                 "authors": authors_list,
@@ -1034,117 +940,6 @@ def fetch_literature_details_in_batches(disease_name:str,pmids: List[str], batch
     
     except Exception as e:
         raise e
-
-def generate_mapped_diseases_for_disease_area(disease_area, articles_data):
-    """
-    Annotate each article with the diseases falling under given disease area
-    """
-    def filter_mapped_diseases(disease_area_mesh_tree_numbers, article_tree_numbers):
-        for da_tn in disease_area_mesh_tree_numbers:
-            for tn in article_tree_numbers:
-                if da_tn in tn:
-                    print(f"Found matching tree number: Disease Area TN: {da_tn}, Article TN: {tn}")
-                    return True
-        return False
-
-    disease_area_mesh_tree_numbers = get_mesh_tree_numbers_of_disease(disease_area)
-    tree_numbers_dict = {}
-    print("disease_area_mesh_tree_numbers: ", disease_area_mesh_tree_numbers)
-    for article in articles_data:
-        mapped_diseases = []
-        mesh_details = article.get("mesh_details", {})
-        if not mesh_details:
-            llmclient = LLMClient()
-            disease_efo_term = llmclient.identify_disease_efo_term(article.get("Title",""), article.get("Abstract","")).get('efo_term', "")
-            if disease_efo_term:
-                if disease_efo_term in tree_numbers_dict:
-                    tree_numbers = tree_numbers_dict[disease_efo_term]
-                else:
-                    tree_numbers = get_mesh_tree_numbers_of_disease(disease_efo_term)
-                    tree_numbers_dict[disease_efo_term] = tree_numbers
-                
-                is_child = filter_mapped_diseases(disease_area_mesh_tree_numbers, tree_numbers)
-                if is_child:
-                    print(f"Adding Mesh Term {disease_efo_term} for disease area {disease_area}")
-                    mapped_diseases.append(disease_efo_term)
-
-        else:
-            for mesh_term, mesh_id in mesh_details.items():
-                # print("mesh_term, mesh_id: ", mesh_term, mesh_id)
-                if mesh_term in tree_numbers_dict:
-                    tree_numbers = tree_numbers_dict[mesh_term]
-                else:
-                    time.sleep(0.1)
-                    tree_numbers = get_mesh_tree_numbers_of_disease(mesh_term, mesh_id)
-                    print("tree_numbers: ", tree_numbers)
-                    tree_numbers_dict[mesh_term] = tree_numbers
-            
-                is_child = filter_mapped_diseases(disease_area_mesh_tree_numbers, tree_numbers)
-                if is_child:
-                    print(f"Adding Mesh Term {mesh_term} for disease area {disease_area}")
-                    mapped_diseases.append(mesh_term)  
-
-        article["mapped_diseases"] = list(set(mapped_diseases))
-
-    return articles_data
-
-def add_mapped_diseases(rna_seq_response: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Add mapped diseases to the RNA-seq response.
-    """
-    def filter_mapped_diseases(disease_area_mesh_tree_numbers, article_tree_numbers):
-        for da_tn in disease_area_mesh_tree_numbers:
-            for tn in article_tree_numbers:
-                if da_tn in tn:
-                    print(f"Found matching tree number: Disease Area TN: {da_tn}, Article TN: {tn}")
-                    return True
-        return False
-    
-    tree_numbers_dict = {}
-
-    for disease_area, articles_data in rna_seq_response.items():
-        disease_area_mesh_tree_numbers = get_mesh_tree_numbers_of_disease(disease_area)
-        for article in articles_data:
-            pmids = article.get("PubMedIDs", [])
-            if pmids:
-                for pmid in pmids:
-                    mesh_details = pmid_to_meshid_mapper(pmid)
-                    if mesh_details:
-                        article["mesh_details"] = mesh_details
-                        article["mapped_diseases"] = []
-                        for mesh_term, mesh_id in mesh_details.items():
-                            logger.info(f"Fetching tree numbers for mesh term: {mesh_term}, mesh_id: {mesh_id} for {pmid}")
-                            tree_numbers = get_mesh_tree_numbers_of_disease(mesh_id)
-                            if mesh_id in tree_numbers and tree_numbers[mesh_id]:
-                                tn_list = tree_numbers[mesh_id]
-                                is_child = filter_mapped_diseases(disease_area_mesh_tree_numbers, tn_list)
-                                if is_child:
-                                    article["mapped_diseases"].append(mesh_term)
-
-            elif pmids == [] or 'mesh_details' not in article:
-                llmclient = LLMClient()
-                disease_efo_term = llmclient.identify_disease_efo_term(article.get("Title",""), article.get("Abstract","")).get('efo_term', "")
-                if disease_efo_term and disease_efo_term not in ['null', 'N/A', 'none', 'None', '']:
-                    logger.info(f"Fetching tree numbers for efo term: {disease_efo_term} for {article.get('PMID','')}")
-                    if disease_efo_term in tree_numbers_dict:
-                        tree_numbers = tree_numbers_dict[disease_efo_term]
-                    else:
-                        tree_numbers = get_mesh_tree_numbers_of_disease(disease_efo_term)
-
-                    if tree_numbers:
-                        tree_numbers_dict[disease_efo_term] = tree_numbers
-
-                        is_child = filter_mapped_diseases(disease_area_mesh_tree_numbers, tree_numbers)
-                        if is_child:
-                            article["mapped_diseases"] = [disease_efo_term]
-                        else:
-                            article["mapped_diseases"] = []
-                else:
-                    article["mesh_details"] = {}
-                    article["mapped_diseases"] = []
-
-            article["mapped_diseases"] = list(set(article.get("mapped_diseases", [])))
-        return rna_seq_response
 
 def fetch_mouse_models(query: str) -> Dict[str, Any]:
     """
@@ -1604,27 +1399,27 @@ def fetch_and_filter_figures_by_disease_and_pmids(disease: str) -> List[Dict[str
         raise e
     return filtered_figures
 
-def get_doid(disease_name: str) -> str:
-    """
-    Fetch the Disease Ontology ID (DOID) for a given disease name using the OLS API.
+# def get_doid(disease_name: str) -> str:
+#     """
+#     Fetch the Disease Ontology ID (DOID) for a given disease name using the OLS API.
 
-    :param disease_name: Name of the disease to search for.
-    :return: DOID of the disease, or a message if not found.
-    """
-    url = "https://www.ebi.ac.uk/ols/api/search"
-    params = {"q": disease_name, "ontology": "doid"}
+#     :param disease_name: Name of the disease to search for.
+#     :return: DOID of the disease, or a message if not found.
+#     """
+#     url = "https://www.ebi.ac.uk/ols/api/search"
+#     params = {"q": disease_name, "ontology": "doid"}
 
-    response = requests.get(url, params=params)
-    if response.status_code == 200:
-        results = response.json().get("response", {}).get("docs", [])
-        if results:
-            return results[0]["obo_id"]  # Return the first match's DOID
-        else:
-            print("No DOID found for the disease.")
-            return ""
-    else:
-        print(f"Error: {response.status_code}")
-        return ""
+#     response = requests.get(url, params=params)
+#     if response.status_code == 200:
+#         results = response.json().get("response", {}).get("docs", [])
+#         if results:
+#             return results[0]["obo_id"]  # Return the first match's DOID
+#         else:
+#             print("No DOID found for the disease.")
+#             return ""
+#     else:
+#         print(f"Error: {response.status_code}")
+#         return ""
 
 
 def add_source_urls_to_records(records: List[Dict[str, str]], doid: str) -> List[Dict[str, str]]:
@@ -1668,78 +1463,79 @@ def add_source_urls_to_records(records: List[Dict[str, str]], doid: str) -> List
         print(f"An error occurred: {e}")
         return records
 
-def fetch_mouse_model_data_alliancegenome(disease_name: str) -> List[Dict[str, Any]]:
+def fetch_mouse_model_data_alliancegenome(disease_name: str) -> List[Dict]:
     """
-    Fetch and process disease data for the given disease name from alliance genome and return the result as JSON.
-    Handles errors such as invalid disease names, API issues, and missing data.
-    Prints the error and returns an empty list in case of an error.
-
-    Args:
-        disease_name (str): The name of the disease.
-
-    Returns:
-        List[Dict[str, Any]]: The processed data in JSON format, or an empty list on error.
+    Fetch mouse model data from AllianceGenome API using DOID derived from disease name.
     """
-    # API base URL
-    api_url = "https://www.alliancegenome.org"
-    
     try:
-        # Extract DOID from the first result
-        disease_id = get_doid(disease_name)
-
-        # Fetch the disease-related models data using the DOID
-        # Alliance genome imposes a limit of 20, therefore overriding with a large number
-        response = requests.get(f"{api_url}/api/disease/{disease_id}/models?limit=1000")
-        response.raise_for_status()  # Raise an error for bad HTTP responses
-
-        # Check if results are available
-        raw_data = response.json().get("results", [])
-        if not raw_data:
-            print(f"Error: No model data found for disease '{disease_name}'.")
+        from utils import get_doid_from_disease_name
+        
+        # Get DOID through the pipeline
+        disease_id = get_doid_from_disease_name(disease_name)
+        
+        if disease_id is None:
+            print(f"[STEP 4] ❌ Skipping {disease_name} - No DOID found")
             return []
 
-        # Step 3: Process the data and extract relevant information
-        extracted_data = []
+        # Query AllianceGenome
+        url = f"https://www.alliancegenome.org/api/disease/{disease_id}/models?limit=1000"
+        
+        print(f"[STEP 4] 🔍 Querying AllianceGenome API...")
+        print(f"[STEP 4] 🌐 URL: {url}")
+        
+        response = requests.get(url)
+        response.raise_for_status()
+        
+        raw_data = response.json().get("results", [])
+        
+        if not raw_data:
+            print(f"[STEP 4] ⚠️  No mouse model data found for {disease_name} (DOID: {disease_id})")
+            return []
+        
+        print(f"[STEP 4] ✅ Found {len(raw_data)} mouse model records")
+        print(f"\n{'='*60}")
+        print(f"[COMPLETE] Mouse models retrieved for '{disease_name}'")
+        print(f"{'='*60}\n")
 
+        # Process the data and extract relevant information
+        extracted_data = []
         for association in raw_data:
             row = {
-                "Model": association.get("subject", {}).get("name", ""),  # Model name
-                "Species": association.get("subject", {}).get("taxon", {}).get("name", ""),  # Species
-                "ExperimentalCondition": association.get("experimentalConditionList", []),  # Experimental conditions
-                "Association": association.get("generatedRelationString", ""),  # Association type
-                "DiseaseQualifiers": association.get("diseaseQualifiers"),  # Disease qualifiers
-                "Disease": association.get("object", {}).get("name", ""),  # Disease name
-                "ConditionModifier": association.get("conditionModifierList", []),  # Condition modifiers
-                "GeneticModifier": association.get("geneticModifierList"),  # Genetic modifiers
-                "Evidence": [evidence.get("abbreviation", "") for evidence in association.get("evidenceCodes", [])],  # Evidence codes
-                "References": [ref.split(":")[1] for ref in association.get("pubmedPubModIDs", []) if ":" in ref],  # Extract only the ID part of PMID
+                "Model": association.get("subject", {}).get("name", ""),
+                "Species": association.get("subject", {}).get("taxon", {}).get("name", ""),
+                "ExperimentalCondition": association.get("experimentalConditionList", []),
+                "Association": association.get("generatedRelationString", ""),
+                "DiseaseQualifiers": association.get("diseaseQualifiers"),
+                "Disease": association.get("object", {}).get("name", ""),
+                "ConditionModifier": association.get("conditionModifierList", []),
+                "GeneticModifier": association.get("geneticModifierList"),
+                "Evidence": [evidence.get("abbreviation", "") for evidence in association.get("evidenceCodes", [])],
+                "References": [ref.split(":")[1] for ref in association.get("pubmedPubModIDs", []) if ":" in ref],
                 "Gene": (
-                association.get("primaryAnnotations", [{}])[0]
-                .get("inferredGene", {})
-                .get("geneFullName", {})
-                .get("displayText", "")
-                or association.get("primaryAnnotations", [{}])[0]
-                .get("inferredGene", {})
-                .get("geneFullName", {})
-                .get("formatText", "")
-                if association.get("primaryAnnotations", [{}])[0].get("inferredGene") is not None
-                else ""
-                    )
+                    association.get("primaryAnnotations", [{}])[0]
+                    .get("inferredGene", {})
+                    .get("geneFullName", {})
+                    .get("displayText", "")
+                    or association.get("primaryAnnotations", [{}])[0]
+                    .get("inferredGene", {})
+                    .get("geneFullName", {})
+                    .get("formatText", "")
+                    if association.get("primaryAnnotations", [{}])[0].get("inferredGene") is not None
+                    else ""
+                )
             }
-        
             extracted_data.append(row)
-        extracted_data=add_source_urls_to_records(extracted_data,disease_id)
-        # Return the processed data as JSON
+        
+        extracted_data = add_source_urls_to_records(extracted_data, disease_id)
         return extracted_data
 
     except requests.exceptions.RequestException as e:
-        # Catch network or HTTP errors
-        print(f"Network or HTTP error: {str(e)}")
+        print(f"[STEP 4] ❌ Network error: {str(e)}")
         return []
     except Exception as e:
-        # Catch any other unforeseen errors
-        print(f"An unexpected error occurred: {str(e)}")
+        print(f"[STEP 4] ❌ Unexpected error: {str(e)}")
         return []
+
     
 
 def get_top_10_literature_helper(disease_name: str) -> list[Any] | Any:
@@ -1857,6 +1653,7 @@ def add_sample_type(data: Dict[str, List[Dict[str, Any]]]) -> Dict[str, List[Dic
     Adds a new field 'SampleType' to each record with additional debug logging.
     Modified to only use 'Diseased' and 'Both' categories based on specific criteria.
     """
+    import logging
     logging.info("Starting add_sample_type function")
     
     try:
@@ -2087,14 +1884,3 @@ def fetch_mesh_entry_terms(disease_name):
     except Exception as e:
         print(f"An error occurred: {e}")
     return mesh_entry_terms
-
-
-if __name__ == "__main__":
-    rna_seq_data_path = "/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease/obesity.json"
-    with open(rna_seq_data_path, 'r') as file:
-        data = json.load(file)
-        rna_seq_data = data["/evidence/rna-sequence/"] 
-    
-    rna_seq_updated = add_mapped_diseases(rna_seq_data)
-    with open("rna_seq_updated.json", 'w') as outfile:
-        json.dump(rna_seq_updated, outfile, indent=4)

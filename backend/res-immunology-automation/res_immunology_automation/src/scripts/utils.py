@@ -6,10 +6,10 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from fastapi import HTTPException
 from typing import Dict, List, Set
-from typing import Optional,Union
+from typing import Optional, Union
 import json
 from gql_queries import GetTargetUniProt
-from gql_queries import DiseaseAssociatedTargetQuery,MousePhenotypesQuery,PublicationQuery
+from gql_queries import DiseaseAssociatedTargetQuery, MousePhenotypesQuery, PublicationQuery
 from gql_variables import DiseaseAssociationTargetVariables
 from typing import List, Dict, Any
 import requests
@@ -85,26 +85,6 @@ def get_type_from_labels(labels) -> str:
             return node_types[type]
 
 
-# def get_efo_id(disease_name: str) -> str:
-#     """
-#     Find the EFO ID for a given disease name, semantically. Considers the topmost result by default.
-#     """
-#     response = requests.get("https://www.ebi.ac.uk/ols/api/search",
-#                             params={"q": disease_name, "ontology": "efo"})
-#     if response.status_code == 200:
-#         results = response.json().get('response', {}).get('docs', [])
-#         if results:
-#             first_result = results[0]
-#             efo_id = first_result.get('obo_id')
-#             print(f"Found EFO ID for {disease_name}: {efo_id}")
-#             return efo_id
-#         else:
-#             print(f"No results found for {disease_name}")
-#             return None
-#     else:
-#         print(f"Error {response.status_code} during search")
-#         return None
-
 def request_open_targets_api(disease_name: str) -> Optional[str]:
     """
     Fetch the EFO ID for a given disease using the OpenTargets GraphQL API.
@@ -115,7 +95,7 @@ def request_open_targets_api(disease_name: str) -> Optional[str]:
     Returns:
         Optional[str]: The EFO ID if found, else None.
     """
-    url: str= "https://api.platform.opentargets.org/api/v4/graphql"
+    url: str = "https://api.platform.opentargets.org/api/v4/graphql"
     headers = {"Content-Type": "application/json"}
     
     # GraphQL query
@@ -146,32 +126,37 @@ def request_open_targets_api(disease_name: str) -> Optional[str]:
             data = response.json()
         else:
             data = None
-        # hits = data.get("data", {}).get("search", {}).get("hits", [])
-        
-        # if hits:
-        #     efo_id = hits[0].get("id", None)
-        #     return efo_id
-        # else:
-        #     print(f"No EFO ID found for '{disease_name}'")
-        #     return None
 
     except requests.exceptions.RequestException as e:
         print(f"An error occurred: {e}")
         return None
     
     return data
-  
-def get_efo_id(disease_name: str)-> Optional[str]:
+
+
+def get_efo_id(disease_name: str) -> Optional[str]:
+    print(f"[STEP 1] 🔍 Searching for EFO ID: '{disease_name}'")
+    
     open_t_data = request_open_targets_api(disease_name)
     if open_t_data:
-        exact_matches = [hit for hit in open_t_data["data"]["search"]["hits"] if hit["name"].lower() == disease_name.lower()]
+        exact_matches = [hit for hit in open_t_data["data"]["search"]["hits"] 
+                        if hit["name"].lower() == disease_name.lower()]
         if exact_matches:
-            return exact_matches[0]['id']
+            efo_id = exact_matches[0]['id']
+            # FIX: Convert underscore to colon
+            efo_id = efo_id.replace('_', ':', 1)
+            
+            print(f"[STEP 1] ✅ EFO ID found: {efo_id}")
+            return efo_id
         else:
-            print(f"EFO ID not found for {disease_name} in OpenTargets")
+            print(f"[STEP 1] ❌ EFO ID not found for {disease_name} in OpenTargets")
             return None
     else:
-        print(f"No records in OpenTargets for {disease_name}")
+        print(f"[STEP 1] ❌ No records in OpenTargets for {disease_name}")
+        return None
+
+
+
 
 def find_disease_id_by_name(jsonl_file: str, disease_name: str) -> Optional[str]:
     """
@@ -245,11 +230,9 @@ def save_big_response_to_file(file_path: str, response: Dict):
 
 def load_response_from_file(file_path: str) -> Dict:
     """ Load response from a file in JSON format """
-    if not os.path.exists(file_path):
-        with open(file_path, 'w') as file:
-            file.write("{}")
     with open(file_path, 'r') as file:
         return json.load(file)
+
 
 def add_years(date_str: str, years: int) -> str:
     """
@@ -309,7 +292,7 @@ def calculate_expiry_date(filing_date: str, invention_type: str, publication_dat
         return add_years(filing_date, 20)
     
 
-def get_associated_targets(disease_name: str,sort_by: str) -> List[str]:
+def get_associated_targets(disease_name: str, sort_by: str) -> List[str]:
     """
     Queries the OpenTargets API for disease-associated targets using a disease name.
 
@@ -336,7 +319,7 @@ def get_associated_targets(disease_name: str,sort_by: str) -> List[str]:
 
         # Prepare the variables for the query
         variables = DiseaseAssociationTargetVariables.replace('{efo_id}', efo_id)
-        variables=variables.replace('{sort_by}',sort_by)
+        variables = variables.replace('{sort_by}', sort_by)
         print(f"Variables: {variables}")
 
         # Construct the GraphQL payload
@@ -358,7 +341,7 @@ def get_associated_targets(disease_name: str,sort_by: str) -> List[str]:
         # Extract the list of target IDs from the response
         data = response.json()
         target_ids = [
-            target['target']['id'] 
+            target['target']['id']
             for target in data.get('data', {}).get('disease', {}).get('associatedTargets', {}).get('rows', [])
         ]
 
@@ -368,20 +351,21 @@ def get_associated_targets(disease_name: str,sort_by: str) -> List[str]:
         print("error:", str(e))
         return []
 
+
 def get_mouse_phenotypes(ensembl_id: str):
-        """
-        Get Mouse Phenotypes for a given ensembl_id
-        """
-        print(f"Using Ensembl ID: {ensembl_id}")
-        variables = {"ensemblId": ensembl_id}
-        otp_base_url = "https://api.platform.opentargets.org/api/v4/graphql"
-        r = requests.post(otp_base_url, json={"query": MousePhenotypesQuery, "variables": variables})
-        api_response = json.loads(r.text)
+    """
+    Get Mouse Phenotypes for a given ensembl_id
+    """
+    print(f"Using Ensembl ID: {ensembl_id}")
+    variables = {"ensemblId": ensembl_id}
+    otp_base_url = "https://api.platform.opentargets.org/api/v4/graphql"
+    r = requests.post(otp_base_url, json={"query": MousePhenotypesQuery, "variables": variables})
+    api_response = json.loads(r.text)
 
-        if 'errors' in api_response:
-            print("Error in API response:", api_response['errors'])
+    if 'errors' in api_response:
+        print("Error in API response:", api_response['errors'])
 
-        return api_response
+    return api_response
 
 
 # Function to fetch all rows
@@ -439,22 +423,16 @@ def fetch_all_publications(efo_id: str, ensembl_ids: List[str], size: int = 100)
     
     return all_rows
 
-# print(get_efo_id("atopic eczema"))
 
 def get_exact_synonyms(disease_name: str) -> List[str]:
-    """
-    Fetch the exact synonyms (`hasExactSynonym`) for a given disease from the OpenTargets API.
-
-    Args:
-        disease_name (str): The name of the disease for which to retrieve synonyms.
-
-    Returns:
-        List[str]: A list of terms corresponding to `hasExactSynonym` for the disease.
-                   Returns an empty list if the response format is invalid or if any error occurs.
-    """
     try:
         # Get the EFO ID for the disease
         efo_id: str = get_efo_id(disease_name)
+        
+        # FIX: Convert colon back to underscore for GraphQL query
+        # get_efo_id returns EFO:0000319, but GraphQL needs EFO_0000319
+        if efo_id and ':' in efo_id:
+            efo_id = efo_id.replace(':', '_', 1)
 
         # GraphQL query to fetch disease information
         query: str = """
@@ -469,6 +447,7 @@ def get_exact_synonyms(disease_name: str) -> List[str]:
           }
         }
         """ % efo_id
+
 
         # OpenTargets API URL
         api_url: str = "https://api.platform.opentargets.org/api/v4/graphql"
@@ -489,13 +468,13 @@ def get_exact_synonyms(disease_name: str) -> List[str]:
                 if synonym_entry["relation"] == "hasExactSynonym":
                     synonyms.extend(synonym_entry["terms"])
 
-        return synonyms+[disease_name]
+        return synonyms + [disease_name]
 
     except Exception as e:
         # Print the error message and return an empty list
         print(f"An error occurred: {e}")
         return [disease_name]
-    
+
 
 def get_conver_later_strapi() -> str:
     """
@@ -537,7 +516,6 @@ def get_conver_later_strapi() -> str:
     except Exception as e:
         print(f"An error occurred: {e}")
         return ""
-    
 
 
 def get_target_indication_pairs_strapi(disease_name: str) -> List[Dict[str, Any]]:
@@ -557,9 +535,8 @@ def get_target_indication_pairs_strapi(disease_name: str) -> List[Dict[str, Any]
     url = f"{base_url}?filters[disease][$eqi]={disease_name}&pagination[page]=1&pagination[pageSize]=500"
 
     # API token for authorization
-    api_token = os.getenv('STRAPI_API_TOKEN') 
+    api_token = os.getenv('STRAPI_API_TOKEN')
 
-    # Check if the token is provided
     if not api_token:
         print("API token not found. Please set the 'STRAPI_API_TOKEN'.")
         return []
@@ -600,7 +577,7 @@ def get_target_indication_pairs_strapi(disease_name: str) -> List[Dict[str, Any]
         # Handle exceptions
         print(f"An error occurred: {e}")
         return []
-    
+
 
 def enrich_disease_pathway_results(disease_results: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -654,6 +631,7 @@ def add_pipeline_indication_records(diseases_and_efo, existing_response: Dict[st
 
     return existing_response
 
+
 def fetch_nct_data(nct_ids: List[str]) -> List[Dict[str, str]]:
     """
     Fetches the official titles for a list of NCT IDs from the clinicaltrials.gov API.
@@ -665,7 +643,7 @@ def fetch_nct_data(nct_ids: List[str]) -> List[Dict[str, str]]:
         Dict[str, str]: A dictionary mapping NCT IDs to their official titles.
     """
     base_url = "https://clinicaltrials.gov/api/v2/studies"
-    nct_data = []    
+    nct_data = []
 
     for nct_id in nct_ids:
         nct_details: Dict[str, str] = {"nctid": nct_id}
@@ -722,7 +700,6 @@ def fetch_nct_data(nct_ids: List[str]) -> List[Dict[str, str]]:
         
         nct_data.append(nct_details)
     return nct_data
-
 
 
 def fetch_nct_titles(nct_ids: List[str]) -> Dict[str, str]:
@@ -962,3 +939,91 @@ def generate_mapped_diseases_for_disease_area(disease_area, articles_data):
                 article["mapped_diseases"].append(mesh_term)
 
     return articles_data
+
+
+
+# New code to be added
+disease_details_query = """
+query disease($efoId: String!) {
+  disease(efoId: $efoId) {
+    id
+    name
+    dbXRefs
+  }
+}
+"""
+
+
+def get_disease_details(efo_id: str) -> Dict[str, Any]:
+    """
+    Fetch disease details from Open Targets using the EFO ID.
+    """
+    print(f"[STEP 2] 🔍 Fetching disease details for EFO ID: {efo_id}")
+    
+    base_url: str = "https://api.platform.opentargets.org/api/v4/graphql"
+    variables = {"efoId": efo_id}
+    try:
+        response = requests.post(
+            base_url,
+            json={'query': disease_details_query, 'variables': variables}
+        )
+        response.raise_for_status()
+        
+        data = response.json()
+        print(f"[STEP 2] ✅ Disease details retrieved successfully")
+        return data
+        
+    except requests.exceptions.RequestException as e:
+        print(f"[STEP 2] ❌ Error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error while connecting to the API: {str(e)}")
+
+
+def get_doid_from_disease_details(details: Dict[str, Any]) -> Optional[str]:
+    """
+    Extract DOID from the dbXRefs in the disease details.
+    """
+    print(f"[STEP 3] 🔍 Extracting DOID from dbXRefs...")
+    
+    dbxrefs = details.get("data", {}).get("disease", {}).get("dbXRefs", [])
+    
+    print(f"[STEP 3] 📋 Available dbXRefs: {dbxrefs}")
+    
+    for ref in dbxrefs:
+        if ref.startswith("DOID:"):
+            print(f"[STEP 3] ✅ DOID found: {ref}")
+            return ref
+    
+    print(f"[STEP 3] ❌ No DOID found in dbXRefs")
+    return None
+
+
+def get_doid_from_disease_name(disease_name: str) -> Optional[str]:
+    """
+    Get DOID from disease name: disease -> EFO ID -> disease details -> extract DOID.
+    """
+    print(f"\n{'='*60}")
+    print(f"[PIPELINE START] Disease: '{disease_name}'")
+    print(f"{'='*60}")
+    
+    efo_id = get_efo_id(disease_name)
+    if not efo_id:
+        print(f"[PIPELINE FAILED] Cannot proceed without EFO ID")
+        return None
+    
+    # Format EFO ID for query (EFO:0000319 -> EFO_0000319)
+    efo_id_query = efo_id.replace(":", "_")
+    print(f"[STEP 2] 🔄 Converting EFO ID format: {efo_id} → {efo_id_query}")
+    
+    details = get_disease_details(efo_id_query)
+    doid = get_doid_from_disease_details(details)
+    
+    if doid:
+        print(f"\n{'='*60}")
+        print(f"[PIPELINE SUCCESS] {disease_name} → {efo_id} → {doid}")
+        print(f"{'='*60}\n")
+    else:
+        print(f"\n{'='*60}")
+        print(f"[PIPELINE FAILED] Could not extract DOID")
+        print(f"{'='*60}\n")
+    
+    return doid
