@@ -3420,6 +3420,7 @@ async def get_rna_sequence(
             response=add_platform_name(response)
             response=add_study_type(response)
             response=add_sample_type(response)
+            # response=add_mapped_diseases(response)
 
 
             for disease, value in response.items():
