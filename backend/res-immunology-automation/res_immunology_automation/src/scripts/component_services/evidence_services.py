@@ -25,11 +25,12 @@ import pandas as pd
 import io
 from fastapi import HTTPException
 from Bio.Entrez import HTTPError
-from .pubmed_utils import get_data_from_pubmed
+from pubmed_utils import get_data_from_pubmed
 import logging
 import socket
 from urllib.error import URLError
-from .disease_area_mapping_utils import get_mesh_tree_numbers_of_disease
+from disease_area_mapping_utils import get_mesh_tree_numbers_of_disease, pmid_to_meshid_mapper
+from ollama_llm_client import LLMClient
 
 MAX_RESULTS=500
 # NCBI API Base URL
@@ -1038,30 +1039,112 @@ def generate_mapped_diseases_for_disease_area(disease_area, articles_data):
     """
     Annotate each article with the diseases falling under given disease area
     """
+    def filter_mapped_diseases(disease_area_mesh_tree_numbers, article_tree_numbers):
+        for da_tn in disease_area_mesh_tree_numbers:
+            for tn in article_tree_numbers:
+                if da_tn in tn:
+                    print(f"Found matching tree number: Disease Area TN: {da_tn}, Article TN: {tn}")
+                    return True
+        return False
+
     disease_area_mesh_tree_numbers = get_mesh_tree_numbers_of_disease(disease_area)
     tree_numbers_dict = {}
     print("disease_area_mesh_tree_numbers: ", disease_area_mesh_tree_numbers)
     for article in articles_data:
         mapped_diseases = []
-        for mesh_term, mesh_id in article.get("mesh_details", {}).items():
-            # print("mesh_term, mesh_id: ", mesh_term, mesh_id)
-            if mesh_term in tree_numbers_dict:
-                tree_numbers = tree_numbers_dict[mesh_term]
-            else:
-                time.sleep(0.1)
-                tree_numbers = get_mesh_tree_numbers_of_disease(mesh_term, mesh_id)
-                print("tree_numbers: ", tree_numbers)
-                tree_numbers_dict[mesh_term] = tree_numbers
+        mesh_details = article.get("mesh_details", {})
+        if not mesh_details:
+            llmclient = LLMClient()
+            disease_efo_term = llmclient.identify_disease_efo_term(article.get("Title",""), article.get("Abstract","")).get('efo_term', "")
+            if disease_efo_term:
+                if disease_efo_term in tree_numbers_dict:
+                    tree_numbers = tree_numbers_dict[disease_efo_term]
+                else:
+                    tree_numbers = get_mesh_tree_numbers_of_disease(disease_efo_term)
+                    tree_numbers_dict[disease_efo_term] = tree_numbers
+                
+                is_child = filter_mapped_diseases(disease_area_mesh_tree_numbers, tree_numbers)
+                if is_child:
+                    print(f"Adding Mesh Term {disease_efo_term} for disease area {disease_area}")
+                    mapped_diseases.append(disease_efo_term)
+
+        else:
+            for mesh_term, mesh_id in mesh_details.items():
+                # print("mesh_term, mesh_id: ", mesh_term, mesh_id)
+                if mesh_term in tree_numbers_dict:
+                    tree_numbers = tree_numbers_dict[mesh_term]
+                else:
+                    time.sleep(0.1)
+                    tree_numbers = get_mesh_tree_numbers_of_disease(mesh_term, mesh_id)
+                    print("tree_numbers: ", tree_numbers)
+                    tree_numbers_dict[mesh_term] = tree_numbers
             
-            for da_tn in disease_area_mesh_tree_numbers:
-                for tn in tree_numbers:
-                    if da_tn in tn:
-                        print(f"Adding Mesh Term {mesh_term} for disease area {disease_area}, with tree number {tn}")
-                        mapped_diseases.append(mesh_term)
-        
+                is_child = filter_mapped_diseases(disease_area_mesh_tree_numbers, tree_numbers)
+                if is_child:
+                    print(f"Adding Mesh Term {mesh_term} for disease area {disease_area}")
+                    mapped_diseases.append(mesh_term)  
+
         article["mapped_diseases"] = list(set(mapped_diseases))
 
     return articles_data
+
+def add_mapped_diseases(rna_seq_response: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Add mapped diseases to the RNA-seq response.
+    """
+    def filter_mapped_diseases(disease_area_mesh_tree_numbers, article_tree_numbers):
+        for da_tn in disease_area_mesh_tree_numbers:
+            for tn in article_tree_numbers:
+                if da_tn in tn:
+                    print(f"Found matching tree number: Disease Area TN: {da_tn}, Article TN: {tn}")
+                    return True
+        return False
+    
+    tree_numbers_dict = {}
+
+    for disease_area, articles_data in rna_seq_response.items():
+        disease_area_mesh_tree_numbers = get_mesh_tree_numbers_of_disease(disease_area)
+        for article in articles_data:
+            pmids = article.get("PubMedIDs", [])
+            if pmids:
+                for pmid in pmids:
+                    mesh_details = pmid_to_meshid_mapper(pmid)
+                    if mesh_details:
+                        article["mesh_details"] = mesh_details
+                        article["mapped_diseases"] = []
+                        for mesh_term, mesh_id in mesh_details.items():
+                            logger.info(f"Fetching tree numbers for mesh term: {mesh_term}, mesh_id: {mesh_id} for {pmid}")
+                            tree_numbers = get_mesh_tree_numbers_of_disease(mesh_id)
+                            if mesh_id in tree_numbers and tree_numbers[mesh_id]:
+                                tn_list = tree_numbers[mesh_id]
+                                is_child = filter_mapped_diseases(disease_area_mesh_tree_numbers, tn_list)
+                                if is_child:
+                                    article["mapped_diseases"].append(mesh_term)
+
+            elif pmids == [] or 'mesh_details' not in article:
+                llmclient = LLMClient()
+                disease_efo_term = llmclient.identify_disease_efo_term(article.get("Title",""), article.get("Abstract","")).get('efo_term', "")
+                if disease_efo_term and disease_efo_term not in ['null', 'N/A', 'none', 'None', '']:
+                    logger.info(f"Fetching tree numbers for efo term: {disease_efo_term} for {article.get('PMID','')}")
+                    if disease_efo_term in tree_numbers_dict:
+                        tree_numbers = tree_numbers_dict[disease_efo_term]
+                    else:
+                        tree_numbers = get_mesh_tree_numbers_of_disease(disease_efo_term)
+
+                    if tree_numbers:
+                        tree_numbers_dict[disease_efo_term] = tree_numbers
+
+                        is_child = filter_mapped_diseases(disease_area_mesh_tree_numbers, tree_numbers)
+                        if is_child:
+                            article["mapped_diseases"] = [disease_efo_term]
+                        else:
+                            article["mapped_diseases"] = []
+                else:
+                    article["mesh_details"] = {}
+                    article["mapped_diseases"] = []
+
+            article["mapped_diseases"] = list(set(article.get("mapped_diseases", [])))
+        return rna_seq_response
 
 def fetch_mouse_models(query: str) -> Dict[str, Any]:
     """
@@ -2004,3 +2087,14 @@ def fetch_mesh_entry_terms(disease_name):
     except Exception as e:
         print(f"An error occurred: {e}")
     return mesh_entry_terms
+
+
+if __name__ == "__main__":
+    rna_seq_data_path = "/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease/obesity.json"
+    with open(rna_seq_data_path, 'r') as file:
+        data = json.load(file)
+        rna_seq_data = data["/evidence/rna-sequence/"] 
+    
+    rna_seq_updated = add_mapped_diseases(rna_seq_data)
+    with open("rna_seq_updated.json", 'w') as outfile:
+        json.dump(rna_seq_updated, outfile, indent=4)

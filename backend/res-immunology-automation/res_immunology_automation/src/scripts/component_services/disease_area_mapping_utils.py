@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 import re
 import time
 import os
+
 NCBI_API_KEY = os.getenv("NCBI_API_KEY")
 
 MESH_TREE_TO_AREA = {
@@ -88,7 +89,7 @@ def pmid_to_meshid_mapper(pmid):
     }
     response = requests.get(url, params=params)
     #print (response.text)
-    mesh_terms = []
+    mesh_details = {}
     
     if response.status_code == 200:
         root = ET.fromstring(response.text)
@@ -99,8 +100,8 @@ def pmid_to_meshid_mapper(pmid):
             if descriptor is not None and qualifier is not None and ((descriptor.attrib.get('MajorTopicYN') == "Y") or (qualifier.attrib.get('MajorTopicYN') == "Y")):
                 term = descriptor.text
                 mesh_id = descriptor.attrib.get('UI')
-                mesh_terms.append((mesh_id))
-    return mesh_terms
+                mesh_details[term] = mesh_id
+    return mesh_details
 
 def fetch_mesh_tree_numbers_batch(mesh_ids):
     """Fetch tree numbers for a list of MeSH IDs using NLM MeSH API"""
@@ -225,6 +226,7 @@ def get_mesh_tree_numbers_of_disease(disease_term, mesh_id = None):
     else:
         tree_numbers = fetch_mesh_tree_numbers_batch([mesh_id])
         return tree_numbers[mesh_id]
+
 
 # if __name__ == "__main__":
 #     # In market intelligence section, for each trial record, do the following. 
