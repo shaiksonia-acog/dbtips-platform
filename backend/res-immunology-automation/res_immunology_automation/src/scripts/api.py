@@ -126,7 +126,7 @@ from component_services.dossier_endpoint_utils import (
     fetch_records_by_status
 )
 from component_services.drug_extraction import DrugExtractor
-from component_services.disease_area_mapping_utils import get_mesh_tree_numbers_of_disease
+from component_services.disease_area_mapping_utils import get_mesh_tree_numbers_of_disease, MeSHToEFOConverter
 from component_services.ollama_llm_client import LLMClient
 from component_services import drug_extraction
 from requests.adapters import HTTPAdapter
@@ -3533,14 +3533,15 @@ async def pgs_catalog_data(request: DiseasesRequest, redis: Redis = Depends(get_
 
     print("filtered diseases: ", filtered_diseases)
     # Check if cached response exists in Redis
-    cached_response_redis: dict = await get_cached_response(redis, key)
-    if cached_response_redis:
-        print("Returning chached response")
-        return cached_response_redis
+    # cached_response_redis: dict = await get_cached_response(redis, key)
+    # if cached_response_redis:
+    #     print("Returning chached response")
+    #     return cached_response_redis
 
     try:
         if build_cache == True:
             diseases_and_efo: Dict[str, str] = {}  # Dictionary to store disease names and their corresponding EFO IDs
+            converter = MeSHToEFOConverter()
 
             for disease in filtered_diseases:
                 disease_name: str = disease.strip().lower().replace(" ", "_")
@@ -3554,11 +3555,17 @@ async def pgs_catalog_data(request: DiseasesRequest, redis: Redis = Depends(get_
                 else:
                     cached_responses = {}
                 
+                efo_id = None
+                efo_details = converter.convert(disease_name.replace('_', ' ').lower())
+                if efo_details and efo_details.get('success'):
+                    efo_id = efo_details.get('efo_id')
+
                 # Fetch PGS CAtalog data using EFO IDs
-                efo_id: str = get_efo_id(disease_name.replace('_', ' ').lower())
+                # efo_id: str = get_efo_id(disease_name.replace('_', ' ').lower())
+                print("EFO ID: ", efo_id)
                 if efo_id:
                     diseases_and_efo[disease_name] = efo_id.replace(':', '_')
-                    genomics_data = fetch_pgs_data(efo_id)
+                    genomics_data = fetch_pgs_data(disease, efo_id)
                 else:
                     genomics_data = [f"EFO ID not found for {disease_name.replace('_', ' ')}"]
 
@@ -3574,8 +3581,7 @@ async def pgs_catalog_data(request: DiseasesRequest, redis: Redis = Depends(get_
                     print(f"Record with ID {disease} added to the disease table.")
                 else:
                     save_response_to_file(cached_file_path, cached_responses)
-                print('disease: ', disease)
-                print("output: ", cached_responses[f"{endpoint}"])
+                
                 response[disease.replace('_', ' ')]=cached_responses[f"{endpoint}"]
             await set_cached_response(redis, key, response)
 
@@ -3608,6 +3614,7 @@ async def gwas_studies_data(request: DiseasesRequest, redis: Redis = Depends(get
     cached_diseases: Set[str] = set()
     cached_data: List = []
     response = {}
+    
     for disease in diseases:
         disease_record = db.query(Disease).filter_by(id=f"{disease}").first()
         # 1. Check if the cached JSON file exists
@@ -3640,7 +3647,7 @@ async def gwas_studies_data(request: DiseasesRequest, redis: Redis = Depends(get
     try:
         
         diseases_and_efo: Dict[str, str] = {}  # Dictionary to store disease names and their corresponding EFO IDs
-
+        converter = MeSHToEFOConverter()
         for disease in filtered_diseases:
             disease_name: str = disease.strip().lower().replace(" ", "_")
             disease_record = db.query(Disease).filter_by(id=f"{disease_name}").first()
@@ -3653,7 +3660,11 @@ async def gwas_studies_data(request: DiseasesRequest, redis: Redis = Depends(get
             else:
                 cached_responses = {}
             
-            efo_id: str = get_efo_id(disease_name.replace('_', ' ').lower())
+            # efo_id: str = get_efo_id(disease_name.replace('_', ' ').lower())
+            efo_ids = None
+            efo_details = converter.convert(disease_name.replace('_', ' ').lower())
+            if efo_details and efo_details.get('success'):
+                efo_id = efo_details.get('efo_id').replace(":", "_")
             print("efo_id: ", efo_id)
             if efo_id:
                 diseases_and_efo[disease_name] = efo_id.replace(':', '_')
@@ -3673,8 +3684,7 @@ async def gwas_studies_data(request: DiseasesRequest, redis: Redis = Depends(get
                 print(f"Record with ID {disease} added to the disease table.")
             else:
                 save_response_to_file(cached_file_path, cached_responses)
-            print('disease: ', disease)
-            print("output: ", cached_responses[f"{endpoint}"])
+
             response[disease]=cached_responses[f"{endpoint}"]
         await set_cached_response(redis, key, response)
 
@@ -3691,7 +3701,12 @@ async def plot_locus_zoom(request: DiseaseRequest, redis: Redis = Depends(get_re
     try:
         disease: str = request.disease
         efo_ids = []
-        requested_efo = get_efo_id(disease.lower())
+        converter = MeSHToEFOConverter()
+        # requested_efo = get_efo_id(disease.lower())
+        efo_details = converter.convert(disease.replace('_', ' ').lower())
+        if efo_details and efo_details.get('success'):
+            requested_efo = efo_details.get('efo_id').replace(":", "_")
+        print("efo_id: ", requested_efo)
         gwas_disease_file_path = os.path.join(GWAS_DATA_DIR, f'{requested_efo}.tsv')
         if not os.path.exists(gwas_disease_file_path):
             print("requested_efo: ", requested_efo)
@@ -3703,7 +3718,6 @@ async def plot_locus_zoom(request: DiseaseRequest, redis: Redis = Depends(get_re
             
             gwas_studies = response.json()
             gwas_studies = gwas_studies[disease.replace(" ", "_")]
-            print("gwas_studies: ", gwas_studies)
             related_traits = list(set([item["Trait(s)"] for item in gwas_studies if "Trait(s)" in item]))
             print("related_traits: ", related_traits)
             for trait in related_traits:
@@ -3713,8 +3727,8 @@ async def plot_locus_zoom(request: DiseaseRequest, redis: Redis = Depends(get_re
                 else:
                     print(f"EFO ID not found for trait: {trait}")
                 time.sleep(1)
+
             print("efo_ids: ", efo_ids)
-            
             gwas_disease_file_path = load_data(efo_ids, requested_efo)
         return gwas_disease_file_path
 
