@@ -41,6 +41,7 @@ def prepare_variants_data(df):
     other_cols = {
                 "PUBMEDID":"PubMed ID", "STRONGEST SNP-RISK ALLELE": "Variant and Risk Allele","SNPS": "rsID", 
                 "FIRST AUTHOR": "Author", "MAPPED_GENE": "Mapped gene(s)", "DISEASE/TRAIT":"Reported trait", 
+                "MAPPED_TRAIT": "Mapped Trait",
                 "STUDY ACCESSION": "Study Accession", "RISK ALLELE FREQUENCY": "RAF", "OR or BETA": "OR or BETA",
                 "95% CI (TEXT)": "CI"
                 }
