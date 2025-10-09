@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 import re
 import time
 import os
+from typing import List, Dict, Optional
 
 NCBI_API_KEY = os.getenv("NCBI_API_KEY")
 
@@ -32,6 +33,98 @@ MESH_TREE_TO_AREA = {
     'C23': 'Pathological Conditions, Signs and Symptoms',
     'C24': 'Occupational Diseases'
 }
+
+class MeSHToEFOConverter:
+    """Convert MeSH terms to EFO terms using OLS API"""
+    
+    def __init__(self):
+        self.ols_base = "https://www.ebi.ac.uk/ols4/api"
+        self.mesh_ontology = "mesh"
+        self.efo_ontology = "efo"
+    
+    def search_mesh_term(self, mesh_term: str) -> Optional[Dict]:
+        """Search for MeSH term and get its ID"""
+        url = f"{self.ols_base}/search"
+        params = {
+            "q": mesh_term,
+            "ontology": self.mesh_ontology,
+            "exact": "true",
+            "rows": 1
+        }
+        
+        try:
+            response = requests.get(url, params=params)
+            response.raise_for_status()
+            data = response.json()
+            
+            if data.get("response", {}).get("numFound", 0) > 0:
+                return data["response"]["docs"][0]
+            return None
+        except Exception as e:
+            print(f"Error searching MeSH term: {e}")
+            return None
+    
+    def find_efo_mapping(self, mesh_id: str, mesh_label: str) -> List[Dict]:
+        """Find EFO terms mapped to the MeSH term"""
+        results = []
+        
+        # Search by label in EFO
+        url = f"{self.ols_base}/search"
+        params = {
+            "q": mesh_label,
+            "ontology": self.efo_ontology,
+            "rows": 10
+        }
+        
+        try:
+            response = requests.get(url, params=params)
+            response.raise_for_status()
+            data = response.json()
+            
+            for doc in data.get("response", {}).get("docs", []):
+                results.append({
+                    "efo_id": doc.get("obo_id", doc.get("short_form")),
+                    "efo_label": doc.get("label"),
+                    "efo_iri": doc.get("iri"),
+                    "description": doc.get("description", [""])[0] if doc.get("description") else ""
+                })
+        except Exception as e:
+            print(f"Error finding EFO mapping: {e}")
+        
+        return results
+    
+    def convert(self, mesh_term: str) -> Dict:
+        """Convert MeSH term to EFO term(s)"""
+        print(f"Converting MeSH term: {mesh_term}")
+        
+        # Search for MeSH term
+        mesh_data = self.search_mesh_term(mesh_term)
+        
+        if not mesh_data:
+            return {
+                "success": False,
+                "mesh_term": mesh_term,
+                "message": "MeSH term not found"
+            }
+        
+        mesh_id = mesh_data.get("obo_id", mesh_data.get("short_form"))
+        mesh_label = mesh_data.get("label")
+        
+        print(f"Found MeSH: {mesh_id} - {mesh_label}")
+        
+        # Find EFO mappings
+        efo_mappings = self.find_efo_mapping(mesh_id, mesh_label)[0]
+        
+        mappings= {
+            "success": True,
+            "mesh_term": mesh_term,
+            "mesh_id": mesh_id,
+            "mesh_label": mesh_label
+        }
+        mappings.update(
+        efo_mappings
+        )
+        return mappings
 
 def efoid_to_meshid_mapper(term_id):
     """
