@@ -587,6 +587,8 @@ def search_pubmed_target(target_name: str, disease_name: str,target_terms_file: 
         target_data: Dict[str, List[str]] = json.load(f)
 
     terms: List[str] = target_data.get(target_name.lower(), [])
+    
+    print("terms for target",terms)
 
     article_types = [
     "Case Reports",
@@ -613,6 +615,7 @@ def search_pubmed_target(target_name: str, disease_name: str,target_terms_file: 
     # Build the target query
     if terms:
         target_query = " OR ".join([f'"{term}"[Title/Abstract]' for term in terms])
+        print("target query before adding target name",target_query)
         target_query = f'("{target_name}"[Title/Abstract] OR {target_query})'
     else:
         target_query = f'"{target_name}"[Title/Abstract]'
@@ -631,7 +634,7 @@ def search_pubmed_target(target_name: str, disease_name: str,target_terms_file: 
     else:
         query = f'{target_query} AND ({article_types_query})'
 
-    print(query)
+    print("Target Query for Target:", target_name, query)
 
     current_year = datetime.now().year
     start_year = current_year - 10
@@ -2150,5 +2153,9 @@ if __name__ == "__main__":
     # rna_seq_updated = add_mapped_diseases(rna_seq_data)
     # with open("rna_seq_updated.json", 'w') as outfile:
     #     json.dump(rna_seq_updated, outfile, indent=4)
-    efo_id = "EFO_0000319"
-    mouse_studies = fetch_mouse_model_data_alliancegenome("cardiovascular disease", efo_id)
+    target_name = "gucy1a1"
+    disease_name = "cardiovascular diseases"
+    target_terms_file = "/app/res-immunology-automation/res_immunology_automation/src/scripts/target_data/target_terms.json"
+    mesh_major_term="cardiovascular diseases"  # cardiovascular diseases
+    search_pubmed_target(target_name, disease_name, target_terms_file, mesh_major_term)
+    
