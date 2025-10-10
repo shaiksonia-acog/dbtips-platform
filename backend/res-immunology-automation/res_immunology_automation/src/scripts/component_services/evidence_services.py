@@ -1668,7 +1668,58 @@ def add_source_urls_to_records(records: List[Dict[str, str]], doid: str) -> List
         print(f"An error occurred: {e}")
         return records
 
-def fetch_mouse_model_data_alliancegenome(disease_name: str) -> List[Dict[str, Any]]:
+def get_disease_details(efo_id: str) -> Dict[str, Any]:
+    """
+    Fetch disease details from Open Targets using the EFO ID.
+    """
+    print(f"[STEP 2] 🔍 Fetching disease details for EFO ID: {efo_id}")
+    
+    base_url: str = "https://api.platform.opentargets.org/api/v4/graphql"
+    variables = {"efoId": efo_id}
+    try:
+        disease_details_query = """
+            query disease($efoId: String!) {
+            disease(efoId: $efoId) {
+                id
+                name
+                dbXRefs
+            }
+            }
+            """
+        response = requests.post(
+            base_url,
+            json={'query': disease_details_query, 'variables': variables}
+        )
+        response.raise_for_status()
+        
+        data = response.json()
+        print(f"[STEP 2] ✅ Disease details retrieved successfully")
+        return data
+        
+    except requests.exceptions.RequestException as e:
+        print(f"[STEP 2] ❌ Error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error while connecting to the API: {str(e)}")
+
+
+def get_doid_from_disease_details(details: Dict[str, Any]) -> Optional[str]:
+    """
+    Extract DOID from the dbXRefs in the disease details.
+    """
+    print(f"[STEP 3] 🔍 Extracting DOID from dbXRefs...")
+    
+    dbxrefs = details.get("data", {}).get("disease", {}).get("dbXRefs", [])
+    
+    print(f"[STEP 3] 📋 Available dbXRefs: {dbxrefs}")
+    
+    for ref in dbxrefs:
+        if ref.startswith("DOID:"):
+            print(f"[STEP 3] ✅ DOID found: {ref}")
+            return ref
+    
+    print(f"[STEP 3] ❌ No DOID found in dbXRefs")
+    return None
+
+def fetch_mouse_model_data_alliancegenome(disease_name: str, efo_id:str) -> List[Dict[str, Any]]:
     """
     Fetch and process disease data for the given disease name from alliance genome and return the result as JSON.
     Handles errors such as invalid disease names, API issues, and missing data.
@@ -1685,8 +1736,9 @@ def fetch_mouse_model_data_alliancegenome(disease_name: str) -> List[Dict[str, A
     
     try:
         # Extract DOID from the first result
-        disease_id = get_doid(disease_name)
+        # disease_id = get_doid(disease_name)
 
+        disease_id = get_doid_from_disease_details(get_disease_details(efo_id))
         # Fetch the disease-related models data using the DOID
         # Alliance genome imposes a limit of 20, therefore overriding with a large number
         response = requests.get(f"{api_url}/api/disease/{disease_id}/models?limit=1000")
@@ -1703,7 +1755,7 @@ def fetch_mouse_model_data_alliancegenome(disease_name: str) -> List[Dict[str, A
 
         for association in raw_data:
             row = {
-                "Model": association.get("subject", {}).get("name", ""),  # Model name
+                "Model": association.get("subject", {}).get("agmFullName", {}).get("displayText", ""),  # Model name
                 "Species": association.get("subject", {}).get("taxon", {}).get("name", ""),  # Species
                 "ExperimentalCondition": association.get("experimentalConditionList", []),  # Experimental conditions
                 "Association": association.get("generatedRelationString", ""),  # Association type
@@ -2090,11 +2142,13 @@ def fetch_mesh_entry_terms(disease_name):
 
 
 if __name__ == "__main__":
-    rna_seq_data_path = "/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease/obesity.json"
-    with open(rna_seq_data_path, 'r') as file:
-        data = json.load(file)
-        rna_seq_data = data["/evidence/rna-sequence/"] 
+    # rna_seq_data_path = "/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease/obesity.json"
+    # with open(rna_seq_data_path, 'r') as file:
+    #     data = json.load(file)
+    #     rna_seq_data = data["/evidence/rna-sequence/"] 
     
-    rna_seq_updated = add_mapped_diseases(rna_seq_data)
-    with open("rna_seq_updated.json", 'w') as outfile:
-        json.dump(rna_seq_updated, outfile, indent=4)
+    # rna_seq_updated = add_mapped_diseases(rna_seq_data)
+    # with open("rna_seq_updated.json", 'w') as outfile:
+    #     json.dump(rna_seq_updated, outfile, indent=4)
+    efo_id = "EFO_0000319"
+    mouse_studies = fetch_mouse_model_data_alliancegenome("cardiovascular disease", efo_id)
