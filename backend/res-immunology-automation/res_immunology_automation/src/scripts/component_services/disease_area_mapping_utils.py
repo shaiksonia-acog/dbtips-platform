@@ -126,45 +126,89 @@ class MeSHToEFOConverter:
         )
         return mappings
 
+# def efoid_to_meshid_mapper(term_id):
+#     """
+#     Given an EFO ID or a MeSH ID, return the corresponding cross-reference(s).
+#     Automatically detects the type based on prefix.
+#     """
+
+#     base_url = "https://www.ebi.ac.uk/ols4/api"
+
+#     if term_id.upper().startswith("EFO"):
+#         # EFO → MeSH
+#         iri = f"http://www.ebi.ac.uk/efo/{term_id.replace(':', '_')}"
+#         url = f"{base_url}/ontologies/efo/terms?iri={iri}"
+#         r = requests.get(url)
+#         if r.status_code != 200:
+#             return {"error": "Failed to fetch EFO term"}
+#         data = r.json()
+#         if not data.get("_embedded"):
+#             return {"error": "EFO term not found"}
+
+#         term = data["_embedded"]["terms"][0]
+#         label = term.get("label")
+
+#         # Try all possible xref locations
+#         xrefs = []
+#         if "obo_xref" in term:
+#             xrefs.extend(term["obo_xref"])
+#         if "annotation" in term:
+#             ann = term["annotation"]
+#             for key in ["hasDbXref", "database_cross_reference", "xref"]:
+#                 if key in ann:
+#                     xrefs.extend(ann[key])
+
+#         # Filter MeSH xrefs
+#         mesh_xrefs = [x for x in xrefs if isinstance(x, str) and x.startswith("MESH:")]
+#         mesh_ids = [x.replace("MESH:", "") for x in mesh_xrefs]
+#         return mesh_ids
+
+#     else:
+#         return {"error": "Unknown ID type. Use EFO_XXXX."}
+
 def efoid_to_meshid_mapper(term_id):
     """
-    Given an EFO ID or a MeSH ID, return the corresponding cross-reference(s).
+    Given an EFO ID or a MONDO ID, return the corresponding MeSH cross-reference(s).
     Automatically detects the type based on prefix.
     """
 
     base_url = "https://www.ebi.ac.uk/ols4/api"
 
     if term_id.upper().startswith("EFO"):
-        # EFO → MeSH
+        ontology = "efo"
         iri = f"http://www.ebi.ac.uk/efo/{term_id.replace(':', '_')}"
-        url = f"{base_url}/ontologies/efo/terms?iri={iri}"
-        r = requests.get(url)
-        if r.status_code != 200:
-            return {"error": "Failed to fetch EFO term"}
-        data = r.json()
-        if not data.get("_embedded"):
-            return {"error": "EFO term not found"}
-
-        term = data["_embedded"]["terms"][0]
-        label = term.get("label")
-
-        # Try all possible xref locations
-        xrefs = []
-        if "obo_xref" in term:
-            xrefs.extend(term["obo_xref"])
-        if "annotation" in term:
-            ann = term["annotation"]
-            for key in ["hasDbXref", "database_cross_reference", "xref"]:
-                if key in ann:
-                    xrefs.extend(ann[key])
-
-        # Filter MeSH xrefs
-        mesh_xrefs = [x for x in xrefs if isinstance(x, str) and x.startswith("MESH:")]
-        mesh_ids = [x.replace("MESH:", "") for x in mesh_xrefs]
-        return mesh_ids
-
+    elif term_id.upper().startswith("MONDO"):
+        ontology = "mondo"
+        iri = f"http://purl.obolibrary.org/obo/{term_id.replace(':', '_')}"
     else:
-        return {"error": "Unknown ID type. Use EFO_XXXX."}
+        return []
+
+    url = f"{base_url}/ontologies/{ontology}/terms?iri={iri}"
+    r = requests.get(url)
+    if r.status_code != 200:
+        return []
+
+    data = r.json()
+    if not data.get("_embedded"):
+        return []
+
+    term = data["_embedded"]["terms"][0]
+
+    # Collect all possible xrefs
+    xrefs = []
+    if "obo_xref" in term:
+        xrefs.extend(term["obo_xref"])
+    if "annotation" in term:
+        ann = term["annotation"]
+        for key in ["hasDbXref", "database_cross_reference", "xref"]:
+            if key in ann:
+                xrefs.extend(ann[key])
+
+    # Filter MeSH IDs
+    mesh_xrefs = [x for x in xrefs if isinstance(x, str) and x.startswith("MESH:")]
+    mesh_ids = [x.replace("MESH:", "") for x in mesh_xrefs]
+
+    return mesh_ids or []
 
 
 def predict_disease_area_from_title_abstract(title:str, abstract:str):
@@ -321,13 +365,13 @@ def get_mesh_tree_numbers_of_disease(disease_term, mesh_id = None):
         return tree_numbers[mesh_id]
 
 
-# if __name__ == "__main__":
-#     # In market intelligence section, for each trial record, do the following. 
-#     efoid = "EFO_0001645"
-#     mesh_ids = efoid_to_meshid_mapper(efoid)
-#     disease_areas = map_mesh_to_disease_area(mesh_ids)
-#     print (efoid, disease_areas)
-#     print ()
+if __name__ == "__main__":
+    # In market intelligence section, for each trial record, do the following. 
+    efoid = "MONDO_0005149"
+    mesh_ids = efoid_to_meshid_mapper(efoid)
+    disease_areas = map_mesh_to_disease_area(mesh_ids)
+    print (efoid, disease_areas)
+    print ()
 
 #     # In literature section, for each PMID, do the following. 
 
