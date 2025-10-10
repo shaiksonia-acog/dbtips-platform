@@ -218,7 +218,7 @@ class GeminiAnalyzer(BaseFigureAnalyzer):
                 raise PipelineStopException(f"Authentication error: {str(e)}") from e
             
             # Re-raise other errors for retry
-            raise
+            raise e
 
     async def analyze_content(self, figure_data: ImageDataModel) -> Dict:
         """
@@ -700,7 +700,7 @@ class MedGemmaAnalyzer(BaseFigureAnalyzer):
                     pass
                 
                 # Re-raise original timeout
-                raise
+                raise e
                 
             except httpx.HTTPStatusError as e:
                 # Check if the HTTP error is due to GPU memory issues
@@ -713,7 +713,7 @@ class MedGemmaAnalyzer(BaseFigureAnalyzer):
                 except:
                     pass
                 # Re-raise the original HTTP error if not GPU memory related
-                raise
+                raise e
                 
             except GPUMemoryException:
                 # Handle GPU memory errors with model reload
