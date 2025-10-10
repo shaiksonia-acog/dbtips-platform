@@ -9,7 +9,7 @@
         "il31ra",
         "il-31ra"
     ],
-     "il31ra": [
+    "il31ra": [
         "il-31ra",
         "il31ra",
         "interleukin-31 receptor",
@@ -67,7 +67,7 @@
     "il5ra": [
         "il5ra",
         "il-5ra",
-        "Interleukin 5 receptor alpha" 
+        "Interleukin 5 receptor alpha"
     ],
     "il5": [
         "il-5",
@@ -135,5 +135,74 @@
     ],
     "pde4d": [
         "pde4d"
+    ],
+    "sav1": [
+        "sav1",
+        "ww45",
+        "wwp4"
+    ],
+    "camk2d": [
+        "camkd",
+        "calmodulin dependent protein kinase II delta"
+    ],
+    "gucy1a1": [
+        "sgc",
+        "soluble guanylyl cyclase"
+    ],
+    "gucy1a2": [
+        "sgc",
+        "soluble guanylyl cyclase"
+    ],
+    "gucy1b1": [
+        "sgc",
+        "soluble guanylyl cyclase"
+    ],
+    "gucy1b2": [
+        "sgc",
+        "soluble guanylyl cyclase"
+    ],
+    "drp1": [
+        "dnm1l",
+        "dynamin related protein 1 like"
+    ],
+    "enho": [
+        "adropin"
+    ],
+    "usp30": [
+        "ubiquitin specific peptidase 30"
+    ],
+    "svep1": [
+        "ccp22"
+    ],
+    "acviia": [
+        "acvr2a",
+        "actr-IIa",
+        "activin a receptor type 2a",
+        "actrII"
+    ],
+    "acviib": [
+        "acvr2b",
+        "actr-IIb",
+        "activin receptor type-2b",
+        "actrII"
+    ],
+    "pde3b": [
+        "phosphodiesterase 3b"
+    ],
+    "gipr": [
+        "glucose-dependent insulinotropic polypeptide receptor"
+    ],
+    "aplnr": [
+        "apj"
+    ],
+    "crhr2": [
+        "crf2",
+        "crfr2"
+    ],
+    "gpr75": [
+        "g protein-coupled receptor 75"
+    ],
+    "inhbe": [
+        "inhibin beta e"
     ]
 }
