@@ -1703,7 +1703,7 @@ async def target_pipeline_new(
                 save_response_to_file(target_record.file_path, cached_responses)
         
             response['available_diseases'] = available_diseases
-            response['disease_areas'] = disease_areas
+            
         logger.info("Returning response")
         return response
 
@@ -2197,9 +2197,10 @@ async def get_evidence_target_literature(request: TargetRequest,
                 all_literature_details: List[Dict[str,Any]] = fetch_literature_details_in_batches(disease.replace("_"," "),pmids)
                 print("all_literature_details: ",len(all_literature_details))
                 
-                # Map the diseases of each article given disease/disease area
-                logger.info("Annotating each article with diseases of given disease area")
-                all_literature_details = generate_mapped_diseases_for_disease_area(disease.replace("_"," "), all_literature_details)
+                if disease != "no-disease":
+                    # Map the diseases of each article given disease/disease area
+                    logger.info("Annotating each article with diseases of given disease area")
+                    all_literature_details = generate_mapped_diseases_for_disease_area(disease.replace("_"," "), all_literature_details)
                 cached_data[disease.replace("_"," ")] = {"literature": all_literature_details}
                 cached_responses[f"{endpoint}"]={"literature": all_literature_details}
 
@@ -2433,13 +2434,14 @@ async def get_mouse_studies(request: DiseasesRequest, redis: Redis = Depends(get
 
     print("filtered diseases: ", filtered_diseases)
     # Check if cached response exists in Redis
-    cached_response_redis: dict = await get_cached_response(redis, key)
-    if cached_response_redis:
-        print("Returning chached response")
-        return cached_response_redis
+    # cached_response_redis: dict = await get_cached_response(redis, key)
+    # if cached_response_redis:
+    #     print("Returning chached response")
+    #     return cached_response_redis
 
 
     try:
+        converter = MeSHToEFOConverter()
         for disease in filtered_diseases:
             disease_record = db.query(Disease).filter_by(id=f"{disease}").first()
             file_path: str = os.path.join(cache_dir, f"{disease}.json")
@@ -2450,9 +2452,18 @@ async def get_mouse_studies(request: DiseasesRequest, redis: Redis = Depends(get
                 cached_responses = load_response_from_file(cached_file_path)
             else:
                 cached_responses = {}
-            data=fetch_mouse_model_data_alliancegenome(disease_name=disease.replace("_"," "))
-            cached_data[disease.replace("_"," ")]  = {"mouse_studies": data}
-            cached_responses[f"{endpoint}"]={"mouse_studies": data}
+            efo_id = None
+            efo_details = converter.convert(disease.replace('_', ' ').lower())
+            if efo_details and efo_details.get('success'):
+                efo_id = efo_details.get('efo_id').replace(":", "_")
+
+            print(f"EFO ID for {disease.replace('_',' ')}: {efo_id}")
+            if not efo_id:
+                cached_responses[f"{endpoint}"]={"mouse_studies": "EFO ID not found"}
+            else:
+                data=fetch_mouse_model_data_alliancegenome(disease_name=disease.replace("_"," "), efo_id=efo_id)
+                cached_data[disease.replace("_"," ")]  = {"mouse_studies": data}
+                cached_responses[f"{endpoint}"]={"mouse_studies": data}
 
             if disease_record is None:
                 save_response_to_file(file_path, cached_responses)
@@ -3558,14 +3569,14 @@ async def pgs_catalog_data(request: DiseasesRequest, redis: Redis = Depends(get_
                 efo_id = None
                 efo_details = converter.convert(disease_name.replace('_', ' ').lower())
                 if efo_details and efo_details.get('success'):
-                    efo_id = efo_details.get('efo_id')
+                    efo_id = efo_details.get('efo_id').replace(":", "_")
 
                 # Fetch PGS CAtalog data using EFO IDs
                 # efo_id: str = get_efo_id(disease_name.replace('_', ' ').lower())
                 print("EFO ID: ", efo_id)
                 if efo_id:
                     diseases_and_efo[disease_name] = efo_id.replace(':', '_')
-                    genomics_data = fetch_pgs_data(disease, efo_id)
+                    genomics_data = fetch_pgs_data(disease.replace('_', ' '), efo_id)
                 else:
                     genomics_data = [f"EFO ID not found for {disease_name.replace('_', ' ')}"]
 
@@ -3748,20 +3759,52 @@ async def plot_locus_zoom(request: DiseasesRequest, redis: Redis = Depends(get_r
     try:
         diseases: str = [disease.lower() for disease in request.diseases]
         response = {}
+        converter = MeSHToEFOConverter()
         for disease in diseases:
-            print('disease: ', disease)
-            efo_id: str = get_efo_id(disease)
-            gwas_disease_file_path = os.path.join(GWAS_DATA_DIR, f'{efo_id}.tsv')
-            print("gwas_disease_file_path: ", gwas_disease_file_path)
+            # print('disease: ', disease)
+            # efo_id: str = get_efo_id(disease)
+            # gwas_disease_file_path = os.path.join(GWAS_DATA_DIR, f'{efo_id}.tsv')
+            # print("gwas_disease_file_path: ", gwas_disease_file_path)
+            # if not os.path.exists(gwas_disease_file_path):
+            #     print("path doesn't exists")
+            #     gwas_disease_file_path = load_data(efo_id)
+            # print("gwas_disease_file_path: ", gwas_disease_file_path)
+            efo_ids = []
+            # requested_efo = get_efo_id(disease.lower())
+            efo_details = converter.convert(disease.replace('_', ' ').lower())
+            if efo_details and efo_details.get('success'):
+                requested_efo = efo_details.get('efo_id').replace(":", "_")
+            print("efo_id: ", requested_efo)
+            gwas_disease_file_path = os.path.join(GWAS_DATA_DIR, f'{requested_efo}.tsv')
             if not os.path.exists(gwas_disease_file_path):
-                print("path doesn't exists")
-                gwas_disease_file_path = load_data(efo_id)
-            print("gwas_disease_file_path: ", gwas_disease_file_path)
-            if gwas_disease_file_path and os.path.isfile(gwas_disease_file_path):
-                response[disease] = gwas_disease_file_path
+                print("requested_efo: ", requested_efo)
+                request_data = DiseasesRequest(diseases=[disease])
+                # Make the POST request to the internal API endpoint
+                response = client.post("/genomics/gwas-studies", json=request_data.dict())
+                if response.status_code != 200:
+                    raise HTTPException(status_code=response.status_code, detail=response.json())
+                
+                gwas_studies = response.json()
+                gwas_studies = gwas_studies[disease.replace(" ", "_")]
+                related_traits = list(set([item["Trait(s)"] for item in gwas_studies if "Trait(s)" in item]))
+                print("related_traits: ", related_traits)
+                for trait in related_traits:
+                    efo_id = get_efo_id(trait.lower())
+                    if efo_id:
+                        efo_ids.append(efo_id)
+                    else:
+                        print(f"EFO ID not found for trait: {trait}")
+                    time.sleep(1)
+
+                print("efo_ids: ", efo_ids)
+                gwas_disease_file_path = load_data(efo_ids, requested_efo)
+                if gwas_disease_file_path and os.path.isfile(gwas_disease_file_path):
+                    response[disease] = gwas_disease_file_path
             
+                else:
+                    response[disease] = None
             else:
-                response[disease] = None
+                response[disease] = gwas_disease_file_path
             print("response: ", response)
         return response
 
