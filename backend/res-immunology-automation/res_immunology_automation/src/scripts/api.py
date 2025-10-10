@@ -259,7 +259,6 @@ def send_email(receiver_email: str, otp: str):
     
 @app.on_event("startup")
 async def startup():
-    logging.info("Starting FastAPI application...")
     # This will create the tables for all models defined with Base
     Base.metadata.create_all(bind=engine)
 
@@ -525,9 +524,7 @@ async def get_progression_tracker(db: Session = Depends(get_db)):
             for status in status_list:
                 if status not in response:
                     response[status] = []
-                response[status].extend(fetch_records_by_status(job_type, status))
-
-        
+                response[status].extend(fetch_records_by_status(db, job_type, status))
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))    
@@ -3312,7 +3309,6 @@ async def get_functional_genomics(request: TargetOnlyRequest, redis: Redis = Dep
         print("Returning redis cached response")
         return cached_response_redis
 
-
     try:
 
         response: Dict[str, List[Dict[str, Any]]] = {"results": find_matching_screens_for_target(target)}
@@ -3537,10 +3533,10 @@ async def pgs_catalog_data(request: DiseasesRequest, redis: Redis = Depends(get_
 
     print("filtered diseases: ", filtered_diseases)
     # Check if cached response exists in Redis
-    # cached_response_redis: dict = await get_cached_response(redis, key)
-    # if cached_response_redis:
-    #     print("Returning chached response")
-    #     return cached_response_redis
+    cached_response_redis: dict = await get_cached_response(redis, key)
+    if cached_response_redis:
+        print("Returning chached response")
+        return cached_response_redis
 
     try:
         if build_cache == True:
