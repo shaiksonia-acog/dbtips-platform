@@ -197,7 +197,7 @@ def efoid_to_meshid_mapper(term_id):
     # Collect all possible xrefs
     xrefs = []
     if "obo_xref" in term:
-        xrefs.extend(term["obo_xref"])
+        xrefs.extend(term["obo_xref"] or [])
     if "annotation" in term:
         ann = term["annotation"]
         for key in ["hasDbXref", "database_cross_reference", "xref"]:
