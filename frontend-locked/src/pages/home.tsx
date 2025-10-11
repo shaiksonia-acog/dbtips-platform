@@ -15,7 +15,7 @@ type FieldType = {
   diseaseArea?: string[];
 };
 
-const targetOptions = ["SAV1", "CAMK2D", "DNM1L", "ENHO", "GUCY1B1", "GUCY1A1", "USP30", "SVEP1"]
+const targetOptions = ["CAMK2D", "DNM1L", "ENHO", "GUCY1A1", "SAV1"]
 const diseaseAreaOptions = [ "Cardiovascular diseases", "Urologic diseases"]
 const indicationOptions = ["Obesity"]
 const { Option } = Select;
