@@ -85,7 +85,8 @@ from component_services.literature_enhancement_services import fetch_literature_
 from component_services.literature_cache_update import update_literature_caches_with_analysis
 from component_services.evidence_services import build_query, get_geo_data_for_diseases,fetch_mouse_models,\
     fetch_and_filter_figures_by_disease_and_pmids,fetch_mouse_model_data_alliancegenome,\
-    get_top_10_literature_helper,add_platform_name,add_study_type, add_sample_type, get_mesh_term_for_disease, build_query_target
+    get_top_10_literature_helper,add_platform_name,add_study_type, add_sample_type, get_mesh_term_for_disease, \
+    build_query_target, add_mapped_diseases
 from component_services.disease_profile_llm import disease_interpreter
 from component_services.target_services import find_matching_screens_for_target,fetch_subcellular_locations
 from fastapi.testclient import TestClient
@@ -2821,39 +2822,59 @@ async def get_target_literature_images_evidence(request: TargetRequest,
                 clean_item = item.strip().lower().replace(" ", "_")
                 file_name = clean_item.replace(":", "-")
                 parts = clean_item.split(':')
-                query_target, query_diseases = parts[0], [parts[-1]]
+                query_target, query_disease = parts[0], [parts[-1]]
                 key = parts[1].replace("_", " ")
+                pathway_endpoint_data = {}
+                pathway_response = {'results': {'literature': [], 'pathways': []}}
 
-                # Fetch literature data with specific target and diseases
+                # Step 1: Fetch literature data with specific target and diseases from Enhancement Pipeline
                 literature_data = fetch_literature_images_data(
                     db, 
                     target=query_target, 
-                    diseases=query_diseases
+                    diseases=query_disease
                 )
-
+                disease_name = query_disease[0].replace("_", " ")
                 # Map literature data to network biology format
                 literature_network_biology_format = map_literature_to_network_biology_format(literature_data)
 
+                # fetching pathway figures from target-literature  cache
                 logger.info(f"Fetching articles from target-literature cache:")
                 file_path = os.path.join(cache_dir, f"{file_name}.json")
                 if os.path.exists(file_path):
                     cached_responses = load_response_from_file(file_path)
                     literature_articles = cached_responses[literature_endpoint]['literature'] if literature_endpoint in cached_responses else []
 
+                logger.info(f"Annotating literature data with mapped diseases from target-literature cache:")
                 # Annotate literature data with mapped diseases from the target-literature cache
-                literature_network_biology_format['results'] = add_mapped_diseases_to_literature(literature_network_biology_format['results'], literature_articles)
+                pathway_response['results']['literature'] = add_mapped_diseases_to_literature(literature_network_biology_format['results'], literature_articles)
+
+                # Step 2: Fetch disease-pathway data
+                logger.info(f"Fetching pathway data for diseases: {disease_name}")
+                request_data = DiseasesRequest(diseases=query_disease)
+                response = client.post("/evidence/disease-pathway/", json=request_data.dict())
+                logger.info(f"Disease-pathway response status: {response.status_code}")
+                if response.status_code != 200:
+                    raise HTTPException(status_code=response.status_code, detail=response.json())
+
+                logger.info(f"Annotating pathway data with mapped diseases: {response.json()[disease_name]['results']}")
+                pathway_endpoint_data[disease_name] = response.json()[disease_name]['results']
+                # annotate pathways data with mapped diseases
+                pathway_endpoint_data = add_mapped_diseases(pathway_endpoint_data, pmid_key='pmid')
+                logger.info(f"Annotated pathway data: {pathway_endpoint_data}")
+                pathway_response['results']['pathways'] = pathway_endpoint_data
+
                 logger.info("Mapped diseases added to literature data")
                 # Store the data using the appropriate key
                 if is_combination:
-                    cached_data[key] = literature_network_biology_format 
+                    cached_data[key] = pathway_response 
                 else:
                     # For single target or disease queries, the mapping might return data with a different key
-                    if literature_network_biology_format:
+                    if pathway_response:
                         # Get the first (and likely only) entry
                         # first_key = next(iter(literature_network_biology_format))
-                        cached_data[key] = literature_network_biology_format
+                        cached_data[key] = pathway_response
                     else:
-                        cached_data[key] = {"results": []}
+                        cached_data[key] = pathway_response
                 
             # Handle file caching
             
@@ -3711,7 +3732,7 @@ async def plot_locus_zoom(request: DiseaseRequest, redis: Redis = Depends(get_re
                             db: Session = Depends(get_db)):
     try:
         disease: str = request.disease
-        efo_ids = []
+        studies = []
         converter = MeSHToEFOConverter()
         # requested_efo = get_efo_id(disease.lower())
         efo_details = converter.convert(disease.replace('_', ' ').lower())
@@ -3729,18 +3750,9 @@ async def plot_locus_zoom(request: DiseaseRequest, redis: Redis = Depends(get_re
             
             gwas_studies = response.json()
             gwas_studies = gwas_studies[disease.replace(" ", "_")]
-            related_traits = list(set([item["Trait(s)"] for item in gwas_studies if "Trait(s)" in item]))
-            print("related_traits: ", related_traits)
-            for trait in related_traits:
-                efo_id = get_efo_id(trait.lower())
-                if efo_id:
-                    efo_ids.append(efo_id)
-                else:
-                    print(f"EFO ID not found for trait: {trait}")
-                time.sleep(1)
-
-            print("efo_ids: ", efo_ids)
-            gwas_disease_file_path = load_data(efo_ids, requested_efo)
+            studies = list(set([item["Study accession"] for item in gwas_studies if "Study accession" in item]))
+            print("studies: ", len(studies), studies)
+            gwas_disease_file_path = load_data(studies, requested_efo)
         return gwas_disease_file_path
 
     except FileNotFoundError as e:
@@ -3786,18 +3798,21 @@ async def plot_locus_zoom(request: DiseasesRequest, redis: Redis = Depends(get_r
                 
                 gwas_studies = response.json()
                 gwas_studies = gwas_studies[disease.replace(" ", "_")]
-                related_traits = list(set([item["Trait(s)"] for item in gwas_studies if "Trait(s)" in item]))
-                print("related_traits: ", related_traits)
-                for trait in related_traits:
-                    efo_id = get_efo_id(trait.lower())
-                    if efo_id:
-                        efo_ids.append(efo_id)
-                    else:
-                        print(f"EFO ID not found for trait: {trait}")
-                    time.sleep(1)
-
-                print("efo_ids: ", efo_ids)
-                gwas_disease_file_path = load_data(efo_ids, requested_efo)
+                # related_traits = list(set([item["Trait(s)"] for item in gwas_studies if "Trait(s)" in item]))
+                # print("related_traits: ", related_traits)
+                # for trait in related_traits:
+                #     efo_id = get_efo_id(trait.lower())
+                #     if efo_id:
+                #         efo_ids.append(efo_id)
+                #     else:
+                #         print(f"EFO ID not found for trait: {trait}")
+                #     time.sleep(1)
+                # print("efo_ids: ", efo_ids)
+                # gwas_disease_file_path = load_data(efo_ids, requested_efo)
+                studies = list(set([item["Study accession"] for item in gwas_studies if "Study accession" in item]))
+                print("studies: ", len(studies), studies)
+                gwas_disease_file_path = load_data(studies, requested_efo)
+                
                 if gwas_disease_file_path and os.path.isfile(gwas_disease_file_path):
                     response[disease] = gwas_disease_file_path
             
