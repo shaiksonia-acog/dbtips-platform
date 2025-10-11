@@ -59,7 +59,7 @@ const valueFormatter = (params) => {
 const Patent = ({ target, indications }) => {
   const [rowData, setRowData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [countryFilter, setCountryFilter] = useState("US");
+  const [countryFilter, setCountryFilter] = useState("ALL");
   const [selectedDisease, setSelectedDisease] = useState(indications);
   const [statusFilter, setStatusFilter] = useState("ACTIVE");
 
