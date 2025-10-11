@@ -91,7 +91,9 @@ const AppContent = () => {
                                 <Route
                                     path="/"
                                     element={
+                                        <ProtectedRoute>
                                         <Home setAppState={setAppState} />
+                                        </ProtectedRoute>
                                     }
                                 />
                                 <Route
