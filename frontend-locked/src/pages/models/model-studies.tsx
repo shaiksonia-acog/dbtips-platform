@@ -131,7 +131,7 @@ const ModelStudies: React.FC<ModelStudiesProps> = ({ indications,diseaseAreaFilt
     diseases: indications,
   };
 
-  const apiEndpoint = "/evidence/mouse-studies";
+  const apiEndpoint = "/evidence/mouse-studies/";
 
   const { data, isLoading, isError, isFetching } = useQuery(
     ["mouseStudies", payload],

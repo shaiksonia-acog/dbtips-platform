@@ -204,7 +204,7 @@ const DiseasePathways: React.FC<NetworkBiologyProps> = ({ indications, target })
               // and we're using target-literature-images endpoint, show all results
               // since they were already filtered by the backend
               const isOriginalTarget = target && selectedTarget.toUpperCase() === target.toUpperCase();
-              const isTargetEndpoint = target; // We have a target prop
+              const isTargetEndpoint = target && indications.length==0;; // We have a target prop
               
               if (isOriginalTarget && isTargetEndpoint) {
                 return true; // Show all results for the original target query

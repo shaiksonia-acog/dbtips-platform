@@ -52,7 +52,7 @@ const CompetitiveLandscape = ({ target, indications, diseaseAreaFilter }) => {
     ["targetPipeline", payload],
     () =>
       fetchData(
-        payload,`/market-intelligence/target-pipeline-new`
+        payload,`/market-intelligence/target-pipeline-new/`
       ),
     {
       enabled: !!target,
