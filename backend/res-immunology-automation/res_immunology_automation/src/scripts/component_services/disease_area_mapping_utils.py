@@ -234,7 +234,11 @@ def pmid_to_meshid_mapper(pmid):
             descriptor = mesh_heading.find("DescriptorName")
             qualifier = mesh_heading.find("QualifierName")
             #if descriptor is not None and descriptor.attrib.get('MajorTopicYN') == "Y":
-            if descriptor is not None and qualifier is not None and ((descriptor.attrib.get('MajorTopicYN') == "Y") or (qualifier.attrib.get('MajorTopicYN') == "Y")):
+            # if descriptor is not None and qualifier is not None and ((descriptor.attrib.get('MajorTopicYN') == "Y") or (qualifier.attrib.get('MajorTopicYN') == "Y")):
+            if descriptor is not None and descriptor.attrib.get('MajorTopicYN') == "Y" or (
+                    qualifier is not None and qualifier.attrib.get('MajorTopicYN', "") == "Y"
+                ):
+
                 term = descriptor.text
                 mesh_id = descriptor.attrib.get('UI')
                 mesh_details[term] = mesh_id
