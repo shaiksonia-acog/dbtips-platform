@@ -20,12 +20,12 @@ const diseaseAreaOptions = [ "Cardiovascular diseases", "Urologic diseases"]
 const indicationOptions = ["Obesity"]
 const { Option } = Select;
 const diseaseToTargetMap: Record<string, string[]> = {
-  "Cardiovascular diseases": ["SAV1","GUCY1A1","CAMK2D"],
+  "Cardiovascular diseases": ["CAMK2D","DNM1L","ENHO","GUCY1A1","SAV1",],
   "Urologic diseases": ["CAMK2D","GUCY1A1"],
 };
 
 const indicationToTargetMap: Record<string, string[]> = {
-  "Obesity": ["USP30", "SVEP1","ENHO","GUCY1B1","GUCY1A1"]
+  "Obesity": []
 };
 const HomeLocked = ({ setAppState }) => {
 
