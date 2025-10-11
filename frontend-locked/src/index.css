@@ -1,0 +1,275 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	/* font-family: Helvetica, sans-serif; */
+	font-family: 'Open Sans', sans-serif;
+	font-size: 14px;
+	line-height: 1.6;
+
+	--color-black: #1b1212;
+	color: #1b1212;
+}
+
+html {
+	scroll-behavior: 'smooth';
+}
+
+.ag-theme-quartz {
+	/* --ag-active-color: var(--color-primary); */
+	--ag-foreground-color: var(--color-black);
+
+	--ag-grid-size: 5px;
+	--ag-list-item-height: 15px;
+	/* --ag-font-family: Helvetica, sans-serif; */
+	--ag-font-family: 'Open Sans', sans-serif;
+	--ag-font-size: 12px;
+	--ag-borders: none;
+	--ag-row-border-style: none;
+	--ag-borders-input: solid 1px;
+
+	--ag-row-hover-color: #ecfdf5;
+}
+
+.ag-theme-quartz a {
+	color: var(--color-black);
+	text-decoration: underline;
+	text-underline-offset: 1.5px;
+}
+
+.ag-theme-quartz .ag-header {
+	background-color: #93d2fc;
+}
+
+.ag-theme-quartz .ag-row-odd {
+	/* Gray 100 */
+	/* background-color: #cfedfa; */
+	/* background-color: #f0f9ff; */
+	background-color: #e0f2fe;
+}
+
+span.reference {
+	color: #1677ff;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.markdown > * {
+    all: revert;
+}
+
+.json-viewer ul {
+    background-color: #fff !important;
+}
+
+.json-viewer {
+    max-height: 80vh; /* Set max height to prevent overflow */
+    overflow-y: auto; /* Scroll vertically if content exceeds max height */
+    overflow-x: auto; /* Scroll horizontally for long lines */
+    font-family: monospace; /* Use monospace font for better readability */
+}
+
+.json-viewer pre {
+    white-space: pre-wrap; /* Enable text wrapping for long lines */
+    /* word-wrap: break-word; Break long words that exceed the container width */
+}
+
+span.highlight {
+    background-color: #a78bfa;
+    color: #fff;
+}
+.custom-tooltip .ant-tooltip-inner {
+    color: black;
+    padding: 10px; /* White text */
+  }
+.custom-tooltip .ant-tooltip-arrow-content {
+    background-color: white; /* Match the tooltip background color */
+  }
+  
+h1{
+    color:#0a427e;
+    font-size:28px !important;
+}
+
+.subHeading{
+    color:#1059a7;
+
+}
+.custom-card-title {
+    color: #357eaf;
+    font-weight: bold;
+    font-size: 15px;
+  }
+  .ant-card-body a{
+    color: var(--color-black);
+    text-decoration: underline;
+    text-underline-offset: 1.5px;
+  }
+  .ant-collapse-header {
+    color: #083f7b !important; /* Change to your preferred color */
+  }
+  form label{
+    font-size: 16px !important;
+    font-weight: bold;
+  }
+  .ant-collapse-header-text,.ant-collapse-content-box,.ant-dropdown-trigger, label,.custom-card-title,.ant-descriptions-item-container,.ant-select-selection-item,.ant-select-item-option-content{
+    font-family: "Open Sans", sans-serif !important;
+  }
+  .ant-btn{
+    font-family: "Open Sans", sans-serif !important;
+  }
+  .nav-link {
+    color: #333;
+    text-decoration: none;
+    /* padding: 0 4px; */
+    /* padding-top: 1.3rem;
+    padding-bottom: 1.3rem; */
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    /* border-left: 2px solid #e0e0e0; */
+    /* border-right: 2px solid #e0e0e0; */
+}
+.nav-link {
+    color: #333;
+    
+    transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+
+
+.nav-item:first-child .nav-link {
+    border-left: none;
+}
+
+.nav-item:last-child .nav-link {
+    border-right: none;
+}
+
+.nav-link:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 123, 255, 0.1);
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.coverLetter .ant-badge-status-dot {
+    border: 1px solid grey;
+}
+#coverLetter .ag-header-cell-label {
+  justify-content: center;
+  text-align: center;
+}
+
+.nav-link:hover:before,
+.nav-link:focus:before {
+    transform: translateY(0);
+}
+.nav-link.active {
+    color: #ffffff;
+    background-color: #007bff;
+    border-color: #007bff;
+    box-shadow: inset 2px 6px 10px rgba(0, 0, 0, 0.2); 
+    /* box-shadow: rgba(88, 52, 52, 0.5) 0px 2px 5px 2px inset; */
+    transform: translateY(2px); 
+    /* box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset; */
+    background: #007bff;
+  -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+     -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+          box-shadow: inset 0px 0px 5px #c1c1c1;
+   outline: none;
+   border-radius: 8px;
+
+}
+#coverLetter .ag-theme-quartz .ag-row-odd {
+ background-color: #ffffff; 
+}
+
+.nav-link:active {
+    transform: scale(0.95);
+
+}
+
+@keyframes pressEffect {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+.nav-link.pressed {
+    animation: pressEffect 0.3s ease;
+}
+/* Hover effect for enlarging card */
+.custom-card {
+    width: 100%; /* Full width within the column */
+    height: 550px; /* Fixed height */
+    display: flex;
+    flex-direction: column;
+    /* justify-content: space-between; */
+    text-align: center;
+  }
+  
+  
+  
+  /* Ensure image fits properly */
+  .custom-card img {
+    object-fit: contain;
+    height: 400px; /* Image height */
+    width: auto; /* Stretch image to fill card */
+  }
+  
+  /* Adjust grid spacing */
+  .ant-row {
+    margin: 10px 23px !important; /* Remove extra row margins */
+  }
+  .ant-carousel .slick-prev,
+  .ant-carousel .slick-next,
+  .ant-carousel .slick-prev:hover,
+  .ant-carousel .slick-next:hover  {
+  color: #000000 !important; /* Change color of navigation arrows */
+  font-size: 45px !important; /* Increase button size */
+  z-index: 10;
+}
+.custom-card .ant-card-meta-title {
+    white-space: normal;
+    word-wrap: break-word;
+    font-size: 16px; /* Adjust font size if needed */
+    font-weight: bold;
+  }
+  /* Change default dot color */
+.ant-carousel .slick-dots li button {
+	background-color: gray;
+	margin-top: 20px;
+}
+
+/* Change active dot color */
+.ant-carousel .slick-dots .slick-active button {
+	background-color: blue !important;
+}
+
+.ant-descriptions-view {
+	th,
+	td {
+		border: none;
+		padding: none;
+		text-align: none;
+	}
+}
+.centered-header .ag-header-cell-label{
+  text-align: center!important;
+  display: flex!important;
+  justify-content: center!important;
+}
+.ag-header-cell-comp-wrapper {
+  justify-content: center;
+}
