@@ -218,7 +218,8 @@ class GeminiAnalyzer(BaseFigureAnalyzer):
                 raise PipelineStopException(f"Authentication error: {str(e)}") from e
             
             # Re-raise other errors for retry
-            raise e
+
+            raise Exception(f"Other error: {str(e)}") from e
 
     async def analyze_content(self, figure_data: ImageDataModel) -> Dict:
         """

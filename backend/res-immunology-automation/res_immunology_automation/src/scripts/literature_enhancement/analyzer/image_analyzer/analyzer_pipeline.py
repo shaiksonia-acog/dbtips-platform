@@ -143,6 +143,7 @@ class ThreeStageHybridAnalysisPipeline:
                     "error_type": "analysis_error",
                     "status": "error"
                 }
+            
             else:
                 logger.warning(f"Stage 2 partial completion: {pmcid} - status: {analysis_result.get('status')}")
             

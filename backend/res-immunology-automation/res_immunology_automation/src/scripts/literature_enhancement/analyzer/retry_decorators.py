@@ -134,8 +134,8 @@ def async_api_retry(max_retries: int = 3, base_delay: float = 10.0, backoff_mult
                     last_exception = e
                     if attempt == max_retries:
                         # For timeout errors, we continue to next record
-                        logger.error(f"MedGemma timeout after {max_retries} retries: {str(e)}")
-                        raise ContinueToNextRecordException(f"MedGemma timeout after {max_retries} retries") from e
+                        logger.error(f"Timeout error from the model after {max_retries} retries: {str(e)}")
+                        raise ContinueToNextRecordException(f"Timeout error from the model after {max_retries} retries") from e
                     
                     delay = base_delay * (backoff_multiplier ** attempt)
                     logger.warning(f"Attempt {attempt + 1} failed with timeout, retrying in {delay}s: {str(e)}")
@@ -188,8 +188,8 @@ def async_api_retry(max_retries: int = 3, base_delay: float = 10.0, backoff_mult
                     
                     if attempt == max_retries:
                         # For unexpected errors, stop the pipeline
-                        logger.error(f"Unexpected MedGemma error after {max_retries} retries, stopping pipeline: {str(e)}")
-                        raise PipelineStopException(f"Unexpected MedGemma error after {max_retries} retries") from e
+                        logger.error(f"Error from Model after {max_retries} retries, stopping pipeline: {str(e)}")
+                        raise PipelineStopException(f"Error from Model after {max_retries} retries due to {str(e)}") from e
                     
                     delay = base_delay * (backoff_multiplier ** attempt)
                     logger.warning(f"Attempt {attempt + 1} failed with unexpected error, retrying in {delay}s: {str(e)}")
