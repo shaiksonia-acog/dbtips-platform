@@ -1,0 +1,148 @@
+{
+    "chromosomes": [
+      {
+        "number": 1,
+        "location": 0,
+        "length": 248918363,
+        "name": "1"
+      },
+      {
+        "number": 2,
+        "location": 248918363,
+        "length": 241873274,
+        "name": "2"
+      },
+      {
+        "number": 3,
+        "location": 490791637,
+        "length": 198038667,
+        "name": "3"
+      },
+      {
+        "number": 4,
+        "location": 688830304,
+        "length": 190175048,
+        "name": "4"
+      },
+      {
+        "number": 5,
+        "location": 879005352,
+        "length": 181368225,
+        "name": "5"
+      },
+      {
+        "number": 6,
+        "location": 1060373577,
+        "length": 170584581,
+        "name": "6"
+      },
+      {
+        "number": 7,
+        "location": 1230958158,
+        "length": 159144771,
+        "name": "7"
+      },
+      {
+        "number": 8,
+        "location": 1390102929,
+        "length": 145054157,
+        "name": "8"
+      },
+      {
+        "number": 9,
+        "location": 1535157086,
+        "length": 138121999,
+        "name": "9"
+      },
+      {
+        "number": 10,
+        "location": 1673279085,
+        "length": 133626742,
+        "name": "10"
+      },
+      {
+        "number": 11,
+        "location": 1806905827,
+        "length": 134387659,
+        "name": "11"
+      },
+      {
+        "number": 12,
+        "location": 1941293486,
+        "length": 133234356,
+        "name": "12"
+      },
+      {
+        "number": 13,
+        "location": 2074527842,
+        "length": 114326281,
+        "name": "13"
+      },
+      {
+        "number": 14,
+        "location": 2188854123,
+        "length": 105529794,
+        "name": "14"
+      },
+      {
+        "number": 15,
+        "location": 2294383917,
+        "length": 101923059,
+        "name": "15"
+      },
+      {
+        "number": 16,
+        "location": 2396306976,
+        "length": 90075910,
+        "name": "16"
+      },
+      {
+        "number": 17,
+        "location": 2486382886,
+        "length": 83094575,
+        "name": "17"
+      },
+      {
+        "number": 18,
+        "location": 2569477461,
+        "length": 80247348,
+        "name": "18"
+      },
+      {
+        "number": 19,
+        "location": 2649724809,
+        "length": 58571389,
+        "name": "19"
+      },
+      {
+        "number": 20,
+        "location": 2708296198,
+        "length": 64273600,
+        "name": "20"
+      },
+      {
+        "number": 21,
+        "location": 2772569798,
+        "length": 46664374,
+        "name": "21"
+      },
+      {
+        "number": 22,
+        "location": 2819234172,
+        "length": 50782294,
+        "name": "22"
+      },
+      {
+        "number": 23,
+        "location": 2870016466,
+        "length": 156010409,
+        "name": "X"
+      },
+      {
+        "number": 24,
+        "location": 3026026875,
+        "length": 57196929,
+        "name": "Y"
+      }
+    ]
+  }
