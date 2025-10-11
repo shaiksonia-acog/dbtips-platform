@@ -1,7 +1,6 @@
 import { Select } from "antd";
 import { useState, useEffect } from "react";
 import { capitalizeFirstLetter } from "../utils/helper";
-import { use } from "cytoscape";
 
 const { Option } = Select;
 
