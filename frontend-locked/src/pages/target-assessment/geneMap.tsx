@@ -225,9 +225,7 @@ const isPointMatching = (point: DataPoint): boolean => {
       
             setChartData(newChartData);
             setOriginalData(newChartData);
-          }
-        else return null;
-        }, [geneMapData]);
+          }}, [geneMapData]);
 
 
   const handleSearchChange = (value: string) => {
