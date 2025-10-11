@@ -2,7 +2,7 @@ services:
   web:
     container_name: 'dbtips-mrl'
     build:
-      context: frontend
+      context: frontend-locked
       dockerfile: Dockerfile
       args:
         - VITE_API_URI=${VITE_API_URI}
