@@ -182,7 +182,7 @@ const AppContent = () => {
                     }}
                 >
                     <div className='h-[100%] w-[30%] z-100 fixed pb-10 '>
-                        <ChatBot baseURL='http://localhost:65220' userAvatar={userAvatar} assistantAvatar={assistantAvatar} />
+                        <ChatBot baseURL='/llm' userAvatar={userAvatar} assistantAvatar={assistantAvatar} />
                     </div>
                 </Layout.Sider>
             </Layout>
