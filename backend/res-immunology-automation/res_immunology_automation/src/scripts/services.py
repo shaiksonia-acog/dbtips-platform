@@ -1756,7 +1756,8 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
                                     "intervention_types": trial.get("intervention_types", "")
                                 })
 
-    
+            logger.info(f"Total trials fetched from Chembl for target {target_input}: {len(results)}")
+
     if not target_chembl_id or drugs_available_from_chembl==False:
         logging.info(f"Fetching Drugs from OT for Target: {target_input}")
         analyzer = TargetAnalyzer(target_input)
@@ -1795,7 +1796,7 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
                 if trial.get('nct_id', "") in no_title_nct_ids:
                     trial["OfficialTitle"] = title_map.get(trial["nct_id"], "")
         
-        logger.info("Getting NCT ids for PMIDs for diseases")
+        logger.info("Getting PMIDs ids for NCTids for diseases")
         # pmid_map = get_disease_pmid_nct_mapping(list(set([d['Disease'].replace("_", " ") for d in results if d['Disease'] != "NA"])))
         # logger.info("MApping PMID with NCT ID")
         # all_entries = get_pmids_for_nct_ids_target_pipeline(results, pmid_map)
@@ -1816,7 +1817,7 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
         #     import json
         #     json.dump(all_entries, f, indent=2)
     
-    # with open("gucy1a1_op.json", "r") as f:
+    # with open("gucy1a1.json", "r") as f:
     #     import json
     #     all_entries = json.load(f)[0]
     #     available = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries if r.get("Disease") and r["Disease"] != "NA"])))
@@ -1828,7 +1829,10 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
             disease = entry['Disease']
             if disease not in disease_tree_numbers and disease!="NA":
                 logger.info("Fetching Disease Tree Numbers")
-                if 'efo_id' not in entry or 'mesh_id' not in entry or entry['efo_id'].startswith("HP"):
+                # if 'efo_id' not in entry or 'mesh_id' not in entry or entry.get('efo_id', "").startswith("HP"):
+                if ('efo_id' not in entry
+                    or 'mesh_id' not in entry
+                    or str(entry.get('efo_id', '') or '').startswith('HP')):
                     logger.debug("Fetch efo and mesh uid if not available")
                     efo_id = get_efo_id(disease)
                     mesh_uid = disease_to_mesh_uid(disease)
@@ -1855,7 +1859,7 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
 if __name__ == "__main__":
     with open("gucy1a1_op2.json", "w") as f:
         import json
-        results = enrich_target_trials("gucy1a1", DBClient())
+        results = enrich_target_trials("gucy1a2", DBClient())
         json.dump(results, f, indent=2)
     
             
