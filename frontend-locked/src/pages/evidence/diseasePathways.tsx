@@ -87,7 +87,7 @@ const DiseasePathways: React.FC<NetworkBiologyProps> = ({ indications, target })
     if (hasTarget && hasIndications) {
       // Use target-literature-images endpoint only when we have BOTH target AND diseases
       return {
-        endpoint: "/evidence/target-literature-images",
+        endpoint: "/evidence/target-literature-images/",
         payload: { 
           target: target, 
           diseases: indications
@@ -97,7 +97,7 @@ const DiseasePathways: React.FC<NetworkBiologyProps> = ({ indications, target })
     } else if (!hasTarget && hasIndications) {
       // Use literature-images endpoint for disease-only queries
       return {
-        endpoint: "/evidence/literature-images",
+        endpoint: "/evidence/literature-images/",
         payload: { diseases: indications },
         queryKey: ["DiseasePathways-Disease", indications]
       };

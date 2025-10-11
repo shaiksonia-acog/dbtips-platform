@@ -72,7 +72,7 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
     isLoading,
   } = useQuery(
     ["pgsCatalog", { diseases: indications }],
-    () => fetchData({ diseases: indications }, "/genomics/pgscatalog"),
+    () => fetchData({ diseases: indications }, "/genomics/pgscatalog/"),
     {
       enabled: !!indications.length,
       refetchOnWindowFocus: false,

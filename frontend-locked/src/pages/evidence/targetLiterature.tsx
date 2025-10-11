@@ -64,7 +64,7 @@ const Evidence = ({ target, indications, diseaseAreaFilter }) => {
     isFetching: evidenceLiteratureFetching,
   } = useQuery(
     ["evidenceLiterature", payload],
-    () => fetchData(payload, "/evidence/target-literature"),
+    () => fetchData(payload, "/evidence/target-literature/"),
     {
       enabled: !!target,
       refetchOnWindowFocus: false,

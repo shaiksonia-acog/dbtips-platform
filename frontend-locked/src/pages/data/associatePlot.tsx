@@ -272,7 +272,7 @@ const AssociatePlot = ({ indications,diseaseAreaFilter }) => {
     isLoading: locusZoomDataLoading,
   } = useQuery(
     ["mondo-data", payload],
-    () => fetchData(payload, "/genomics/locus-zoom"),
+    () => fetchData(payload, "/genomics/locus-zoom/"),
     {
       enabled: !!indications.length,
       refetchOnWindowFocus: false,
@@ -334,7 +334,7 @@ const AssociatePlot = ({ indications,diseaseAreaFilter }) => {
     isLoading,
   } = useQuery(
     ["gwas-studies", payload],
-    () => fetchData(payload, "/genomics/gwas-studies"),
+    () => fetchData(payload, "/genomics/gwas-studies/"),
     {
       enabled: !!indications.length,
       refetchOnWindowFocus: false,
