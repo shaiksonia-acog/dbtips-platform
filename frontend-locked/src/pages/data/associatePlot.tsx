@@ -204,6 +204,7 @@ const AssociatePlot = ({ indications,diseaseAreaFilter }) => {
     {
       headerName: "p-value",
       field: "pvalue",
+      sort:"asc"
     },
     {
       headerName: "RAF",
