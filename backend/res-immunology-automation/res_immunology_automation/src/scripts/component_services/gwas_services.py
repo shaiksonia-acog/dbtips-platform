@@ -10,7 +10,7 @@ def get_gwas_studies(efo_id):
     response = requests.get(base_url, params = params, headers=headers)
     if response.status_code != 200:
         print(f"Error: {response.status_code}")
-        return None
+        return []
 
     data = response.json()
     # print (data)
@@ -18,8 +18,8 @@ def get_gwas_studies(efo_id):
 
     pages_available = data.get("page", {}).get("totalPages", 1)
     print("Total pages available:", pages_available)
-    for page in range(1, pages_available+1):
-        if page > 1:
+    for page in range(0, pages_available):
+        if page > 0:
             time.sleep(1)  # To avoid hitting rate limits
             params["page"] = page
             response = requests.get(base_url, params=params, headers=headers)
@@ -27,6 +27,7 @@ def get_gwas_studies(efo_id):
                 print(f"Error on page {page}: {response.status_code}")
                 continue
             data = response.json()
+
         if "_embedded" in data:
             if 'studies' in data['_embedded']:
                 for study in data["_embedded"]["studies"]:
@@ -47,7 +48,6 @@ def get_gwas_studies(efo_id):
                         })
                     else:
                         filtered_studies.append({})
-
     return filtered_studies
 
 
@@ -57,9 +57,6 @@ if __name__ == "__main__":
     efo_id = "EFO_0000319"
     # Ensure this matches the GWAS Catalog trait name
     studies = get_gwas_studies(efo_id)
-    for study in studies:
-        for k,v in study.items():
-            print(f"{k} : {v}")
-        print("+"*50)
+    print(f"Total studies found for {efo_id}: {len(studies)}")
     # if not studies:
     #     print("No relevant GWAS studies found.")
