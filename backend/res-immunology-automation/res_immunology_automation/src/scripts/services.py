@@ -363,12 +363,15 @@ def parse_protein_expression(expressions):
         for organ in exp['tissue']['organs']:
             rna_score = max(0, exp['rna']['level'])
             protein_level = max(0, exp['protein']['level'])
+            rna_value = max(0, exp['rna']['value'])
+
             if organ not in organ_data:
                 organ_data[organ] = []
             organ_data[organ].append({
                 'Tissue': exp['tissue']['label'],
                 'RNA Z-Score': rna_score,
-                'Protein Level': protein_level
+                'Protein Level': protein_level,
+                'rna_value': rna_value
             })
 
     return {"data": [{organ: tissues} for organ, tissues in organ_data.items()]}
