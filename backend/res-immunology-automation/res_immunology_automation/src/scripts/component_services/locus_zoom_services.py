@@ -2,9 +2,32 @@ import pandas as pd
 import numpy as np
 import os, csv
 from typing import List
+from decimal import getcontext
+import math
+from decimal import Decimal, InvalidOperation
+
 # from populate_gwas_asso_data import filter_asso_by_efo_id, prepare_variants_data, fetch_ld_data
 
 gwas_data_path = '/app/res-immunology-automation/res_immunology_automation/src/gwas_data'
+getcontext().prec = 100
+
+
+def safe_to_decimal(x):
+    try:
+        return Decimal(str(x).strip())
+    except (InvalidOperation, TypeError):
+        return Decimal('NaN')
+
+
+def neglog10_decimal(pval):
+    try:
+        if pval.is_nan() or pval == 0:
+            return np.nan
+        # log10(p) = ln(p) / ln(10)
+        return float(-pval.ln() / Decimal(math.log(10)))
+    except Exception:
+        return np.nan
+
 
 # # load Asso data Filter Asso data by EFOId and generate a variant df
 def filter_asso_by_efo_id(studies: List[str], efo_id: str) -> pd.DataFrame:
@@ -28,6 +51,43 @@ def filter_asso_by_efo_id(studies: List[str], efo_id: str) -> pd.DataFrame:
         raise FileNotFoundError("The GWAS Acssociations data file does not exist.")
 
 # Filter columns in variants file
+# def prepare_variants_data(df):
+#     """
+#     Drop unnecessary columns from variants data 
+#     """
+#     print("Adjusting and Sorting by Chromosome")
+#     new_df = pd.DataFrame() 
+#     df.columns = [col.strip() for col in df.columns]  # Clean up column names
+    
+#     # Detect necessary columns for plotting
+#     required_columns = {"CHR_ID", "CHR_POS", "P-VALUE", "SNPS"}
+#     other_cols = {
+#                 "PUBMEDID":"PubMed ID", "STRONGEST SNP-RISK ALLELE": "Variant and Risk Allele","SNPS": "rsID", 
+#                 "FIRST AUTHOR": "Author", "MAPPED_GENE": "Mapped gene(s)", "DISEASE/TRAIT":"Reported trait", 
+#                 "MAPPED_TRAIT": "Mapped Trait",
+#                 "STUDY ACCESSION": "Study Accession", "RISK ALLELE FREQUENCY": "RAF", "OR or BETA": "OR or BETA",
+#                 "95% CI (TEXT)": "CI"
+#                 }
+#     if not required_columns.issubset(df.columns):
+#         raise ValueError(f"TSV file must contain these columns: {required_columns}")
+    
+#     # Add derived columns if necessary
+#     if "Neglog10(pvalue)" not in df.columns:
+#         df["P-VALUE"] = df["P-VALUE"].apply(safe_to_decimal)
+#         df["P-VALUE"] = pd.to_numeric(df["P-VALUE"], errors="coerce")
+#         new_df['pvalue'] = df['P-VALUE']
+#         # new_df["Neglog10(pvalue)"] = -np.log10(df["P-VALUE"].replace(0, np.nan))  # Avoid log(0) error
+#         df["Neglog10(pvalue)"] = df["P-VALUE"].apply(neglog10_decimal)
+
+#     # Convert types
+#     df["Chromosome"] = pd.Categorical(df["CHR_ID"], categories=[str(i) for i in range(1, 23)] + ["X", "Y"], ordered=True)
+#     new_df["Chromosome"] = df["Chromosome"].cat.remove_unused_categories()
+#     new_df["Position"] = pd.to_numeric(df["CHR_POS"], errors="coerce")
+#     new_df['rsID'] = df['SNPS']
+#     for k,v in other_cols.items():
+#         new_df[v] = df[k]
+#     return new_df.sort_values("Chromosome")
+
 def prepare_variants_data(df):
     """
     Drop unnecessary columns from variants data 
@@ -36,31 +96,45 @@ def prepare_variants_data(df):
     new_df = pd.DataFrame() 
     df.columns = [col.strip() for col in df.columns]  # Clean up column names
     
-    # Detect necessary columns for plotting
     required_columns = {"CHR_ID", "CHR_POS", "P-VALUE", "SNPS"}
     other_cols = {
-                "PUBMEDID":"PubMed ID", "STRONGEST SNP-RISK ALLELE": "Variant and Risk Allele","SNPS": "rsID", 
-                "FIRST AUTHOR": "Author", "MAPPED_GENE": "Mapped gene(s)", "DISEASE/TRAIT":"Reported trait", 
-                "MAPPED_TRAIT": "Mapped Trait",
-                "STUDY ACCESSION": "Study Accession", "RISK ALLELE FREQUENCY": "RAF", "OR or BETA": "OR or BETA",
-                "95% CI (TEXT)": "CI"
-                }
+        "PUBMEDID":"PubMed ID",
+        "STRONGEST SNP-RISK ALLELE": "Variant and Risk Allele",
+        "SNPS": "rsID", 
+        "FIRST AUTHOR": "Author",
+        "MAPPED_GENE": "Mapped gene(s)",
+        "DISEASE/TRAIT":"Reported trait", 
+        "MAPPED_TRAIT": "Mapped Trait",
+        "STUDY ACCESSION": "Study Accession",
+        "RISK ALLELE FREQUENCY": "RAF",
+        "OR or BETA": "OR or BETA",
+        "95% CI (TEXT)": "CI"
+    }
+
     if not required_columns.issubset(df.columns):
         raise ValueError(f"TSV file must contain these columns: {required_columns}")
     
-    # Add derived columns if necessary
+    # --- ✅ Proper Decimal-safe handling of P-VALUE ---
     if "Neglog10(pvalue)" not in df.columns:
-        df["P-VALUE"] = pd.to_numeric(df["P-VALUE"], errors="coerce")
-        new_df['pvalue'] = df['P-VALUE']
-        new_df["Neglog10(pvalue)"] = -np.log10(df["P-VALUE"].replace(0, np.nan))  # Avoid log(0) error
+        df["P-VALUE_decimal"] = df["P-VALUE"].apply(safe_to_decimal)
+        new_df['pvalue'] = df["P-VALUE_decimal"]
+        # new_df['pvalue'] = df['P-VALUE'].apply(lambda x: float(x) if not x.is_nan() else np.nan)
+        new_df["Neglog10(pvalue)"] = df["P-VALUE_decimal"].apply(neglog10_decimal)
+    else:
+        new_df['pvalue'] = pd.to_numeric(df["P-VALUE"], errors="coerce")
+        new_df["Neglog10(pvalue)"] = pd.to_numeric(df["Neglog10(pvalue)"], errors="coerce")
 
-    # Convert types
+    # --- Chromosome handling ---
     df["Chromosome"] = pd.Categorical(df["CHR_ID"], categories=[str(i) for i in range(1, 23)] + ["X", "Y"], ordered=True)
     new_df["Chromosome"] = df["Chromosome"].cat.remove_unused_categories()
     new_df["Position"] = pd.to_numeric(df["CHR_POS"], errors="coerce")
     new_df['rsID'] = df['SNPS']
-    for k,v in other_cols.items():
-        new_df[v] = df[k]
+
+    # --- Copy other columns ---
+    for k, v in other_cols.items():
+        if k in df.columns:
+            new_df[v] = df[k]
+
     return new_df.sort_values("Chromosome")
 
 def load_data(studies: List[str], requested_efo:str) -> str:
@@ -72,6 +146,7 @@ def load_data(studies: List[str], requested_efo:str) -> str:
             df = filter_asso_by_efo_id(studies, requested_efo)
             if df.empty:
                 return None
+            df.to_csv("filtered.df")
             df = prepare_variants_data(df)
             df.to_csv(variants_associate_path, sep='\t', index=False)
         return variants_associate_path
