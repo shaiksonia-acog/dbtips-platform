@@ -2,6 +2,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { fetchData } from '../../utils/fetchData';
 import { useQuery } from 'react-query';
 import { Empty } from 'antd';
+import CustomHeader from '../market-intelligence/customHeader';
 
 const Paralogs = ({ target,  }) => {
 	const payload = {
@@ -45,6 +46,21 @@ const Paralogs = ({ target,  }) => {
 
 					if (key == 'Common GO slim') {
 						def.minWidth = 540;
+					}
+					if (key == 'Paralog Score') {
+						def.headerComponent= CustomHeader;
+						def.headerComponentParams= {
+						  displayName: "Paralog Score",
+						  title:"The score presents the number of independent orthology/paralogy prediction algorithms that support a paralogous relationship for a given gene pair within a species. Higher the score, higher is the consensus."
+						};
+						def.minWidth= 170;
+					}
+					if(key=="DIOPT Score"){
+						def.headerComponent= CustomHeader;
+						def.headerComponentParams= {
+						  displayName: "DIOPT Score",
+						  title:"Reflects the agreement of the paralog/ortholog prediction among various algorithms. A score of 2 means at least two algorithms support the paralogy. Higher the score, higher is the consensus."
+						};
 					}
 
 					return def;
