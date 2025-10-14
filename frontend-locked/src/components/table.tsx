@@ -71,10 +71,10 @@ const AutoSizingAgGrid = ({
         paginationPageSize={paginationPageSize}
         // Removed commented-out headerHeight
         domLayout={rowData && rowData?.length <= 10 ? "autoHeight" : "normal"}
-        enableRangeSelection={true}
         enableCellTextSelection={true}
         suppressColumnVirtualisation={true}
         suppressRowVirtualisation={true}
+        
       />
     </div>
   );

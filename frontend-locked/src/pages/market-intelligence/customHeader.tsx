@@ -1,8 +1,8 @@
 import { useState,useEffect } from "react";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { ArrowDownOutlined, ArrowUpOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 const CustomHeader = (props) => {
-    const { displayName } = props;
+    const { displayName,title } = props;
     const [sortState, setSortState] = useState(null); // null, 'asc', or 'desc'
   
     const onSortRequested = () => {
@@ -56,18 +56,18 @@ const CustomHeader = (props) => {
       >
         <span>{displayName}</span>
         <Tooltip
-          overlayClassName="custom-tooltip"
-          color="#fff"
-          title={`Powered by LLM`}
-          overlayStyle={{ maxWidth: "350px" }}
+          // overlayClassName="custom-tooltip"
+          color="black"
+          title={title}
+          style={{ maxWidth: "350px" }}
         >
           <InfoCircleOutlined className="text-base cursor-pointer ml-1 align-middle" />
         </Tooltip>
   
         {/* Sort indicator */}
         {sortState && (
-          <span className="sort-indicator ml-1">
-            {sortState === "asc" ? "↑" : "↓"}
+          <span className=" ml-2">
+            {sortState === "asc" ?<ArrowUpOutlined className="h-5 text-black-800"/> : <ArrowDownOutlined className="h-5" />}
           </span>
         )}
       </div>

@@ -1,27 +1,29 @@
-export const fetchData = async (payload, endpoint) => {
-	const response = await fetch(`${import.meta.env.VITE_API_URI}${endpoint}`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify(payload),
-	});
+export async function fetchData<T = any>(
+  payload: unknown,
+  endpoint: string,
+  init?: RequestInit
+): Promise<T> {
+  const res = await fetch(`${import.meta.env.VITE_API_URI}${endpoint}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+    ...init,
+  });
 
-	if (!response.ok) {
-		// Attempt to parse the error response
-		const errorText = await response.text(); // Using .text() to handle non-JSON responses too
-		let errorMessage;
-		try {
-			// Try to parse as JSON
-			const errorData = JSON.parse(errorText);
-			errorMessage = errorData.message || JSON.stringify(errorData);
-		} catch {
-			// Fallback to plain text if not JSON
-			errorMessage = errorText;
-		}
-		throw new Error(errorMessage || 'An unknown error occurred');
-	}
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    let errorMessage: string;
+    try {
+      // Try to parse as JSON
+      const errorData = JSON.parse(text);
+      errorMessage = errorData.message || JSON.stringify(errorData);
+    } catch {
+      // Fallback to plain text if not JSON
+      errorMessage = text || `Request failed with status ${res.status}`;
+    }
+    throw new Error(errorMessage);
+  }
 
-	// Return the appropriate data based on the endpoint
-	return endpoint === '/export' ? response.blob() : response.json();
-};
+  // Return blob for '/export' endpoint, otherwise JSON
+  return endpoint === "/export" ? (res.blob() as Promise<T>) : (res.json() as Promise<T>);
+}

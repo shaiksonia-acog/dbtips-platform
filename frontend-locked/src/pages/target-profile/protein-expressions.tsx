@@ -5,6 +5,7 @@ import { fetchData } from "../../utils/fetchData";
 import { useQuery } from "react-query";
 import { Empty } from "antd";
 import LoadingButton from "../../components/loading";
+import { capitalizeFirstLetter } from "../../utils/helper";
 
 const ProteinExpressions = ({ target }) => {
   const [selectedOrgan, setSelectedOrgan] = useState("All");
@@ -18,7 +19,7 @@ const ProteinExpressions = ({ target }) => {
     isLoading: targetProteinExpressioLoading,
   } = useQuery(
     ["targetProteinExpression", payload],
-    () => fetchData(payload, "/target-profile/protein-expressions/"),
+    () => fetchData(payload, "/target-profile/protein-expressions/test"),
     {
       enabled: !!target,
     }
@@ -39,6 +40,7 @@ const ProteinExpressions = ({ target }) => {
           tissue: "",
           value: 0,
           text: "",
+          rna_value: 0,
         };
         let maxProteinLevel = {
           tissue: "",
@@ -51,11 +53,12 @@ const ProteinExpressions = ({ target }) => {
             (organObj) => organObj[organKey]
           )[organKey];
         organData.forEach((tissue) => {
-          if (tissue["RNA Z-Score"] >= maxZScore.value) {
+          if (tissue["rna_value"] >= maxZScore.rna_value) {
             maxZScore = {
               tissue: organKey,
               value: tissue["RNA Z-Score"],
               text: tissue.Tissue,
+              rna_value:tissue["rna_value"]
             };
           }
 
@@ -70,28 +73,36 @@ const ProteinExpressions = ({ target }) => {
         allRNAData.push(maxZScore);
         allProteinData.push(maxProteinLevel);
       });
+      // Sort by rna_value in descending order
+      allRNAData.sort((b,a) => b.rna_value - a.rna_value);
+      allProteinData.sort((b,a) => b.value - a.value);
+      
       return { rnaData: allRNAData, proteinData: allProteinData };
     } else {
       // When a specific organ is selected, get the relevant data
       const organData =
         targetProteinExpressionData?.protein_expressions?.data?.find(
-          (organObj) => organObj[selectedOrgan]
-        )[selectedOrgan];
-      const rnaData = organData.map((tissue) => ({
+          (organObj) => organObj[selectedOrgan.toLowerCase()]
+        )[selectedOrgan.toLowerCase()];
+        console.log("organ data",organData)
+      const rnaData = organData?.map((tissue) => ({
         tissue: tissue.Tissue,
-        value: tissue["RNA Z-Score"],
+        value: tissue["rna_value"],
+        rna_value:tissue["rna_value"]
       }));
       const proteinData = organData.map((tissue) => ({
         tissue: tissue.Tissue,
         value: tissue["Protein Level"],
       }));
-      return { rnaData, proteinData };
+      rnaData.sort((b,a) => b.rna_value - a.rna_value);
+      proteinData.sort((b,a) => b.value - a.value);
+      return {rnaData, proteinData };
     }
   };
 
   const { rnaData, proteinData } = getOrganData();
 
-  const options = organKeys?.map((organKey: string) => ({ value: organKey }));
+  const options = organKeys?.map((organKey: string) => ({ value: capitalizeFirstLetter(organKey) })).sort((a, b) => a.value.localeCompare(b.value));
 
   return (
     <section
@@ -122,6 +133,7 @@ const ProteinExpressions = ({ target }) => {
         )}
       {targetProteinExpressionData && (
         <>
+        <span>Filter by organ: </span>
           <Select
             defaultValue="All"
             style={{ width: 250, marginTop: 30 }}
@@ -139,18 +151,25 @@ const ProteinExpressions = ({ target }) => {
               data={[
                 {
                   y: rnaData.map((d) => d.tissue),
-                  x: rnaData.map((d) => d.value),
+                  x: rnaData.map((d) => d.rna_value),
                   text: rnaData.map((d) => d.text),
                   type: "bar",
                   orientation: "h",
                   name: "RNA Z-Score",
                   marker: { color: "skyblue" },
+                hoverinfo: "none",
+              
                 },
               ]}
+              
               layout={{
                 title: `RNA Z-Score ${
                   selectedOrgan === "All" ? "by Organ" : `in ${selectedOrgan}`
                 }`,
+                xaxis: {
+                  tickvals: [Math.min(...rnaData.map(d => d.rna_value)), Math.max(...rnaData.map(d => d.rna_value))],       // positions on the x-axis
+                  ticktext: ['Low', 'High'], // corresponding labels
+                },
                 width: 700,
                 height: 800,
                 yaxis: {
@@ -178,6 +197,10 @@ const ProteinExpressions = ({ target }) => {
                 }`,
                 height: 760,
                 width: 600,
+                xaxis: {
+                  tickvals: [Math.min(...proteinData.map(d => d.value)), Math.max(...proteinData.map(d => d.value))],      
+                  ticktext: ['Low', 'High'], 
+                },
                 yaxis: {
                   automargin: true,
                 },

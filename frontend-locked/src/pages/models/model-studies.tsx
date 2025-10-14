@@ -222,13 +222,14 @@ const ModelStudies: React.FC<ModelStudiesProps> = ({ indications,diseaseAreaFilt
         }}
         filterComponent={
           <>
+          <div className="flex gap-x-4">
         {  diseaseAreaFilter &&
           <DiseaseFilter
           allDiseases={indications}
           selectedDiseases={selectedDiseaseAreas}
           onChange={setSelectedDiseaseAreas}
           disabled={showLoading}
-          width={500}
+          width={300}
           labelText="Disease Area:"
         />}
           <DiseaseFilter
@@ -236,10 +237,11 @@ const ModelStudies: React.FC<ModelStudiesProps> = ({ indications,diseaseAreaFilt
             selectedDiseases={selectedDiseases}
             onChange={setSelectedDiseases}
             disabled={showLoading}
-            width={500}
+            width={300}
             labelText="Disease:"
             showAllOption={false}
           />
+          </div>
           </>
         }
       />

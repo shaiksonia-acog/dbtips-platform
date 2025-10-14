@@ -13,7 +13,7 @@ import Exportbutton from "../../components/exportButton";
 import { preprocessLiteratureData } from "../../utils/llmUtils";
 import { ExternalLink } from "lucide-react";
 import DiseaseFilter from "../../components/diseaseFilter";
-
+import ColumnSelector from "../../components/columnFilter";
 import { filterByDiseases } from "../../utils/filterDisease";
 function convertToArray(data) {
   const result = [];
@@ -33,9 +33,21 @@ const Evidence = ({ target, indications, diseaseAreaFilter }) => {
   const [modalContent, setModalContent] = useState("");
   const [modalTitle, setModalTitle] = useState("");
   const [url, setUrl] = useState("");
+  const [selectedColumns, setSelectedColumns] = useState([
+    "checkbox",
+    "DiseaseArea",
+    "mapped_diseases",
+    "Year",
+    "Qualifers",
+    "Title",
+    "authors",
+    "citedby",
+    "tables_analysis",
+    "supplementary_analysis",
+  ]);
   const showModal = (content, title, url) => {
     setModalContent(content);
-    setUrl(url);
+setUrl(url);
     setModalTitle(title);
     setIsModalVisible(true);
   };
@@ -176,7 +188,156 @@ const Evidence = ({ target, indications, diseaseAreaFilter }) => {
     }
     invoke("target_literature", { send: false });
   };
+  const columnDefs = useMemo(
+    () => [
+      {
+        headerName: "",
+        field: "checkbox",
+        checkboxSelection: true,
+        filter: false,
+        flex: 0.5,
+      },
+      ...(diseaseAreaFilter
+        ? [
+            {
+              field: "DiseaseArea",
+              headerName: "Disease Area",
+              flex: 2,
+            },
+          ]
+        : []),
 
+      ...(indications.length > 0
+        ? [
+            {
+              field: "mapped_diseases",
+              headerName: "Disease",
+              flex: 2,
+              cellRenderer: (params) => {
+                if (params.value && params.value.length > 0) {
+                  return params.value
+                    .map((d) => capitalizeFirstLetter(d))
+                    .join(" | ");
+                }
+                return "";
+              },
+            },
+          ]
+        : []),
+      { field: "Year" },
+      {
+        field: "Qualifers",
+        headerName: "Category",
+        flex: 1,
+        valueFormatter: (params) => {
+          if (params.value) {
+            return params.value.join(", ");
+          }
+          return "";
+        },
+      },
+      {
+        field: "Title",
+        headerName: "Title",
+        flex: 4,
+        cellRenderer: (params) => {
+          return (
+            <a href={params.data.PubMedLink} target="_blank">
+              {parse(params.value)}
+            </a>
+          );
+        },
+      },
+      {
+        headerName: "Authors",
+        field: "authors",
+        cellRenderer: (params) => {
+          const authors = params.value;
+
+          if (!authors || authors.length === 0) {
+            return "";
+          }
+
+          if (authors.length <= 4) {
+            return <div>{authors.join(", ")}</div>;
+          }
+
+          const displayText = ` ${authors
+            .slice(0, 3)
+            .join(", ")}, .... , ${authors[authors.length - 1]}`;
+          const allAuthors = ` ${authors.join(", ")}`;
+
+          return (
+            <Tooltip title={allAuthors} placement="topLeft">
+              <div className="truncated-authors">{displayText}</div>
+            </Tooltip>
+          );
+        },
+        flex: 2,
+      },
+      {
+        field: "citedby",
+        headerName: "Cited by",
+        flex: 1,
+      },
+      {
+        field: "tables_analysis",
+        headerName: "Tables Analysis",
+        flex: 1.5,
+
+        cellRenderer: (params) => {
+          const content = params.value;
+          if (!content || content.length === 0) {
+            return "";
+          }
+          return (
+            <Tag
+              color="geekblue"
+              className="cursor-pointer mt-2"
+              onClick={() =>
+                showModal(content, "Tables Analysis", params.data.pmc_url)
+              }
+            >
+              View Analysis
+            </Tag>
+          );
+        },
+      },
+      {
+        field: "supplementary_analysis",
+        headerName: "Supplementary File Availability",
+        flex: 2.5,
+        cellRenderer: (params) => {
+          const content = params.value;
+          if (!content) {
+            return "";
+          }
+          return (
+            <Tag
+              color="geekblue"
+              className="cursor-pointer mt-2"
+              onClick={() =>
+                showModal(
+                  content,
+                  "Supplementary Analysis",
+                  params.data.pmc_url
+                )
+              }
+            >
+              View Analysis
+            </Tag>
+          );
+        },
+      },
+    ],
+    [diseaseAreaFilter, indications]
+  );
+  const visibleColumns = useMemo(() => {
+    return columnDefs.filter((col) => selectedColumns.includes(col.field));
+  }, [columnDefs, selectedColumns]);
+  const handleColumnChange = (columns: string[]) => {
+    setSelectedColumns(columns);
+  };
   return (
     <div className=" mt-8  ">
       <section id="literature-evidence " className="px-[5vw]">
@@ -237,12 +398,19 @@ const Evidence = ({ target, indications, diseaseAreaFilter }) => {
                 labelText="Disease:"
               />
             </div>
-            <Exportbutton
-              endpoint="/evidence/target-literature/"
-              fileName="literature_reviews"
-              indications={indications}
-              target={target}
-            />
+            <div className="flex gap-2">
+              <ColumnSelector
+                allColumns={columnDefs}
+                defaultSelectedColumns={selectedColumns}
+                onChange={handleColumnChange}
+              />
+              <Exportbutton
+                endpoint="/evidence/target-literature/"
+                fileName="literature_reviews"
+                indications={indications}
+                target={target}
+              />
+            </div>
           </div>
         )}
 
@@ -260,151 +428,7 @@ const Evidence = ({ target, indications, diseaseAreaFilter }) => {
                   wrapText: true,
                   cellStyle: { whiteSpace: "normal", lineHeight: "20px" },
                 }}
-                columnDefs={[
-                  {
-                    headerName: "",
-                    field: "checkbox",
-                    checkboxSelection: true,
-                    filter: false,
-                    flex: 0.5,
-                  },
-                  ...(diseaseAreaFilter
-                    ? [
-                      {
-                        field: "DiseaseArea",
-                        headerName: "Disease Area",
-                        flex: 2,
-                      },
-                      ]
-                    : []),
-                  
-                  ...(indications.length > 0
-                    ? [
-                        {
-                          field: "mapped_diseases",
-                          headerName: "Disease",
-                          flex: 2,
-                          cellRenderer: (params) => {
-                            if (params.value && params.value.length > 0) {
-                              return params.value
-                                .map((d) => capitalizeFirstLetter(d))
-                                .join(" | ");
-                            }
-                            return "";
-                          },
-                        },
-                      ]
-                    : []),
-                  { field: "Year" },
-                  {
-                    field: "Qualifers",
-                    headerName: "Category",
-                    flex: 1,
-                    valueFormatter: (params) => {
-                      if (params.value) {
-                        return params.value.join(", ");
-                      }
-                      return "";
-                    },
-                  },
-                  {
-                    field: "Title",
-                    headerName: "Title",
-                    flex: 4,
-                    cellRenderer: (params) => {
-                      return (
-                        <a href={params.data.PubMedLink} target="_blank">
-                          {parse(params.value)}
-                        </a>
-                      );
-                    },
-                  },
-                  {
-                    headerName: "Authors",
-                    field: "authors",
-                    cellRenderer: (params) => {
-                      const authors = params.value;
-
-                      if (!authors || authors.length === 0) {
-                        return "";
-                      }
-
-                      if (authors.length <= 4) {
-                        return <div>{authors.join(", ")}</div>;
-                      }
-
-                      const displayText = ` ${authors
-                        .slice(0, 3)
-                        .join(", ")}, .... , ${authors[authors.length - 1]}`;
-                      const allAuthors = ` ${authors.join(", ")}`;
-
-                      return (
-                        <Tooltip title={allAuthors} placement="topLeft">
-                          <div className="truncated-authors">{displayText}</div>
-                        </Tooltip>
-                      );
-                    },
-                    flex: 2,
-                  },
-                  {
-                    field: "citedby",
-                    headerName: "Cited by",
-                    flex: 1,
-                  },
-                  {
-                    field: "tables_analysis",
-                    headerName: "Tables Analysis",
-                    flex: 1.5,
-
-                    cellRenderer: (params) => {
-                      const content = params.value;
-                      if (!content || content.length === 0) {
-                        return "";
-                      }
-                      return (
-                        <Tag
-                          color="geekblue"
-                          className="cursor-pointer mt-2"
-                          onClick={() =>
-                            showModal(
-                              content,
-                              "Tables Analysis",
-                              params.data.pmc_url
-                            )
-                          }
-                        >
-                          View Analysis
-                        </Tag>
-                      );
-                    },
-                  },
-                  {
-                    field: "supplementary_analysis",
-                    headerName: "Supplementary File Availability",
-                    flex: 2.5,
-                    cellRenderer: (params) => {
-                      const content = params.value;
-                      if (!content) {
-                        return "";
-                      }
-                      return (
-                        <Tag
-                          color="geekblue"
-                          className="cursor-pointer mt-2"
-                          onClick={() =>
-                            showModal(
-                              content,
-                              "Supplementary Analysis",
-                              params.data.pmc_url
-                            )
-                          }
-                        >
-                          View Analysis
-                        </Tag>
-                      );
-                    },
-                  },
-                ]}
+                columnDefs={visibleColumns}
                 rowData={rowData}
                 rowSelection="multiple"
                 pagination={true}
