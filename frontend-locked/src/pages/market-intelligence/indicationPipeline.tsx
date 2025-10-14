@@ -80,6 +80,7 @@ const IndicationPipeline = ({ indications }) => {
         headerComponent: CustomHeader,
         headerComponentParams: {
           displayName: "Trial outcome",
+          title:"Powered by LLM"
         },
         cellRenderer: (params) => {
           return capitalizeFirstLetter(params.value);
