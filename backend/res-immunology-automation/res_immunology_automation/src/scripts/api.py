@@ -3283,9 +3283,23 @@ async def search_patents(request: TargetRequest, redis: Redis = Depends(get_redi
                         filtered_results.append(filtered_data)
                     cached_data[disease.replace("_", " ")] = {"results": filtered_results}
                     cached_responses[f"{endpoint}"] = {"results": filtered_results}
+                # except requests.RequestException as exc:
+                #     raise HTTPException(status_code=exc.response.status_code, detail=f"Error: {exc.response.text}")
                 except requests.RequestException as exc:
-                    raise HTTPException(status_code=exc.response.status_code, detail=f"Error: {exc.response.text}")
-
+                    # raise HTTPException(status_code=exc.response.status_code, detail=f"Error: {exc.response.text}")
+                    if exc.response is not None:
+                        # Response exists → HTTP error (e.g., 404, 500)
+                        raise HTTPException(
+                            status_code=exc.response.status_code,
+                            detail=f"Error: {exc.response.text}"
+                        )
+                    else:
+                        # No response → Connection, timeout, DNS, etc.
+                        raise HTTPException(
+                            status_code=500,
+                            detail=f"Request failed: {str(exc)}"
+                        )
+                        
                 if target_disease_record is None:
                     save_response_to_file(file_path, cached_responses)
                     new_record = TargetDisease(id=f"{target}-{disease_key}", file_path=file_path)
