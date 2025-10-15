@@ -142,7 +142,7 @@
         "wwp4"
     ],
     "camk2d": [
-        "camkd",
+        "camkII",
         "calmodulin dependent protein kinase II delta"
     ],
     "gucy1a1": [
@@ -161,8 +161,8 @@
         "sgc",
         "soluble guanylyl cyclase"
     ],
-    "drp1": [
-        "dnm1l",
+    "dnm1l": [
+        "drp1",
         "dynamin related protein 1 like"
     ],
     "enho": [

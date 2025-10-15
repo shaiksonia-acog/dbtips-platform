@@ -112,7 +112,7 @@ def build_query(target: str, disease: str, target_terms_file: str, disease_synon
         target_data: Dict[str, List[str]] = json.load(j)
 
     # Get the synonyms of the disease
-    synonyms: List[str] = disease_data.get(disease.lower(), {}).get("synonyms", [])
+    synonyms: List[str] = disease_data.get(disease.lower(), {}).get("patent_synonyms", [])
 
     # Create the query for the disease and its synonyms
     disease_query = ""
@@ -124,6 +124,8 @@ def build_query(target: str, disease: str, target_terms_file: str, disease_synon
         disease_query = f'(AB="{disease}")'    
 
     terms: List[str] = target_data.get(target.lower(), [])
+    # filter synonyms which has multiple words
+    terms = [term for term in terms if ' ' not in term]
     # print(terms)
 
     if terms:
@@ -160,6 +162,9 @@ def build_query_target(target: str, target_terms_file: str) -> str:
 
     # Get the synonyms of the target
     terms: List[str] = target_data.get(target.lower(), [])
+
+    # filter synonyms which has multiple words
+    terms = [term for term in terms if ' ' not in term]
 
     if terms:
         # Include the original target along with the terms
@@ -289,16 +294,25 @@ def search_geo(disease_name: str) -> List[Tuple[str, str]]:
     Entrez.api_key = NCBI_API_KEY
 
     try:
+        disease_synonyms_file = "/app/res-immunology-automation/res_immunology_automation/src/disease_data/diseases_synonyms.json"
+        with open(disease_synonyms_file, 'r') as f:
+            disease_data: Dict = json.load(f).get("diseases", {})
+
+        # Get the synonyms of the disease
+        synonyms: List[str] = disease_data.get(disease_name.lower(), {}).get("synonyms", [])
+
         disease_mesh_term = get_mesh_term_for_disease(disease_name)
+        synonyms.append(disease_mesh_term)
 
         print("MeshTerm in searchGeo",disease_mesh_term)
-
+        disease_syn_query = " OR ".join([f'"{syn}" [Title] OR "{syn}" [Description]' for syn in synonyms])
+        disease_only_query = f'"{disease_mesh_term}" [MeSH Terms] '
         query = (
-            f'"{disease_mesh_term}" [MeSH Terms] AND '
+            f'({disease_syn_query}) AND '
             f'"gse" [Filter] NOT "Hive" [All Fields] NOT "Hives" [All Fields] AND '
             f'"Expression profiling by high throughput sequencing" [Filter]'
         )
-
+        print("Geo Query: ", query)
         handle = Entrez.esearch(db="gds", term=query, retmax=MAX_RESULTS)
         record = Entrez.read(handle)
         handle.close()
@@ -1613,7 +1627,7 @@ def fetch_and_filter_figures_by_disease_and_pmids(disease: str) -> List[Dict[str
             gene_symbols: List[str] = fetch_gene_symbols_from_figid(figid)
             # Add gene symbols to the figure dictionary
             figure["gene_symbols"] = gene_symbols
-        strapi_result=get_network_biology_strapi(disease_name=disease)
+        # strapi_result=get_network_biology_strapi(disease_name=disease)
         filtered_figures.extend(strapi_result)
     except HTTPException as e:
         raise e
