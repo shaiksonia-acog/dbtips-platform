@@ -1626,9 +1626,14 @@ def split_OT_results_by_trial(all_trials):
                 trial_copy = trial.copy()
                 trial_copy["Source URLs"] = [source]
                 trial_copy["nct_id"] = source.split('/')[-1]
+                trial_copy['Modality'] = trial['Type']
+                trial_copy.pop("Type", None) 
                 splitted_trials.append(trial_copy)
         else:
-            splitted_trials.append(trial.copy())
+            trial_copy = trial.copy()
+            trial_copy['Modality'] = trial['Type']
+            trial_copy.pop("Type", None) 
+            splitted_trials.append(trial_copy)
     return splitted_trials
 
 def enrich_target_trials(target_input: str, db_client: DBClient):
