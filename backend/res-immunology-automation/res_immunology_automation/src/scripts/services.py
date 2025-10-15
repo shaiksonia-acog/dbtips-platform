@@ -1617,6 +1617,20 @@ def serialize_results(results):
 
     return serialized
 
+def split_OT_results_by_trial(all_trials):
+    splitted_trials = []
+    for trial in all_trials:
+        source_urls = trial.get("Source URLs", [])
+        if source_urls:
+            for source in source_urls:
+                trial_copy = trial.copy()
+                trial_copy["Source URLs"] = [source]
+                trial_copy["nct_id"] = source.split('/')[-1]
+                splitted_trials.append(trial_copy)
+        else:
+            splitted_trials.append(trial.copy())
+    return splitted_trials
+
 def enrich_target_trials(target_input: str, db_client: DBClient):
     """
     Generate target pipeline results given target
@@ -1686,7 +1700,8 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
                         "PMIDs": [],
                         "OutcomeStatus": "",
                         "efo_id": "",
-                        "mesh_id": ""
+                        "mesh_id": "",
+                        "WhyStopped": ""
                     })
                 else:
                     logger.info("Fetching trials for each indication...")
@@ -1731,12 +1746,14 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
                                 "ApprovalStatus": approval,
                                 "Modality": modality,
                                 "nct_id": "",
+                                "Source URLs": [],
                                 "Phase": "",
                                 "Status": "",
                                 "Sponsor": "",
                                 "Source type": "",
                                 "OfficialTitle": "",
-                                "intervention_types": ""
+                                "intervention_types": "",
+                                "WhyStopped": ""
                             })
                         else:
                             for trial in all_trials:
@@ -1747,6 +1764,7 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
                                     "Disease": ind.get("indication_name", "NA"),
                                     "efo_id": ind.get("efo_id", ""),
                                     "mesh_id": ind.get("mesh_id", ""),
+                                    "WhyStopped": get_why_stopped(nct_id=trial.get("nct_id", "")), 
                                     "Source URLs": [f'https://clinicaltrials.gov/ct2/show/{trial.get("nct_id", "")}'],
                                     "ApprovalStatus": approval,
                                     "Modality": modality,
@@ -1768,6 +1786,7 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
         diseases = None
         # Fetch all the trials details from OT
         results = parse_knowndrugs_all(ot_response, diseases)
+        results = split_OT_results_by_trial(results)
 
     db_client.close() 
 
@@ -1799,9 +1818,8 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
                 if trial.get('nct_id', "") in no_title_nct_ids:
                     trial["OfficialTitle"] = title_map.get(trial["nct_id"], "")
         
-        logger.info("Getting PMIDs ids for NCTids for diseases")
         # pmid_map = get_disease_pmid_nct_mapping(list(set([d['Disease'].replace("_", " ") for d in results if d['Disease'] != "NA"])))
-        # logger.info("MApping PMID with NCT ID")
+        logger.info("Mapping PMID with NCT ID")
         # all_entries = get_pmids_for_nct_ids_target_pipeline(results, pmid_map)
         for entry in results:
             if entry.get('nct_id', "") != "":           
@@ -1820,9 +1838,9 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
         #     import json
         #     json.dump(all_entries, f, indent=2)
     
-    # with open("gucy1a1.json", "r") as f:
+    # with open("gipr.json", "r") as f:
     #     import json
-    #     all_entries = json.load(f)[0]
+    #     all_entries = json.load(f)
     #     available = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries if r.get("Disease") and r["Disease"] != "NA"])))
 
         # Generate Disease Areas
@@ -1860,9 +1878,7 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
     return [], []
 
 if __name__ == "__main__":
-    with open("gucy1a1_op2.json", "w") as f:
+    with open("gipr_op.json", "w") as f:
         import json
-        results = enrich_target_trials("gucy1a2", DBClient())
+        results = enrich_target_trials("gipr", DBClient())
         json.dump(results, f, indent=2)
-    
-            
