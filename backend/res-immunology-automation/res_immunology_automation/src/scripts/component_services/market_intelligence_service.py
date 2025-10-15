@@ -1369,6 +1369,8 @@ def add_outcome_status_target_pipeline(records: List[Dict[str, Any]]) -> List[Di
                         else:
                             entry["OutcomeStatus"] = get_outcome_status_openai(pubmed_ids, entry.get("Disease", "").lower())
                         time.sleep(1)
+                    else:
+                        entry["OutcomeStatus"] = ""
 
     except HTTPException as e:
         print("exception raised here")
