@@ -123,21 +123,11 @@ const GeneEssentialityMap = ({ target }: GeneEssentialityChartProps) => {
   }
 
   useEffect(() => {
-<<<<<<< HEAD
     if (geneMapData) {
       const essentialityData = geneMapData?.geneEssentialityMap
       const uniqueTissues = Array.from(new Set(essentialityData.map((item: any) => item.tissueName))) as string[]
       uniqueTissues.sort((a, b) => b.toLowerCase().localeCompare(a.toLowerCase()))
       setTissues(uniqueTissues)
-=======
-    if (geneMapData?.geneEssentialityMap) {
-      const essentialityData = geneMapData?.geneEssentialityMap;
-      const uniqueTissues = Array.from(
-        new Set(essentialityData.map((item: any) => item.tissueName))
-      ) as string[];
-      uniqueTissues.sort((a, b) => b.toLowerCase().localeCompare(a.toLowerCase()));
-      setTissues(uniqueTissues);
->>>>>>> 04f66c9 (Improve gene essentiality map component with enhanced data checks and user messaging)
 
       const scatterData = essentialityData.flatMap((item: any) =>
         item.screens
@@ -415,15 +405,8 @@ const handleLegendClick = (datasetIndex: number) => {
 
 
   return (
-<<<<<<< HEAD
     <div className="py-10" id="geneEssentialityMap">
       <h1 className="text-3xl font-semibold mb-3">Gene essentiality map</h1>
-=======
-    <div className="py-10 " id="geneEssentialityMap">
-         <h1 className='text-3xl font-semibold mb-2'>Gene essentiality map</h1>
-         <p className="py-2">{`Shows how essential  ${target} is across multiple cell lines, helping identify genes that are critical for cell survival or specific to certain cancer types.
-`}</p>
->>>>>>> 04f66c9 (Improve gene essentiality map component with enhanced data checks and user messaging)
       <div className="flex gap-2">
         <SearchBar
           searchTerm={searchTerm}
