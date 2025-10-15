@@ -4,21 +4,51 @@
       "synonyms": [
         "systemic sclerosis",
         "scleroderma"
+      ],
+      "patent_synonyms": [
+        "systemic sclerosis",
+        "scleroderma"
       ]
     },
     "hidradenitis suppurativa": {
       "synonyms": [
+        "hidradenitis"
+      ],
+      "patent_synonyms": [
         "hidradenitis"
       ]
     },
     "atopic eczema": {
       "synonyms": [
         "atopic dermatitis"
+      ],
+      "patent_synonyms": [
+        "atopic dermatitis"
       ]
     },
     "dermatitis, atopic": {
       "synonyms": [
         "atopic dermatitis"
+      ],
+      "patent_synonyms": [
+        "atopic dermatitis"
+      ]
+    },
+    "cardiovascular diseases": {
+      "patent_synonyms": [
+        "cardiovascular",
+        "vascular",
+        "heart"
+      ]
+    },
+    "urologic diseases": {
+        "synonyms": [
+          "kidney",
+          "renal"
+      ],
+      "patent_synonyms": [
+          "kidney",
+          "renal"
       ]
     }
   }
