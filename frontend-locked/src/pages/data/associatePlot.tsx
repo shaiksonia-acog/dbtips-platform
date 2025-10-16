@@ -1,6 +1,13 @@
 import { useEffect, useState, useMemo } from "react";
 import { useQuery, useQueries } from "react-query";
-import { Empty,  Button, Segmented, ConfigProvider, message } from "antd";
+import {
+  Empty,
+  Button,
+  Segmented,
+  ConfigProvider,
+  message,
+  Select,
+} from "antd";
 import { fetchData } from "../../utils/fetchData";
 import { capitalizeFirstLetter } from "../../utils/helper";
 import LoadingButton from "../../components/loading";
@@ -12,6 +19,7 @@ import {
   preprocessGWASStudiesData,
   preprocessAssociationData,
 } from "../../utils/llmUtils";
+const { Option } = Select;
 import ExportButton from "../../components/exportButton";
 import ColumnSelector from "../../components/columnFilter";
 import { filterByDiseases } from "../../utils/filterDisease";
@@ -61,7 +69,7 @@ function convertToArray(data) {
           ...record,
           pubDate: record["Pub. date"] || null, // Safely access the publication date
           DiseaseArea: capitalizeFirstLetter(disease.replace(/_/g, " ")),
-          disease:  capitalizeFirstLetter(disease.replace(/_/g, " ")), // Add the disease key
+          disease: capitalizeFirstLetter(disease.replace(/_/g, " ")), // Add the disease key
         });
       });
     } else {
@@ -71,13 +79,15 @@ function convertToArray(data) {
 
   return { result, diseaseWithoutEFOID };
 }
-const AssociatePlot = ({ indications,diseaseAreaFilter }) => {
+const AssociatePlot = ({ indications, diseaseAreaFilter }) => {
   const [selectedDisease, setSelectedDisease] = useState([]);
   const [activeTab, setActiveTab] = useState("studies");
-    // const [diseaseFilterOptions, setDiseaseFilterOptions] = useState<string[]>([]);
-    const [selectedDiseaseAreas, setSelectedDiseaseAreas] = useState(indications);
+  // const [diseaseFilterOptions, setDiseaseFilterOptions] = useState<string[]>([]);
+  const [selectedDiseaseAreas, setSelectedDiseaseAreas] = useState(indications);
   const [columns, setColumns] = useState([]);
   const [defaultSelectedColumns, setDefaultSelectedColumns] = useState([]);
+  const [selectedGene, setSelectedGene] = useState("");
+  const [selectedAccession, setSelectedAccession] = useState([]);
   const [selectedColumnsGWASStudies, setSelectedColumnsGWASStudies] = useState([
     "DiseaseArea",
     "disease",
@@ -94,12 +104,13 @@ const AssociatePlot = ({ indications,diseaseAreaFilter }) => {
     "Summary statistics",
   ]);
   useEffect(() => {
-      if (!diseaseAreaFilter ) {
-        setSelectedDisease(indications);
-      }
-      setSelectedDiseaseAreas(indications);
-    }, [indications,diseaseAreaFilter]);
+    if (!diseaseAreaFilter) {
+      setSelectedDisease(indications);
+    }
+    setSelectedDiseaseAreas(indications);
+  }, [indications, diseaseAreaFilter]);
   const [selectedAssociationColumns, setSelectedAssociationColumns] = useState([
+    "DiseaseArea",
     "mapped_diseases",
     "Study Accession",
     "Variant and Risk Allele",
@@ -109,122 +120,165 @@ const AssociatePlot = ({ indications,diseaseAreaFilter }) => {
     "CI",
     "Mapped gene(s)",
   ]);
-  const gwasColumnDefs = useMemo(()=>[
-    ...(diseaseAreaFilter
-      ? [
-        {
-          field: "disease",
-          headerName: "Disease Area",
+  const gwasColumnDefs = useMemo(
+    () => [
+      ...(diseaseAreaFilter
+        ? [
+            {
+              field: "disease",
+              headerName: "Disease Area",
+            },
+          ]
+        : []),
+      {
+        field: "Association count",
+        maxWidth: 120,
+        valueGetter: (params) => {
+          if (params.data["Association count"] === "Not available") return "0";
+          else if (params.data["Association count"]) {
+            return params.data["Association count"];
+          } else return "0";
         },
-        ]
-      : []),
-    {
-      field: "Association count",
-      maxWidth: 120,
-      valueGetter: (params) => {
-        if (params.data["Association count"] === "Not available") return "0";
-        else if (params.data["Association count"]) {
-          return params.data["Association count"];
-        } else return "0";
+        sort: "desc",
       },
-      sort: "desc",
-    },
-    {
-      field: "First author",
-    },
-    {
-      field: "Study accession",
-    },
-    {
-      field: "pubDate",
-      filter: "agDateColumnFilter",
-      headerName: "Pub. Date ",
-      flex: 2,
-    },
-    {
-      field: "Journal",
-    },
-    {
-      field: "Title",
-      minWidth: 200,
-    },
-    {
-      field: "Reported trait",
-    },
-    {
-      field: "Trait(s)",
-    },
-    {
-      field: "Discovery sample ancestry",
-    },
-    {
-      field: "Replication sample ancestry",
-      flex: 2,
-    },
+      {
+        field: "First author",
+      },
+      {
+        field: "Study accession",
+      },
+      {
+        field: "pubDate",
+        filter: "agDateColumnFilter",
+        headerName: "Pub. Date ",
+        flex: 2,
+      },
+      {
+        field: "Journal",
+      },
+      {
+        field: "Title",
+        minWidth: 200,
+      },
+      {
+        field: "Reported trait",
+      },
+      {
+        field: "Trait(s)",
+      },
+      {
+        field: "Discovery sample ancestry",
+      },
+      {
+        field: "Replication sample ancestry",
+        flex: 2,
+      },
 
-    {
-      field: "Summary statistics",
-      cellRenderer: (params) => {
-        if (params.value !== "NA") {
-          return (
-            <a href={params.value} target="_blank" rel="noopener noreferrer">
-              FTP download
-            </a>
-          );
-        } else return "Not available";
-      },
-    },
-  ],[diseaseAreaFilter]);
-  const associationColumnDefs = useMemo(() => [
-    ...(diseaseAreaFilter
-      ? [
-        {
-          field: "DiseaseArea",
-          headerName: "Disease Area",
+      {
+        field: "Summary statistics",
+        cellRenderer: (params) => {
+          if (params.value !== "NA") {
+            return (
+              <a href={params.value} target="_blank" rel="noopener noreferrer">
+                FTP download
+              </a>
+            );
+          } else return "Not available";
         },
-        ]
-      : []),
-    {
-      headerName: "Disease",
-      
-      field: "mapped_diseases",
-      cellRenderer: (params) => {
-        if (!params.value) return "";
-        return params.value.map(val => capitalizeFirstLetter(val)).join(" | ");
       },
-    },
-    {
-      headerName: "Study Accession",
-      field: "Study Accession",
-    },
-    {
-      headerName: "Variant and Risk Allele",
-      field: "Variant and Risk Allele",
-    },
-    {
-      headerName: "p-value",
-      field: "pvalue",
-      agGridColumnType: "numericColumn",
-      sort:"asc"
-    },
-    {
-      headerName: "RAF",
-      field: "RAF",
-    },
-    {
-      headerName: "OR or BETA",
-      field: "OR or BETA",
-    },
+    ],
+    [diseaseAreaFilter]
+  );
+  const associationColumnDefs = useMemo(
+    () => [
+      ...(diseaseAreaFilter
+        ? [
+            {
+              field: "DiseaseArea",
+              headerName: "Disease Area",
+            },
+          ]
+        : []),
+      {
+        headerName: "Disease",
 
-    {
-      headerName: "CI",
-      field: "CI",
-    },
-    {
-      headerName: "Mapped Gene",
-      field: "Mapped gene(s)",
-    },
-  ], [diseaseAreaFilter]);
+        field: "mapped_diseases",
+        cellRenderer: (params) => {
+          if (!params.value) return "";
+          return params.value
+            .map((val) => capitalizeFirstLetter(val))
+            .join(" | ");
+        },
+      },
+      {
+        headerName: "Study Accession",
+        field: "Study Accession",
+      },
+      {
+        headerName: "Variant and Risk Allele",
+        field: "Variant and Risk Allele",
+      },
+      {
+        headerName: "p-value",
+        field: "pvalue",
+        agGridColumnType: "numericColumn",
+        sort: "asc",
+        filter: "agNumberColumnFilter",
+        comparator: (valueA, valueB) => {
+          // Handle null/undefined/empty
+          if (!valueA && !valueB) return 0;
+          if (!valueA) return 1;
+          if (!valueB) return -1;
+
+          // Extract exponents from scientific notation
+          const getExponent = (val) => {
+            const str = String(val).toUpperCase();
+            const match = str.match(/E([+-]?\d+)/);
+            if (!match) return 0; // Not in scientific notation
+            return parseInt(match[1], 10);
+          };
+
+          const getCoefficient = (val) => {
+            const str = String(val).toUpperCase();
+            const match = str.match(/^([+-]?\d+\.?\d*)/);
+            if (!match) return parseFloat(val);
+            return parseFloat(match[1]);
+          };
+
+          const expA = getExponent(valueA);
+          const expB = getExponent(valueB);
+
+          // Compare by exponent first (larger exponent = larger number)
+          if (expA !== expB) {
+            return expA - expB;
+          }
+
+          // If exponents equal, compare coefficients
+          const coefA = getCoefficient(valueA);
+          const coefB = getCoefficient(valueB);
+          return coefA - coefB;
+        },
+      },
+      {
+        headerName: "RAF",
+        field: "RAF",
+      },
+      {
+        headerName: "OR or BETA",
+        field: "OR or BETA",
+      },
+
+      {
+        headerName: "CI",
+        field: "CI",
+      },
+      {
+        headerName: "Mapped Gene",
+        field: "Mapped gene(s)",
+      },
+    ],
+    [diseaseAreaFilter]
+  );
   const visibleColumns = useMemo(() => {
     if (activeTab === "studies") {
       return gwasColumnDefs.filter((col) =>
@@ -265,7 +319,13 @@ const AssociatePlot = ({ indications,diseaseAreaFilter }) => {
       setColumns(associationColumnDefs);
       setDefaultSelectedColumns(selectedAssociationColumns);
     }
-  }, [activeTab, associationColumnDefs, gwasColumnDefs, selectedAssociationColumns, selectedColumnsGWASStudies]);
+  }, [
+    activeTab,
+    associationColumnDefs,
+    gwasColumnDefs,
+    selectedAssociationColumns,
+    selectedColumnsGWASStudies,
+  ]);
 
   const {
     data,
@@ -302,7 +362,7 @@ const AssociatePlot = ({ indications,diseaseAreaFilter }) => {
         // Add disease name to each record for better context
         return parsedData.map((record) => ({
           ...record,
-          DiseaseArea:item.disease,
+          DiseaseArea: item.disease,
           mapped_diseases: record["Mapped Trait"]
             ? record["Mapped Trait"].split(",")
             : [],
@@ -353,13 +413,18 @@ const AssociatePlot = ({ indications,diseaseAreaFilter }) => {
   }, [gwasStudiesData]);
 
   const rowData = useMemo(() => {
-      if (diseaseAreaFilter) {
-        return filterByDiseases(processedData, selectedDiseaseAreas, indications,"DiseaseArea");
-      }
-      return processedData;
-    }, [processedData, selectedDiseaseAreas, indications, diseaseAreaFilter]);
+    if (diseaseAreaFilter) {
+      return filterByDiseases(
+        processedData,
+        selectedDiseaseAreas,
+        indications,
+        "DiseaseArea"
+      );
+    }
+    return processedData;
+  }, [processedData, selectedDiseaseAreas, indications, diseaseAreaFilter]);
 
-  const associationsRowData =useMemo(() => {
+  const associationsRowData = useMemo(() => {
     if (diseaseAreaFilter) {
       return filterByDiseases(
         combinedData,
@@ -372,30 +437,74 @@ const AssociatePlot = ({ indications,diseaseAreaFilter }) => {
   }, [combinedData, selectedDiseaseAreas, indications, diseaseAreaFilter]);
   console.log("associationsRowData", associationsRowData);
   const filterAssociationData = useMemo(() => {
-    if (!(selectedDisease.length > 0)) {
+    if (!(selectedDisease.length > 0) && !selectedGene) {
       return associationsRowData;
     }
-    return associationsRowData?.filter((row) =>
-      row.mapped_diseases?.some((d) =>
-        selectedDisease.some(
-          (sel) => d.toLowerCase().trim() === sel.toLowerCase().trim()
-        )
-      )
-    );
-  }, [associationsRowData, selectedDisease]);
 
+    let filteredData = associationsRowData;
+
+    if (selectedDisease.length !== 0) {
+      filteredData = filteredData?.filter((row) =>
+        row.mapped_diseases?.some((d: string) =>
+          selectedDisease.some(
+            (sel) => d.toLowerCase().trim() === sel.toLowerCase().trim()
+          )
+        )
+      );
+    }
+
+    if (selectedGene) {
+      filteredData = filteredData.filter((row) => {
+        // Split the "Mapped gene(s)" by commas or semicolons and trim whitespace
+        const genes = row["Mapped gene(s)"]
+          ? row["Mapped gene(s)"].split(/[;,]+/).map((g) => g.trim())
+          : [];
+        
+        // Check if any of the genes exactly matches the selectedGene
+        const matchesGene = genes.some((gene) => gene === selectedGene.trim());
+      
+        if (matchesGene) {
+          const accession = row["Study Accession"];
+          // Add accession to selectedAccession if it's not already there
+          if (accession && !selectedAccession.includes(accession)) {
+            setSelectedAccession((prev) => [...prev, accession]);
+          }
+        }
+        
+        return matchesGene;  // Keep rows that have a gene matching the selectedGene
+      });
+      
+    }
+    console.log("selected study accesion", selectedAccession);
+
+    return filteredData;
+  }, [associationsRowData, selectedAccession, selectedDisease, selectedGene]);
+  useEffect(() => {
+    if (!selectedGene) {
+      setSelectedAccession([]);
+    }
+  }, [selectedGene]);
   //  useEffect(() => {
   //     const diseases = Array.from(new Set(rowData.map(item => capitalizeFirstLetter(item["Trait(s)"])))).sort();
   //     setDiseaseFilterOptions(diseases);
   //   }, [rowData]);
-    const filteredData = useMemo(() => {
-        if (selectedDisease.length > 0) {          
-          return rowData.filter(item => 
-          selectedDisease.includes(capitalizeFirstLetter(item["Trait(s)"]))
-          );
-        }
-        return rowData;
-      }, [rowData, selectedDisease]);
+  const filteredData = useMemo(() => {
+    let filtered = rowData;
+    
+    if (selectedDisease.length > 0) {
+      filtered = filtered.filter((item) =>
+        selectedDisease.includes(capitalizeFirstLetter(item["Trait(s)"]))
+      );
+    }
+    
+    if (selectedAccession.length > 0) {
+      filtered = filtered.filter((item) =>
+        selectedAccession.includes(item["Study accession"])
+      );
+    }
+    
+    return filtered;
+  }, [rowData, selectedDisease, selectedAccession]);
 
   useEffect(() => {
     const llmData = preprocessGWASStudiesData(rowData);
@@ -410,8 +519,10 @@ const AssociatePlot = ({ indications,diseaseAreaFilter }) => {
   }, [rowData, selectedDisease, indications, register]);
 
   const handleLLMCall = () => {
-    if(processedData.length===0){
-      message.warning("This feature requires context to be passed to LLM. As there is no data available, this feature cannot be used");
+    if (processedData.length === 0) {
+      message.warning(
+        "This feature requires context to be passed to LLM. As there is no data available, this feature cannot be used"
+      );
       return;
     }
     invoke("gwas", { send: false });
@@ -433,7 +544,6 @@ const AssociatePlot = ({ indications,diseaseAreaFilter }) => {
         </Button>
       </div>
 
-  
       {locusZoomDataLoading && <LoadingButton />}
       {(gwasStudiesError || error) && (
         <div>
@@ -444,17 +554,47 @@ const AssociatePlot = ({ indications,diseaseAreaFilter }) => {
         <div className="mt-4">
           <div className="flex mb-3">
             <div className="flex gap-4">
-            {  diseaseAreaFilter &&
-          <DiseaseFilter
-          allDiseases={indications}
-          selectedDiseases={selectedDiseaseAreas}
-          onChange={setSelectedDiseaseAreas}
-          disabled={isLoading}
-          width={300}
-          
-          labelText={diseaseAreaFilter?"Disease Area:":"Disease:"}
-        />}
-               {/* <DiseaseFilter
+              
+              {diseaseAreaFilter && (
+                <DiseaseFilter
+                  allDiseases={indications}
+                  selectedDiseases={selectedDiseaseAreas}
+                  onChange={setSelectedDiseaseAreas}
+                  disabled={isLoading}
+                  width={300}
+                  labelText={diseaseAreaFilter ? "Disease Area:" : "Disease:"}
+                />
+              )}
+              <div>
+              <span className="mt-1 mr-1">Gene: </span>
+              
+                <Select
+                  style={{ width: 300 }}
+                  placeholder="Select a Gene"
+                  value={selectedGene}
+                  onChange={(value) => setSelectedGene(value)}
+                  allowClear
+                  showSearch
+                >
+                  {/* <Option value="">Select Gene (Coming soon)</Option> */}
+                  {Array.from(
+                    new Set(
+                      associationsRowData.flatMap(
+                        (item) => (item["Mapped gene(s)"] || "").split(/[,;]/) // Split by comma or semicolon
+                      )
+                    )
+                  )
+                    .filter((gene) => gene.trim() !== "") // Remove any empty strings
+                    .sort()
+                    .map((gene) => (
+                      <Option key={gene} value={gene}>
+                        {gene}
+                      </Option>
+                    ))}
+                </Select>
+              
+              </div>
+              {/* <DiseaseFilter
             allDiseases={diseaseFilterOptions}
             selectedDiseases={selectedDisease}
             onChange={setSelectedDisease}
@@ -494,9 +634,9 @@ const AssociatePlot = ({ indications,diseaseAreaFilter }) => {
                 onChange={handleColumnChange}
               />
               <ExportButton
-              indications={indications}
-              endpoint="/genomics/gwas-studies"
-              fileName="GWAS-Studies"
+                indications={indications}
+                endpoint="/genomics/gwas-studies"
+                fileName="GWAS-Studies"
               />
             </div>
           </div>

@@ -126,9 +126,11 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
 
     // Extract unique variants and genes for filters
     const uniqueVariants = [...new Set(processedRows.map(row => row.variant))].filter(Boolean).sort();;
-    const uniqueGenes = [...new Set(
-      processedRows.flatMap(row => row.gene ? row.gene.split(', ') : [])
-    )].filter(Boolean).sort();
+    const uniqueGenes = [
+      ...new Set(
+        processedRows.flatMap(row => row.gene ? row.gene.split(/[,;]+/) : [])  // Split by comma or semicolon
+      )
+    ].filter(gene => typeof gene === 'string' && gene.trim() !== '').sort();
     // const uniqueDisease = [...new Set(
     //   processedRows.flatMap(row => 
     //     row.mapped_trait ? row.mapped_trait.split(', ').map(trait => trait.trim()) : []
@@ -182,8 +184,12 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
         );
       } else if (filterType === "gene") {
         filteredData = filteredData.filter((row) => {
-          const genes = row.gene ? row.gene.split(",").map((g) => g.trim()) : [];
-          return genes.includes(optionValue);
+          const genes = row.gene
+            ? row.gene.split(/[;,]+/).map((g) => g.trim())  // Split by both commas and semicolons
+            : [];
+          
+          // Check if any gene exactly matches `optionValue`
+          return genes.some((gene) => gene === optionValue.trim());
         });
       }
     }

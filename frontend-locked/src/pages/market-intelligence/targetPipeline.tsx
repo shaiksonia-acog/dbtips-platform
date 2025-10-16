@@ -440,11 +440,11 @@ const CompetitiveLandscape = ({ target, indications, diseaseAreaFilter }) => {
                       />
                     )}
                     <ExportButton
-                      indications={[""]}
+                      indications={indications}
                       target={target}
                       disabled={targetDataLoading || processedData.length === 0}
                       fileName={"Target-Pipeline"}
-                      endpoint={"/market-intelligence/target-pipeline-all/"}
+                      endpoint={"/market-intelligence/target-pipeline-new/"}
                     />
                   </div>
                 </div>

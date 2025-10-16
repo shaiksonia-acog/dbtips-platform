@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { useQuery } from "react-query";
 import { fetchData } from "../../utils/fetchData";
@@ -7,6 +7,8 @@ import { Empty, Select } from "antd";
 import countries from "./countries.yaml";
 import { capitalizeFirstLetter } from "../../utils/helper";
 import ExportButton from "../../components/exportButton";
+import ColumnSelector from "../../components/columnFilter";
+
 const { Option } = Select;
 
 function convertToArray(data) {
@@ -56,12 +58,80 @@ const valueFormatter = (params) => {
   return `${day}/${month}/${year}`;
 };
 
-const Patent = ({ target, indications,diseaseAreaFilter }) => {
+const Patent = ({ target, indications, diseaseAreaFilter }) => {
   const [rowData, setRowData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [countryFilter, setCountryFilter] = useState("All");
   const [selectedDisease, setSelectedDisease] = useState(indications);
   const [statusFilter, setStatusFilter] = useState("ACTIVE");
+  const [selectedColumns, setSelectedColumns] = useState([
+    "Disease",
+    "patent_id",
+    "assignee",
+    "filing_date",
+    "grant_date",
+  ]);
+
+  const allColumnDefs = useMemo(() => [
+    {
+      field: "Disease",
+      headerName: "Disease area",
+      width: 200,
+      cellRenderer: (params) =>
+        capitalizeFirstLetter(params.value),
+    },
+    {
+      headerName: "Title",
+      field: "patent_id",
+      valueGetter: (params) => `${params.data.title} (${params.data.patent_id})`,
+      cellRenderer: PatentLink,
+      flex: 2,
+    },
+    {
+      headerName: "Current assignee",
+      field: "assignee",
+      flex: 2,
+    },
+    {
+      headerName: "Filing date",
+      field: "filing_date",
+      width: 200,
+      filter: "agDateColumnFilter",
+      filterParams,
+      valueFormatter,
+    },
+    {
+      headerName: "Grant date",
+      field: "grant_date",
+      width: 200,
+      filterParams,
+      valueFormatter,
+    },
+    {
+      headerName: "Expected expiry date",
+      field: "expiry_date",
+      flex: 1.1,
+      filter: "agDateColumnFilter",
+      filterParams,
+      valueFormatter,
+    },
+  ], []);
+
+  const availableColumns = useMemo(() => {
+    if (indications.length > 0) {
+        return allColumnDefs;
+    }
+    return allColumnDefs.filter(c => c.field !== 'Disease');
+  }, [indications.length, allColumnDefs]);
+
+  const visibleColumns = useMemo(() => {
+    return availableColumns.filter((col) => selectedColumns.includes(col.field));
+  }, [availableColumns, selectedColumns]);
+
+  const handleColumnChange = (columns) => {
+    setSelectedColumns(columns);
+  };
+
 
   const payload = {
     target: target === "TNFRSF4" ? "OX40" : target,
@@ -80,6 +150,13 @@ const Patent = ({ target, indications,diseaseAreaFilter }) => {
 useEffect(() => {
     setSelectedDisease(indications);
   }, [indications]);
+
+  useEffect(() => {
+    if (indications.length === 0) {
+      setSelectedColumns(cols => cols.filter(c => c !== 'Disease'));
+    }
+  }, [indications.length]);
+
   useEffect(() => {
     if (patentData) {
       const flattenedData = convertToArray(patentData)
@@ -139,7 +216,7 @@ useEffect(() => {
         <div>
          { patentData &&
           <div className="flex justify-between my-3">
-            <div className="flex gap-3   ">
+            <div className="flex gap-3 flex-wrap   ">
               { indications.length>0 && <div className="flex gap-2">
                 <h3 className="mt-1">{diseaseAreaFilter?"Disease Area:":"Disease:"} </h3>
                 <Select
@@ -205,13 +282,22 @@ useEffect(() => {
                 </Select>
               </div>
             </div>
-            <ExportButton
-              target={target}
-              endpoint={"/evidence/search-patent/"}
-              fileName="patent"
-              indications={indications}
-              disabled={patentLoading || filteredData.length === 0}
-            />
+            <div className="flex gap-2">
+              {filteredData.length > 0 && (
+                <ColumnSelector
+                  allColumns={availableColumns}
+                  defaultSelectedColumns={selectedColumns}
+                  onChange={handleColumnChange}
+                />
+              )}
+              <ExportButton
+                target={target}
+                endpoint={"/evidence/search-patent/"}
+                fileName="patent"
+                indications={indications}
+                disabled={patentLoading || filteredData.length === 0}
+              />
+            </div>
           </div>}
           {filteredData.length === 0 ? (
             <Empty
@@ -234,55 +320,7 @@ useEffect(() => {
                   wrapText: true,
                   cellStyle: { whiteSpace: "normal", lineHeight: "20px" },
                 }}
-                columnDefs={[
-                  ...(indications.length > 0
-                    ? [
-                        {
-                          field: "Disease",
-                          headerName: "Disease",
-                          width: 200,
-                          cellRenderer: (params) =>
-                            capitalizeFirstLetter(params.value),
-                        },
-                      ]
-                    : []),
-                  
-                  {
-                    headerName: "Title",
-                    field: "patent_id",
-                    valueGetter: (params) => `${params.data.title} (${params.data.patent_id})`,
-                    cellRenderer: PatentLink,
-                    flex: 2,
-                  },
-                  {
-                    headerName: "Current assignee",
-                    field: "assignee",
-                    flex: 2,
-                  },
-                  {
-                    headerName: "Filing date",
-                    field: "filing_date",
-                    width: 200,
-                    filter: "agDateColumnFilter",
-                    filterParams,
-                    valueFormatter,
-                  },
-                  {
-                    headerName: "Grant date",
-                    field: "grant_date",
-                    width: 200,
-                    filterParams,
-                    valueFormatter,
-                  },
-                  {
-                    headerName: "Expected expiry date",
-                    field: "expiry_date",
-                    flex: 1.1,
-                    filter: "agDateColumnFilter",
-                    filterParams,
-                    valueFormatter,
-                  },
-                ]}
+                columnDefs={visibleColumns}
                 rowData={filteredData}
                 pagination
                 paginationPageSize={20}

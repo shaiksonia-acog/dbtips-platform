@@ -7,6 +7,7 @@ import { capitalizeFirstLetter, convertDiseaseObjectToArray } from "../../utils/
 import { filterByDiseases } from "../../utils/filterDisease";
 import DataTableWrapper from "../../components/dataTableWrapper";
 import DiseaseFilter from "../../components/diseaseFilter";
+import CustomHeader from "../../components/customHeader";
 interface ModelStudiesProps {
   indications: string[];
   diseaseAreaFilter: boolean;
@@ -77,29 +78,43 @@ const ModelStudies: React.FC<ModelStudiesProps> = ({ indications,diseaseAreaFilt
         field: "Association",
         flex: 1,
         headerName: "Association",
+        headerComponent:CustomHeader,
+        headerComponentParams: { 
+          headerName: "Association",
+          title:(<ul>
+            <li><strong>Is model of</strong> – Model reproduces phenotypes consistent with the human disease.</li>
+            <li><strong>Does not model</strong> – Model was evaluated but did not reproduce disease phenotypes.</li>
+            <li><strong>Is implicated in</strong> – A variant of the gene is shown to function in causing or modifying a human disease or model state.</li>
+            <li><strong>A marker of</strong> – A biological molecule found in blood, other body fluids, or tissues that is a sign of the disease.</li>
+          </ul>
+          )
+         },
+        // valueGetter: (params) => {
+        //   return params.data.Association;
+        // },
         valueGetter: (params) => {
-          return params.data.Association;
-        },
-        cellRenderer: (params) => {
-          const type = params.value.toLowerCase();
-          if (params.value == "is_not_model_of") return <>does Not model</>;
+          const associationValue = params.data.Association;
+          const type = associationValue.toLowerCase();
+          
+          if (associationValue == "is_not_model_of") return "does Not model";
 
           if (type === "is_not_model_of") {
-            return <>does not model</>;
+            return "does not model";
           }
 
           const words = type
             ?.replaceAll("_", " ")
             .split(/(?:^| )not(?: |$)/, 2);
-          return (
-            <>
-              {words?.[0]}
-              {words?.length > 1 && <> not {words[1]}</>}
-            </>
-          );
+          
+          let result = words?.[0] || "";
+          if (words?.length > 1) {
+            result += " not " + words[1];
+          }
+          
+          return result;
         },
-      },
-      {
+            },
+            {
         field: "Disease",
         headerName: "Disease",
         valueGetter: (params) => {

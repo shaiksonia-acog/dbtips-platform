@@ -73,8 +73,7 @@ const Paralogs = ({ target,  }) => {
 		<section id='paralogs' className='mt-12 px-[5vw]'>
 			<h1 className='text-3xl font-semibold'>Paralogs</h1>
 			<p className='mt-2 italic font-medium'>
-				Homology for a target across selected species. Understanding paralogs
-				can help avoid off-target effects and improve drug specificity.
+			Analysis of homologs and paralogs across selected species helps identify potential off-target effects and improve drug specificity.
 			</p>
 
 			{paralogsError ? (

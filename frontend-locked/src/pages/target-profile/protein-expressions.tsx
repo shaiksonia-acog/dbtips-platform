@@ -19,7 +19,7 @@ const ProteinExpressions = ({ target }) => {
     isLoading: targetProteinExpressioLoading,
   } = useQuery(
     ["targetProteinExpression", payload],
-    () => fetchData(payload, "/target-profile/protein-expressions/test"),
+    () => fetchData(payload, "/target-profile/protein-expressions"),
     {
       enabled: !!target,
     }

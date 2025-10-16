@@ -166,8 +166,10 @@ const DiseasePathways: React.FC<NetworkBiologyProps> = ({ indications, target })
       Object.values(networkBiologyData).forEach((condition) =>
         condition.results.forEach((result) => {
           if (result.mapped_diseases) {
-            result.mapped_diseases.forEach(disease => uniqueDiseases.add(disease));
-            
+            result.mapped_diseases.forEach(disease => {
+              if(!indications.map(d=>d.toLowerCase()).includes(disease.toLowerCase()))
+              uniqueDiseases.add(disease);
+            });
           }
           result?.gene_symbols?.forEach((symbol) => {
             
