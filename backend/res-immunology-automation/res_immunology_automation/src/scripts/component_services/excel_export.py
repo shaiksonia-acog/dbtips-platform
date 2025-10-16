@@ -51,7 +51,7 @@ def create_excel_from_json(json_data: Dict, template_path: str, output_path: str
             platform = "; ".join([f"{k}: {v}" for k, v in item["Platform"].items()])
             design = "; ".join(item["Design"])
             studyType = item["StudyType"]
-            organism = "; ".join(item["Organism"])
+            organism = "; ".join([str(org) for org in item["Organism"] if org is not None])
             platformName = "; ".join(item["PlatformNames"])
 
             # Write the first-level fields
@@ -566,13 +566,13 @@ def process_target_pipeline(data: Dict[str, Any]) -> None:
 
         # Write PMIDs (if any) in subsequent rows
         pmid_row = row - num_rows  # Start from the first row of this item
-        if status == "Completed" and pmids:
+        if pmids:
             for pmid in pmids:
                 ws.cell(row=pmid_row, column=4).hyperlink = f"https://pubmed.ncbi.nlm.nih.gov/{pmid}"
                 ws.cell(row=pmid_row, column=4, value=f"PMID: {pmid}")
                 ws.cell(row=pmid_row, column=4).style = "Hyperlink"
                 pmid_row += 1
-        elif status != "Completed":
+        else:
             ws.cell(row=pmid_row, column=5, value=outcome_reason)
 
     # Populate the "Approved_drugs" sheet
@@ -779,7 +779,7 @@ def process_kol_videos(data):
 
 def process_gwas_excel( data, association_data):
     # Load workbook and disable template mode
-    template_path = "../excel_export_templates/GWAS-template-v1.xltx"
+    template_path = "../excel_export_templates/GWAS-Studies.xltx"
     output_path = "GWASLatest.xlsx"
     workbook = load_workbook(template_path)
     workbook.template = False
@@ -821,10 +821,11 @@ def process_gwas_excel( data, association_data):
             cell.value = None
     
     associationRow = 2
-    for disease, associations in association_data.items():
+    for diseaseArea, associations in association_data.items():
         for association in associations["gwas_associations"]:
+            disease=", ".join(association["mapped_diseases"])
             row_data = [
-                disease, association["Study Accession"], association["Variant and Risk Allele"],
+                diseaseArea,disease, association["Study Accession"], association["Variant and Risk Allele"],
                 association["pvalue"], association["RAF"], association["OR or BETA"],
                 association["CI"], association["Mapped gene(s)"]
             ]
@@ -1009,7 +1010,7 @@ def process_kol_excel(data):
 
 def process_literature_excel(data,selectedLiteratureData):
     # Load workbook and disable template mode
-    template_path = "../excel_export_templates/Literature_template-v1.0.xltx"
+    template_path = "../excel_export_templates/Literature_template.xltx"
     output_path = "./LiteratureLatest.xlsx"
     workbook = load_workbook(template_path)
     workbook.template = False
@@ -1021,7 +1022,7 @@ def process_literature_excel(data,selectedLiteratureData):
     row=2
     for disease, disease_data in data.items():
         for study in disease_data["literature"]: 
-            disease=disease
+            diseaseArea = "" if disease.lower() == "no-disease" else disease
             year = study["Year"]
             citedBy = study["citedby"]
             category = ", ".join(study["Qualifers"])  # Joining gene list into a single string
@@ -1030,8 +1031,9 @@ def process_literature_excel(data,selectedLiteratureData):
             pubmedLink = study["PubMedLink"]
             tableAnalysis = ", ".join(study["tables_analysis"])
             supplementary_analysis = study["supplementary_analysis"]
+            childDisease=", ".join(study["mapped_diseases"]) 
             row_data = [
-                disease, year,category,title,author,citedBy,tableAnalysis,supplementary_analysis
+                diseaseArea,childDisease, year,category,title,author,citedBy,tableAnalysis,supplementary_analysis
             ]
             for col, value in enumerate(row_data, start=1):
                 ws.cell(row=row, column=col, value=value)
