@@ -1,10 +1,6 @@
 import { AgGridReact } from "ag-grid-react";
-import { Tooltip } from "antd";
-// import { InfoCircleOutlined } from "@ant-design/icons";
-
-// import json from '../assets/ADORA3.json';
+import { Tooltip, Empty } from "antd";
 import { convertObjectToArray } from "../../utils/helper";
-import { Empty } from "antd";
 import ProteinImage from "./proteinImage";
 import LoadingButton from "../../components/loading";
 
@@ -14,13 +10,28 @@ const AboutTarget = ({
   targetDetailsLoading,
   description,
 }) => {
-  // const data = json.about_target;
-
   const taxonomy = convertObjectToArray(data?.taxonomy) || [];
+
+  const formatDescription = (text) => {
+    if (!text) return "";
+
+    // Find all “Inhibits ...” occurrences
+    const inhibitsSentences = text.match(/Inhibits peroxisomal division when overexpressed\.?/g);
+
+    if (inhibitsSentences && inhibitsSentences.length >= 2) {
+      // Remove all inhibits sentences from the main text
+      let main = text.replace(/Inhibits peroxisomal division when overexpressed\.?/g, "").trim();
+
+      // Append prefixed inhibited lines with line breaks
+      main += `\n[Isoform 1]: ${inhibitsSentences[inhibitsSentences.length - 2]}\n[Isoform 4]: ${inhibitsSentences[inhibitsSentences.length - 1]}`;
+      return main;
+    }
+
+    return text;
+  };
 
   return (
     <section id="introduction">
-      {/* Target Description */}
       <article id="target-description" className="mt-8 px-[5vw] min-h-[80vh] ">
         <h1 className="text-3xl mb-2 font-semibold ">Description</h1>
         <p className="font-medium">
@@ -33,34 +44,32 @@ const AboutTarget = ({
             <Empty />
           </div>
         )}
-        
+
         {data && (
           <>
-            {data && (
-              <div>
-                <span>
-                  Uniprot ID:{" "}
-                  <span className="text-sky-800">
-                    {data.target_details.uniprot_id}
-                  </span>{" "}
-                  |{" "}
-                </span>
-                <span>
-                  ENSGID:{" "}
-                  <span className="text-sky-800">
-                    {" "}
-                    {data.target_details.ensembl_id}{" "}
-                  </span>
+            <div>
+              <span>
+                Uniprot ID:{" "}
+                <span className="text-sky-800">
+                  {data.target_details.uniprot_id}
                 </span>{" "}
-              </div>
-            )}
+                |{" "}
+              </span>
+              <span>
+                ENSGID:{" "}
+                <span className="text-sky-800">
+                  {data.target_details.ensembl_id}
+                </span>
+              </span>
+            </div>
             <div className="flex gap-32 mt-3">
-              {/* Function Descriptions Section */}
               <div className="flex-1 ">
                 <h2 className="text-lg font-medium subHeading">
                   Function descriptions
                 </h2>
-                <p className="text-justify">{description}</p>
+                {/* Render with newlines */}
+                <p className="text-justify whitespace-pre-line">{formatDescription(description)}</p>
+
                 <h2 className="text-lg font-medium mb-2 mt-10 subHeading">
                   Synonyms (from UniProt)
                 </h2>
@@ -82,7 +91,6 @@ const AboutTarget = ({
                 </div>
               </div>
 
-              {/* Synonyms Section */}
               <div className="flex-1 mt-[-32px]">
                 {data && (
                   <ProteinImage uniprot={data.target_details.uniprot_id} />
@@ -93,7 +101,6 @@ const AboutTarget = ({
         )}
       </article>
 
-      {/* Taxonomy */}
       <article id="taxonomy" className="mt-12 px-[5vw] bg-gray-50 py-20">
         <h1 className="text-3xl font-semibold">Taxonomy</h1>
         <p className=" font-medium mt-2">
