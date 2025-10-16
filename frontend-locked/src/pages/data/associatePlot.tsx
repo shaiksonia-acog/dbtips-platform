@@ -86,7 +86,7 @@ const AssociatePlot = ({ indications, diseaseAreaFilter }) => {
   const [selectedDiseaseAreas, setSelectedDiseaseAreas] = useState(indications);
   const [columns, setColumns] = useState([]);
   const [defaultSelectedColumns, setDefaultSelectedColumns] = useState([]);
-  const [selectedGene, setSelectedGene] = useState("");
+  const [selectedGene, setSelectedGene] = useState();
   const [selectedAccession, setSelectedAccession] = useState([]);
   const [selectedColumnsGWASStudies, setSelectedColumnsGWASStudies] = useState([
     "DiseaseArea",
