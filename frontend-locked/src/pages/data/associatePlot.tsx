@@ -86,7 +86,7 @@ const AssociatePlot = ({ indications, diseaseAreaFilter }) => {
   const [selectedDiseaseAreas, setSelectedDiseaseAreas] = useState(indications);
   const [columns, setColumns] = useState([]);
   const [defaultSelectedColumns, setDefaultSelectedColumns] = useState([]);
-  const [selectedGene, setSelectedGene] = useState();
+  const [selectedGene, setSelectedGene] = useState<string | undefined>();
   const [selectedAccession, setSelectedAccession] = useState([]);
   const [selectedColumnsGWASStudies, setSelectedColumnsGWASStudies] = useState([
     "DiseaseArea",
@@ -461,7 +461,7 @@ const AssociatePlot = ({ indications, diseaseAreaFilter }) => {
           : [];
         
         // Check if any of the genes exactly matches the selectedGene
-        const matchesGene = genes.some((gene) => gene === selectedGene.trim());
+        const matchesGene = genes.some((gene) => gene === selectedGene?.trim());
       
         if (matchesGene) {
           const accession = row["Study Accession"];
