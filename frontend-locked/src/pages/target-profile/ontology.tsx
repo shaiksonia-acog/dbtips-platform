@@ -13,6 +13,27 @@ declare global {
     }
   }
 }
+const sourceURLS = {
+  Reactome: (id: string) => `https://identifiers.org/reactome:${id}`,
+  PMID: (id: string) => `https://doi.org/${id}`,
+  GO_REF: (id: string) => `https://identifiers.org/GO_REF:${id}`,
+};
+
+const sourceMapContent = (source: string) => {
+  const sourceName = source.slice(0, source.indexOf(":"));
+  const sourceId = source.slice(source.indexOf(":") + 1);
+  
+  if (sourceURLS[sourceName as keyof typeof sourceURLS]) {
+    return (
+      <a href={sourceURLS[sourceName as keyof typeof sourceURLS](sourceId)} target="_blank" rel="noopener noreferrer">
+       {source}
+      </a>
+    );
+  }
+  
+  return <span>{sourceName}</span>;
+};
+
 interface CustomHeaderProps {
   displayName?: string;
 }
@@ -151,11 +172,7 @@ const Ontology = ({ hgnc_id, target }) => {
                 { field: "Gene Product", headerName: "Gene product" },
                 {
                   field: "Source",
-                  cellRenderer: (params) => (
-                    <a target="_blank" href={params.data.Link}>
-                      {params.value}
-                    </a>
-                  ),
+                  cellRenderer: (params) => sourceMapContent(params.value),
                   headerName: "Evidence",
                 },
               ]}
