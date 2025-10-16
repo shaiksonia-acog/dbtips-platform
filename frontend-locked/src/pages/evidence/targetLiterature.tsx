@@ -224,7 +224,12 @@ setUrl(url);
             },
           ]
         : []),
-      { field: "Year" },
+      { field: "Year" ,
+        cellRenderer: (params) => {
+          if(params.value===0) return "";
+          return params.value;
+        }
+      },
       {
         field: "Qualifers",
         headerName: "Category",
