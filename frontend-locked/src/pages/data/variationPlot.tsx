@@ -1,16 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect ,useRef} from "react";
 import Plotly from "plotly.js-dist-min";
 import LocusZoom from "locuszoom";
-import { Select, message, Empty,  Space } from "antd";
+import { Select, message, Empty,  Space, Tooltip } from "antd";
 import { useQuery } from "react-query";
 import { fetchData } from "../../utils/fetchData";
 import LoadingButton from "../../components/loading";
 import CHROMOSOMES from "./chromosomes.json";
+import { InfoCircleOutlined } from "@ant-design/icons"
+
 
 const { Option } = Select;
 
 function DiseasePlot({ diseases,diseaseAreaFilter }) {
- 
+  const plotRef = useRef(null);
+
   const [selectedDisease, setSelectedDisease] = useState("");
   const [allPoints, setAllPoints] = useState([]);
   const [mondoId, setMondoId] = useState(null);
@@ -20,7 +23,7 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
   const [selectedOption, setSelectedOption] = useState(null);
   // const [diseaseOptions, setDiseaseOptions] = useState([]);
   // const [selectedMappedTrait, setSelectedMappedTrait] = useState("");
-  const [filterType, setFilterType] = useState("variant"); // Default filter type
+  const [filterType, setFilterType] = useState("gene"); // Default filter type
 
   // Reset data on disease change
   useEffect(() => {
@@ -223,7 +226,7 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
       dataMap[chr].positions.push(pos);
     });
     
-    const plotDiv = document.getElementById("plot");
+    const plotDiv = plotRef.current;
     if (!plotDiv) return;
     
     Plotly.purge(plotDiv);
@@ -242,6 +245,7 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
     }));
 
     const layout = {
+     
       title: {
         text: "Manhattan Plot with Variant Details",
       },
@@ -348,7 +352,7 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
     <div>
       <h2 className="text-xl subHeading font-semibold mb-3 mt-4" id="manhattanPlot">Manhattan Plot</h2>
       <p className="my-1 font-medium">
-        A genome-wide visualization of SNP significance, highlighting risk loci in GWAS. Click on a specific variant to view the 'LocusZoom plot'.
+      Displays genome-wide SNP associations, highlighting significant genetic loci linked to {diseases}. Clicking a point (variant) typically opens a LocusZoom plot showing nearby genes and linkage patterns.
       </p>
       
       <div className="flex flex-wrap gap-2 mt-4">
@@ -435,11 +439,39 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
 
 
       {!locuszoomLoading && !locuszoomError && locuszoomData?.[selectedDisease.toLowerCase()] && locuszoomData?.[selectedDisease.toLowerCase()] !== "EFO ID not found for immune-mediated necrotizing myopathy" && (
-        <div>
+        <div style={{ position: 'relative' }}>
           <div
             id="plot"
+            ref={plotRef} 
             style={{ width: "100%", height: "400px", marginTop: "20px" }}
-          ></div>
+          >
+            <Tooltip title="Each number represents a chromosome (1–22, X, Y). Dots along each chromosome mark SNP locations">
+        <InfoCircleOutlined 
+          style={{ 
+            position: 'absolute', 
+            bottom: '25px', 
+            left: '53.3%',
+            fontSize: '16px',
+            color: '#666',
+            cursor: 'pointer'
+          }} 
+        />
+      </Tooltip>
+      <Tooltip title="Indicates the statistical significance of each SNP’s association with the disease. Higher points mean stronger associations.">
+        <InfoCircleOutlined 
+          style={{ 
+        position: 'absolute', 
+        top: '39%', 
+        left: '28px',
+        fontSize: '16px',
+        color: '#666',
+        cursor: 'pointer',
+        transform: 'translateY(-80%) rotate(-90deg)'
+          }} 
+        />
+      </Tooltip>
+
+          </div>
           <div id="lz-plot" style={{ marginTop: "20px" }}></div>
         </div>
       )}
