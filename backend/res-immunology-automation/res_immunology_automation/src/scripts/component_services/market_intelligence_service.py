@@ -1790,7 +1790,7 @@ def get_target_pipeline_strapi_all(diseases: List[str], target: str) -> List[Dic
             filtered_data.append({
                 "Disease": (item.get("disease") or "").lower(),
                 "Drug": item.get("drug", ""),
-                "Type": item.get("type", ""),
+                "Modality": item.get("type", ""),
                 "Mechanism of Action": item.get("MoA", ""),
                 "Phase": f"Phase {phase}" if phase else "N/A",
                 "Status": trial_status,
