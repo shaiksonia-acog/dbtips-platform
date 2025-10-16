@@ -7,7 +7,52 @@ import json,csv
 from openpyxl.styles import Font
 from collections import defaultdict
 from openpyxl.styles import Alignment
+def extract_parent_indication_from_tree_number(disease_tree_number, mapping):
+    """
+    Extract the parent indication (disease area) based on the disease tree number from the mapping.
+    
+    :param disease_tree_number: A disease tree number (e.g., 'C14.280.067')
+    :param mapping: A dictionary mapping disease areas to their respective tree numbers
+    :return: The parent disease area if a match is found, otherwise None
+    """
+    for area, tree_numbers in mapping.items():
+        for tree_num in tree_numbers:
+            # Check if the disease tree number starts with the mapped tree number
+            if disease_tree_number.startswith(tree_num):
+                return area  # Return the parent disease area
+    return None  # Return None if no match is found
 
+
+def process_approved_drug_data(target_data):
+    """
+    Process the drug data and dynamically extract parent disease areas from disease_tree_numbers.
+    
+    :param target_data: Dictionary containing 'target_pipeline' (drug data) and 'disease_tree_numbers' (mapping)
+    :return: List of processed drug data with dynamically added parent disease areas
+    """
+    # Extract disease area mapping from target data
+    mapping = target_data.get('disease_tree_numbers', {})
+    
+    # List to hold the final approved drug data
+    approved_drug_data = []
+    
+    # Iterate through each drug in the 'target_pipeline'
+    for row in target_data['target_pipeline']:
+        # Extract disease tree numbers from the drug's data
+        disease_tree_numbers = row.get('disease_tree_numbers', [])
+        
+        # Find the matching parent disease area for each disease_tree_number
+        all_matching_indications = set()  # Use a set to avoid duplicate disease areas
+        for disease_tree_number in disease_tree_numbers:
+            parent_area = extract_parent_indication_from_tree_number(disease_tree_number, mapping)
+            if parent_area:
+                all_matching_indications.add(parent_area)
+        
+        # For each matching parent disease area, add it to the row
+        for indication in all_matching_indications:
+            approved_drug_data.append({**row, 'diseaseArea': indication})
+    
+    return approved_drug_data
 
 def separate(value):
     if not value:
@@ -382,7 +427,7 @@ def process_patent_data(data: List[Dict[str, Any]]) -> str:
     :return: The output file path.
     """
     # Define template path and output path inside the function
-    template_path = "../excel_export_templates/Patent-template.xltx"
+    template_path = "../excel_export_templates/patent.xltx"
     output_path = "patent_excel.xlsx"
 
     # Initialize Workbook
@@ -426,11 +471,11 @@ def process_patent_data(data: List[Dict[str, Any]]) -> str:
                 ws.cell(row=current_row, column=3, value=result.get("assignee", "")).alignment = alignment
                 ws.cell(row=current_row, column=4, value=result.get("filing_date", "")).alignment = alignment
                 ws.cell(row=current_row, column=5, value=result.get("grant_date", "")).alignment = alignment
-                ws.cell(row=current_row, column=6, value=result.get("expiry_date", "")).alignment = alignment
+                # ws.cell(row=current_row, column=6, value=result.get("expiry_date", "")).alignment = alignment
 
                 # Country-specific status
-                ws.cell(row=current_row, column=7, value=country).alignment = alignment
-                ws.cell(row=current_row, column=8, value=status).alignment = alignment
+                ws.cell(row=current_row, column=6, value=country).alignment = alignment
+                ws.cell(row=current_row, column=7, value=status).alignment = alignment
 
                 current_row += 1  # Move to the next row for the next country status
 
@@ -501,7 +546,7 @@ def process_target_pipeline(data: Dict[str, Any]) -> None:
         None
     """
     # Define the template path and output path inside the function
-    template_path: str = "../excel_export_templates/Target-pipline-export-template.xltx"
+    template_path: str = "../excel_export_templates/target-pipeline.xltx"
     output_path: str = "target_pipeline_excel.xlsx"
 
     print("Loading template...")
@@ -519,70 +564,86 @@ def process_target_pipeline(data: Dict[str, Any]) -> None:
     for row in ws.iter_rows(min_row=2):
         for cell in row:
             cell.value = None
-
+    approved_drug_data = process_approved_drug_data(data)
     # Populate the "Pipeline_Data" sheet with the target pipeline data
     row = 2
-    for item in data["target_pipeline"]:
+    for item in approved_drug_data["target_pipeline"]:
+        disease_area = item.get("diseaseArea", "Not Known")
         disease = item["Disease"]
-        outcome_status = item.get("OutcomeStatus")
         drug = item["Drug"]
-        phase = item["Phase"]
-        status = item["Status"]
-        sponsor = item["Sponsor"]
-        drug_type = item["Type"]
-        moa = item["Mechanism of Action"]
-        outcome_reason = item.get("WhyStopped", "")
-        approval_status = item.get("ApprovalStatus", "Not Known")
         source_urls = item.get("Source URLs", [])
+        phase = item["Phase"]
+        outcome_status = item.get("OutcomeStatus")
+        outcome_reason = item.get("WhyStopped", "")
         pmids = item.get("PMIDs", [])
+        drug_type = item["Modality"]
+        sponsor = item["Sponsor"]
+        moa = item["Mechanism of Action"]
+        status = item["Status"]
+        approval_status = item.get("ApprovalStatus", "Not Known")
 
-        num_rows = max(len(source_urls), len(pmids), 1)
+        # If both WhyStopped and PMIDs exist → +1 for WhyStopped + len(pmids)
+        if outcome_reason and pmids:
+            num_rows = len(pmids) + 1
+        else:
+            num_rows = max(len(source_urls), len(pmids), 1)
+
         for idx in range(num_rows):
-            ws.cell(row=row, column=1, value=disease)
-            ws.cell(row=row, column=3, value=outcome_status)
-            ws.cell(row=row, column=5, value=drug)
-            ws.cell(row=row, column=6, value=drug_type)
-            ws.cell(row=row, column=7, value=phase)
-            ws.cell(row=row, column=8, value=status)
-            ws.cell(row=row, column=9, value=sponsor)
-            ws.cell(row=row, column=10, value=moa)
-            ws.cell(row=row, column=11, value=approval_status)
+            # Fixed columns for the main record
+            ws.cell(row=row, column=1, value=disease_area)
+            ws.cell(row=row, column=2, value=disease)
+            ws.cell(row=row, column=3, value=drug)
 
-            # Write Source URL or leave empty
+            # Trial ID
             trial_id = source_urls[idx] if idx < len(source_urls) else ""
             if trial_id:
-                ws.cell(row=row, column=2).hyperlink = trial_id
-                ws.cell(row=row, column=2, value=trial_id)
-                ws.cell(row=row, column=2).style = "Hyperlink"
-            
-            # Write PMIDs if available
-            if idx < len(pmids):
-                pmid = pmids[idx]
-                ws.cell(row=row, column=4).hyperlink = f"https://pubmed.ncbi.nlm.nih.gov/{pmid}"
-                ws.cell(row=row, column=4, value=f"PMID: {pmid}")
+                ws.cell(row=row, column=4).hyperlink = trial_id
+                ws.cell(row=row, column=4, value=trial_id)
                 ws.cell(row=row, column=4).style = "Hyperlink"
 
+            ws.cell(row=row, column=5, value=phase)
+            ws.cell(row=row, column=6, value=outcome_status)
+
+            # --- 🧩 Source / Reference logic ---
+            if outcome_reason and pmids:
+                if idx == 0:
+                    # First row → WhyStopped
+                    ws.cell(row=row, column=7, value=outcome_reason)
+                else:
+                    # Next rows → PMIDs
+                    pmid_index = idx - 1
+                    if pmid_index < len(pmids):
+                        pmid = pmids[pmid_index]
+                        cell = ws.cell(row=row, column=7, value=f"PMID: {pmid}")
+                        cell.hyperlink = f"https://pubmed.ncbi.nlm.nih.gov/{pmid}"
+                        cell.style = "Hyperlink"
+            elif pmids:
+                # Only PMIDs present
+                if idx < len(pmids):
+                    pmid = pmids[idx]
+                    cell = ws.cell(row=row, column=7, value=f"PMID: {pmid}")
+                    cell.hyperlink = f"https://pubmed.ncbi.nlm.nih.gov/{pmid}"
+                    cell.style = "Hyperlink"
+            elif outcome_reason:
+                # Only WhyStopped present
+                ws.cell(row=row, column=7, value=outcome_reason)
+
+            # Remaining columns
+            ws.cell(row=row, column=8, value=drug_type)
+            ws.cell(row=row, column=9, value=sponsor)
+            ws.cell(row=row, column=10, value=moa)
+            ws.cell(row=row, column=11, value=status)
+            ws.cell(row=row, column=12, value=approval_status)
+
             row += 1
-
-        # Write PMIDs (if any) in subsequent rows
-        pmid_row = row - num_rows  # Start from the first row of this item
-        if pmids:
-            for pmid in pmids:
-                ws.cell(row=pmid_row, column=4).hyperlink = f"https://pubmed.ncbi.nlm.nih.gov/{pmid}"
-                ws.cell(row=pmid_row, column=4, value=f"PMID: {pmid}")
-                ws.cell(row=pmid_row, column=4).style = "Hyperlink"
-                pmid_row += 1
-        else:
-            ws.cell(row=pmid_row, column=5, value=outcome_reason)
-
+    approved_set = set()
     # Populate the "Approved_drugs" sheet
-    approved_set = set(
-        (record["Drug"], record["Disease"])
-        for record in data["target_pipeline"]
-        if record["ApprovalStatus"] == "Approved"
-    )
+    for record in approved_drug_data:
+        if record["ApprovalStatus"] == "Approved":
+            approved_set.add((record["Drug"], record["Disease"]))
 
     approved_drug_row = 2
+
     for drug, disease in approved_set:
         approved_drugs_sheet.cell(row=approved_drug_row, column=1, value=disease)
         approved_drugs_sheet.cell(row=approved_drug_row, column=2, value=drug)
