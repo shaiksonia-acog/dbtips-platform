@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import { Empty, Button, message } from "antd";
 import Patent from "./patent";
 import ExportButton from "../../components/exportButton";
-// import he from "he";
+import he from "he";
 import ApprovedDrug from "./targetApprovedDrug";
 import { capitalizeFirstLetter } from "../../utils/helper";
 import LoadingButton from "../../components/loading";
@@ -12,6 +12,7 @@ import { useChatStore } from "chatbot-component";
 import BotIcon from "../../assets/bot.svg?react";
 import { preprocessTargetData } from "../../utils/llmUtils";
 import ColumnSelector from "../../components/columnFilter";
+import CustomHeader from "../../components/customHeader";
 // import parse from "html-react-parser";
 import Table from "../../components/table";
 import DiseaseFilter from "../../components/diseaseFilter";
@@ -42,24 +43,24 @@ const CompetitiveLandscape = ({ target, indications, diseaseAreaFilter }) => {
 
   const payload = {
     target: target?.toLowerCase(),
-    diseases:indications.length>0 ?indications : [ "no-disease"],
+    diseases: indications.length > 0 ? indications : ["no-disease"],
   };
-  const{ data: targetData,
+  const { data: targetData,
     error: targetError,
     isLoading: targetDataLoading,
     isFetching: targetDataFetching,
     isFetched: targetDataFetched, } = useQuery(
-    ["targetPipeline", payload],
-    () =>
-      fetchData(
-        payload,`/market-intelligence/target-pipeline-new/`
-      ),
-    {
-      enabled: !!target,
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 15 * 60 * 1000, // 15 minutes
-    }
-  );
+      ["targetPipeline", payload],
+      () =>
+        fetchData(
+          payload, `/market-intelligence/target-pipeline-new/`
+        ),
+      {
+        enabled: !!target,
+        staleTime: 5 * 60 * 1000, // 5 minutes
+        cacheTime: 15 * 60 * 1000, // 15 minutes
+      }
+    );
 
   // For testing with local JSON data
   //
@@ -98,11 +99,15 @@ const CompetitiveLandscape = ({ target, indications, diseaseAreaFilter }) => {
             headerName: "Disease Area",
             flex: 2,
           },
-          ]
+        ]
         : []),
       {
         field: "Disease",
         cellRenderer: (params) => capitalizeFirstLetter(params.value),
+        flex: 2,
+      },
+       {
+        field: "Drug",
         flex: 2,
       },
       {
@@ -120,49 +125,80 @@ const CompetitiveLandscape = ({ target, indications, diseaseAreaFilter }) => {
           else return "";
         },
       },
-      {
-        field: "WhyStopped",
-        headerName: "Outcome reason",
-        flex: 3,
-        cellStyle: { whiteSpace: "normal", lineHeight: "20px" },
-        cellRenderer: (params) => {
-          if (params.data.Status == "Completed" && params.data.PMIDs?.length > 0)
-            return params.data.PMIDs.map((pmid, index) => (
-              <a
-                key={index}
-                className="mr-2"
-                href={`https://pubmed.ncbi.nlm.nih.gov/${pmid}`}
-                target="_blank"
-              >
-                {pmid}
-                {params.data.PMIDs.length - 1 !== index ? "," : ""}
-              </a>
-            ));
-          else return params.value;
-        },
-        valueGetter: (params) => {
-          if (params.data.Status == "Completed" && params.data?.PMIDs?.length > 0)
-            return params.data.PMIDs;
-          else return params.data.WhyStopped;
-        },
-      },
+      { field: "Phase" },
+
       {
         field: "OutcomeStatus",
         flex: 2,
         headerName: "Trial outcome",
+        headerComponent: CustomHeader,
+        headerComponentParams: {
+          displayName: "Trial outcome",
+          title:
+            (
+              <div>
+                <ul style={{ margin: '8px 2px' }}>
+                  <li><strong>Success</strong> – The trial successfully met its endpoint.</li>
+                  <li><strong>Failure</strong> – The trial did not meet its endpoint.</li>
+                  <li><strong>Indeterminate</strong> – The outcome is unclear or lacks conclusive evidence to classify as success or failure.</li>
+                  <li><strong>Not known</strong> – No information available.</li>
+                </ul>
+              </div>
+            ),
+        },
         cellRenderer: (params) => {
           return capitalizeFirstLetter(params.value);
         },
       },
       {
-        field: "Drug",
-        flex: 2,
+        field: "WhyStopped",
+        headerComponent: CustomHeader,
+        headerComponentParams: {
+          displayName: "Source/Reference",
+          title:
+            "Indicates the reference used to determine the trial’s outcome status.",
+        },
+        flex: 3,
+        cellStyle: { whiteSpace: "normal", lineHeight: "20px" },
+        cellRenderer: (params) => {
+          // Display both PMIDs and WhyStopped
+
+          const pmidLinks = params.data?.PMIDs?.map((pmid, index) => (
+            <a
+              key={index}
+              className='mr-2'
+              href={`https://pubmed.ncbi.nlm.nih.gov/${pmid}`}
+              target='_blank'
+            >
+              {pmid}
+              {params.data.PMIDs.length - 1 !== index ? ',' : ''}
+            </a>
+          ));
+
+          // Show the WhyStopped value
+          const whyStopped = params.data.WhyStopped ? he.decode(params.data.WhyStopped) : "";
+
+          return (
+            <div>
+              <div className='mb-2'>{`${params.data.PMIDs?.length > 0 ? "PMID: " : ""}`} {pmidLinks}</div>
+              <div>{whyStopped}</div>
+            </div>
+          );
+        },
+        valueGetter: (params) => {
+          // Return both PMIDs and WhyStopped as separate values
+          return {
+            pmids: params.data.PMIDs,
+            whyStopped: params.data.WhyStopped
+          };
+        },
       },
-      { field: "Modality", flex: 2,  },
-      { field: "Phase" },
-      { field: "Status", flex: 2 },
+      
+     
+      { field: "Modality", flex: 2, },
       { field: "Sponsor", flex: 2 },
       { field: "Mechanism of Action", flex: 3 },
+      { field: "Status", flex: 2 },
     ],
     [diseaseAreaFilter]
   );
@@ -192,25 +228,25 @@ const CompetitiveLandscape = ({ target, indications, diseaseAreaFilter }) => {
       setApprovedDrugData(processedData);
       return;
     }
-  
+
     const mapping = targetData?.disease_tree_numbers || {};
     const approved = processedData.flatMap((row) => {
       const matches = getMatchingIndications(row, indications, mapping);
-      return matches.map((indication) => ({ ...row, diseaseArea:indication }));
+      return matches.map((indication) => ({ ...row, diseaseArea: indication }));
     });
-  
+
     setApprovedDrugData(approved);
   }, [indications, processedData, targetData]);
-  
+
 
   // Initialize selected disease areas with all options
   useEffect(() => {
-    if (!diseaseAreaFilter ) {
+    if (!diseaseAreaFilter) {
       setSelectedDisease(indications)
     }
-    
+
     setSelectedDiseaseAreas(diseaseAreaOptions);
-  }, [diseaseAreaOptions, diseaseAreaFilter,indications]);
+  }, [diseaseAreaOptions, diseaseAreaFilter, indications]);
 
   // Filter by disease area (multiple selection)
   const areaFiltered = useMemo(() => {
@@ -218,7 +254,7 @@ const CompetitiveLandscape = ({ target, indications, diseaseAreaFilter }) => {
     if (!selectedDiseaseAreas.length) return [];
 
     const mapping = targetData?.disease_tree_numbers || {};
-    
+
     return processedData.flatMap((row) => {
       const matchingIndications = selectedDiseaseAreas.filter((area) => {
         const areaTreeNumbers = mapping[area] || [];
@@ -226,7 +262,7 @@ const CompetitiveLandscape = ({ target, indications, diseaseAreaFilter }) => {
           areaTreeNumbers.some((selNum) => itemNum.startsWith(selNum))
         );
       });
-      
+
       return matchingIndications.map((indication) => ({
         ...row,
         diseaseArea: indication
@@ -238,10 +274,10 @@ const CompetitiveLandscape = ({ target, indications, diseaseAreaFilter }) => {
   useEffect(() => {
     const diseases = areaFiltered.map((i) => i.Disease).filter(Boolean);
     const uniqueDiseases = [...new Set(diseases)].sort();
-    if(!diseaseAreaFilter)
-    setDiseaseOptions([...uniqueDiseases,...indications].sort());
+    if (!diseaseAreaFilter)
+      setDiseaseOptions([...uniqueDiseases, ...indications].sort());
     else setDiseaseOptions(uniqueDiseases);
-  }, [areaFiltered,indications,diseaseAreaFilter]);
+  }, [areaFiltered, indications, diseaseAreaFilter]);
 
   // Reset selected diseases when disease options change
   // useEffect(() => {
@@ -256,10 +292,10 @@ const CompetitiveLandscape = ({ target, indications, diseaseAreaFilter }) => {
       selectedDisease.length === 0
         ? areaFiltered
         : areaFiltered.filter((row) =>
-            selectedDisease.some(
-              (disease) => disease.toLowerCase() === row.Disease.toLowerCase()
-            )
-          );
+          selectedDisease.some(
+            (disease) => disease.toLowerCase() === row.Disease.toLowerCase()
+          )
+        );
 
     // return selectedModality === "All"
     //   ? diseaseFiltered
@@ -277,7 +313,7 @@ const CompetitiveLandscape = ({ target, indications, diseaseAreaFilter }) => {
         data: llmData,
       });
     }
-  }, [approvedDrugData,targetData, target, register]);
+  }, [approvedDrugData, targetData, target, register]);
 
   const handleLLMCall = () => {
     if (processedData.length === 0) {
@@ -345,36 +381,36 @@ const CompetitiveLandscape = ({ target, indications, diseaseAreaFilter }) => {
         {!targetDataLoading &&
           !targetError &&
           targetData &&
-          targetDataFetched  && (
-          <div>
-            {processedData?.length > 0 && (
-              <div className="flex justify-between my-2">
-                <div className="flex gap-2">
-                  {diseaseAreaFilter && (
+          targetDataFetched && (
+            <div>
+              {processedData?.length > 0 && (
+                <div className="flex justify-between my-2">
+                  <div className="flex gap-2">
+                    {diseaseAreaFilter && (
+                      <div>
+                        <DiseaseFilter
+                          allDiseases={indications}
+                          selectedDiseases={selectedDiseaseAreas}
+                          onChange={setSelectedDiseaseAreas}
+                          labelText="Disease area:"
+                          width={300}
+
+                        />
+                      </div>
+                    )}
+
                     <div>
                       <DiseaseFilter
-                        allDiseases={indications}
-                        selectedDiseases={selectedDiseaseAreas}
-                        onChange={setSelectedDiseaseAreas}
-                        labelText="Disease area:"
+                        allDiseases={diseaseOptions}
+                        selectedDiseases={selectedDisease}
+                        onChange={setSelectedDisease}
+                        labelText="Disease:"
                         width={300}
-                        
+                        placeholder="Select diseases"
+                        showAllOption={false}
                       />
                     </div>
-                  )}
-             
-                  <div>
-                    <DiseaseFilter
-                      allDiseases={diseaseOptions}
-                      selectedDiseases={selectedDisease}
-                      onChange={setSelectedDisease}
-                      labelText="Disease:"
-                      width={300}
-                      placeholder="Select diseases"
-                      showAllOption={false}
-                    />
-                  </div>
-{/*                   
+                    {/*                   
                   <div>
                     <span className="mt-1 mr-1">Modality: </span>
                     <Select
@@ -394,40 +430,40 @@ const CompetitiveLandscape = ({ target, indications, diseaseAreaFilter }) => {
                       ))}
                     </Select>
                   </div> */}
-                </div>
-                <div className="flex gap-2">
-                  {filteredData.length > 0 && (
-                    <ColumnSelector
-                      allColumns={columnDefs}
-                      defaultSelectedColumns={selectedColumns}
-                      onChange={handleColumnChange}
+                  </div>
+                  <div className="flex gap-2">
+                    {filteredData.length > 0 && (
+                      <ColumnSelector
+                        allColumns={columnDefs}
+                        defaultSelectedColumns={selectedColumns}
+                        onChange={handleColumnChange}
+                      />
+                    )}
+                    <ExportButton
+                      indications={[""]}
+                      target={target}
+                      disabled={targetDataLoading || processedData.length === 0}
+                      fileName={"Target-Pipeline"}
+                      endpoint={"/market-intelligence/target-pipeline-all/"}
                     />
-                  )}
-                  <ExportButton
-                    indications={[""]}
-                    target={target}
-                    disabled={targetDataLoading || processedData.length === 0}
-                    fileName={"Target-Pipeline"}
-                    endpoint={"/market-intelligence/target-pipeline-all/"}
-                  />
+                  </div>
                 </div>
-              </div>
-            )}
-            <div>
-              <Table columnDefs={visibleColumns} rowData={filteredData} />
-
-              {filteredData?.length > 0 && (
-                <p>
-                  * The failed entries for the targets include trials that were
-                  withdrawn or terminated due to unmet endpoints, financial
-                  constraints, or other factors. For detailed explanations,
-                  please refer to the respective trial ID from the "Therapeutic
-                  pipeline" table.
-                </p>
               )}
+              <div>
+                <Table columnDefs={visibleColumns} rowData={filteredData} />
+
+                {filteredData?.length > 0 && (
+                  <p>
+                    * The failed entries for the targets include trials that were
+                    withdrawn or terminated due to unmet endpoints, financial
+                    constraints, or other factors. For detailed explanations,
+                    please refer to the respective trial ID from the "Therapeutic
+                    pipeline" table.
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
         {!targetData &&
           !targetDataLoading &&
           !targetError &&

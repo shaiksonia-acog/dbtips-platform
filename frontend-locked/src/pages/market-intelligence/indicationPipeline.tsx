@@ -15,7 +15,7 @@ import ColumnSelector from "../../components/columnFilter";
 import { filterByDiseases } from "../../utils/filterDisease";
 import { convertToArray } from "../../utils/helper";
 import DiseaseFilter from "../../components/diseaseFilter";
-import CustomHeader from "./customHeader";
+import CustomHeader from "../../components/customHeader";
 const { Option } = Select;
 import DrugInformation from "./drugInformation";
 

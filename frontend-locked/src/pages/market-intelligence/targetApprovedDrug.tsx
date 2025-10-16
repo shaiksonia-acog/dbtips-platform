@@ -8,7 +8,6 @@ import { useQuery } from "react-query";
 import BlackboxWarningCard from "./blackboxWarningCard";
 import { fetchData } from "../../utils/fetchData";
 import DiseaseFilter from "../../components/diseaseFilter";
-import { filterByDiseases } from "../../utils/filterDisease";
 function createApprovedDrugsPayload(data) {
   const diseaseMap = {};
   data.forEach(({ Disease, Drug }) => {
@@ -39,13 +38,16 @@ const ApprovedDrug = ({
   const [modalData, setModalData] = useState(undefined);
   const [payload, setPayload] = useState({});
   const [selectedColumns, setSelectedColumns] = useState([
+    "diseaseArea",
     "Disease",
     "Target",
     "Drug",
     "blackbox",
   ]);
+  console.log("approvedDrugData", approvedDrugData);
   useEffect(() => {
-    setSelectedDisease(indications ? [...indications] : []);
+    if(!diseaseAreaFilter)
+    setSelectedDisease(indications);
     setSelectedDiseaseArea(diseaseAreaFilter ? [...indications] : []);
   }, [diseaseAreaFilter,indications]);
 
@@ -149,6 +151,15 @@ const ApprovedDrug = ({
   );
   const columnDefs = useMemo(
     () => [
+      ...(diseaseAreaFilter
+        ? [
+          {
+            field: "diseaseArea",
+            headerName: "Disease Area",
+            flex: 2,
+          },
+        ]
+        : []),
       {
         field: "Disease",
         cellRenderer: (params) => capitalizeFirstLetter(params.value),
@@ -169,26 +180,37 @@ const ApprovedDrug = ({
   const handleColumnChange = (columns) => {
     setSelectedColumns(columns);
   };
+  const areaFilteredData = useMemo(() => {
+    if (!approvedDrugData) return [];
+    if (selectedDiseaseArea.length === 0) return [];
+    return approvedDrugData.filter((data) =>
+      selectedDiseaseArea.some(
+        (disease) =>
+          disease.toLowerCase() === data.diseaseArea?.toLowerCase()
+      )
+    );
+  }, [approvedDrugData, selectedDiseaseArea]);
   const filteredData = useMemo(() => {
     if (!approvedDrugData) return [];
-    const data = approvedDrugData
-    console.log("selectedDisease", selectedDisease);
-    const diseaseAreaFiltered =
-     filterByDiseases(approvedDrugData, selectedDisease, indications,"diseaseArea");
-    console.log("diseaseAreaFiltered", diseaseAreaFiltered);
+    // const data = areaFilteredData
+    // const diseaseAreaFiltered =
+    //  filterByDiseases(approvedDrugData, selectedDisease, indications,"diseaseArea");
+    // console.log("diseaseAreaFiltered", diseaseAreaFiltered);
+
     const filtered =
-      selectedDiseaseArea.length === 0
-        ? diseaseAreaFiltered?.filter(
+      selectedDisease.length === 0
+        ? areaFilteredData?.filter(
             (data) => data.ApprovalStatus === "Approved"
           )
-        : diseaseAreaFiltered?.filter(
+        : areaFilteredData?.filter(
             (data) =>
               selectedDisease.some(
                 (disease) =>
-                  disease.toLowerCase() === data.Disease.toLowerCase()
+                  disease.toLowerCase() === data.
+                Disease
+                .toLowerCase()
               ) && data.ApprovalStatus === "Approved"
           );
-    console.log("filtered", filtered, data);
     // Unique data filtering
     const uniqueKeys = new Set(
       filtered?.map((item) => `${item.Disease}-${item.Drug.toLowerCase()}`)
@@ -200,7 +222,7 @@ const ApprovedDrug = ({
           (item) => `${item.Disease}-${item.Drug.toLowerCase()}` === key
         )!
     );
-  }, [selectedDisease, approvedDrugData,selectedDiseaseArea,indications]);
+  }, [approvedDrugData, areaFilteredData, selectedDisease]);
   useEffect(() => {
     if (filteredData.length > 0) {
       const payload = createApprovedDrugsPayload(filteredData);
@@ -208,9 +230,7 @@ const ApprovedDrug = ({
     }
   }, [filteredData]);
 
-  useEffect(() => {
-    setSelectedDisease(indications);
-  }, [indications]);
+
   const showLoading = isFetchingData || loading || blackboxWarningIsLoading;
   const diseaseOptions = useMemo(() => {
     const diseases = approvedDrugData.map((i) => i.Disease).filter(Boolean);
@@ -235,9 +255,9 @@ const ApprovedDrug = ({
           regulatory authorities for one or more diseases.
         </p>
       )}
-      {approvedDrugData?.available_diseases?.length > 0 && (
+      {diseaseOptions.length > 0 && (
         <div className="flex justify-between">
-           <div className="flex gap-4 my-4">
+           <div className="flex gap-4 my-2">
             { diseaseAreaFilter &&  <DiseaseFilter
                       allDiseases={diseaseAreaOptions}
                       selectedDiseases={selectedDiseaseArea}
@@ -245,7 +265,6 @@ const ApprovedDrug = ({
                       labelText="Disease Area:"
                       width={300}
                       placeholder="Select disease area:"
-                      showAllOption={false}
                     />}
               <DiseaseFilter
                       allDiseases={diseaseOptions}
@@ -277,7 +296,7 @@ const ApprovedDrug = ({
         </div>
       )}
       {!showLoading && !error && filteredData && (
-        <div className=" mt-4 mb-10">
+        <div className=" mt-1 mb-10">
           <Table
             columnDefs={visibleColumns}
             rowData={filteredData}
