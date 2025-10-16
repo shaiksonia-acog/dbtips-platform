@@ -201,7 +201,7 @@ def process_mouse_studies(data: dict) -> str:
     Returns:
     - str: The path to the generated output file.
     """
-    template_path: str = "../excel_export_templates/Animal-Models-template.xltx"
+    template_path: str = "../excel_export_templates/animal-models-template.xltx"
     output_path: str = "animal_model_excel.xlsx"
     
     # Load workbook and clear the "Data" sheet
@@ -221,20 +221,21 @@ def process_mouse_studies(data: dict) -> str:
 
     # Populate the sheet with data
     row = 2
-    for disease, value in data.items():
+    for diseaseArea, value in data.items():
         for item in value.get("mouse_studies", []):
             model = item.get("Model", "")
             gene = item.get("Gene", "")
             species = item.get("Species", "")
             association = item.get("Association", "")
             source_url = item.get("SourceURL", "")
+            disease= item.get("Disease")
             
             initial_row = row
             first_trial = True
 
             for trial_id in item.get("References", []):
                 if first_trial:
-                    ws.cell(row=row, column=1, value=capitalize_words(disease))  # Disease
+                    ws.cell(row=row, column=1, value=capitalize_words(diseaseArea))  # Disease
                     ws.cell(row=row, column=2, value=model)  # Model
                     ws.cell(row=row, column=2).hyperlink = source_url
                     ws.cell(row=row, column=2).style = "Hyperlink"
@@ -242,14 +243,15 @@ def process_mouse_studies(data: dict) -> str:
                     ws.cell(row=row, column=3, value=gene)  # Gene
                     ws.cell(row=row, column=4, value=species)  # Species
                     ws.cell(row=row, column=5, value=render_association(association))  # Association
+                    ws.cell(row=row, column=6,value=disease)
 
                     first_trial = False
 
                 # Add trial ID with hyperlink
                 pubmed_url = f"https://pubmed.ncbi.nlm.nih.gov/{trial_id}"
-                ws.cell(row=row, column=6, value=pubmed_url)  # Reference
-                ws.cell(row=row, column=6).hyperlink = pubmed_url
-                ws.cell(row=row, column=6).style = "Hyperlink"
+                ws.cell(row=row, column=7, value=pubmed_url)  # Reference
+                ws.cell(row=row, column=7).hyperlink = pubmed_url
+                ws.cell(row=row, column=7).style = "Hyperlink"
 
                 row += 1
 
@@ -567,7 +569,7 @@ def process_target_pipeline(data: Dict[str, Any]) -> None:
     approved_drug_data = process_approved_drug_data(data)
     # Populate the "Pipeline_Data" sheet with the target pipeline data
     row = 2
-    for item in approved_drug_data["target_pipeline"]:
+    for item in approved_drug_data:
         disease_area = item.get("diseaseArea", "Not Known")
         disease = item["Disease"]
         drug = item["Drug"]
@@ -884,7 +886,7 @@ def process_gwas_excel( data, association_data):
     associationRow = 2
     for diseaseArea, associations in association_data.items():
         for association in associations["gwas_associations"]:
-            disease=", ".join(association["mapped_diseases"])
+            disease=", ".join(association["Mapped gene(s)"])
             row_data = [
                 diseaseArea,disease, association["Study Accession"], association["Variant and Risk Allele"],
                 association["pvalue"], association["RAF"], association["OR or BETA"],
@@ -1084,7 +1086,7 @@ def process_literature_excel(data,selectedLiteratureData):
     for disease, disease_data in data.items():
         for study in disease_data["literature"]: 
             diseaseArea = "" if disease.lower() == "no-disease" else disease
-            year = study["Year"]
+            year = study["Year"] if study["Year"] != 0 else ""
             citedBy = study["citedby"]
             category = ", ".join(study["Qualifers"])  # Joining gene list into a single string
             author = ", ".join(study["authors"])
@@ -1099,10 +1101,10 @@ def process_literature_excel(data,selectedLiteratureData):
             for col, value in enumerate(row_data, start=1):
                 ws.cell(row=row, column=col, value=value)
 
-            ws.cell(row=row, column=4, value=title)
+            ws.cell(row=row, column=5, value=title)
 
-            ws.cell(row=row, column=4).hyperlink = pubmedLink
-            ws.cell(row=row, column=4).style = "Hyperlink"
+            ws.cell(row=row, column=5).hyperlink = pubmedLink
+            ws.cell(row=row, column=5).style = "Hyperlink"
 
             row += 1  # Move to the next row after filling
     # for row in selectedLiteratureWorkbook.iter_rows(min_row=2):  # Keep the first row (headers)
@@ -1136,7 +1138,7 @@ def process_literature_excel(data,selectedLiteratureData):
 
 def process_target_literature_excel(data):
     # Load workbook and disable template mode
-    template_path = "../excel_export_templates/Literature_template-v1.0.xltx"
+    template_path = "../excel_export_templates/Literature_template.xltx"
     output_path = "./LiteratureLatest.xlsx"
     workbook = load_workbook(template_path)
     workbook.template = False
@@ -1148,25 +1150,26 @@ def process_target_literature_excel(data):
     row=2
     for disease, disease_data in data.items():
         for study in disease_data["literature"]: 
-            disease = "" if disease.lower() == "no-disease" else disease
-            year = study["Year"]
+            diseaseArea = "" if disease.lower() == "no-disease" else disease
+            year = study["Year"] if study["Year"] != 0 else ""
             citedBy = study["citedby"]
             category = ", ".join(study["Qualifers"])  # Joining gene list into a single string
             author = ", ".join(study["authors"])
             title = study["Title"]
             pubmedLink = study["PubMedLink"]
             tableAnalysis = ", ".join(study["tables_analysis"])
+            childDisease=", ".join(study["mapped_diseases"]) 
             supplementary_analysis = study["supplementary_analysis"]
             row_data = [
-                disease, year,category,title,author,citedBy,tableAnalysis,supplementary_analysis
+                diseaseArea,childDisease, year,category,title,author,citedBy,tableAnalysis,supplementary_analysis
             ]
             for col, value in enumerate(row_data, start=1):
                 ws.cell(row=row, column=col, value=value)
 
-            ws.cell(row=row, column=4, value=title)
+            ws.cell(row=row, column=5, value=title)
 
-            ws.cell(row=row, column=4).hyperlink = pubmedLink
-            ws.cell(row=row, column=4).style = "Hyperlink"
+            ws.cell(row=row, column=5).hyperlink = pubmedLink
+            ws.cell(row=row, column=5).style = "Hyperlink"
 
             row += 1  # Move to the next row after filling
    
