@@ -57,7 +57,8 @@ const ModelStudies = ({ target }) => {
           <Empty description={String(mouseStudiesError)} />
         </div>
       ) : (
-        <div>{ filteredData.length>0 &&
+        <div>
+        <div>{ rowData.length>0 &&
           <div className="flex justify-between my-2">
             <div>
               <span className="mt-10 mr-1">Filter by phenotypes: </span>
@@ -67,9 +68,16 @@ const ModelStudies = ({ target }) => {
                 onChange={(value) => setSelectedCategory(value)}
               >
                 <Option value="All">All</Option>
-                <Option value="immune system phenotype">
-                  Immune system phenotype
-                </Option>
+               
+                {
+                  [...new Set(rowData.flatMap(item => 
+                    item.Categories.map(category => category.Label)
+                  ))].map((label) => 
+                    <Option value={label} key={label}>
+                      {capitalizeFirstLetter(label)}
+                    </Option>
+                  )
+                }
               </Select>
             </div>
             <ExportButton
@@ -171,6 +179,7 @@ const ModelStudies = ({ target }) => {
               rowData={filteredData}
             />
           </div>
+        </div>
         </div>
       )}
     </section>
