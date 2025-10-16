@@ -13,6 +13,7 @@ import LoadingButton from "../../components/loading";
 import PieChart from "../../components/pieChart";
 import ColumnSelector from "../../components/columnFilter";
 import DiseaseFilter from "../../components/diseaseFilter";
+import CustomHeader from "../../components/customHeader";
 
 // Cell renderers as separate components for clarity
 const PieChartRenderer = ({ chartData, symbol, heading }) => (
@@ -160,6 +161,12 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
       {
         field: "PGS ID",
         headerName: "Polygenic Score ID & Name",
+       
+        headerComponent: CustomHeader,
+        headerComponentParams: {
+          title: "Unique identifier and name of the polygenic score entry",
+          displayName: "Polygenic Score ID & Name",
+        },
         valueGetter: (params) => `
         <div>
           <span>${params.data["PGS ID"]}</span>
@@ -171,6 +178,11 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
       {
         field: "PGS Publication ID",
         headerName: "PGS Publication ID (PGP)",
+        headerComponent: CustomHeader,
+        headerComponentParams: {
+          title: "Reference to the publication describing how the score was developed and validated.",
+          displayName: "PGS Publication ID (PGP)",
+        },
         valueGetter: (params) => `
         <div>
           <span>${params.data["PGS Publication ID"]}</span>
@@ -183,14 +195,30 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
       {
         field: "PGS Reported Trait",
         headerName: "Reported trait",
+        headerComponent: CustomHeader,
+        headerComponentParams: {
+          title: "The trait or phenotype the score predicts.",
+          displayName: "Reported trait",
+        },
+        cellRenderer: (params) => capitalizeFirstLetter(params.value),
       },
       {
         field: "PGS Number of Variants",
         headerName: "Number of Variants",
+        headerComponent: CustomHeader,
+        headerComponentParams: {
+          title: "Total number of genetic variants used to calculate the score.",
+          displayName: "Number of Variants",
+        },
       },
       {
         field: "PGS Ancestry Distribution",
         headerName: "Ancestry distribution",
+        headerComponent: CustomHeader,
+        headerComponentParams: {
+          title: "Genetic ancestry composition of populations used for score development (Dev) and evaluation (Eval)",
+          displayName: "Ancestry distribution (Dev/Eval)",
+        },
         headerClass: "ag-header-cell-center",
         children: [
           {
@@ -228,6 +256,11 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
       {
         field: "PGS Scoring File",
         headerName: "Scoring File (FTP Link)",
+        headerComponent: CustomHeader,
+        headerComponentParams: {
+          title: "Downloadable file containing variant weights and scoring details.",
+          displayName: "Scoring File (FTP Link)",
+        },
         maxWidth: 140,
         floatingFilter: false,
         filter: false,
