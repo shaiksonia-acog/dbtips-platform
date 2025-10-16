@@ -29,6 +29,7 @@ const RnaSeqCard = () => {
 		studyType: 'All',
 		platformName: 'All',
 		sampleType: 'All', // Added new filter for sampleType
+		GSEId:[]
 	});
 	const { register, invoke } = useChatStore();
 
@@ -131,9 +132,14 @@ const RnaSeqCard = () => {
 			// Check if the sample type matches the selected filter
 			const sampleTypeMatches =
 				filters.sampleType === 'All' || data.SampleType === filters.sampleType;
+			const GSEIdMatches =
+				filters.GSEId.length==0 || 
+				(Array.isArray(filters.GSEId) 
+					? filters.GSEId.includes(data.GseID)
+					: data.GseID === filters.GSEId);
 
 			// Include data only if it matches all filters
-			return organismMatches && studyTypeMatches && platformNameMatches && sampleTypeMatches;
+			return organismMatches && studyTypeMatches && platformNameMatches && sampleTypeMatches&&GSEIdMatches;
 		});
 
 		const totalStudies = selectedDiseaseData.length;
@@ -373,6 +379,27 @@ const RnaSeqCard = () => {
 									<Option value='Diseased'>Diseased</Option>
 									<Option value='Both'>Both</Option>
 									<Option value='Unknown'>Unknown</Option>
+								</Select>
+							</div>
+							<div>
+								<span>Filter by study ID: </span>
+								<Select
+									style={{ width: 300 }}
+									placeholder='Select GEO accession'
+									value={filters.GSEId}
+									onChange={(value) => handleFilterChange('GSEId', value)}
+									allowClear
+									showSearch
+									
+									mode='multiple'
+								>
+									{/* Control option removed */}
+									{dataArray
+										.map((data) => data.GseID)
+										.sort()
+										.map((gseId) => (
+											<Option key={gseId} value={gseId}>{gseId}</Option>
+										))}
 								</Select>
 							</div>
 						</div>
