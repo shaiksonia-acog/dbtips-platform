@@ -4919,10 +4919,10 @@ async def get_excel_export(request: ExcelExportRequest):
             json_data=response.json()
             file_path = process_model_studies(json_data)
             return FileResponse(file_path, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename="model_studies_excel.xlsx") 
-        elif endpoint=="/market-intelligence/target-pipeline-all/":
+        elif endpoint=="/market-intelligence/target-pipeline-new/":
             request_data = TargetRequest(target=target,diseases=filtered_diseases)
             # Make the POST request to the internal API endpoint
-            response = client.post("/market-intelligence/target-pipeline-all/", json=request_data.dict())
+            response = client.post("/market-intelligence/target-pipeline-new/", json=request_data.dict())
             if response.status_code != 200:
                 raise HTTPException(status_code=response.status_code, detail=response.json())
             json_data=response.json()
