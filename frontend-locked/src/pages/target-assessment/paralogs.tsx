@@ -2,7 +2,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { fetchData } from '../../utils/fetchData';
 import { useQuery } from 'react-query';
 import { Empty } from 'antd';
-import CustomHeader from '../market-intelligence/customHeader';
+import CustomHeader from '../../components/customHeader';
 
 const Paralogs = ({ target,  }) => {
 	const payload = {
