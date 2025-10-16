@@ -201,7 +201,7 @@ def process_mouse_studies(data: dict) -> str:
     Returns:
     - str: The path to the generated output file.
     """
-    template_path: str = "../excel_export_templates/animal-models-template.xltx"
+    template_path: str = "../excel_export_templates/animal-model-template.xltx"
     output_path: str = "animal_model_excel.xlsx"
     
     # Load workbook and clear the "Data" sheet
