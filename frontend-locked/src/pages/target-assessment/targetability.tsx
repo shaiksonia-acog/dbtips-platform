@@ -17,7 +17,7 @@ const metricInfo = {
     "Mouse ortholog identity": "1 = There is at least one gene in mice that contains a sequence with a 100% of identity with the target. 0 = There are no genes in mice containing a sequence with at least 80% of identity with the target.",
     "Chemical probes": "1 = Target has high-quality chemical probes. 0 = Target does not have high-quality chemical probes.",
     "Genetic constraint": "A score from -1 to 1 is given to genes depending on their LOEUF metric rank, being -1 the least tolerant to LoF variation and 1 the most tolerant.",
-    "Mouse models": "> 0 = When the target has been knocked-out in mice there were multiple and severe phenotypes reported, with a score higher than the first quartile. 0 = Either the target has non-severe phenotypes reported or is in the first quartile of the normalised score.",
+    "Mouse models": "< 0 = When the target has been knocked-out in mice there were multiple and severe phenotypes reported, with a score higher than the first quartile. 0 = Either the target has non-severe phenotypes reported or is in the first quartile of the normalised score.",
     "Gene essentiality": "-1 = Target reported as essential. 0 = Target not reported as essential.",
     "Known safety events": "-1 = The target has at least one adverse event.",
     "Cancer driver gene": "-1 = Target is catalogued as driver gene (tumour suppressor, oncogene or both).",

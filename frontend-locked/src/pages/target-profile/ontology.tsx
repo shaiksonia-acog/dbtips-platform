@@ -15,7 +15,7 @@ declare global {
 }
 const sourceURLS = {
   Reactome: (id: string) => `https://identifiers.org/reactome:${id}`,
-  PMID: (id: string) => `https://doi.org/${id}`,
+  PMID: (id: string) => `https://europepmc.org/article/med/${id}`,
   GO_REF: (id: string) => `https://identifiers.org/GO_REF:${id}`,
 };
 
@@ -26,7 +26,7 @@ const sourceMapContent = (source: string) => {
   if (sourceURLS[sourceName as keyof typeof sourceURLS]) {
     return (
       <a href={sourceURLS[sourceName as keyof typeof sourceURLS](sourceId)} target="_blank" rel="noopener noreferrer">
-       {source}
+       {source.replace("PMID", "Europe PMC")}
       </a>
     );
   }

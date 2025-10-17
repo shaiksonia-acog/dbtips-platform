@@ -155,7 +155,7 @@ const ProteinExpressions = ({ target }) => {
                   text: rnaData.map((d) => d.text),
                   type: "bar",
                   orientation: "h",
-                  name: "RNA Z-Score",
+                  name: "RNA expression levels by organ",
                   marker: { color: "skyblue" },
                 hoverinfo: "none",
               
@@ -163,7 +163,7 @@ const ProteinExpressions = ({ target }) => {
               ]}
               
               layout={{
-                title: `RNA Z-Score ${
+                title: `RNA expression levels ${
                   selectedOrgan === "All" ? "by Organ" : `in ${selectedOrgan}`
                 }`,
                 xaxis: {
@@ -186,13 +186,13 @@ const ProteinExpressions = ({ target }) => {
                   x: proteinData.map((d) => d.value),
                   text: proteinData.map((d) => d.text),
                   type: "bar",
-                  name: "Protein Level",
+                  name: "Protein expression levels by organ",
                   orientation: "h",
                   marker: { color: "salmon" },
                 },
               ]}
               layout={{
-                title: `Protein Levels ${
+                title: `Protein expression levels ${
                   selectedOrgan === "All" ? "by Organ" : `in ${selectedOrgan}`
                 }`,
                 height: 760,
