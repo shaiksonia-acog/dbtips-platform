@@ -1343,6 +1343,22 @@ def normalize_phase(phase: str) -> str:
             return f"Phase {num}"
     return phase.title()
 
+def fetch_drugs(disease):
+    db_client = DBClient()
+    raw_data = db_client.fetch_data(disease.replace("_", " "))
+    for trial in raw_data[:3]:
+        print(json.dumps(trial, indent=2))
+    extracted_drugs = extractor.extract_drug_names(raw_data)
+    time.sleep(0.3)
+
+    for t in extracted_drugs[:3]:
+        print(json.dumps(t, indent=2))
+    
+    # close AACT DB connection
+    db_client.close()
+    
+    return extracted_drugs
+
 def enrich_trial_data(trials: List[Dict], disease_name: str, llm_client) -> List[Dict]:
     start_time = time.time()
     logger.info("Starting enrich_trial_data for disease: %s", disease_name)
@@ -1414,7 +1430,7 @@ def enrich_trial_data(trials: List[Dict], disease_name: str, llm_client) -> List
             "Disease": disease_name,
             "OriginalDrugNames": original_drug_names,
             "NctId": nct_id,
-            "Source URLs": [f"https://clinicaltrials.gov/ct2/show/{nct_id}"],
+            "Source URLs": [f"https://clinicaltrials.gov/study/{nct_id}"],
             "Status": item.get("overall_status", "NA"),
             "Phase": normalize_phase(item.get("phase", "NA")),
             "Sponsor": item.get("sponsor", "NA"),
@@ -1636,7 +1652,7 @@ def split_OT_results_by_trial(all_trials):
             splitted_trials.append(trial_copy)
     return splitted_trials
 
-def enrich_target_trials(target_input: str, db_client: DBClient):
+def enrich_target_trials(target_input: str):
     """
     Generate target pipeline results given target
     """
@@ -1650,6 +1666,8 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
     # 1. If chemblID doesn't exists, use OT to fetch drugs
 
     # Step1: Get Target Details from ChemBl
+    # Create AACT client
+    db_client: DBClient = DBClient()
 
     target_chembl_id = drug_extraction.get_target_chembl_id(target_input)
     drugs_available_from_chembl = False
@@ -1770,7 +1788,7 @@ def enrich_target_trials(target_input: str, db_client: DBClient):
                                     "efo_id": ind.get("efo_id", ""),
                                     "mesh_id": ind.get("mesh_id", ""),
                                     "WhyStopped": get_why_stopped(nct_id=trial.get("nct_id", "")), 
-                                    "Source URLs": [f'https://clinicaltrials.gov/ct2/show/{trial.get("nct_id", "")}'],
+                                    "Source URLs": [f'https://clinicaltrials.gov/study/{trial.get("nct_id", "")}'],
                                     "ApprovalStatus": approval,
                                     "Modality": modality,
                                     "nct_id": trial.get("nct_id", ""),
