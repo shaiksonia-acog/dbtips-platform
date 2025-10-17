@@ -25,7 +25,7 @@ const YourComponent = ({ indications=[], endpoint, fileName, target="",disabled=
       const url = window.URL.createObjectURL(blobObject);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `${target}-${fileName}.xlsx`);
+      link.setAttribute("download", `${target ? `${target}-` : ''}${fileName}.xlsx`);
       document.body.appendChild(link);
       link.click();
       link.remove();
