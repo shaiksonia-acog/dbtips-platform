@@ -1073,7 +1073,7 @@ def process_kol_excel(data):
 
 def process_literature_excel(data,selectedLiteratureData):
     # Load workbook and disable template mode
-    template_path = "../excel_export_templates/Literature_template.xltx"
+    template_path = "../excel_export_templates/literature_template.xltx"
     output_path = "./LiteratureLatest.xlsx"
     workbook = load_workbook(template_path)
     workbook.template = False
@@ -1138,7 +1138,7 @@ def process_literature_excel(data,selectedLiteratureData):
 
 def process_target_literature_excel(data):
     # Load workbook and disable template mode
-    template_path = "../excel_export_templates/Literature_template.xltx"
+    template_path = "../excel_export_templates/literature_template.xltx"
     output_path = "./LiteratureLatest.xlsx"
     workbook = load_workbook(template_path)
     workbook.template = False
