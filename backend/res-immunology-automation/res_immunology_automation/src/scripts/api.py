@@ -1975,7 +1975,7 @@ async def get_key_influencers(request: DiseasesRequest):
 
 
 
-@app.post("/market-intelligence/blackbox-warnings/",
+@app.post("/market-intelligence/blackbox-warnings",
     tags=["Market Intelligence"],
 )
 async def get_blackbox_warnings(
