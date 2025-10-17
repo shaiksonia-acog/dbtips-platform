@@ -47,7 +47,7 @@ const ApprovedDrug = ({
     isLoading: blackboxWarningIsLoading,
   } = useQuery(
     ["blackboxwarning", payload],
-    () => fetchData(payload, "/market-intelligence/blackbox-warnings/"),
+    () => fetchData(payload, "/market-intelligence/blackbox-warnings"),
     {
       enabled: Object.keys(payload).length > 0,
       refetchOnWindowFocus: false,
