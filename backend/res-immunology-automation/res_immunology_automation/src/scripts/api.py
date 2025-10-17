@@ -17,7 +17,7 @@ from component_services.disease_profile_services import (
     find_ancestors, find_descendants, 
     extract_data_by_ids, fetch_gtr_records
 )
-from component_services.aact_db_client import DBClient
+# from component_services.aact_db_client import DBClient
 from ldap3 import Server, Connection, ALL
 import uvicorn
 import logging
@@ -39,6 +39,7 @@ from services import (
     parse_gene_map,
     parse_tractability,
     enrich_trial_data,
+    fetch_drugs,
     parse_gene_ontology,
     parse_mouse_phenotypes,
     parse_paralogs,
@@ -1557,7 +1558,6 @@ async def get_indication_pipeline_new(request: DiseasesRequest, db: Session = De
     try:
         response = {"indication_pipeline": {}}
         if build_cache:
-            db_client: DBClient = DBClient()
             if is_rate_limited():
                 remaining_time = int(rate_limited_until - time.time())
                 raise HTTPException(status_code=429, detail=f"Rate limit in effect. Try again after {remaining_time} seconds.")
@@ -1569,23 +1569,22 @@ async def get_indication_pipeline_new(request: DiseasesRequest, db: Session = De
             all_trials = {}
             # --- Main Processing Using Enrich Function ---
             for disease in filtered_diseases:
-                raw_data = db_client.fetch_data(disease.replace("_", " "))
-                for trial in raw_data[:3]:
-                    print(json.dumps(trial, indent=2))
-                extracted_drugs = extractor.extract_drug_names(raw_data)
-                time.sleep(0.3)
+                # raw_data = db_client.fetch_data(disease.replace("_", " "))
+                # for trial in raw_data[:3]:
+                #     print(json.dumps(trial, indent=2))
+                # extracted_drugs = extractor.extract_drug_names(raw_data)
+                # time.sleep(0.3)
 
-                for t in extracted_drugs[:3]:
-                    print(json.dumps(t, indent=2))
-
+                # for t in extracted_drugs[:3]:
+                #     print(json.dumps(t, indent=2))
+                extracted_drugs = fetch_drugs(disease)
                 enriched_trials = enrich_trial_data(extracted_drugs, disease.replace("_", " "), llm_client)
                 all_trials[disease] = enriched_trials
             
             # --- Save to Cache & DB ---
             response = {"indication_pipeline": all_trials}
 
-            # close AACT DB connection
-            db_client.close()
+            
             for disease, value in response["indication_pipeline"].items():
                 disease_clean = disease.strip().lower().replace(" ", "_")
                 disease_record = db.query(Disease).filter_by(id=disease_clean).first()
@@ -1641,7 +1640,7 @@ async def target_pipeline_new(
     db: Session = Depends(get_db),
     build_cache: bool=False
     ):
-    db_client: DBClient = DBClient()
+    # db_client: DBClient = DBClient()
     diseases_input = request.diseases
     target_input = request.target.strip()
     endpoint: str = "/market-intelligence/target-pipeline/"
@@ -1682,7 +1681,7 @@ async def target_pipeline_new(
         if build_cache == True:
             # Get ChEMBL target ID
             
-            results, available_diseases = enrich_target_trials(target_input, db_client)
+            results, available_diseases = enrich_target_trials(target_input)
             response = {"target_pipeline": results}
             logger.info("Saving and Updating Cache")
             # --- Save to cache & DB ---
