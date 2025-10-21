@@ -120,7 +120,7 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
       if (diseaseAreaFilter) {
         setDiseaseFilterOptions([...diseases.sort()]);
       } else {
-        const combinedDiseases = [...diseases, ...indications];
+        const combinedDiseases = [...new Set([...diseases, ...indications.map(indication => indication.toLowerCase())])];
         setDiseaseFilterOptions([...combinedDiseases.sort()]);
       }
     }
@@ -133,8 +133,12 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
     }
     return dataFilteredByArea.filter(
       (row) =>
-        row.mapped_diseases &&
-        row.mapped_diseases.some((d) => selectedDisease.includes(d))
+      row.mapped_diseases &&
+      row.mapped_diseases.some((d) => 
+        selectedDisease.some(selected => 
+        selected.toLowerCase() === d.toLowerCase()
+        )
+      )
     );
   }, [dataFilteredByArea, selectedDisease]);
 

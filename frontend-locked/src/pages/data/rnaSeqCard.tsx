@@ -43,8 +43,10 @@ const RnaSeqCard = () => {
 	useEffect(() => {
 		const queryParams = new URLSearchParams(location.search);
 		const { indications: newIndications, diseaseArea } = parseQueryParams(queryParams);
-		setIndications(newIndications.length > 0 ? indications : diseaseArea);
-	}, [location]);
+		
+		setIndications(newIndications.length > 0 ? newIndications : diseaseArea);
+	
+	}, [indications, location]);
 
 	const {
 		data: rnaSeqData,
