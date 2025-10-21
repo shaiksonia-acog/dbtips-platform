@@ -15,7 +15,7 @@ type FieldType = {
   diseaseArea?: string[];
 };
 
-const targetOptions = ["CAMK2D", "CRHR2","DNM1L", "ENHO","GPR75","INHBE", "GUCY1A1","GUCY1B1", "SAV1","SVEP1","USP30"]
+const targetOptions = ["ACTRIIA","ACTRIIB","APLNR","CAMK2D", "CRHR2","DNM1L", "ENHO","GPR75","INHBE","GIPR", "GUCY1A1","GUCY1B1", "PDE3B","SAV1","SVEP1","USP30"]
 const diseaseAreaOptions = [ "Cardiovascular diseases", "Urologic diseases"]
 const indicationOptions = ["Obesity"]
 const { Option } = Select;
@@ -26,7 +26,7 @@ const diseaseToTargetMap: Record<string, string[]> = {
 };
 
 const indicationToTargetMap: Record<string, string[]> = {
-  "Obesity": ["CRHR2","GPR75","INHBE"]
+  "Obesity": ["ACTRIIA","ACTRIIB","APLNR","CRHR2","GIPR","GPR75","INHBE","PDE3B"]
 };
 const HomeLocked = ({ setAppState }) => {
 
