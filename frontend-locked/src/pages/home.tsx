@@ -221,7 +221,7 @@ const HomeLocked = ({ setAppState }) => {
                       },
                     }}
                   >
-                    <Form.Item name="target" label="Target:">
+                    <Form.Item name="target" label="Target:" rules={[{ required: true }]}>
 
                       <Select
                         showSearch={true}
