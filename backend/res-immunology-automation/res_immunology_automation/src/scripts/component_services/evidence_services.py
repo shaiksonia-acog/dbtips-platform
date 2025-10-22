@@ -557,7 +557,7 @@ def search_pubmed(disease_name: str) -> List[str]:
     article_types_query = " OR ".join([f'"{atype}"[Publication Type]' for atype in article_types])
 
     # Final term combining disease name and article type filters
-    term = f'({disease_name}[MAJR]) AND ({article_types_query})'
+    term = f'({disease_name}[MeSH Terms]) AND ({article_types_query})'
 
     params = {
         "db": "pubmed",
