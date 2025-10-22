@@ -2845,9 +2845,25 @@ async def get_target_literature_images_evidence(request: TargetRequest,
                 logger.info(f"Annotating literature data with mapped diseases from target-literature cache:")
                 # Annotate literature data with mapped diseases from the target-literature cache
                 pathway_response['results']['literature'] = add_mapped_diseases_to_literature(literature_network_biology_format['results'], literature_articles)
-
+                
+                
                 if is_combination:
-                component_servicesnfo("Mapped diseases added to literature data")
+                    logger.info(f"Fetching pathway data for diseases from disease-pathways endpoint: {disease_name}")
+                    request_data = DiseasesRequest(diseases=query_disease)
+                    response = client.post("/evidence/disease-pathway/", json=request_data.dict())
+                    logger.info(f"Disease-pathway response status: {response.status_code}")
+                    if response.status_code != 200:
+                        raise HTTPException(status_code=response.status_code, detail=response.json())
+
+                    logger.info(f"Annotating pathway data with mapped diseases: {response.json()[disease_name]['results']}")
+                    pathway_endpoint_data[disease_name] = response.json()[disease_name]['results']
+                    # annotate pathways data with mapped diseases
+                    pathway_endpoint_data = add_mapped_diseases(pathway_endpoint_data, pmid_key='pmid')
+                    logger.info(f"Annotated pathway data: {pathway_endpoint_data}")
+                    pathway_response['results']['pathways'] = pathway_endpoint_data
+
+                    logger.info("Mapped diseases added to literature data")
+
                 # Store the data using the appropriate key
                 if is_combination:
                     cached_data[key] = pathway_response 
