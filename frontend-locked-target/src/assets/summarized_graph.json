@@ -1,0 +1,2159 @@
+{
+    "directed": false,
+    "multigraph": false,
+    "graph": {
+        "node_default": {},
+        "edge_default": {}
+    },
+    "nodes": [
+        {
+            "type": "GENE",
+            "description": "TNFSF4, also known as OX40L, is a gene from the tumour necrosis factor ligand superfamily member 4. It encodes the protein OX40 ligand (OX40L), which functions as a T cell costimulatory molecule. TNFSF4 is associated with susceptibility to systemic sclerosis (SSc) and systemic lupus erythematosus (SLE) through various single nucleotide polymorphisms (SNPs).",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204,5639a5e5649646c1e4c8deb1e1f0a1b1,5db9eda60231516215dcb8b82826f9bc,87174642d9d24116b8cc01fca23746f2,ab372f2a5df06a33e153fa648bb2b950,c89a7a896cf934207d874042e48857da,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "id": "TNFSF4"
+        },
+        {
+            "type": "PROTEIN",
+            "description": "OX40 ligand (OX40L) is a T cell costimulatory molecule encoded by the TNFSF4 gene. It serves as a binding partner of OX40 and plays a crucial role in T-cell costimulation and autoimmune diseases. OX40L is expressed on various immune cells and provides a costimulatory signal essential for T cell proliferation, survival, and cytokine production.",
+            "source_id": "87174642d9d24116b8cc01fca23746f2,ab372f2a5df06a33e153fa648bb2b950,f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "OX40L"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Systemic lupus erythematosus (SLE) is an autoimmune disease. It is associated with TNFSF4 and other genes.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,87174642d9d24116b8cc01fca23746f2,ab372f2a5df06a33e153fa648bb2b950,c89a7a896cf934207d874042e48857da",
+            "id": "SLE"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Systemic sclerosis (SSC) is a clinically heterogeneous autoimmune disease characterized by fibrosis of the skin and internal organs. This condition leads to the development of both cutaneous and visceral fibrosis. Systemic sclerosis is associated with the TNFSF4 gene and specific single nucleotide polymorphisms (SNPs) such as rs2205960 and rs855648, particularly in the promoter region of TNFSF4.",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204,5639a5e5649646c1e4c8deb1e1f0a1b1,5db9eda60231516215dcb8b82826f9bc,87174642d9d24116b8cc01fca23746f2,ab372f2a5df06a33e153fa648bb2b950,c89a7a896cf934207d874042e48857da,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "id": "SSC"
+        },
+        {
+            "type": "SNP",
+            "description": "Single nucleotide polymorphism rs1234314, located in the TNFSF4 gene region, is associated with susceptibility to systemic sclerosis. This polymorphism has been consistently linked to an increased risk of developing systemic sclerosis, highlighting its potential role in the pathogenesis of this autoimmune disease.",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204,5db9eda60231516215dcb8b82826f9bc,87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "id": "RS1234314"
+        },
+        {
+            "type": "SNP",
+            "description": "Single nucleotide polymorphism rs2205960, located in the TNFSF4 gene region, is associated with susceptibility to systemic sclerosis.",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204,5db9eda60231516215dcb8b82826f9bc,87174642d9d24116b8cc01fca23746f2,ab372f2a5df06a33e153fa648bb2b950,c89a7a896cf934207d874042e48857da,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "id": "RS2205960"
+        },
+        {
+            "type": "SNP",
+            "description": "RS844648 is a single nucleotide polymorphism (SNP) located in the TNFSF4 gene region. This SNP is associated with susceptibility to systemic sclerosis, a chronic autoimmune disease characterized by fibrosis of the skin and internal organs. Multiple studies have identified rs844648 as a genetic marker linked to an increased risk of developing systemic sclerosis, highlighting its potential role in the pathogenesis of this condition.",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204,87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "id": "RS844648"
+        },
+        {
+            "type": "SNP",
+            "description": "RS844644 is a single nucleotide polymorphism (SNP) located in the TNFSF4 gene region. This SNP has been associated with systemic sclerosis, a chronic autoimmune disease characterized by fibrosis of the skin and internal organs. While some descriptions suggest that rs844644 is protective against systemic sclerosis, the consensus in the medical literature indicates that it is linked to the disease, highlighting its potential role in the pathogenesis or progression of systemic sclerosis.",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204,5db9eda60231516215dcb8b82826f9bc,87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "id": "RS844644"
+        },
+        {
+            "type": "GENE",
+            "description": "PTPN22 is a gene encoding a protein tyrosine phosphatase that plays a significant role in the immune response. It is associated with susceptibility to several autoimmune diseases, including systemic sclerosis (SSc), type I diabetes mellitus, rheumatoid arthritis, and systemic lupus erythematosus. The involvement of PTPN22 in these conditions highlights its importance in the pathogenesis of autoimmune disorders.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,87174642d9d24116b8cc01fca23746f2,ab372f2a5df06a33e153fa648bb2b950",
+            "id": "PTPN22"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Type I diabetes mellitus, an autoimmune disease associated with PTPN22",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "id": "TIDM"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Rheumatoid arthritis (RA) is an autoimmune disease associated with the genetic markers PTPN22 and STAT4. It is characterized by chronic inflammation of the joints, leading to pain, swelling, and potential joint destruction. Additionally, RA may share genetic susceptibility with other autoimmune diseases such as systemic sclerosis (SSc) and systemic lupus erythematosus (SLE), indicating a possible common genetic predisposition among these conditions.",
+            "source_id": "87174642d9d24116b8cc01fca23746f2,ab372f2a5df06a33e153fa648bb2b950",
+            "id": "RA"
+        },
+        {
+            "type": "GENE",
+            "description": "STAT4 is a gene associated with susceptibility to several autoimmune diseases, including systemic sclerosis (SSc), systemic lupus erythematosus (SLE), and rheumatoid arthritis (RA). It plays a crucial role in influencing the genetic predisposition to these conditions by being involved in the immune response.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,87174642d9d24116b8cc01fca23746f2,ab372f2a5df06a33e153fa648bb2b950",
+            "id": "STAT4"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Atherosclerosis is a disease influenced by genetic variants of TNFSF4. It is associated with polymorphisms in the TNFSF4 gene.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,87174642d9d24116b8cc01fca23746f2",
+            "id": "ATHEROSCLEROSIS"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Scleroderma, also known as systemic sclerosis, is a chronic multisystem disease characterized by progressive fibrosis in the skin and internal organs. This condition involves the thickening and hardening of the skin and can also affect various internal organs, leading to significant health complications.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,87174642d9d24116b8cc01fca23746f2,f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "SCLERODERMA"
+        },
+        {
+            "type": "GENE",
+            "description": "IRF5 is a gene associated with susceptibility to systemic sclerosis (SSc) and is involved in the immune response. It is also linked to polymorphisms in systemic lupus erythematosus (SLE) and systemic sclerosis. Functional variants of IRF5 define risk and protective haplotypes for human lupus and are associated with systemic sclerosis.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,87174642d9d24116b8cc01fca23746f2,ab372f2a5df06a33e153fa648bb2b950",
+            "id": "IRF5"
+        },
+        {
+            "type": "GENE",
+            "description": "FAS is a gene associated with susceptibility to systemic sclerosis (SSc) and is involved in the immune response. It is also linked to polymorphisms in systemic lupus erythematosus (SLE) and systemic sclerosis. Specifically, FAS has a promoter polymorphism that is associated with both systemic lupus erythematosus and systemic sclerosis.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,87174642d9d24116b8cc01fca23746f2,ab372f2a5df06a33e153fa648bb2b950",
+            "id": "FAS"
+        },
+        {
+            "type": "SYMPTOM",
+            "description": "CREST stands for Calcinosis, Raynaud\u2019s phenomenon, Esophageal dysfunction, Sclerodactyly, and Telangiectasias. These features are used for disease classification in systemic sclerosis and are also recognized in the field of rheumatology.",
+            "source_id": "87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da",
+            "id": "CREST"
+        },
+        {
+            "type": "SYMPTOM",
+            "description": "Calcinosis is the formation of calcium deposits in the skin, which is a symptom and feature of CREST syndrome in systemic sclerosis.",
+            "source_id": "87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da,f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "CALCINOSIS"
+        },
+        {
+            "type": "SYMPTOM",
+            "description": "Raynaud\u2019s phenomenon is a condition where blood flow to extremities is reduced, causing discoloration and pain. It is also a feature of CREST syndrome in systemic sclerosis.",
+            "source_id": "87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da",
+            "id": "RAYNAUD\u2019S PHENOMENON"
+        },
+        {
+            "type": "SYMPTOM",
+            "description": "Esophageal dysfunction is a feature of CREST syndrome in systemic sclerosis. It refers to problems with the esophagus, such as difficulty swallowing.",
+            "source_id": "87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da",
+            "id": "ESOPHAGEAL DYSFUNCTION"
+        },
+        {
+            "type": "SYMPTOM",
+            "description": "Sclerodactyly is a condition characterized by the thickening and tightening of the skin on the fingers and hands. It is a notable feature of CREST syndrome, which is a subset of systemic sclerosis. This condition manifests as a symptom of CREST syndrome, contributing to the overall clinical presentation of the disease.",
+            "source_id": "87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da,f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "SCLERODACTYLY"
+        },
+        {
+            "type": "SYMPTOM",
+            "description": "Telangiectasias are small, widened blood vessels on the skin. They are a notable feature of CREST syndrome, which is a subset of systemic sclerosis.",
+            "source_id": "87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da",
+            "id": "TELANGIECTASIAS"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Myositis is an inflammatory disease characterized by inflammation of the muscles. It leads to muscle weakness and can be associated with systemic sclerosis.",
+            "source_id": "87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da",
+            "id": "MYOSITIS"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Sjogren's syndrome is an autoimmune disease characterized by dry eyes and dry mouth. It affects the glands that produce moisture and can be associated with systemic sclerosis.",
+            "source_id": "87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da",
+            "id": "SJOGREN'S SYNDROME"
+        },
+        {
+            "type": "BIOLOGICALSTRUCTURE",
+            "description": "Autoantibodies are antibodies that mistakenly target and react with a person's own tissues or organs. They are often found in autoimmune diseases such as systemic lupus erythematosus (SLE) and systemic sclerosis (SSc). Autoantibodies are present in systemic sclerosis and other autoimmune diseases, highlighting their significant role in the pathogenesis and diagnosis of these conditions.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,87174642d9d24116b8cc01fca23746f2",
+            "id": "AUTOANTIBODIES"
+        },
+        {
+            "type": "CHEMICAL",
+            "description": "Type I interferon is a group of proteins involved in the regulation of the immune response. It is often upregulated in autoimmune diseases such as systemic lupus erythematosus (SLE) and systemic sclerosis (SSc). Additionally, Type I interferon is a cytokine that, in combination with OX40L, may induce a Th1 response.",
+            "source_id": "87174642d9d24116b8cc01fca23746f2,ab372f2a5df06a33e153fa648bb2b950",
+            "id": "TYPE I INTERFERON"
+        },
+        {
+            "type": "GENE",
+            "description": "IRF5 is a gene associated with polymorphisms in systemic lupus erythematosus and systemic sclerosis",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "id": "INTERFERON REGULATORY FACTOR 5 (IRF5)"
+        },
+        {
+            "type": "MEDICALTREATMENT",
+            "description": "The American College of Rheumatology provides criteria for disease classification, including for systemic sclerosis",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "id": "AMERICAN COLLEGE OF RHEUMATOLOGY (ACR)"
+        },
+        {
+            "type": "MEDICALTREATMENT",
+            "description": "GENISOS is a study that investigates the genetic and environmental factors in systemic sclerosis outcomes",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "id": "GENETICS VERSUS ENVIRONMENT IN SCLERODERMA OUTCOMES STUDY (GENISOS)"
+        },
+        {
+            "type": "MEDICALTREATMENT",
+            "description": "The Scleroderma Family Registry and DNA Repository collects data and samples for research on systemic sclerosis",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "id": "SCLERODERMA FAMILY REGISTRY AND DNA REPOSITORY"
+        },
+        {
+            "type": "MEDICALTREATMENT",
+            "description": "The University of Texas Rheumatology Division conducts research and provides treatment for rheumatic diseases, including systemic sclerosis",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "id": "UNIVERSITY OF TEXAS RHEUMATOLOGY DIVISION"
+        },
+        {
+            "type": "CELL_LINE",
+            "description": "HEp-2 cells are a cell line used as an antigen substrate in immunofluorescence assays",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "HEP-2 CELLS"
+        },
+        {
+            "type": "IMMUNOGLOBULIN",
+            "description": "Antinuclear antibodies are autoantibodies that bind to contents of the cell nucleus",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "ANTINUCLEAR ANTIBODIES"
+        },
+        {
+            "type": "IMMUNOGLOBULIN",
+            "description": "Anti-centromere antibodies are autoantibodies that target the centromere of chromosomes. They are associated with CREST syndrome, which is a subset of systemic sclerosis.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,c89a7a896cf934207d874042e48857da",
+            "id": "ANTI-CENTROMERE ANTIBODIES"
+        },
+        {
+            "type": "ENZYME",
+            "description": "Topoisomerase I is an enzyme that plays a crucial role in DNA replication by helping to relieve strain in DNA through the mechanism of breaking and rejoining the DNA strand. This enzyme is also a significant target in autoimmune conditions, specifically scleroderma, where it is targeted by anti-topoisomerase I autoantibodies.",
+            "source_id": "c89a7a896cf934207d874042e48857da,f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "TOPOISOMERASE I"
+        },
+        {
+            "type": "IMMUNOGLOBULIN",
+            "description": "Anti-RNA polymerase III antibodies are autoantibodies that target RNA polymerase III",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "ANTI-RNA POLYMERASE III ANTIBODIES"
+        },
+        {
+            "type": "SNP",
+            "description": "Single nucleotide polymorphism rs1234315 of the TNFSF4 gene is linked to systemic sclerosis",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "RS1234315"
+        },
+        {
+            "type": "SNP",
+            "description": "Single nucleotide polymorphism rs12039904 of the TNFSF4 gene is linked to systemic sclerosis",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "RS12039904"
+        },
+        {
+            "type": "SNP",
+            "description": "Single nucleotide polymorphism rs2795288 of the TNFSF4 gene is linked to systemic sclerosis",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "RS2795288"
+        },
+        {
+            "type": "SNP",
+            "description": "Single nucleotide polymorphism rs844665 of the TNFSF4 gene has been studied in the context of systemic sclerosis. While some studies indicate that rs844665 is associated with systemic sclerosis, other research suggests that this association is not significant. Therefore, the relationship between rs844665 and systemic sclerosis remains inconclusive, warranting further investigation to clarify its potential role in the disease.",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204,5db9eda60231516215dcb8b82826f9bc,c89a7a896cf934207d874042e48857da,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "id": "RS844665"
+        },
+        {
+            "type": "SNP",
+            "description": "Single nucleotide polymorphism rs10912580 of the TNFSF4 gene is linked to systemic sclerosis",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "RS10912580"
+        },
+        {
+            "type": "IMMUNOGLOBULIN",
+            "description": "Anti-topoisomerase I antibodies are autoantibodies that target the enzyme topoisomerase I",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "ANTI-TOPOISOMERASE I ANTIBODIES"
+        },
+        {
+            "type": "BIOLOGICALSTRUCTURE",
+            "description": "Genomic DNA is the complete set of DNA in an organism, including all of its genes",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "GENOMIC DNA"
+        },
+        {
+            "type": "BIOLOGICALSTRUCTURE",
+            "description": "Peripheral blood is the circulating blood in the body outside of the heart and lungs",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "PERIPHERAL BLOOD"
+        },
+        {
+            "type": "CHEMICAL",
+            "description": "PureGene genomic DNA isolation kit is used to extract genomic DNA from blood samples",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "PUREGENE GENOMIC DNA ISOLATION KIT"
+        },
+        {
+            "type": "CHEMICAL",
+            "description": "ABI TaqMan SNP genotyping assay is a chemical assay used for SNP genotyping",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "ABI TAQMAN SNP GENOTYPING ASSAY"
+        },
+        {
+            "type": "CHEMICAL",
+            "description": "ABI 7900HT is a real-time thermocycler used for plate reading in SNP genotyping assays",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "ABI 7900HT"
+        },
+        {
+            "type": "CHEMICAL",
+            "description": "SDS V.2.3 software is used for automated allele calling in SNP genotyping assays",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "SDS V.2.3 SOFTWARE"
+        },
+        {
+            "type": "BIOLOGICALSTRUCTURE",
+            "description": "HapMap is a database that provides data on human genetic variation",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "HAPMAP"
+        },
+        {
+            "type": "CHEMICAL",
+            "description": "SAS V.9.1.3 is a software used for statistical analysis",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "SAS V.9.1.3"
+        },
+        {
+            "type": "BIOLOGICALPATHWAY",
+            "description": "Hardy\u2013Weinberg equilibrium is a principle that describes the genetic variation in a population under certain conditions",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "HARDY\u2013WEINBERG EQUILIBRIUM"
+        },
+        {
+            "type": "MOLECULARFUNCTION",
+            "description": "Pearson \u03c72 test is a statistical test used to determine if there is a significant association between two categorical variables",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "PEARSON \u03a72 TEST"
+        },
+        {
+            "type": "MOLECULARFUNCTION",
+            "description": "Fisher exact test is a statistical test used to determine if there are nonrandom associations between two categorical variables",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "FISHER EXACT TEST"
+        },
+        {
+            "type": "MOLECULARFUNCTION",
+            "description": "Logistic regression analysis is a statistical method for analyzing a dataset in which there are one or more independent variables that determine an outcome",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "LOGISTIC REGRESSION ANALYSIS"
+        },
+        {
+            "type": "BIOLOGICALPATHWAY",
+            "description": "Linkage disequilibrium is the non-random association of alleles at different loci in a given population",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "LINKAGE DISEQUILIBRIUM"
+        },
+        {
+            "type": "CHEMICAL",
+            "description": "Haploview is a software used for the analysis and visualization of linkage disequilibrium and haplotype maps",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "HAPLOVIEW"
+        },
+        {
+            "type": "CHEMICAL",
+            "description": "CART V.6.0 is a software used for classification and regression tree analysis",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "CART V.6.0"
+        },
+        {
+            "type": "MOLECULARFUNCTION",
+            "description": "D\u2032 is a measure of linkage disequilibrium between two genetic loci",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "D\u2032"
+        },
+        {
+            "type": "MOLECULARFUNCTION",
+            "description": "r2 is a measure of the proportion of variance in one variable that is predictable from another variable",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "R2"
+        },
+        {
+            "type": "MOLECULARFUNCTION",
+            "description": "pFDR is a method for controlling the false discovery rate in multiple comparisons",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "PFDR"
+        },
+        {
+            "type": "",
+            "description": "Single nucleotide polymorphism (SNP) is a variation in a single nucleotide that occurs at a specific position in the genome. These variations, known as SNPs, are common and can be found throughout the genome.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950,c89a7a896cf934207d874042e48857da,f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "SNP"
+        },
+        {
+            "type": "",
+            "description": "",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "id": "STATISTICAL ANALYSIS"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Limited systemic sclerosis (LSSC) is a subset of systemic sclerosis characterized by skin involvement that is confined to the face, hands, and feet. This form of systemic sclerosis is distinguished by its limited cutaneous involvement, which differentiates it from other forms of the disease that may affect a broader range of skin areas.",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204,ab372f2a5df06a33e153fa648bb2b950",
+            "id": "LSSC"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Diffuse systemic sclerosis (DSSC) is a subset of systemic sclerosis characterized by extensive cutaneous involvement.",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204,ab372f2a5df06a33e153fa648bb2b950",
+            "id": "DSSC"
+        },
+        {
+            "type": "IMMUNOGLOBULIN",
+            "description": "Anti-centromere antibodies, associated with a subset of systemic sclerosis",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "id": "ACA"
+        },
+        {
+            "type": "IMMUNOGLOBULIN",
+            "description": "Anti-topoisomerase antibodies, associated with a subset of systemic sclerosis",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "id": "ATA"
+        },
+        {
+            "type": "IMMUNOGLOBULIN",
+            "description": "Anti-RNA polymerase III antibodies, associated with a subset of systemic sclerosis",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "id": "ARA"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Pulmonary fibrosis, a condition that can occur in systemic sclerosis patients",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "id": "PULMONARY FIBROSIS"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Pulmonary hypertension, a condition that can occur in systemic sclerosis patients",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "id": "PULMONARY HYPERTENSION"
+        },
+        {
+            "type": "SNP",
+            "description": "Single nucleotide polymorphism rs855648 of the TNFSF4 gene is associated with systemic sclerosis",
+            "source_id": "5db9eda60231516215dcb8b82826f9bc",
+            "id": "RS855648"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Systemic sclerosis, also known as scleroderma or SSc, is a chronic autoimmune disease characterized by fibrosis of the skin and internal organs.",
+            "source_id": "5db9eda60231516215dcb8b82826f9bc,e2d4a3467d27e6de3b2eea8b20f310e8,f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "SYSTEMIC SCLEROSIS"
+        },
+        {
+            "type": "IMMUNOGLOBULIN",
+            "description": "Anti-centromere antibodies are associated with systemic sclerosis, specifically targeting centromere proteins. These antibodies are particularly linked to limited systemic sclerosis.",
+            "source_id": "5db9eda60231516215dcb8b82826f9bc,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "entity_type": "IMMUNOGLOBULIN",
+            "id": "ANTI-CENTROMERE"
+        },
+        {
+            "type": "IMMUNOGLOBULIN",
+            "description": "Anti-topoisomerase I antibodies are autoantibodies often found in patients with systemic sclerosis (SSc). These antibodies are used as a marker for the disease and are particularly associated with more severe forms of SSc, including diffuse systemic sclerosis.",
+            "source_id": "5db9eda60231516215dcb8b82826f9bc,ab372f2a5df06a33e153fa648bb2b950,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "entity_type": "IMMUNOGLOBULIN",
+            "id": "ANTI-TOPOISOMERASE I"
+        },
+        {
+            "type": "IMMUNOGLOBULIN",
+            "description": "Anti-RNA polymerase III antibodies are autoantibodies associated with systemic sclerosis (SSc). These antibodies are used as a diagnostic marker and are linked to a subset of SSc patients.",
+            "source_id": "5db9eda60231516215dcb8b82826f9bc,ab372f2a5df06a33e153fa648bb2b950,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "entity_type": "IMMUNOGLOBULIN",
+            "id": "ANTI-RNA POLYMERASE III"
+        },
+        {
+            "type": "DISEASE",
+            "description": "A subtype of systemic sclerosis characterized by skin thickening limited to the face, hands, and feet",
+            "source_id": "e2d4a3467d27e6de3b2eea8b20f310e8",
+            "entity_type": "DISEASE",
+            "id": "LIMITED SYSTEMIC SCLEROSIS"
+        },
+        {
+            "type": "DISEASE",
+            "description": "A subtype of systemic sclerosis characterized by widespread skin thickening and involvement of internal organs",
+            "source_id": "e2d4a3467d27e6de3b2eea8b20f310e8",
+            "entity_type": "DISEASE",
+            "id": "DIFFUSE SYSTEMIC SCLEROSIS"
+        },
+        {
+            "type": "SNP",
+            "description": "Single nucleotide polymorphism rs944648 of the TNFSF4 gene is associated with systemic sclerosis.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "RS944648"
+        },
+        {
+            "type": "PROTEIN",
+            "description": "OX40 is a member of the TNF receptor superfamily involved in T-cell function and diseases. It is a protein expressed on CD4+ and CD8+ T cells. OX40 binds to its ligand, OX40L, and provides a costimulatory signal that results in T cell proliferation, survival, and cytokine production.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950,f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "OX40"
+        },
+        {
+            "type": "CELL_LINE",
+            "description": "CD4+ T cells are a type of immune cell that express the OX40 protein and are involved in the adaptive immune response.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "CD4+ T CELL"
+        },
+        {
+            "type": "CELL_LINE",
+            "description": "CD8+ T cells are a type of immune cell that express the OX40 protein and are involved in the adaptive immune response.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "CD8+ T CELL"
+        },
+        {
+            "type": "CELL_LINE",
+            "description": "T cells are a type of immune cell that are involved in the adaptive immune response. They express OX40 and interact with OX40L.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "T CELL"
+        },
+        {
+            "type": "CELL_LINE",
+            "description": "B cells are a type of immune cell that are involved in antibody production. They express OX40L and interact with OX40.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "B CELL"
+        },
+        {
+            "type": "CELL_LINE",
+            "description": "Natural killer (NK) cells are a type of immune cell that express OX40L and are involved in the innate immune response.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "NK CELL"
+        },
+        {
+            "type": "CELL_LINE",
+            "description": "Endothelial cells are non-immune cells that express OX40L and are involved in the formation of blood vessels.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "ENDOTHELIAL CELL"
+        },
+        {
+            "type": "CELL_LINE",
+            "description": "Smooth muscle cells are non-immune cells that express OX40L and are involved in the contraction of muscles.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "SMOOTH MUSCLE CELL"
+        },
+        {
+            "type": "CHEMICAL",
+            "description": "Th2 cytokines are a type of cytokine that are promoted by OX40\u2013OX40L interactions and are involved in the immune response.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "TH2 CYTOKINE"
+        },
+        {
+            "type": "CHEMICAL",
+            "description": "Interleukin 17 (IL-17) is a proinflammatory cytokine that plays a crucial role in the immune response. Its production is negatively regulated by the interaction between OX40 and OX40L.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950,f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "IL-17"
+        },
+        {
+            "type": "CELL_LINE",
+            "description": "Foxp3+ regulatory T cells are a type of immune cell that are inhibited by OX40\u2013OX40L interactions and are involved in immune regulation.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "FOXP3+ REGULATORY T CELL"
+        },
+        {
+            "type": "CELL_LINE",
+            "description": "Plasmacytoid dendritic cells are a type of immune cell that regulate T helper responses through a balance of OX40L and type I interferon expression.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "PLASMACYTOID DENDRITIC CELL"
+        },
+        {
+            "type": "GENE",
+            "description": "Major histocompatibility complex class II (MHC class II) is a gene associated with SSc susceptibility and is involved in the immune response.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "MHC CLASS II"
+        },
+        {
+            "type": "GENE",
+            "description": "Allograft inflammatory factor 1 (AIF1) is a gene associated with systemic sclerosis (SSc) susceptibility, particularly in individuals who are anti-centromere antibody positive. AIF1 plays a significant role in the immune response, contributing to the pathogenesis of this autoimmune disease.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950,f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "AIF1"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Diabetes is a chronic disease characterized by high blood sugar levels. It is an autoimmune condition where the body's immune system mistakenly attacks its own cells, leading to the destruction of insulin-producing beta cells in the pancreas. Research has shown that in NOD (Non-Obese Diabetic) mice, diabetes can be prevented by targeting the interactions between OX40 and OX40 ligand (OX40L). These targeted strategies to block OX40\u2013OX40L interactions have been effective in preventing the development of diabetes in these mouse models, highlighting a potential therapeutic approach for managing the disease.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950,f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "DIABETES"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Multiple sclerosis, an autoimmune disease where targeted strategies to block OX40\u2013OX40L interactions have prevented its development in mouse models.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "MULTIPLE SCLEROSIS"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Experimental autoimmune encephalomyelitis is an animal model of multiple sclerosis used to study autoimmune diseases. In this model, OX40\u2013OX40L interactions are involved, making it a valuable tool for understanding the mechanisms underlying multiple sclerosis and other autoimmune conditions.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950,f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "EXPERIMENTAL AUTOIMMUNE ENCEPHALOMYELITIS"
+        },
+        {
+            "type": "CELL_LINE",
+            "description": "C57/BL6 is a common inbred strain of laboratory mouse used in research, including studies on OX40L transgenic mice.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "C57/BL6"
+        },
+        {
+            "type": "CELL_LINE",
+            "description": "Non-obese diabetic mouse is a strain of mouse used as a model for studying diabetes, particularly in the context of autoimmune research.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "NON-OBESE DIABETIC MOUSE"
+        },
+        {
+            "type": "BIOLOGICALPATHWAY",
+            "description": "A statistical method used to correct p-values for multiple comparisons, reducing the likelihood of false positives.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "BENJAMINI AND HOCHBERG FALSE DISCOVERY RATE METHOD"
+        },
+        {
+            "type": "BIOLOGICALPATHWAY",
+            "description": "A statistical method used to model the relationship between a dependent variable and one or more independent variables, often used in genetic association studies.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "LOGISTIC REGRESSION"
+        },
+        {
+            "type": "BIOLOGICALPATHWAY",
+            "description": "Classification and Regression Tree analysis, a statistical method used to identify interactions between variables, such as SNPs in genetic studies.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "CART"
+        },
+        {
+            "type": "BIOLOGICALPATHWAY",
+            "description": "A type of immune response characterized by the production of interferon-gamma and other cytokines, typically involved in defense against intracellular pathogens.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "TH1 RESPONSE"
+        },
+        {
+            "type": "BIOLOGICALPATHWAY",
+            "description": "A type of immune response characterized by the production of interleukin-4 and other cytokines, typically involved in defense against extracellular pathogens and allergens.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "id": "TH2 RESPONSE"
+        },
+        {
+            "type": "GENE",
+            "description": "CTLA4 is a gene associated with rheumatoid arthritis",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "id": "CTLA4"
+        },
+        {
+            "type": "GENE",
+            "description": "PADI4 is a gene associated with rheumatoid arthritis",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "id": "PADI4"
+        },
+        {
+            "type": "GENE",
+            "description": "BANK1 is a gene associated with systemic lupus erythematosus",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "id": "BANK1"
+        },
+        {
+            "type": "DISEASE",
+            "description": "CREST syndrome is a distinct subset of systemic sclerosis characterized by the presence of anticentromere antibodies. It is defined by a specific constellation of clinical features, including Calcinosis, Raynaud's phenomenon, Esophageal dysmotility, Sclerodactyly, and Telangiectasia. This serologic entity is recognized for its unique clinical presentation within the broader category of systemic sclerosis.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "CREST SYNDROME"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Rheumatoid arthritis is an autoimmune disease associated with PTPN22, CTLA4, and PADI4",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "entity_type": "DISEASE",
+            "id": "RHEUMATOID ARTHRITIS"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Type I diabetes is an autoimmune disease associated with PTPN22",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "entity_type": "DISEASE",
+            "id": "TYPE I DIABETES"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Venous thromboembolism is a condition influenced by genetic variants of TNFSF4",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "entity_type": "DISEASE",
+            "id": "VENOUS THROMBOEMBOLISM"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Carotid artery disease is influenced by genetic variants of TNFSF4",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "entity_type": "DISEASE",
+            "id": "CAROTID ARTERY DISEASE"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Stroke is influenced by genetic variants of TNFSF4",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "entity_type": "DISEASE",
+            "id": "STROKE"
+        },
+        {
+            "type": "CHEMICAL",
+            "description": "Anti-RNP antibodies are associated with systemic lupus erythematosus",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "entity_type": "CHEMICAL",
+            "id": "ANTI-RNP ANTIBODIES"
+        },
+        {
+            "type": "PROTEIN",
+            "description": "Fibrillarin is a protein targeted by autoantibodies in systemic sclerosis",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "entity_type": "PROTEIN",
+            "id": "FIBRILLARIN"
+        },
+        {
+            "type": "BIOLOGICALPATHWAY",
+            "description": "Angiogenesis is a biological pathway that is regulated abnormally in patients with scleroderma.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,f286191a8009d9c0ef61d3de0938f0e6",
+            "entity_type": "BIOLOGICALPATHWAY",
+            "id": "ANGIOGENESIS"
+        },
+        {
+            "type": "MEDICALTREATMENT",
+            "description": "DNA sequencing is a method used to identify SNPs involved in SSc pathogenesis",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "entity_type": "MEDICALTREATMENT",
+            "id": "DNA SEQUENCING"
+        },
+        {
+            "type": "MEDICALTREATMENT",
+            "description": "Genotyping is a method used to identify genetic variations in the TNFSF4 gene region",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "entity_type": "MEDICALTREATMENT",
+            "id": "GENOTYPING"
+        },
+        {
+            "type": "BIOLOGICALSTRUCTURE",
+            "description": "Institutional Review Board (IRB) is a committee for the protection of human subjects in research",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "entity_type": "BIOLOGICALSTRUCTURE",
+            "id": "IRB"
+        },
+        {
+            "type": "BIOLOGICALSTRUCTURE",
+            "description": "The University of Texas Health Science Center at Houston Medical School is an institution where the study was conducted",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "entity_type": "BIOLOGICALSTRUCTURE",
+            "id": "UNIVERSITY OF TEXAS HEALTH SCIENCE CENTER AT HOUSTON MEDICAL SCHOOL"
+        },
+        {
+            "type": "BIOLOGICALPATHWAY",
+            "description": "Gene\u2013gene interactions are necessary to understand genetic associations in autoimmune diseases",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "id": "GENE\u2013GENE INTERACTIONS"
+        },
+        {
+            "type": "BIOLOGICALPATHWAY",
+            "description": "Gene\u2013environment interactions are necessary to understand genetic associations in autoimmune diseases",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "id": "GENE\u2013ENVIRONMENT INTERACTIONS"
+        },
+        {
+            "type": "BIOLOGICALSTRUCTURE",
+            "description": "Odds ratios are statistical measures observed in the study to determine the strength of association between genes and diseases",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "id": "ODDS RATIOS"
+        },
+        {
+            "type": "BIOLOGICALSTRUCTURE",
+            "description": "The promoter region of the TNFSF4 gene contains SNPs associated with SSc susceptibility",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "id": "PROMOTER REGION"
+        },
+        {
+            "type": "CHEMICAL",
+            "description": "DNA sequencing helps identify SNPs involved in SSc pathogenesis",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "id": "DNA"
+        },
+        {
+            "type": "IMMUNOGLOBULIN",
+            "description": "Anticentromere antibodies are autoantibodies associated with CREST syndrome and systemic sclerosis",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "ANTICENTROMERE ANTIBODIES"
+        },
+        {
+            "type": "CELL_LINE",
+            "description": "Foxp3+ regulatory T-cells are a subset of T-cells involved in immune regulation, affected by OX40/OX40L costimulation",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "FOXP3+ REGULATORY T-CELLS"
+        },
+        {
+            "type": "CELL_LINE",
+            "description": "Memory T-cells are a type of T-cell that retains information about pathogens for faster response upon re-exposure, expanded by OX40/OX40L interaction",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "MEMORY T-CELLS"
+        },
+        {
+            "type": "CELL_LINE",
+            "description": "B cells are a type of white blood cell involved in the humoral immune response, influenced by OX40L",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "B CELLS"
+        },
+        {
+            "type": "CELL_LINE",
+            "description": "Plasmacytoid dendritic cells are a type of dendritic cell that regulates Th cell responses through OX40 ligand and type I IFNs",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "PLASMACYTOID DENDRITIC CELLS"
+        },
+        {
+            "type": "DRUG",
+            "description": "Anti-OX40 ligand monoclonal antibody is a therapeutic agent used to ameliorate experimental autoimmune encephalomyelitis",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "ANTI-OX40 LIGAND MONOCLONAL ANTIBODY"
+        },
+        {
+            "type": "GENE",
+            "description": "HLA-DQB1 is a gene associated with the immune response, particularly with anti-topoisomerase I autoantibody response in scleroderma",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "HLA-DQB1"
+        },
+        {
+            "type": "IMMUNOGLOBULIN",
+            "description": "Anti-topoisomerase I autoantibodies are autoantibodies associated with scleroderma",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "ANTI-TOPOISOMERASE I AUTOANTIBODIES"
+        },
+        {
+            "type": "SYMPTOM",
+            "description": "Raynaud's phenomenon is a condition where blood flow to extremities is reduced, often associated with systemic sclerosis",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "RAYNAUD'S PHENOMENON"
+        },
+        {
+            "type": "SYMPTOM",
+            "description": "Esophageal dysmotility is a condition where the esophagus has difficulty moving food down, a symptom of CREST syndrome",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "ESOPHAGEAL DYSMOTILITY"
+        },
+        {
+            "type": "SYMPTOM",
+            "description": "Telangiectasia is the dilation of small blood vessels, causing red marks on the skin, a symptom of CREST syndrome",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "TELANGIECTASIA"
+        },
+        {
+            "type": "IMMUNOGLOBULIN",
+            "description": "Anti-nuclear antibodies are autoantibodies that target the nucleus of cells, commonly found in systemic sclerosis patients",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "ANTI-NUCLEAR ANTIBODIES"
+        },
+        {
+            "type": "DISEASE",
+            "description": "Bladder cancer is a type of cancer that affects the bladder, with predisposition linked to DNA-repair and cell-cycle-control genes",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "BLADDER CANCER"
+        },
+        {
+            "type": "GENE",
+            "description": "DNA-repair genes are involved in the repair of DNA damage and are linked to bladder cancer predisposition",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "DNA-REPAIR GENES"
+        },
+        {
+            "type": "GENE",
+            "description": "Cell-cycle-control genes regulate the cell cycle and are associated with bladder cancer predisposition",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "CELL-CYCLE-CONTROL GENES"
+        },
+        {
+            "type": "CELL_LINE",
+            "description": "Th-2 cells are a subset of T-helper cells involved in the immune response, influenced by OX40 ligand",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "TH-2 CELLS"
+        },
+        {
+            "type": "CHEMICAL",
+            "description": "Type I interferons (IFNs) are cytokines involved in the immune response, regulated by plasmacytoid dendritic cells through OX40 ligand",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "TYPE I IFNS"
+        },
+        {
+            "type": "BIOLOGICALSTRUCTURE",
+            "description": "NOD mice are a strain of mice used as a model for studying autoimmune diabetes",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "NOD MICE"
+        },
+        {
+            "type": "DRUG",
+            "description": "Monoclonal antibodies are antibodies made by identical immune cells that are clones of a unique parent cell, used in various treatments including targeting OX40 ligand",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "MONOCLONAL ANTIBODY"
+        },
+        {
+            "type": "MOLECULARFUNCTION",
+            "description": "Memory induction is the process of creating long-lasting immune memory, influenced by OX40 ligand in Th-2 cells",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "MEMORY INDUCTION"
+        },
+        {
+            "type": "CELL_LINE",
+            "description": "Pathogenic T-cells are T-cells that cause disease, whose migration is influenced by OX40 ligand in experimental autoimmune encephalomyelitis",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "PATHOGENIC T-CELLS"
+        },
+        {
+            "type": "MOLECULARFUNCTION",
+            "description": "Th cell responses are immune responses mediated by T-helper cells, regulated by plasmacytoid dendritic cells through OX40 ligand",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "TH CELL RESPONSES"
+        },
+        {
+            "type": "",
+            "description": "",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "id": "OX40/OX40 LIGAND"
+        }
+    ],
+    "links": [
+        {
+            "weight": 9.0,
+            "description": "TNFSF4 encodes the T cell costimulatory molecule OX40 ligand",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "source": "TNFSF4",
+            "target": "OX40L"
+        },
+        {
+            "weight": 31.0,
+            "description": "TNFSF4 has been identified as a susceptibility gene for the development of systemic lupus erythematosus (SLE). It is associated with SLE, indicating its significant role in the pathogenesis of this autoimmune disease.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,87174642d9d24116b8cc01fca23746f2,ab372f2a5df06a33e153fa648bb2b950",
+            "source": "TNFSF4",
+            "target": "SLE"
+        },
+        {
+            "weight": 32.0,
+            "description": "TNFSF4 is associated with susceptibility to systemic sclerosis (SSC). This association indicates that TNFSF4 plays a role in the development and progression of systemic sclerosis, making it a significant factor in understanding the susceptibility to this autoimmune disease.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,87174642d9d24116b8cc01fca23746f2,ab372f2a5df06a33e153fa648bb2b950",
+            "source": "TNFSF4",
+            "target": "SSC"
+        },
+        {
+            "weight": 19.0,
+            "description": "Genetic variants and polymorphisms in TNFSF4 are associated with and influence the development of atherosclerosis.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,87174642d9d24116b8cc01fca23746f2",
+            "source": "TNFSF4",
+            "target": "ATHEROSCLEROSIS"
+        },
+        {
+            "weight": 32.0,
+            "description": "TNFSF4 and SNP rs1234314 are associated with systemic sclerosis and its susceptibility. The TNFSF4 gene contains the SNP rs1234314, which has been identified as a significant factor in the development of systemic sclerosis.",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204,c89a7a896cf934207d874042e48857da,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "source": "TNFSF4",
+            "target": "RS1234314"
+        },
+        {
+            "weight": 8.0,
+            "description": "TNFSF4 and SNP rs1234315 are associated with systemic sclerosis",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "TNFSF4",
+            "target": "RS1234315"
+        },
+        {
+            "weight": 48.0,
+            "description": "TNFSF4 and the single nucleotide polymorphism (SNP) rs2205960 are associated with systemic sclerosis and its susceptibility. The TNFSF4 gene contains the SNP rs2205960, which has been identified as a significant factor in the development of systemic sclerosis.",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204,5db9eda60231516215dcb8b82826f9bc,ab372f2a5df06a33e153fa648bb2b950,c89a7a896cf934207d874042e48857da,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "source": "TNFSF4",
+            "target": "RS2205960"
+        },
+        {
+            "weight": 24.0,
+            "description": "TNFSF4 and SNP rs844644 are associated with systemic sclerosis and its susceptibility.",
+            "source_id": "c89a7a896cf934207d874042e48857da,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "source": "TNFSF4",
+            "target": "RS844644"
+        },
+        {
+            "weight": 8.0,
+            "description": "TNFSF4 and SNP rs12039904 are associated with systemic sclerosis",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "TNFSF4",
+            "target": "RS12039904"
+        },
+        {
+            "weight": 8.0,
+            "description": "TNFSF4 and SNP rs2795288 are associated with systemic sclerosis",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "TNFSF4",
+            "target": "RS2795288"
+        },
+        {
+            "weight": 32.0,
+            "description": "TNFSF4 and SNP rs844648 are associated with systemic sclerosis and its susceptibility. The TNFSF4 gene contains the SNP rs844648, which has been identified as a significant factor in the development of systemic sclerosis.",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204,c89a7a896cf934207d874042e48857da,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "source": "TNFSF4",
+            "target": "RS844648"
+        },
+        {
+            "weight": 29.0,
+            "description": "TNFSF4 and SNP rs844665 are genetic entities that have been studied in the context of systemic sclerosis. TNFSF4, a member of the tumor necrosis factor (TNF) ligand family, contains the single nucleotide polymorphism (SNP) rs844665. Research indicates that both TNFSF4 and SNP rs844665 are associated with systemic sclerosis and its susceptibility. However, it is important to note that some studies have found that SNP rs844665 is not significantly associated with systemic sclerosis. This suggests that while there is a general association between these genetic markers and the disease, the specific role of SNP rs844665 in systemic sclerosis may require further investigation to fully understand its significance.",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204,c89a7a896cf934207d874042e48857da,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "source": "TNFSF4",
+            "target": "RS844665"
+        },
+        {
+            "weight": 8.0,
+            "description": "TNFSF4 and SNP rs10912580 are associated with systemic sclerosis",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "TNFSF4",
+            "target": "RS10912580"
+        },
+        {
+            "weight": 8.0,
+            "description": "TNFSF4 and SNP rs855648 are linked to systemic sclerosis",
+            "source_id": "5db9eda60231516215dcb8b82826f9bc",
+            "source": "TNFSF4",
+            "target": "RS855648"
+        },
+        {
+            "weight": 8.0,
+            "description": "TNFSF4 and SNP rs944648 are linked to systemic sclerosis",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "TNFSF4",
+            "target": "RS944648"
+        },
+        {
+            "weight": 7.0,
+            "description": "TNFSF4 is associated with SSc susceptibility along with MHC class II",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "TNFSF4",
+            "target": "MHC CLASS II"
+        },
+        {
+            "weight": 7.0,
+            "description": "TNFSF4 is associated with SSc susceptibility along with PTPN22",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "TNFSF4",
+            "target": "PTPN22"
+        },
+        {
+            "weight": 7.0,
+            "description": "TNFSF4 is associated with SSc susceptibility along with AIF1",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "TNFSF4",
+            "target": "AIF1"
+        },
+        {
+            "weight": 7.0,
+            "description": "TNFSF4 is associated with SSc susceptibility along with IRF5",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "TNFSF4",
+            "target": "IRF5"
+        },
+        {
+            "weight": 7.0,
+            "description": "TNFSF4 is associated with SSc susceptibility along with STAT4",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "TNFSF4",
+            "target": "STAT4"
+        },
+        {
+            "weight": 7.0,
+            "description": "TNFSF4 is associated with SSc susceptibility along with FAS",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "TNFSF4",
+            "target": "FAS"
+        },
+        {
+            "weight": 7.0,
+            "description": "TNFSF4 is associated with rheumatoid arthritis",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "TNFSF4",
+            "target": "RA"
+        },
+        {
+            "weight": 7.0,
+            "description": "TNFSF4 is associated with diffuse systemic sclerosis susceptibility",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "TNFSF4",
+            "target": "DSSC"
+        },
+        {
+            "weight": 7.0,
+            "description": "TNFSF4 is associated with limited systemic sclerosis susceptibility",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "TNFSF4",
+            "target": "LSSC"
+        },
+        {
+            "weight": 12.0,
+            "description": "Genetic variants of TNFSF4 influence venous thromboembolism",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "source": "TNFSF4",
+            "target": "VENOUS THROMBOEMBOLISM"
+        },
+        {
+            "weight": 12.0,
+            "description": "Genetic variants of TNFSF4 influence carotid artery disease",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "source": "TNFSF4",
+            "target": "CAROTID ARTERY DISEASE"
+        },
+        {
+            "weight": 12.0,
+            "description": "Genetic variants of TNFSF4 influence stroke",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "source": "TNFSF4",
+            "target": "STROKE"
+        },
+        {
+            "weight": 18.0,
+            "description": "OX40 and OX40L are integral components in the immune system, particularly in the context of T-cell costimulation. OX40, a receptor found on the surface of T-cells, binds to its ligand, OX40L, which is expressed on antigen-presenting cells. This interaction between OX40 and OX40L provides a crucial costimulatory signal that enhances T-cell activation, proliferation, and survival. The binding of OX40 to OX40L is essential for the effective functioning of the immune response, making these molecules significant targets in the study and treatment of autoimmune diseases.",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950,f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "OX40L",
+            "target": "OX40"
+        },
+        {
+            "weight": 8.0,
+            "description": "OX40L provides a costimulatory signal for T cell proliferation, survival, and cytokine production",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "OX40L",
+            "target": "T CELL"
+        },
+        {
+            "weight": 8.0,
+            "description": "OX40L is expressed on B cells and is involved in antibody production",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "OX40L",
+            "target": "B CELL"
+        },
+        {
+            "weight": 7.0,
+            "description": "OX40L is expressed on NK cells and is involved in the innate immune response",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "OX40L",
+            "target": "NK CELL"
+        },
+        {
+            "weight": 7.0,
+            "description": "OX40L is expressed on endothelial cells and is involved in blood vessel formation",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "OX40L",
+            "target": "ENDOTHELIAL CELL"
+        },
+        {
+            "weight": 7.0,
+            "description": "OX40L is expressed on smooth muscle cells and is involved in muscle contraction",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "OX40L",
+            "target": "SMOOTH MUSCLE CELL"
+        },
+        {
+            "weight": 7.0,
+            "description": "OX40L promotes Th2 cytokine production",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "OX40L",
+            "target": "TH2 CYTOKINE"
+        },
+        {
+            "weight": 15.0,
+            "description": "OX40L negatively regulates IL-17 production",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950,f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "OX40L",
+            "target": "IL-17"
+        },
+        {
+            "weight": 7.0,
+            "description": "OX40L inhibits the formation of Foxp3+ regulatory T cells",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "OX40L",
+            "target": "FOXP3+ REGULATORY T CELL"
+        },
+        {
+            "weight": 7.0,
+            "description": "OX40L expression on plasmacytoid dendritic cells regulates T helper responses",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "OX40L",
+            "target": "PLASMACYTOID DENDRITIC CELL"
+        },
+        {
+            "weight": 7.0,
+            "description": "OX40L and type I interferon together may induce a Th1 response",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "OX40L",
+            "target": "TYPE I INTERFERON"
+        },
+        {
+            "weight": 7.0,
+            "description": "Blocking OX40\u2013OX40L interactions has prevented the development of diabetes in mouse models",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "OX40L",
+            "target": "DIABETES"
+        },
+        {
+            "weight": 7.0,
+            "description": "Blocking OX40\u2013OX40L interactions has prevented the development of multiple sclerosis in mouse models",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "OX40L",
+            "target": "MULTIPLE SCLEROSIS"
+        },
+        {
+            "weight": 1.0,
+            "description": "Blocking OX40\u2013OX40L interactions has prevented the development of experimental autoimmune encephalomyelitis in mouse models",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "OX40L",
+            "target": "EXPERIMENTAL AUTOIMMUNE ENCEPHALOMYELITIS"
+        },
+        {
+            "weight": 7.0,
+            "description": "OX40L transgenic mice on the C57/BL6 background develop organ-specific inflammation",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "OX40L",
+            "target": "C57/BL6"
+        },
+        {
+            "weight": 7.0,
+            "description": "Blocking OX40\u2013OX40L interactions has prevented the development of diabetes in non-obese diabetic mice",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "OX40L",
+            "target": "NON-OBESE DIABETIC MOUSE"
+        },
+        {
+            "weight": 7.0,
+            "description": "OX40L with type I interferon may induce a Th1 response",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "OX40L",
+            "target": "TH1 RESPONSE"
+        },
+        {
+            "weight": 1.0,
+            "description": "OX40L alone induces a Th2 response",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "OX40L",
+            "target": "TH2 RESPONSE"
+        },
+        {
+            "weight": 7.0,
+            "description": "OX40L affects the induction of Foxp3+ regulatory T-cells",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "OX40L",
+            "target": "FOXP3+ REGULATORY T-CELLS"
+        },
+        {
+            "weight": 7.0,
+            "description": "OX40L expands memory T-cells",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "OX40L",
+            "target": "MEMORY T-CELLS"
+        },
+        {
+            "weight": 8.0,
+            "description": "OX40L is essential for B cell proliferation and differentiation",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "OX40L",
+            "target": "B CELLS"
+        },
+        {
+            "weight": 7.0,
+            "description": "Plasmacytoid dendritic cells regulate Th cell responses through OX40 ligand",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "OX40L",
+            "target": "PLASMACYTOID DENDRITIC CELLS"
+        },
+        {
+            "weight": 8.0,
+            "description": "OX40 ligand plays a critical role in the development of pathogenic Th-2 cells",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "OX40L",
+            "target": "TH-2 CELLS"
+        },
+        {
+            "weight": 7.0,
+            "description": "Monoclonal antibodies can target OX40 ligand for therapeutic purposes",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "OX40L",
+            "target": "MONOCLONAL ANTIBODY"
+        },
+        {
+            "weight": 7.0,
+            "description": "OX40 ligand influences memory induction in Th-2 cells",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "OX40L",
+            "target": "MEMORY INDUCTION"
+        },
+        {
+            "weight": 7.0,
+            "description": "OX40 ligand influences the migration of pathogenic T-cells in experimental autoimmune encephalomyelitis",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "OX40L",
+            "target": "PATHOGENIC T-CELLS"
+        },
+        {
+            "weight": 8.0,
+            "description": "PTPN22 is associated with the development of systemic lupus erythematosus",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "source": "SLE",
+            "target": "PTPN22"
+        },
+        {
+            "weight": 22.0,
+            "description": "STAT4 is a susceptibility gene that influences the genetic predisposition to systemic lupus erythematosus (SLE).",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,87174642d9d24116b8cc01fca23746f2",
+            "source": "SLE",
+            "target": "STAT4"
+        },
+        {
+            "weight": 14.0,
+            "description": "Systemic Lupus Erythematosus (SLE) and Systemic Sclerosis (SSc) are autoimmune diseases that share common immune alterations and genetic associations. Despite these similarities, patients with SLE were excluded from the SSc study, indicating that while there are overlapping features, the diseases are distinct enough to warrant separate investigation in certain research contexts.",
+            "source_id": "87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da",
+            "source": "SLE",
+            "target": "SSC"
+        },
+        {
+            "weight": 21.0,
+            "description": "Systemic Lupus Erythematosus (SLE) is an autoimmune disease characterized by the immune system attacking the body's own tissues, leading to inflammation and damage in various organs. One of the key genetic factors associated with SLE is the Interferon Regulatory Factor 5 (IRF5). IRF5 plays a crucial role in the immune response and has been identified as a significant genetic determinant in the development of SLE. Specifically, IRF5 is associated with polymorphisms that influence the susceptibility to systemic lupus erythematosus. Furthermore, IRF5 defines risk and protective haplotypes for human lupus, indicating that certain genetic variations in IRF5 can either increase the risk of developing SLE or provide a protective effect against the disease. This highlights the importance of IRF5 in the pathogenesis of SLE and its potential as a target for therapeutic interventions.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,87174642d9d24116b8cc01fca23746f2",
+            "source": "SLE",
+            "target": "IRF5"
+        },
+        {
+            "weight": 21.0,
+            "description": "Systemic lupus erythematosus (SLE) is associated with polymorphisms in the FAS gene. Specifically, FAS promoter polymorphisms have been identified as being linked to the development and progression of SLE. This association suggests that variations in the FAS gene, particularly in its promoter region, may play a significant role in the pathogenesis of SLE, potentially influencing the regulation of apoptosis and immune system function.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,87174642d9d24116b8cc01fca23746f2",
+            "source": "SLE",
+            "target": "FAS"
+        },
+        {
+            "weight": 7.0,
+            "description": "Patients with systemic lupus erythematosus have a myriad of circulating antinuclear autoantibodies",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "source": "SLE",
+            "target": "AUTOANTIBODIES"
+        },
+        {
+            "weight": 7.0,
+            "description": "Peripheral blood cells from a subset of patients with systemic lupus erythematosus have a pattern of upregulation of type I interferon associated gene transcripts",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "source": "SLE",
+            "target": "TYPE I INTERFERON"
+        },
+        {
+            "weight": 7.0,
+            "description": "IRF5 is associated with polymorphisms in systemic lupus erythematosus",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "source": "SLE",
+            "target": "INTERFERON REGULATORY FACTOR 5 (IRF5)"
+        },
+        {
+            "weight": 14.0,
+            "description": "BANK1 is associated with systemic lupus erythematosus",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "source": "SLE",
+            "target": "BANK1"
+        },
+        {
+            "weight": 12.0,
+            "description": "Anti-RNP antibodies are associated with systemic lupus erythematosus",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "source": "SLE",
+            "target": "ANTI-RNP ANTIBODIES"
+        },
+        {
+            "weight": 50.0,
+            "description": "SNP rs1234314 is associated with susceptibility to systemic sclerosis (SSC). This single nucleotide polymorphism (SNP) has been identified as a genetic factor that may influence an individual's likelihood of developing systemic sclerosis, a chronic autoimmune disease characterized by fibrosis of the skin and internal organs. The association between rs1234314 and SSC highlights the importance of genetic factors in the pathogenesis of this complex disease.",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204,5db9eda60231516215dcb8b82826f9bc,87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "source": "SSC",
+            "target": "RS1234314"
+        },
+        {
+            "weight": 50.0,
+            "description": "SNP rs2205960 is associated with susceptibility to systemic sclerosis (SSC). This single nucleotide polymorphism (SNP) has been identified as a genetic factor that may influence an individual's likelihood of developing systemic sclerosis, a chronic autoimmune disease characterized by fibrosis of the skin and internal organs. The association between rs2205960 and SSC highlights the potential genetic underpinnings of the disease, providing a target for further research into its pathogenesis and potential therapeutic interventions.",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204,5db9eda60231516215dcb8b82826f9bc,87174642d9d24116b8cc01fca23746f2,ab372f2a5df06a33e153fa648bb2b950,c89a7a896cf934207d874042e48857da,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "source": "SSC",
+            "target": "RS2205960"
+        },
+        {
+            "weight": 36.0,
+            "description": "SNP rs844648 is associated with susceptibility to systemic sclerosis (SSC). This single nucleotide polymorphism (SNP) has been identified as a genetic factor that may influence an individual's likelihood of developing systemic sclerosis, a chronic autoimmune disease characterized by fibrosis of the skin and internal organs. The association between rs844648 and SSC highlights the potential role of genetic predisposition in the pathogenesis of this complex condition.",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204,87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "source": "SSC",
+            "target": "RS844648"
+        },
+        {
+            "weight": 41.0,
+            "description": "SNP rs844644 is associated with systemic sclerosis (SSC) and systemic sclerosis susceptibility. Additionally, SNP rs844644 has been identified as having a protective effect against systemic sclerosis.",
+            "source_id": "5db9eda60231516215dcb8b82826f9bc,87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "source": "SSC",
+            "target": "RS844644"
+        },
+        {
+            "weight": 21.0,
+            "description": "IRF5 is associated with systemic sclerosis (SSC) and is linked to polymorphisms in this autoimmune disease.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,87174642d9d24116b8cc01fca23746f2",
+            "source": "SSC",
+            "target": "IRF5"
+        },
+        {
+            "weight": 21.0,
+            "description": "SSC (Systemic Sclerosis) and FAS (Fas Cell Surface Death Receptor) are closely linked through genetic polymorphisms. Specifically, polymorphisms in the FAS gene, including those in the FAS promoter region, have been associated with systemic sclerosis. This connection suggests that variations in the FAS gene may play a role in the pathogenesis of systemic sclerosis, potentially influencing the disease's onset and progression.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,87174642d9d24116b8cc01fca23746f2",
+            "source": "SSC",
+            "target": "FAS"
+        },
+        {
+            "weight": 8.0,
+            "description": "CREST features are used for disease classification in systemic sclerosis",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "source": "SSC",
+            "target": "CREST"
+        },
+        {
+            "weight": 6.0,
+            "description": "Myositis can be a symptom in patients with systemic sclerosis",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "source": "SSC",
+            "target": "MYOSITIS"
+        },
+        {
+            "weight": 6.0,
+            "description": "Sjogren's syndrome can be a symptom in patients with systemic sclerosis",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "source": "SSC",
+            "target": "SJOGREN'S SYNDROME"
+        },
+        {
+            "weight": 19.0,
+            "description": "Systemic sclerosis (SSC) is characterized by the presence of autoantibodies. Patients with systemic sclerosis have a myriad of circulating antinuclear autoantibodies, which are a hallmark of the disease. These autoantibodies play a significant role in the pathogenesis and clinical manifestations of SSC.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,87174642d9d24116b8cc01fca23746f2",
+            "source": "SSC",
+            "target": "AUTOANTIBODIES"
+        },
+        {
+            "weight": 7.0,
+            "description": "Peripheral blood cells from a subset of patients with systemic sclerosis have a pattern of upregulation of type I interferon associated gene transcripts",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "source": "SSC",
+            "target": "TYPE I INTERFERON"
+        },
+        {
+            "weight": 7.0,
+            "description": "IRF5 is associated with polymorphisms in systemic sclerosis",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "source": "SSC",
+            "target": "INTERFERON REGULATORY FACTOR 5 (IRF5)"
+        },
+        {
+            "weight": 8.0,
+            "description": "The American College of Rheumatology provides criteria for disease classification in systemic sclerosis",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "source": "SSC",
+            "target": "AMERICAN COLLEGE OF RHEUMATOLOGY (ACR)"
+        },
+        {
+            "weight": 7.0,
+            "description": "GENISOS investigates genetic and environmental factors in systemic sclerosis outcomes",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "source": "SSC",
+            "target": "GENETICS VERSUS ENVIRONMENT IN SCLERODERMA OUTCOMES STUDY (GENISOS)"
+        },
+        {
+            "weight": 7.0,
+            "description": "The Scleroderma Family Registry and DNA Repository collects data and samples for research on systemic sclerosis",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "source": "SSC",
+            "target": "SCLERODERMA FAMILY REGISTRY AND DNA REPOSITORY"
+        },
+        {
+            "weight": 1.0,
+            "description": "The University of Texas Rheumatology Division conducts research and provides treatment for systemic sclerosis",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "source": "SSC",
+            "target": "UNIVERSITY OF TEXAS RHEUMATOLOGY DIVISION"
+        },
+        {
+            "weight": 7.0,
+            "description": "SNP rs1234315 is associated with systemic sclerosis",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "SSC",
+            "target": "RS1234315"
+        },
+        {
+            "weight": 7.0,
+            "description": "SNP rs12039904 is associated with systemic sclerosis",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "SSC",
+            "target": "RS12039904"
+        },
+        {
+            "weight": 7.0,
+            "description": "SNP rs2795288 is associated with systemic sclerosis",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "SSC",
+            "target": "RS2795288"
+        },
+        {
+            "weight": 38.0,
+            "description": "SNP rs844665 is associated with systemic sclerosis and systemic sclerosis susceptibility. However, some studies indicate that SNP rs844665 is not significantly associated with systemic sclerosis. This suggests that while there may be a potential link between rs844665 and systemic sclerosis, the association is not consistently observed across all research, indicating the need for further investigation to clarify its role in the disease.",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204,5db9eda60231516215dcb8b82826f9bc,c89a7a896cf934207d874042e48857da,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "source": "SSC",
+            "target": "RS844665"
+        },
+        {
+            "weight": 1.0,
+            "description": "SNP rs10912580 is associated with systemic sclerosis",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "SSC",
+            "target": "RS10912580"
+        },
+        {
+            "weight": 7.0,
+            "description": "Limited systemic sclerosis is a subset of systemic sclerosis",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "SSC",
+            "target": "LSSC"
+        },
+        {
+            "weight": 7.0,
+            "description": "Diffuse systemic sclerosis is a subset of systemic sclerosis",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "SSC",
+            "target": "DSSC"
+        },
+        {
+            "weight": 7.0,
+            "description": "Anti-centromere antibodies are associated with a subset of systemic sclerosis",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "SSC",
+            "target": "ACA"
+        },
+        {
+            "weight": 7.0,
+            "description": "Anti-topoisomerase antibodies are associated with a subset of systemic sclerosis",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "SSC",
+            "target": "ATA"
+        },
+        {
+            "weight": 7.0,
+            "description": "Anti-RNA polymerase III antibodies are associated with a subset of systemic sclerosis",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "SSC",
+            "target": "ARA"
+        },
+        {
+            "weight": 7.0,
+            "description": "SNP rs855648 is associated with systemic sclerosis susceptibility",
+            "source_id": "5db9eda60231516215dcb8b82826f9bc",
+            "source": "SSC",
+            "target": "RS855648"
+        },
+        {
+            "weight": 14.0,
+            "description": "Anti-centromere antibodies are associated with systemic sclerosis",
+            "source_id": "5db9eda60231516215dcb8b82826f9bc",
+            "source": "SSC",
+            "target": "ANTI-CENTROMERE"
+        },
+        {
+            "weight": 22.0,
+            "description": "Systemic sclerosis (SSC) is a chronic autoimmune disease characterized by fibrosis of the skin and internal organs. Anti-topoisomerase I antibodies are closely associated with systemic sclerosis and serve as a significant autoantibody marker for this condition. The presence of anti-topoisomerase I antibodies in patients is indicative of systemic sclerosis, aiding in the diagnosis and understanding of the disease's pathogenesis.",
+            "source_id": "5db9eda60231516215dcb8b82826f9bc,ab372f2a5df06a33e153fa648bb2b950",
+            "source": "SSC",
+            "target": "ANTI-TOPOISOMERASE I"
+        },
+        {
+            "weight": 12.0,
+            "description": "Anti-RNA polymerase III antibodies are associated with systemic sclerosis (SSC). Anti-RNA polymerase III is an autoantibody marker for systemic sclerosis, indicating its significant role in the diagnosis and understanding of this autoimmune disease.",
+            "source_id": "5db9eda60231516215dcb8b82826f9bc,ab372f2a5df06a33e153fa648bb2b950,e2d4a3467d27e6de3b2eea8b20f310e8",
+            "source": "SSC",
+            "target": "ANTI-RNA POLYMERASE III"
+        },
+        {
+            "weight": 12.0,
+            "description": "Limited systemic sclerosis is a subtype of systemic sclerosis",
+            "source_id": "e2d4a3467d27e6de3b2eea8b20f310e8",
+            "source": "SSC",
+            "target": "LIMITED SYSTEMIC SCLEROSIS"
+        },
+        {
+            "weight": 12.0,
+            "description": "Diffuse systemic sclerosis is a subtype of systemic sclerosis",
+            "source_id": "e2d4a3467d27e6de3b2eea8b20f310e8",
+            "source": "SSC",
+            "target": "DIFFUSE SYSTEMIC SCLEROSIS"
+        },
+        {
+            "weight": 7.0,
+            "description": "SNP rs944648 is associated with systemic sclerosis susceptibility",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "SSC",
+            "target": "RS944648"
+        },
+        {
+            "weight": 14.0,
+            "description": "STAT4 influences the genetic predisposition to systemic sclerosis",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "source": "SSC",
+            "target": "STAT4"
+        },
+        {
+            "weight": 12.0,
+            "description": "Autoantibodies to fibrillarin are present in systemic sclerosis",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "source": "SSC",
+            "target": "FIBRILLARIN"
+        },
+        {
+            "weight": 14.0,
+            "description": "DNA sequencing helps identify SNPs involved in SSc pathogenesis",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "source": "SSC",
+            "target": "DNA SEQUENCING"
+        },
+        {
+            "weight": 2.0,
+            "description": "Genotyping helps identify genetic variations in the TNFSF4 gene region",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "source": "SSC",
+            "target": "GENOTYPING"
+        },
+        {
+            "weight": 14.0,
+            "description": "SNP rs1234314 is more common in limited systemic sclerosis compared to controls",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "RS1234314",
+            "target": "LSSC"
+        },
+        {
+            "weight": 14.0,
+            "description": "SNP rs1234314 is more common in diffuse systemic sclerosis compared to controls",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "RS1234314",
+            "target": "DSSC"
+        },
+        {
+            "weight": 21.0,
+            "description": "SNP rs1234314 is associated with ACA-positive systemic sclerosis",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "RS1234314",
+            "target": "ACA"
+        },
+        {
+            "weight": 21.0,
+            "description": "SNP rs1234314 is associated with ATA-positive systemic sclerosis",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "RS1234314",
+            "target": "ATA"
+        },
+        {
+            "weight": 5.0,
+            "description": "SNP rs1234314 is not associated with pulmonary fibrosis in systemic sclerosis patients",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "RS1234314",
+            "target": "PULMONARY FIBROSIS"
+        },
+        {
+            "weight": 5.0,
+            "description": "SNP rs1234314 is not associated with pulmonary hypertension in systemic sclerosis patients",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "RS1234314",
+            "target": "PULMONARY HYPERTENSION"
+        },
+        {
+            "weight": 14.0,
+            "description": "SNP rs2205960 is more common in limited systemic sclerosis compared to controls",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "RS2205960",
+            "target": "LSSC"
+        },
+        {
+            "weight": 14.0,
+            "description": "SNP rs2205960 is more common in diffuse systemic sclerosis compared to controls",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "RS2205960",
+            "target": "DSSC"
+        },
+        {
+            "weight": 21.0,
+            "description": "SNP rs2205960 is more frequent in ATA-positive systemic sclerosis compared to controls",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "RS2205960",
+            "target": "ATA"
+        },
+        {
+            "weight": 5.0,
+            "description": "SNP rs2205960 is not associated with pulmonary fibrosis in systemic sclerosis patients",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "RS2205960",
+            "target": "PULMONARY FIBROSIS"
+        },
+        {
+            "weight": 5.0,
+            "description": "SNP rs2205960 is not associated with pulmonary hypertension in systemic sclerosis patients",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "RS2205960",
+            "target": "PULMONARY HYPERTENSION"
+        },
+        {
+            "weight": 8.0,
+            "description": "Interaction between SNPs rs2205960 and rs855648 in the TNFSF4 gene region is associated with systemic sclerosis",
+            "source_id": "5db9eda60231516215dcb8b82826f9bc",
+            "source": "RS2205960",
+            "target": "RS855648"
+        },
+        {
+            "weight": 14.0,
+            "description": "SNP rs844648 is more common in diffuse systemic sclerosis compared to controls",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "RS844648",
+            "target": "DSSC"
+        },
+        {
+            "weight": 9.0,
+            "description": "SNP rs844648 is associated with ARA-positive systemic sclerosis",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "RS844648",
+            "target": "ARA"
+        },
+        {
+            "weight": 5.0,
+            "description": "SNP rs844648 is not associated with pulmonary fibrosis in systemic sclerosis patients",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "RS844648",
+            "target": "PULMONARY FIBROSIS"
+        },
+        {
+            "weight": 5.0,
+            "description": "SNP rs844648 is not associated with pulmonary hypertension in systemic sclerosis patients",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "RS844648",
+            "target": "PULMONARY HYPERTENSION"
+        },
+        {
+            "weight": 14.0,
+            "description": "SNP rs844644 is less common in diffuse systemic sclerosis compared to controls",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "RS844644",
+            "target": "DSSC"
+        },
+        {
+            "weight": 5.0,
+            "description": "SNP rs844644 is not associated with pulmonary fibrosis in systemic sclerosis patients",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "RS844644",
+            "target": "PULMONARY FIBROSIS"
+        },
+        {
+            "weight": 5.0,
+            "description": "SNP rs844644 is not associated with pulmonary hypertension in systemic sclerosis patients",
+            "source_id": "31513af83d109f0e11eca33fa5fb3204",
+            "source": "RS844644",
+            "target": "PULMONARY HYPERTENSION"
+        },
+        {
+            "weight": 8.0,
+            "description": "PTPN22 is associated with the development of type I diabetes mellitus",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "source": "PTPN22",
+            "target": "TIDM"
+        },
+        {
+            "weight": 8.0,
+            "description": "PTPN22 is associated with the development of rheumatoid arthritis",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "source": "PTPN22",
+            "target": "RA"
+        },
+        {
+            "weight": 16.0,
+            "description": "PTPN22 is associated with rheumatoid arthritis",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "source": "PTPN22",
+            "target": "RHEUMATOID ARTHRITIS"
+        },
+        {
+            "weight": 16.0,
+            "description": "PTPN22 is associated with type I diabetes",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "source": "PTPN22",
+            "target": "TYPE I DIABETES"
+        },
+        {
+            "weight": 8.0,
+            "description": "STAT4 is a susceptibility gene for the development of rheumatoid arthritis",
+            "source_id": "87174642d9d24116b8cc01fca23746f2",
+            "source": "RA",
+            "target": "STAT4"
+        },
+        {
+            "weight": 19.0,
+            "description": "Scleroderma is a complex autoimmune disease characterized by abnormalities in the regulation of angiogenesis. Patients with scleroderma exhibit irregularities in the regulators of angiogenesis, indicating that the process of new blood vessel formation is abnormally regulated in these individuals. This dysregulation of angiogenesis is a significant aspect of the pathophysiology of scleroderma, contributing to the disease's clinical manifestations and progression.",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1,f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "SCLERODERMA",
+            "target": "ANGIOGENESIS"
+        },
+        {
+            "weight": 9.0,
+            "description": "Systemic sclerosis is also known as scleroderma",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "SCLERODERMA",
+            "target": "SYSTEMIC SCLEROSIS"
+        },
+        {
+            "weight": 14.0,
+            "description": "CREST syndrome, an acronym for Calcinosis, Raynaud's phenomenon, Esophageal dysmotility, Sclerodactyly, and Telangiectasia, includes calcinosis as one of its defining features. Calcinosis, characterized by the deposition of calcium in the skin and other tissues, is a notable manifestation of CREST syndrome.",
+            "source_id": "87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da",
+            "source": "CREST",
+            "target": "CALCINOSIS"
+        },
+        {
+            "weight": 14.0,
+            "description": "CREST syndrome, an acronym for Calcinosis, Raynaud's phenomenon, Esophageal dysmotility, Sclerodactyly, and Telangiectasia, includes Raynaud\u2019s phenomenon as one of its key features. Raynaud\u2019s phenomenon, characterized by episodic vasospasm of the extremities leading to color changes, pain, numbness, and tingling, is a significant clinical manifestation within the spectrum of CREST syndrome.",
+            "source_id": "87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da",
+            "source": "CREST",
+            "target": "RAYNAUD\u2019S PHENOMENON"
+        },
+        {
+            "weight": 14.0,
+            "description": "CREST syndrome, an acronym for Calcinosis, Raynaud's phenomenon, Esophageal dysfunction, Sclerodactyly, and Telangiectasia, includes esophageal dysfunction as one of its key features. Esophageal dysfunction is a significant aspect of CREST syndrome, highlighting the involvement of the esophagus in the disease's clinical manifestations.",
+            "source_id": "87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da",
+            "source": "CREST",
+            "target": "ESOPHAGEAL DYSFUNCTION"
+        },
+        {
+            "weight": 14.0,
+            "description": "CREST syndrome, an acronym for Calcinosis, Raynaud's phenomenon, Esophageal dysmotility, Sclerodactyly, and Telangiectasia, includes sclerodactyly as one of its defining features. Sclerodactyly, characterized by the thickening and tightening of the skin on the fingers and hands, is a hallmark of CREST syndrome, contributing to the clinical diagnosis and understanding of this autoimmune condition.",
+            "source_id": "87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da",
+            "source": "CREST",
+            "target": "SCLERODACTYLY"
+        },
+        {
+            "weight": 9.0,
+            "description": "CREST syndrome, an acronym for Calcinosis, Raynaud's phenomenon, Esophageal dysmotility, Sclerodactyly, and Telangiectasias, includes telangiectasias as one of its defining features. Telangiectasias, characterized by small, dilated blood vessels near the surface of the skin or mucous membranes, is a notable manifestation within the spectrum of symptoms associated with CREST syndrome.",
+            "source_id": "87174642d9d24116b8cc01fca23746f2,c89a7a896cf934207d874042e48857da",
+            "source": "CREST",
+            "target": "TELANGIECTASIAS"
+        },
+        {
+            "weight": 8.0,
+            "description": "Calcinosis is a symptom of CREST syndrome",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "CALCINOSIS",
+            "target": "CREST SYNDROME"
+        },
+        {
+            "weight": 8.0,
+            "description": "Sclerodactyly is a symptom of CREST syndrome",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "SCLERODACTYLY",
+            "target": "CREST SYNDROME"
+        },
+        {
+            "weight": 8.0,
+            "description": "HEp-2 cells are used as an antigen substrate to test for antinuclear antibodies",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "HEP-2 CELLS",
+            "target": "ANTINUCLEAR ANTIBODIES"
+        },
+        {
+            "weight": 8.0,
+            "description": "HEp-2 cells are used to determine anti-centromere antibodies by their distinctive IIF pattern",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "HEP-2 CELLS",
+            "target": "ANTI-CENTROMERE ANTIBODIES"
+        },
+        {
+            "weight": 14.0,
+            "description": "CREST syndrome is associated with anti-centromere antibodies",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "source": "ANTI-CENTROMERE ANTIBODIES",
+            "target": "CREST SYNDROME"
+        },
+        {
+            "weight": 7.0,
+            "description": "Anti-RNA polymerase III antibodies are determined by enzyme-linked immunoassay",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "TOPOISOMERASE I",
+            "target": "ANTI-RNA POLYMERASE III ANTIBODIES"
+        },
+        {
+            "weight": 8.0,
+            "description": "Anti-topoisomerase I antibodies target the enzyme topoisomerase I",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "TOPOISOMERASE I",
+            "target": "ANTI-TOPOISOMERASE I ANTIBODIES"
+        },
+        {
+            "weight": 8.0,
+            "description": "Anti-topoisomerase I autoantibodies target the enzyme topoisomerase I in scleroderma",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "TOPOISOMERASE I",
+            "target": "ANTI-TOPOISOMERASE I AUTOANTIBODIES"
+        },
+        {
+            "weight": 8.0,
+            "description": "Genomic DNA is extracted from peripheral blood",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "GENOMIC DNA",
+            "target": "PERIPHERAL BLOOD"
+        },
+        {
+            "weight": 8.0,
+            "description": "PureGene genomic DNA isolation kit is used to extract genomic DNA",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "GENOMIC DNA",
+            "target": "PUREGENE GENOMIC DNA ISOLATION KIT"
+        },
+        {
+            "weight": 8.0,
+            "description": "ABI TaqMan SNP genotyping assay is used for SNP genotyping",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "ABI TAQMAN SNP GENOTYPING ASSAY",
+            "target": "SNP"
+        },
+        {
+            "weight": 8.0,
+            "description": "ABI 7900HT is used for plate reading in ABI TaqMan SNP genotyping assay",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "ABI TAQMAN SNP GENOTYPING ASSAY",
+            "target": "ABI 7900HT"
+        },
+        {
+            "weight": 8.0,
+            "description": "SDS V.2.3 software is used for automated allele calling in ABI TaqMan SNP genotyping assay",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "ABI TAQMAN SNP GENOTYPING ASSAY",
+            "target": "SDS V.2.3 SOFTWARE"
+        },
+        {
+            "weight": 8.0,
+            "description": "HapMap data is used for validation of SNP allele calls",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "HAPMAP",
+            "target": "SNP"
+        },
+        {
+            "weight": 8.0,
+            "description": "SAS V.9.1.3 is used for statistical analysis",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "SAS V.9.1.3",
+            "target": "STATISTICAL ANALYSIS"
+        },
+        {
+            "weight": 8.0,
+            "description": "Hardy\u2013Weinberg equilibrium is tested for SNPs",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "HARDY\u2013WEINBERG EQUILIBRIUM",
+            "target": "SNP"
+        },
+        {
+            "weight": 8.0,
+            "description": "Pearson \u03c72 test is used for allelic and genotypic associations",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "PEARSON \u03a72 TEST",
+            "target": "STATISTICAL ANALYSIS"
+        },
+        {
+            "weight": 8.0,
+            "description": "Fisher exact test is used for allelic and genotypic associations",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "FISHER EXACT TEST",
+            "target": "STATISTICAL ANALYSIS"
+        },
+        {
+            "weight": 8.0,
+            "description": "Logistic regression analysis is used to confirm SNP associations",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "LOGISTIC REGRESSION ANALYSIS",
+            "target": "STATISTICAL ANALYSIS"
+        },
+        {
+            "weight": 8.0,
+            "description": "Linkage disequilibrium is calculated for SNPs",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "LINKAGE DISEQUILIBRIUM",
+            "target": "SNP"
+        },
+        {
+            "weight": 8.0,
+            "description": "Haploview is used for linkage disequilibrium analysis",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "LINKAGE DISEQUILIBRIUM",
+            "target": "HAPLOVIEW"
+        },
+        {
+            "weight": 8.0,
+            "description": "D\u2032 is a measure used in linkage disequilibrium",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "LINKAGE DISEQUILIBRIUM",
+            "target": "D\u2032"
+        },
+        {
+            "weight": 8.0,
+            "description": "r2 is a measure used in linkage disequilibrium",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "LINKAGE DISEQUILIBRIUM",
+            "target": "R2"
+        },
+        {
+            "weight": 8.0,
+            "description": "CART V.6.0 is used for classification and regression tree analysis of SNPs",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "CART V.6.0",
+            "target": "SNP"
+        },
+        {
+            "weight": 1.0,
+            "description": "pFDR is used for controlling false discovery rate in statistical analysis",
+            "source_id": "c89a7a896cf934207d874042e48857da",
+            "source": "PFDR",
+            "target": "STATISTICAL ANALYSIS"
+        },
+        {
+            "weight": 6.0,
+            "description": "The Benjamini and Hochberg false discovery rate method is used to correct p-values for SNP associations",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "SNP",
+            "target": "BENJAMINI AND HOCHBERG FALSE DISCOVERY RATE METHOD"
+        },
+        {
+            "weight": 7.0,
+            "description": "Logistic regression is used to estimate the risk of SNPs in systemic sclerosis",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "SNP",
+            "target": "LOGISTIC REGRESSION"
+        },
+        {
+            "weight": 7.0,
+            "description": "CART analysis shows interaction between TNFSF4 SNPs rs2205960 and rs944648 in systemic sclerosis",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "SNP",
+            "target": "CART"
+        },
+        {
+            "weight": 7.0,
+            "description": "AIF1 SNP is associated with anti-centromere antibody positive systemic sclerosis",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "SNP",
+            "target": "AIF1"
+        },
+        {
+            "weight": 8.0,
+            "description": "CREST syndrome is a distinct subset of systemic sclerosis",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "SYSTEMIC SCLEROSIS",
+            "target": "CREST SYNDROME"
+        },
+        {
+            "weight": 8.0,
+            "description": "Anti-nuclear antibodies are commonly found in systemic sclerosis patients",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "SYSTEMIC SCLEROSIS",
+            "target": "ANTI-NUCLEAR ANTIBODIES"
+        },
+        {
+            "weight": 14.0,
+            "description": "Anti-centromere antibodies are associated with limited systemic sclerosis",
+            "source_id": "e2d4a3467d27e6de3b2eea8b20f310e8",
+            "source": "ANTI-CENTROMERE",
+            "target": "LIMITED SYSTEMIC SCLEROSIS"
+        },
+        {
+            "weight": 14.0,
+            "description": "Anti-topoisomerase I antibodies are associated with diffuse systemic sclerosis",
+            "source_id": "e2d4a3467d27e6de3b2eea8b20f310e8",
+            "source": "ANTI-TOPOISOMERASE I",
+            "target": "DIFFUSE SYSTEMIC SCLEROSIS"
+        },
+        {
+            "weight": 8.0,
+            "description": "OX40 is expressed on CD4+ T cells and provides a costimulatory signal",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "OX40",
+            "target": "CD4+ T CELL"
+        },
+        {
+            "weight": 8.0,
+            "description": "OX40 is expressed on CD8+ T cells and provides a costimulatory signal",
+            "source_id": "ab372f2a5df06a33e153fa648bb2b950",
+            "source": "OX40",
+            "target": "CD8+ T CELL"
+        },
+        {
+            "weight": 7.0,
+            "description": "Targeting OX40/OX40 ligand interactions can prevent diabetes in NOD mice",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "DIABETES",
+            "target": "OX40/OX40 LIGAND"
+        },
+        {
+            "weight": 7.0,
+            "description": "NOD mice are used as a model for studying autoimmune diabetes",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "DIABETES",
+            "target": "NOD MICE"
+        },
+        {
+            "weight": 7.0,
+            "description": "Anti-OX40 ligand monoclonal antibody ameliorates experimental autoimmune encephalomyelitis",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "EXPERIMENTAL AUTOIMMUNE ENCEPHALOMYELITIS",
+            "target": "ANTI-OX40 LIGAND MONOCLONAL ANTIBODY"
+        },
+        {
+            "weight": 14.0,
+            "description": "CTLA4 is associated with rheumatoid arthritis",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "source": "CTLA4",
+            "target": "RHEUMATOID ARTHRITIS"
+        },
+        {
+            "weight": 14.0,
+            "description": "PADI4 is associated with rheumatoid arthritis",
+            "source_id": "5639a5e5649646c1e4c8deb1e1f0a1b1",
+            "source": "PADI4",
+            "target": "RHEUMATOID ARTHRITIS"
+        },
+        {
+            "weight": 8.0,
+            "description": "Anticentromere antibodies are associated with CREST syndrome",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "CREST SYNDROME",
+            "target": "ANTICENTROMERE ANTIBODIES"
+        },
+        {
+            "weight": 8.0,
+            "description": "Raynaud's phenomenon is a symptom of CREST syndrome",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "CREST SYNDROME",
+            "target": "RAYNAUD'S PHENOMENON"
+        },
+        {
+            "weight": 8.0,
+            "description": "Esophageal dysmotility is a symptom of CREST syndrome",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "CREST SYNDROME",
+            "target": "ESOPHAGEAL DYSMOTILITY"
+        },
+        {
+            "weight": 1.0,
+            "description": "Telangiectasia is a symptom of CREST syndrome",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "CREST SYNDROME",
+            "target": "TELANGIECTASIA"
+        },
+        {
+            "weight": 7.0,
+            "description": "Plasmacytoid dendritic cells regulate Th cell responses through OX40 ligand and type I IFNs",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "PLASMACYTOID DENDRITIC CELLS",
+            "target": "TYPE I IFNS"
+        },
+        {
+            "weight": 1.0,
+            "description": "Plasmacytoid dendritic cells regulate Th cell responses through OX40 ligand",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "PLASMACYTOID DENDRITIC CELLS",
+            "target": "TH CELL RESPONSES"
+        },
+        {
+            "weight": 7.0,
+            "description": "HLA-DQB1 is associated with anti-topoisomerase I autoantibody response in scleroderma",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "HLA-DQB1",
+            "target": "ANTI-TOPOISOMERASE I AUTOANTIBODIES"
+        },
+        {
+            "weight": 7.0,
+            "description": "Bladder cancer predisposition is linked to DNA-repair genes",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "BLADDER CANCER",
+            "target": "DNA-REPAIR GENES"
+        },
+        {
+            "weight": 7.0,
+            "description": "Bladder cancer predisposition is linked to cell-cycle-control genes",
+            "source_id": "f286191a8009d9c0ef61d3de0938f0e6",
+            "source": "BLADDER CANCER",
+            "target": "CELL-CYCLE-CONTROL GENES"
+        }
+    ]
+}

@@ -1,0 +1,2927 @@
+{
+	"elements": [
+		{
+			"data": {
+				"id": "5600278",
+				"label": "TNFRSF4",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "TNFRSF4",
+					"locus_group": "protein-coding gene",
+					"name": "TNFRSF4",
+					"description": "A tumor necrosis factor receptor superfamily member 4 that is encoded in the genome of human.",
+					"location": "1p36.33",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:7293",
+					"information_content": 100,
+					"NCBITaxon": "10090",
+					"equivalent_identifiers": [
+						"HGNC:11918",
+						"ENSEMBL:ENSP00000368538",
+						"PR:P43489",
+						"UMLS:C1420812",
+						"UniProtKB:P43489",
+						"ENSEMBL:ENSP00000368538.3",
+						"NCBIGene:7293",
+						"UMLS:C1608540",
+						"OMIM:600315",
+						"ENSEMBL:ENSG00000186827"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5518069",
+				"label": "ERBB2",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "ERBB2",
+					"locus_group": "protein-coding gene",
+					"name": "ERBB2",
+					"description": "A receptor tyrosine-protein kinase erbB-2 that is encoded in the genome of human.",
+					"location": "17q12",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:2064",
+					"information_content": 100,
+					"NCBITaxon": "9606",
+					"equivalent_identifiers": [
+						"HGNC:3430",
+						"ENSEMBL:ENSP00000462808.1",
+						"UMLS:C0242957",
+						"UMLS:C1702024",
+						"ENSEMBL:ENSP00000463714",
+						"UMLS:C1506592",
+						"UniProtKB:X5DNK3",
+						"PR:P04626",
+						"OMIM:164870",
+						"ENSEMBL:ENSG00000141736",
+						"NCBIGene:2064",
+						"ENSEMBL:ENSP00000462808",
+						"UniProtKB:P04626",
+						"ENSEMBL:ENSP00000463714.1",
+						"UniProtKB:F5H1T4",
+						"UniProtKB:J3QLU9",
+						"UMLS:C4320090"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5546396",
+				"label": "IL4R",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "IL4R",
+					"locus_group": "protein-coding gene",
+					"name": "IL4R",
+					"description": "An interleukin-4 receptor subunit alpha that is encoded in the genome of human.",
+					"location": "16p12.1",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:3566",
+					"information_content": 100,
+					"equivalent_identifiers": [
+						"UniProtKB:P24394",
+						"NCBIGene:3566",
+						"UniProtKB:B2RBY1",
+						"UMLS:C1334118",
+						"OMIM:147781",
+						"ENSEMBL:ENSG00000077238",
+						"UMLS:C1620077",
+						"PR:P24394",
+						"HGNC:6015"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5445223",
+				"label": "dermatitis, atopic",
+				"type": "Disease",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:DiseaseOrPhenotypicFeature",
+					"biolink:Disease",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing"
+				],
+				"properties": {
+					"MONDO_SUPERCLASS_immune_system_disorder": true,
+					"MONDO_SUPERCLASS_dermatitis": true,
+					"MONDO_SUPERCLASS_inflammatory_disease": true,
+					"MONDO_SUPERCLASS_hereditary_skin_disorder": true,
+					"description": "Atopic dermatitis (AD) or atopic eczema is an itchy, inflammatory skin condition with a predilection for the skin flexures. It is characterized by poorly defined erythema with edema, vesicles, and weeping in the acute stage and skin thickening (lichenification) in the chronic stage.",
+					"MONDO_SUPERCLASS_human_disease": true,
+					"equivalent_identifiers": [
+						"MEDDRA:10001712",
+						"HP:0001047",
+						"MEDDRA:10003639",
+						"OMIM:603165",
+						"MEDDRA:10001711",
+						"MEDDRA:10012438",
+						"SNOMEDCT:24079001",
+						"MEDDRA:10089311",
+						"UMLS:C0011615",
+						"SNOMEDCT:200775004",
+						"MESH:C566404",
+						"MEDDRA:10014191",
+						"MEDDRA:10014188",
+						"MONDO:0011292",
+						"UMLS:C4280605",
+						"MESH:D003876",
+						"MEDDRA:10012434",
+						"MEDDRA:10003641",
+						"UMLS:C1864155"
+					],
+					"MONDO_SUPERCLASS_disease": true,
+					"MONDO_SUPERCLASS_hereditary_disease": true,
+					"name": "dermatitis, atopic",
+					"MONDO_SUPERCLASS_integumentary_system_disorder": true,
+					"id": "MONDO:0011292",
+					"information_content": 84.2,
+					"MONDO_SUPERCLASS_skin_disorder": true
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5597465",
+				"label": "TNFAIP3",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "TNFAIP3",
+					"locus_group": "protein-coding gene",
+					"name": "TNFAIP3",
+					"description": "A tumor necrosis factor alpha-induced protein 3 that is encoded in the genome of human.",
+					"location": "6q23.3",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:7128",
+					"information_content": 100,
+					"NCBITaxon": "10090",
+					"equivalent_identifiers": [
+						"UMLS:C1420799",
+						"OMIM:191163",
+						"ENSEMBL:ENSP00000237289.4",
+						"HGNC:11896",
+						"ENSEMBL:ENSG00000118503",
+						"ENSEMBL:ENSP00000409845",
+						"ENSEMBL:ENSP00000409845.2",
+						"UniProtKB:P21580",
+						"ENSEMBL:ENSP00000393577.2",
+						"ENSEMBL:ENSP00000401562",
+						"PR:P21580",
+						"ENSEMBL:ENSP00000237289",
+						"ENSEMBL:ENSP00000393577",
+						"UMLS:C0171965",
+						"ENSEMBL:ENSP00000481570",
+						"ENSEMBL:ENSP00000481570.1",
+						"ENSEMBL:ENSP00000401562.2",
+						"NCBIGene:7128"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5597452",
+				"label": "TNF",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "TNF",
+					"locus_group": "protein-coding gene",
+					"name": "TNF",
+					"description": "A tumor necrosis factor that is encoded in the genome of human.",
+					"location": "6p21.33",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:7124",
+					"information_content": 100,
+					"NCBITaxon": "10090",
+					"equivalent_identifiers": [
+						"ENSEMBL:ENSP00000389492.2",
+						"ENSEMBL:ENSG00000232810",
+						"UMLS:C0812246",
+						"ENSEMBL:ENSP00000365290",
+						"ENSEMBL:ENSP00000389490.2",
+						"HGNC:11892",
+						"ENSEMBL:ENSP00000410668",
+						"ENSEMBL:ENSP00000389490",
+						"PR:P01375",
+						"ENSEMBL:ENSP00000365290.3",
+						"OMIM:191160",
+						"UMLS:C1448177",
+						"ENSEMBL:ENSP00000372988",
+						"ENSEMBL:ENSP00000392858.2",
+						"ENSEMBL:ENSP00000392858",
+						"ENSEMBL:ENSP00000410668.2",
+						"NCBIGene:7124",
+						"UniProtKB:Q5STB3",
+						"UniProtKB:P01375",
+						"ENSEMBL:ENSP00000372988.4",
+						"ENSEMBL:ENSP00000398698",
+						"ENSEMBL:ENSP00000389492",
+						"ENSEMBL:ENSP00000398698.2"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5440767",
+				"label": "hidradenitis suppurativa",
+				"type": "Disease",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:DiseaseOrPhenotypicFeature",
+					"biolink:Disease",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing"
+				],
+				"properties": {
+					"MONDO_SUPERCLASS_disease": true,
+					"MONDO_SUPERCLASS_inflammatory_disease": true,
+					"name": "hidradenitis suppurativa",
+					"description": "A chronic suppurative and cicatricial disease of the apocrine glands occurring chiefly in the axillae in women and in the groin and anal regions in men. It is characterized by poral occlusion with secondary bacterial infection, evolving into abscesses which eventually rupture. As the disease becomes chronic, ulcers appear, sinus tracts enlarge, fistulas develop, and fibrosis and scarring become evident.",
+					"MONDO_SUPERCLASS_integumentary_system_disorder": true,
+					"id": "MONDO:0006559",
+					"MONDO_SUPERCLASS_human_disease": true,
+					"information_content": 100,
+					"MONDO_SUPERCLASS_skin_disorder": true,
+					"equivalent_identifiers": [
+						"MEDDRA:10020041",
+						"DOID:2280",
+						"MESH:D017497",
+						"UMLS:C0162836",
+						"NCIT:C128429",
+						"ICD10:L73.2",
+						"MEDDRA:10076650",
+						"MEDDRA:10085165",
+						"EFO:1000710",
+						"HP:0040154",
+						"MONDO:0006559",
+						"SNOMEDCT:59393003"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5519724",
+				"label": "FKBP1A",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "FKBP1A",
+					"locus_group": "protein-coding gene",
+					"name": "FKBP1A",
+					"description": "A peptidyl-prolyl cis-trans isomerase FKBP1A that is encoded in the genome of human.",
+					"location": "20p13",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:2280",
+					"information_content": 100,
+					"NCBITaxon": "9606",
+					"equivalent_identifiers": [
+						"UMLS:C2934980",
+						"UniProtKB:Q0VDC6",
+						"ENSEMBL:ENSP00000503033",
+						"ENSEMBL:ENSP00000383003",
+						"ENSEMBL:ENSP00000503152.1",
+						"ENSEMBL:ENSP00000383003.4",
+						"ENSEMBL:ENSP00000503152",
+						"ENSEMBL:ENSP00000371138",
+						"ENSEMBL:ENSP00000478093.1",
+						"ENSEMBL:ENSP00000503033.1",
+						"ENSEMBL:ENSG00000088832",
+						"OMIM:186945",
+						"ENSEMBL:ENSP00000371143.4",
+						"PR:P62942",
+						"ENSEMBL:ENSP00000371138.3",
+						"ENSEMBL:ENSP00000371143",
+						"UniProtKB:A0A087WTS4",
+						"HGNC:3711",
+						"UniProtKB:P62942",
+						"UMLS:C1414618",
+						"ENSEMBL:ENSP00000478093",
+						"NCBIGene:2280"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5546280",
+				"label": "IL4",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "IL4",
+					"locus_group": "protein-coding gene",
+					"name": "IL4",
+					"description": "An interleukin-4 that is encoded in the genome of human.",
+					"location": "5q31.1",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:3565",
+					"information_content": 100,
+					"NCBITaxon": "9606",
+					"equivalent_identifiers": [
+						"PR:P05112",
+						"UniProtKB:Q5FC01",
+						"ENSEMBL:ENSG00000113520",
+						"UniProtKB:P05112",
+						"UMLS:C1701589",
+						"NCBIGene:3565",
+						"OMIM:147780",
+						"HGNC:6014",
+						"UniProtKB:D4HNR6",
+						"UMLS:C1334119"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5601464",
+				"label": "TYK2",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "TYK2",
+					"locus_group": "protein-coding gene",
+					"name": "TYK2",
+					"description": "A non-receptor tyrosine-protein kinase TYK2 that is encoded in the genome of human.",
+					"location": "19p13.2",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:7297",
+					"information_content": 100,
+					"NCBITaxon": "10090",
+					"equivalent_identifiers": [
+						"ENSEMBL:ENSP00000436175",
+						"ENSEMBL:ENSP00000436175.2",
+						"OMIM:176941",
+						"UniProtKB:P29597",
+						"PR:P29597",
+						"NCBIGene:7297",
+						"UMLS:C1421249",
+						"ENSEMBL:ENSG00000105397",
+						"UMLS:C1448662",
+						"ENSEMBL:ENSP00000431885.1",
+						"ENSEMBL:ENSP00000431885",
+						"HGNC:12440"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5637548",
+				"label": "CD4",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "CD4",
+					"locus_group": "protein-coding gene",
+					"name": "CD4",
+					"description": "A CD4 molecule that is encoded in the genome of human.",
+					"location": "12p13.31",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:920",
+					"information_content": 100,
+					"NCBITaxon": "9606",
+					"equivalent_identifiers": [
+						"ENSEMBL:ENSP00000011653",
+						"UniProtKB:B0AZV7",
+						"PR:P01730",
+						"UniProtKB:B4DT49",
+						"ENSEMBL:ENSG00000010610",
+						"UniProtKB:A0A4Y5UGE4",
+						"HGNC:1678",
+						"UMLS:C1332714",
+						"OMIM:186940",
+						"UMLS:C4048280",
+						"ENSEMBL:ENSP00000011653.4",
+						"NCBIGene:920",
+						"UniProtKB:P01730"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5536559",
+				"label": "NR3C1",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "NR3C1",
+					"locus_group": "protein-coding gene",
+					"name": "NR3C1",
+					"description": "A glucocorticoid receptor that is encoded in the genome of human.",
+					"location": "5q31.3",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:2908",
+					"information_content": 100,
+					"NCBITaxon": "9606",
+					"equivalent_identifiers": [
+						"UMLS:C1370369",
+						"PR:P04150",
+						"UniProtKB:E5KQF6",
+						"NCBIGene:2908",
+						"HGNC:7978",
+						"UniProtKB:F1D8N4",
+						"ENSEMBL:ENSG00000113580",
+						"OMIM:138040",
+						"UniProtKB:P04150",
+						"UMLS:C1334899",
+						"UniProtKB:E5KQF5"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5546423",
+				"label": "IL6",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "IL6",
+					"locus_group": "protein-coding gene",
+					"name": "IL6",
+					"description": "An interleukin-6 that is encoded in the genome of human.",
+					"location": "7p15.3",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:3569",
+					"information_content": 100,
+					"NCBITaxon": "9606",
+					"equivalent_identifiers": [
+						"UniProtKB:B4DNQ5",
+						"ENSEMBL:ENSP00000258743.5",
+						"UMLS:C0878479",
+						"NCBIGene:3569",
+						"ENSEMBL:ENSG00000136244",
+						"ENSEMBL:ENSP00000385675",
+						"UniProtKB:Q75MH2",
+						"UMLS:C1334122",
+						"ENSEMBL:ENSP00000385043.1",
+						"HGNC:6018",
+						"UniProtKB:B5MC21",
+						"ENSEMBL:ENSP00000258743",
+						"PR:P05231",
+						"UniProtKB:B4DVM1",
+						"UMLS:C1527132",
+						"UniProtKB:P05231",
+						"UMLS:C1698754",
+						"ENSEMBL:ENSP00000385675.1",
+						"OMIM:147620",
+						"ENSEMBL:ENSP00000385043"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5543258",
+				"label": "HRH1",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "HRH1",
+					"locus_group": "protein-coding gene",
+					"name": "HRH1",
+					"description": "A histamine H1 receptor that is encoded in the genome of human.",
+					"location": "3p25.3",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:3269",
+					"information_content": 100,
+					"NCBITaxon": "9606",
+					"equivalent_identifiers": [
+						"HGNC:5182",
+						"PR:P35367",
+						"ENSEMBL:ENSP00000406705",
+						"ENSEMBL:ENSG00000196639",
+						"ENSEMBL:ENSP00000397028",
+						"OMIM:600167",
+						"ENSEMBL:ENSP00000406705.2",
+						"ENSEMBL:ENSP00000380247",
+						"UMLS:C1439351",
+						"ENSEMBL:ENSP00000380247.1",
+						"ENSEMBL:ENSP00000397028.2",
+						"NCBIGene:3269",
+						"UniProtKB:P35367"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5642932",
+				"label": "CD81",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "CD81",
+					"locus_group": "protein-coding gene",
+					"name": "CD81",
+					"description": "A CD81 molecule that is encoded in the genome of human.",
+					"location": "11p15.5",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:975",
+					"information_content": 100,
+					"NCBITaxon": "10090",
+					"equivalent_identifiers": [
+						"UMLS:C1413240",
+						"UniProtKB:E9PJK1",
+						"ENSEMBL:ENSP00000431780.1",
+						"OMIM:186845",
+						"ENSEMBL:ENSP00000431780",
+						"ENSEMBL:ENSP00000433178.2",
+						"ENSEMBL:ENSP00000433178",
+						"UniProtKB:P60033",
+						"HGNC:1701",
+						"ENSEMBL:ENSP00000437242.1",
+						"PR:P60033",
+						"ENSEMBL:ENSG00000110651",
+						"ENSEMBL:ENSP00000263645",
+						"ENSEMBL:ENSP00000263645.5",
+						"ENSEMBL:ENSP00000437242",
+						"UMLS:C1452163",
+						"NCBIGene:975"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5587005",
+				"label": "PTGS2",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"name": "PTGS2",
+					"description": "A prostaglandin G/H synthase 2 that is encoded in the genome of human.",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:5743",
+					"information_content": 100,
+					"NCBITaxon": "10116",
+					"equivalent_identifiers": [
+						"ENSEMBL:ENSG00000073756",
+						"UniProtKB:P35354",
+						"ENSEMBL:ENSP00000356438",
+						"ENSEMBL:ENSP00000356438.5",
+						"NCBIGene:5743",
+						"HGNC:9605",
+						"ENSEMBL:ENSP00000506242",
+						"OMIM:600262",
+						"PR:P35354",
+						"UMLS:C1565860",
+						"UMLS:C1367485",
+						"ENSEMBL:ENSP00000506242.1"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5539384",
+				"label": "NR4A1",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "NR4A1",
+					"locus_group": "protein-coding gene",
+					"name": "NR4A1",
+					"description": "A nuclear receptor subfamily 4 immunity group A member 1 that is encoded in the genome of human.",
+					"location": "12q13.13",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:3164",
+					"information_content": 100,
+					"NCBITaxon": "10090",
+					"equivalent_identifiers": [
+						"UniProtKB:Q6ZMM6",
+						"UMLS:C1367453",
+						"NCBIGene:3164",
+						"ENSEMBL:ENSP00000440864",
+						"UniProtKB:F5GXF0",
+						"PR:P22736",
+						"UMLS:C1700524",
+						"UniProtKB:P22736",
+						"HGNC:7980",
+						"OMIM:139139",
+						"ENSEMBL:ENSG00000123358",
+						"ENSEMBL:ENSP00000440864.1"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5548689",
+				"label": "JAK1",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "JAK1",
+					"locus_group": "protein-coding gene",
+					"name": "JAK1",
+					"description": "A tyrosine-protein kinase JAK1 that is encoded in the genome of human.",
+					"location": "1p31.3",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:3716",
+					"information_content": 100,
+					"NCBITaxon": "9606",
+					"equivalent_identifiers": [
+						"ENSEMBL:ENSP00000514240",
+						"ENSEMBL:ENSG00000162434",
+						"ENSEMBL:ENSP00000514291",
+						"PR:P23458",
+						"ENSEMBL:ENSP00000500296",
+						"ENSEMBL:ENSP00000499884",
+						"ENSEMBL:ENSP00000500296.1",
+						"ENSEMBL:ENSP00000514243",
+						"ENSEMBL:ENSP00000343204",
+						"NCBIGene:3716",
+						"ENSEMBL:ENSP00000500485.1",
+						"OMIM:147795",
+						"ENSEMBL:ENSP00000499900",
+						"ENSEMBL:ENSP00000500485",
+						"ENSEMBL:ENSP00000499900.1",
+						"ENSEMBL:ENSP00000499884.1",
+						"ENSEMBL:ENSP00000500841.1",
+						"UniProtKB:Q6P669",
+						"ENSEMBL:ENSP00000514241",
+						"ENSEMBL:ENSP00000514240.1",
+						"ENSEMBL:ENSP00000514243.1",
+						"ENSEMBL:ENSP00000514291.1",
+						"ENSEMBL:ENSP00000514241.1",
+						"ENSEMBL:ENSP00000343204.4",
+						"ENSEMBL:ENSP00000500745",
+						"UMLS:C1334290",
+						"ENSEMBL:ENSP00000500841",
+						"ENSEMBL:ENSP00000500745.2",
+						"UniProtKB:P23458",
+						"HGNC:6190",
+						"UMLS:C1527598",
+						"UniProtKB:A0A8V8TPQ9"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5546635",
+				"label": "IL13",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "IL13",
+					"locus_group": "protein-coding gene",
+					"name": "IL13",
+					"description": "An interleukin-13 that is encoded in the genome of human.",
+					"location": "5q31.1",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:3596",
+					"information_content": 100,
+					"NCBITaxon": "9606",
+					"equivalent_identifiers": [
+						"UniProtKB:P35225",
+						"PR:P35225",
+						"ENSEMBL:ENSP00000304915.3",
+						"ENSEMBL:ENSP00000304915",
+						"UMLS:C1334103",
+						"ENSEMBL:ENSG00000169194",
+						"HGNC:5973",
+						"OMIM:147683",
+						"UMLS:C3658037",
+						"NCBIGene:3596"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5635640",
+				"label": "TNFRSF10A",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "TNFRSF10A",
+					"locus_group": "protein-coding gene",
+					"name": "TNFRSF10A",
+					"description": "A tumor necrosis factor receptor superfamily member 10A that is encoded in the genome of human.",
+					"location": "8p21.3",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:8797",
+					"information_content": 100,
+					"NCBITaxon": "9606",
+					"equivalent_identifiers": [
+						"UMLS:C1504635",
+						"OMIM:603611",
+						"UMLS:C1336643",
+						"ENSEMBL:ENSP00000221132.3",
+						"NCBIGene:8797",
+						"UniProtKB:O00220",
+						"ENSEMBL:ENSG00000104689",
+						"HGNC:11904",
+						"ENSEMBL:ENSP00000221132",
+						"PR:O00220"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5626398",
+				"label": "RELT",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "RELT",
+					"locus_group": "protein-coding gene",
+					"name": "RELT",
+					"description": "A tumor necrosis factor receptor superfamily member 19L that is encoded in the genome of human.",
+					"location": "11q13.4",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:84957",
+					"information_content": 100,
+					"NCBITaxon": "10090",
+					"equivalent_identifiers": [
+						"ENSEMBL:ENSP00000064780",
+						"ENSEMBL:ENSG00000054967",
+						"UMLS:C5202848",
+						"NCBIGene:84957",
+						"UMLS:C1422189",
+						"ENSEMBL:ENSP00000377207.2",
+						"ENSEMBL:ENSP00000377207",
+						"ENSEMBL:ENSP00000064780.2",
+						"HGNC:13764",
+						"OMIM:611211",
+						"PR:Q969Z4",
+						"UniProtKB:Q969Z4"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5598795",
+				"label": "TRAF1",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "TRAF1",
+					"locus_group": "protein-coding gene",
+					"name": "TRAF1",
+					"description": "A TNF receptor-associated factor 1 that is encoded in the genome of human.",
+					"location": "9q33.2",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:7185",
+					"information_content": 100,
+					"NCBITaxon": "9606",
+					"equivalent_identifiers": [
+						"PR:Q13077",
+						"UMLS:C1420887",
+						"UniProtKB:Q13077",
+						"OMIM:601711",
+						"ENSEMBL:ENSG00000056558",
+						"NCBIGene:7185",
+						"UMLS:C4281730",
+						"HGNC:12031"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5572386",
+				"label": "PDE4D",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "PDE4D",
+					"locus_group": "protein-coding gene",
+					"name": "PDE4D",
+					"description": "A 3',5'-cyclic-AMP phosphodiesterase 4D that is encoded in the genome of human.",
+					"location": "5q11.2-q12.1",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:5144",
+					"information_content": 100,
+					"NCBITaxon": "10090",
+					"equivalent_identifiers": [
+						"HGNC:8783",
+						"UMLS:C1418423",
+						"OMIM:600129",
+						"PR:Q08499",
+						"ENSEMBL:ENSG00000113448",
+						"UniProtKB:A0A140VJR0",
+						"UMLS:C1313282",
+						"UniProtKB:Q08499",
+						"NCBIGene:5144"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5571792",
+				"label": "FOXP3",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "FOXP3",
+					"locus_group": "protein-coding gene",
+					"name": "FOXP3",
+					"description": "A forkhead box protein P3 that is encoded in the genome of human.",
+					"location": "Xp11.23",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:50943",
+					"information_content": 100,
+					"NCBITaxon": "10090",
+					"equivalent_identifiers": [
+						"ENSEMBL:ENSG00000049768",
+						"UniProtKB:Q9BZS1",
+						"HGNC:6106",
+						"UMLS:C1504797",
+						"NCBIGene:50943",
+						"UMLS:C1416467",
+						"PR:Q9BZS1",
+						"OMIM:300292"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5598799",
+				"label": "TRAF2",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "TRAF2",
+					"locus_group": "protein-coding gene",
+					"name": "TRAF2",
+					"description": "A TNF receptor-associated factor 2 that is encoded in the genome of human.",
+					"location": "9q34.3",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:7186",
+					"information_content": 100,
+					"NCBITaxon": "10090",
+					"equivalent_identifiers": [
+						"UMLS:C4316866",
+						"OMIM:601895",
+						"PR:Q12933",
+						"NCBIGene:7186",
+						"UMLS:C1366777",
+						"UniProtKB:Q12933",
+						"ENSEMBL:ENSG00000127191",
+						"HGNC:12032"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5635483",
+				"label": "TNFSF9",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "TNFSF9",
+					"locus_group": "protein-coding gene",
+					"name": "TNFSF9",
+					"description": "A tumor necrosis factor ligand superfamily member 9 that is encoded in the genome of human.",
+					"location": "19p13.3",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:8744",
+					"information_content": 100,
+					"NCBITaxon": "9606",
+					"equivalent_identifiers": [
+						"OMIM:606182",
+						"UMLS:C1420821",
+						"ENSEMBL:ENSG00000125657",
+						"ENSEMBL:ENSP00000245817.2",
+						"PR:P41273",
+						"ENSEMBL:ENSP00000245817",
+						"UMLS:C1676759",
+						"UniProtKB:P41273",
+						"UniProtKB:A0A0U5J8I0",
+						"HGNC:11939",
+						"NCBIGene:8744"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5540924",
+				"label": "BIRC3",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "BIRC3",
+					"locus_group": "protein-coding gene",
+					"name": "BIRC3",
+					"description": "A baculoviral IAP repeat-containing protein 3 that is encoded in the genome of human.",
+					"location": "11q22.2",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:330",
+					"information_content": 100,
+					"NCBITaxon": "10090",
+					"equivalent_identifiers": [
+						"ENSEMBL:ENSP00000263464.4",
+						"ENSEMBL:ENSP00000432907.1",
+						"HGNC:591",
+						"ENSEMBL:ENSP00000501119.1",
+						"PR:Q13489",
+						"UniProtKB:Q13489",
+						"ENSEMBL:ENSP00000432907",
+						"ENSEMBL:ENSP00000263464",
+						"UMLS:C1332415",
+						"NCBIGene:330",
+						"OMIM:601721",
+						"ENSEMBL:ENSP00000501119",
+						"UMLS:C0763658",
+						"ENSEMBL:ENSG00000023445"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"id": "5588248",
+				"label": "VSIR",
+				"type": "Gene",
+				"labels": [
+					"biolink:ThingWithTaxon",
+					"biolink:ChemicalEntityOrGeneOrGeneProduct",
+					"biolink:PhysicalEssence",
+					"biolink:PhysicalEssenceOrOccurrent",
+					"biolink:OntologyClass",
+					"biolink:MacromolecularMachineMixin",
+					"biolink:GeneProductMixin",
+					"biolink:Polypeptide",
+					"biolink:Gene",
+					"biolink:GenomicEntity",
+					"biolink:GeneOrGeneProduct",
+					"biolink:ChemicalEntityOrProteinOrPolypeptide",
+					"biolink:BiologicalEntity",
+					"biolink:NamedThing",
+					"biolink:Protein"
+				],
+				"properties": {
+					"symbol": "VSIR",
+					"locus_group": "protein-coding gene",
+					"name": "VSIR",
+					"description": "A V-type immunoglobulin domain-containing suppressor of T-cell activation that is encoded in the genome of human.",
+					"location": "10q22.1",
+					"taxon": "NCBITaxon:9606",
+					"id": "NCBIGene:64115",
+					"information_content": 100,
+					"equivalent_identifiers": [
+						"ENSEMBL:ENSP00000378409.3",
+						"NCBIGene:64115",
+						"ENSEMBL:ENSP00000378409",
+						"UMLS:C1824302",
+						"UniProtKB:Q9H7M9",
+						"HGNC:30085",
+						"UMLS:C4049985",
+						"PR:Q9H7M9",
+						"ENSEMBL:ENSG00000107738",
+						"OMIM:615608"
+					]
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5518069",
+				"target": "5600278",
+				"label": "biolink:affects",
+				"properties": {
+					"agent_type": "text_mining_agent",
+					"object_direction_qualifier": "increased",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:text-mining-provider-targeted",
+					"qualified_predicate": "biolink:causes",
+					"sentences": "The cells were then incubated for 7 days in vitro with a major histocompatibility complex (MHC) class I peptide derived from neu, in the presence or absence of an agonistic anti-OX40 monoclonal antibody, before CD8+ T cells were isolated for use in ACT therapy.|NA",
+					"tmkp_ids": [
+						"tmkp:382d75342b2c3b3c293fe32fa193d98d2f429c3eec0957ae40a693dffbf10a04"
+					],
+					"tmkp_confidence_score": 0.9165799,
+					"publications": ["PMID:29313971"],
+					"object_aspect_qualifier": "activity_or_abundance",
+					"source": "ERBB2",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5546396",
+				"target": "5518069",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0007",
+					"publications": ["PMID:28514442"],
+					"source": "IL4R",
+					"target": "ERBB2"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5546396",
+				"target": "5445223",
+				"label": "biolink:target_for",
+				"properties": {
+					"agent_type": "manual_agent",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:drugmechdb",
+					"drugmechdb_path_id": ["DB12159_MESH_D003876_1"],
+					"source": "IL4R",
+					"target": "dermatitis, atopic"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5600278",
+				"target": "5597465",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "237",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "83",
+					"Textmining": "203",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "TNFRSF4",
+					"target": "TNFAIP3"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5597465",
+				"target": "5597452",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:2289",
+					"publications": ["PMID:30561431"],
+					"source": "TNFAIP3",
+					"target": "TNF"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5597452",
+				"target": "5440767",
+				"label": "biolink:target_for",
+				"properties": {
+					"agent_type": "manual_agent",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:drugmechdb",
+					"drugmechdb_path_id": ["DB00051_MESH_D017497_1"],
+					"source": "TNF",
+					"target": "hidradenitis suppurativa"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5518069",
+				"target": "5519724",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0112",
+					"publications": ["PMID:31980649"],
+					"source": "ERBB2",
+					"target": "FKBP1A"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5519724",
+				"target": "5445223",
+				"label": "biolink:target_for",
+				"properties": {
+					"agent_type": "manual_agent",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:drugmechdb",
+					"drugmechdb_path_id": ["DB00864_MESH_D003876_1"],
+					"source": "FKBP1A",
+					"target": "dermatitis, atopic"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5546280",
+				"target": "5600278",
+				"label": "biolink:affects",
+				"properties": {
+					"agent_type": "text_mining_agent",
+					"object_direction_qualifier": "increased",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:text-mining-provider-targeted",
+					"qualified_predicate": "biolink:causes",
+					"sentences": "IL-4 was the primary driver of Th2 CD4 T cell differentiation as IL-4 blockade augmented the efficacy of combined anti-OX40/anti-CTLA-4 therapy in the TRAMP-C1 model.|NA",
+					"tmkp_ids": [
+						"tmkp:4fb050f2fbf762e23facd2bd47b78ace5dd88adc8a006076957ccbaa0b4198c5"
+					],
+					"tmkp_confidence_score": 0.9892023,
+					"publications": ["PMC:4329814"],
+					"object_aspect_qualifier": "activity_or_abundance",
+					"source": "IL4",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5546396",
+				"target": "5546280",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0099",
+					"publications": ["PMID:23597562"],
+					"source": "IL4R",
+					"target": "IL4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5546280",
+				"target": "5546396",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0114",
+					"publications": ["PMID:10219247"],
+					"source": "IL4",
+					"target": "IL4R"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5546280",
+				"target": "5600278",
+				"label": "biolink:affects",
+				"properties": {
+					"agent_type": "text_mining_agent",
+					"object_direction_qualifier": "decreased",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:text-mining-provider-targeted",
+					"qualified_predicate": "biolink:causes",
+					"sentences": "However, IL-4 blockade delivered with combination anti-OX40/anti-CTLA-4 therapy led to a profound increase in long-term survival.|NA|(C) IL-4 blockade with combined anti-OX40/anti-CTLA-4 mAb significantly enhances tumor regression and survival in the presence of a large tumor burden.|NA|IL-4 blockade in conjunction with either anti-OX40 or anti-CTLA-4 alone had no effect.|NA",
+					"tmkp_ids": [
+						"tmkp:d044ec5c5ac4f353394d4db20d7379fd4acc57b87eca16fed946cedfcc87ebd5",
+						"tmkp:f5c1d3714b2208cb571ee321aec427ae7cb20d396f0bd3121572d65c0619b822",
+						"tmkp:6984837cfbbb55061eb711c0840b9b74b4899be1c033efc0235386854824e80c"
+					],
+					"tmkp_confidence_score": 0.9800721833333333,
+					"publications": ["PMC:4091104", "PMC:4091104", "PMC:4091104"],
+					"object_aspect_qualifier": "activity_or_abundance",
+					"source": "IL4",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5601464",
+				"target": "5600278",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "157",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "52",
+					"Coexpression": "59",
+					"Textmining": "131",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "TYK2",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5546396",
+				"target": "5601464",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0007",
+					"publications": ["PMID:28514442"],
+					"source": "IL4R",
+					"target": "TYK2"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5637548",
+				"target": "5600278",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "872",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "109",
+					"Textmining": "863",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "CD4",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5536559",
+				"target": "5637548",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0006",
+					"publications": ["PMID:16888650"],
+					"source": "NR3C1",
+					"target": "CD4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5536559",
+				"target": "5445223",
+				"label": "biolink:target_for",
+				"properties": {
+					"agent_type": "manual_agent",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:drugmechdb",
+					"drugmechdb_path_id": [
+						"DB00288_MESH_D003876_1",
+						"DB11750_MESH_D003876_2",
+						"DB11750_MESH_D003876_1",
+						"DB00240_MESH_D003876_1",
+						"DB00443_MESH_D003876_1",
+						"DB13158_MESH_D003876_1",
+						"DB00838_MESH_D003876_1",
+						"DB01380_MESH_D003876_1",
+						"DB01260_MESH_D003876_1",
+						"DB00547_MESH_D003876_1",
+						"DB01234_MESH_D003876_1",
+						"DB00223_MESH_D003876_1",
+						"DB00846_MESH_D003876_1",
+						"DB00663_MESH_D003876_1",
+						"DB00591_MESH_D003876_1",
+						"DB010473_MESH_D003876_1",
+						"DB00588_MESH_D003876_1",
+						"DB06786_MESH_D003876_1",
+						"DB00741_MESH_D003876_1",
+						"DB00959_MESH_D003876_1",
+						"DB14512_MESH_D003876_1",
+						"DB01130_MESH_D003876_1",
+						"DB00860_MESH_D003876_1",
+						"DB00635_MESH_D003876_1",
+						"DB00620_MESH_D003876_1",
+						"DB00596_MESH_D003876_1"
+					],
+					"source": "NR3C1",
+					"target": "dermatitis, atopic"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5546423",
+				"target": "5600278",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "703",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "70",
+					"Textmining": "693",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "45",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "IL6",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5543258",
+				"target": "5546423",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0813",
+					"publications": ["PMID:25241761"],
+					"source": "HRH1",
+					"target": "IL6"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5543258",
+				"target": "5445223",
+				"label": "biolink:target_for",
+				"properties": {
+					"agent_type": "manual_agent",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:drugmechdb",
+					"drugmechdb_path_id": [
+						"DB07615_MESH_D003876_1",
+						"DB01142_MESH_D003876_1",
+						"DB00557_MESH_D003876_1"
+					],
+					"source": "HRH1",
+					"target": "dermatitis, atopic"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5642932",
+				"target": "5600278",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "160",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "44",
+					"Textmining": "158",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "CD81",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5642932",
+				"target": "5543258",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0112",
+					"publications": ["PMID:28298427"],
+					"source": "CD81",
+					"target": "HRH1"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5587005",
+				"target": "5600278",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "178",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "45",
+					"Textmining": "175",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "PTGS2",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5587005",
+				"target": "5587005",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0007",
+					"publications": ["PMID:16606823"],
+					"source": "PTGS2",
+					"target": "PTGS2"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5587005",
+				"target": "5445223",
+				"label": "biolink:target_for",
+				"properties": {
+					"agent_type": "manual_agent",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:drugmechdb",
+					"drugmechdb_path_id": ["DB07615_MESH_D003876_2"],
+					"source": "PTGS2",
+					"target": "dermatitis, atopic"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5539384",
+				"target": "5600278",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "269",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "42",
+					"Textmining": "269",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "NR4A1",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5539384",
+				"target": "5536559",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0018",
+					"publications": ["PMID:21900206"],
+					"source": "NR4A1",
+					"target": "NR3C1"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5548689",
+				"target": "5600278",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "288",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "52",
+					"Coexpression": "48",
+					"Textmining": "275",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "JAK1",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5546396",
+				"target": "5548689",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0007",
+					"publications": ["PMID:28514442"],
+					"source": "IL4R",
+					"target": "JAK1"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5546635",
+				"target": "5600278",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "582",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "63",
+					"Textmining": "542",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "106",
+					"source": "IL13",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5546635",
+				"target": "5546396",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0007",
+					"publications": ["PMID:33961781"],
+					"source": "IL13",
+					"target": "IL4R"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5635640",
+				"target": "5600278",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "499",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "42",
+					"Textmining": "499",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "TNFRSF10A",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5635640",
+				"target": "5546396",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0007",
+					"publications": ["PMID:28514442"],
+					"source": "TNFRSF10A",
+					"target": "IL4R"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5626398",
+				"target": "5600278",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "593",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "72",
+					"Textmining": "576",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "51",
+					"source": "RELT",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5546396",
+				"target": "5626398",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0007",
+					"publications": ["PMID:28514442"],
+					"source": "IL4R",
+					"target": "RELT"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5600278",
+				"target": "5626398",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "593",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "72",
+					"Textmining": "576",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "51",
+					"source": "TNFRSF4",
+					"target": "RELT"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5600278",
+				"target": "5642932",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "160",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "44",
+					"Textmining": "158",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "TNFRSF4",
+					"target": "CD81"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5600278",
+				"target": "5601464",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "157",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "52",
+					"Coexpression": "59",
+					"Textmining": "131",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "TNFRSF4",
+					"target": "TYK2"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5600278",
+				"target": "5587005",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "178",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "45",
+					"Textmining": "175",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "TNFRSF4",
+					"target": "PTGS2"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5600278",
+				"target": "5546635",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "582",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "63",
+					"Textmining": "542",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "106",
+					"source": "TNFRSF4",
+					"target": "IL13"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5600278",
+				"target": "5637548",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "872",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "109",
+					"Textmining": "863",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "TNFRSF4",
+					"target": "CD4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5600278",
+				"target": "5546423",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "703",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "70",
+					"Textmining": "693",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "45",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "TNFRSF4",
+					"target": "IL6"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5600278",
+				"target": "5635640",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "499",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "42",
+					"Textmining": "499",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "TNFRSF4",
+					"target": "TNFRSF10A"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5600278",
+				"target": "5539384",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "269",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "42",
+					"Textmining": "269",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "TNFRSF4",
+					"target": "NR4A1"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5600278",
+				"target": "5548689",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "288",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "52",
+					"Coexpression": "48",
+					"Textmining": "275",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "TNFRSF4",
+					"target": "JAK1"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5598795",
+				"target": "5600278",
+				"label": "biolink:genetically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:hetionet",
+					"aggregator_knowledge_source": ["infores:hetionet"],
+					"source": "TRAF1",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5572386",
+				"target": "5598795",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0397|MI:1112",
+					"publications": ["PMID:25416956"],
+					"source": "PDE4D",
+					"target": "TRAF1"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5572386",
+				"target": "5445223",
+				"label": "biolink:target_for",
+				"properties": {
+					"agent_type": "manual_agent",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:drugmechdb",
+					"drugmechdb_path_id": ["DB05219_MESH_D003876_1"],
+					"source": "PDE4D",
+					"target": "dermatitis, atopic"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5598795",
+				"target": "5572386",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:1356",
+					"publications": ["PMID:25416956"],
+					"source": "TRAF1",
+					"target": "PDE4D"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5597465",
+				"target": "5600278",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "237",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "83",
+					"Textmining": "203",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "TNFAIP3",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5600278",
+				"target": "5571792",
+				"label": "biolink:affects",
+				"properties": {
+					"agent_type": "text_mining_agent",
+					"object_direction_qualifier": "decreased",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:text-mining-provider-targeted",
+					"qualified_predicate": "biolink:causes",
+					"sentences": "Our results have demonstrated that i) These 11 shared Treg signature genes were the same as 11 genes shared by Treg from four tissues shown in  Figure 1A-A , suggesting that the 11 genes are the Treg essential suppressive function-required regardless of tissue environments; ii) nine statistically significant Foxp3-induced genes are different from these 11 core Treg signature genes except Foxp3, suggesting that nine out of 11 core Treg signature genes are not induced by Foxp3 but contribute to Treg suppressive function; iii) 20 thymic Treg cluster genes share only four genes with 11 Treg signature genes shared by Treg from four peripheral tissues and reported 50 Foxp3-induced genes such as Foxp3, TNFRSF4 (CD134, OX40), CTLA4 and TNFRSF18 (GITR, CD357); iv) seven out of 11 Treg core genes shared by Treg from four tissues and 46 out of reported 50 Foxp3-induced genes do not share with 20 thymic Treg cluster genes, suggesting that those 53 genes (93%) out of 57 genes ( Figure 3A-A ) are the peripheral Treg genes expressed from Foxp3 induction in peripheral tissues or signaling pathways from peripheral tissue environments but not expressed in thymic Treg; and v) 16 out of 20 (80%) thymic Treg cluster genes are not shared with tissue Treg, suggesting that thymic Treg lose 80% of thymic cluster genes when they adapt tissue environments.|NA",
+					"tmkp_ids": [
+						"tmkp:b954d52a5224fb662fa4c66a647e191cb9cddbd0dea7d05689807acd157fbf51"
+					],
+					"tmkp_confidence_score": 0.96485394,
+					"publications": ["PMC:7892453"],
+					"object_aspect_qualifier": "activity_or_abundance",
+					"source": "TNFRSF4",
+					"target": "FOXP3"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5571792",
+				"target": "5597452",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0006",
+					"publications": ["PMID:25712342"],
+					"source": "FOXP3",
+					"target": "TNF"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5571792",
+				"target": "5600278",
+				"label": "biolink:affects",
+				"properties": {
+					"agent_type": "text_mining_agent",
+					"object_direction_qualifier": "decreased",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:text-mining-provider-targeted",
+					"qualified_predicate": "biolink:causes",
+					"sentences": "Our results have demonstrated that i) These 11 shared Treg signature genes were the same as 11 genes shared by Treg from four tissues shown in  Figure 1A-A , suggesting that the 11 genes are the Treg essential suppressive function-required regardless of tissue environments; ii) nine statistically significant Foxp3-induced genes are different from these 11 core Treg signature genes except Foxp3, suggesting that nine out of 11 core Treg signature genes are not induced by Foxp3 but contribute to Treg suppressive function; iii) 20 thymic Treg cluster genes share only four genes with 11 Treg signature genes shared by Treg from four peripheral tissues and reported 50 Foxp3-induced genes such as Foxp3, TNFRSF4 (CD134, OX40), CTLA4 and TNFRSF18 (GITR, CD357); iv) seven out of 11 Treg core genes shared by Treg from four tissues and 46 out of reported 50 Foxp3-induced genes do not share with 20 thymic Treg cluster genes, suggesting that those 53 genes (93%) out of 57 genes ( Figure 3A-A ) are the peripheral Treg genes expressed from Foxp3 induction in peripheral tissues or signaling pathways from peripheral tissue environments but not expressed in thymic Treg; and v) 16 out of 20 (80%) thymic Treg cluster genes are not shared with tissue Treg, suggesting that thymic Treg lose 80% of thymic cluster genes when they adapt tissue environments.|NA|Using CD4+ T cells from Foxp3-GFP mice, we found that neither anti-4-1BB or anti-OX40 inhibited TGF-?-dependent Treg conversion (Fig. 4a).|NA|After the cells were blocked with anti-CD16/32 clone 93 1:300 (eBioscience), they were stained with PBS/2% FCS with the following fluorochrome-coupled antibodies purchased from either eBioscience, BD Pharmingen or BioLegend: anti-B220 clone RA3-6B2 1:400, anti-CD4 clone GK1.5 1:400, anti-CD8 clone 53-6.7 1:400, anti-CD19 clone 1D3 1:400, anti-CD25 clone PC61.5 1:400, anti-CD44 clone IM7 1:400, anti-CD45RB C363.16A 1:400, anti-CD62L clone MEL.14 1:400, anti-CD86 clone GL1 1:400, anti-CTLA4 (CD152) clone UC10-4B9 1:300, anti-Foxp3 clone FJK-16s 1:300, anti-IFN-? clone XMG1.2 1:300, anti-MHCII clone M5/114.15.2 1:400, anti-OX40 (CD134) clone OX86 1:300, anti-PD-1 (CD279) clone J43 1:300, and anti-TIGIT clone GIGD7 1:300.|NA",
+					"tmkp_ids": [
+						"tmkp:57de654d3b03fc3a4a02293005edabda73f4616b0a5a5bfdba30ec192386e7a3",
+						"tmkp:7aec7e10e6b6d7f4b345cfa23578ca3c05712b9cbb628a4e8b4e4471fbce8003",
+						"tmkp:a18e3335c7a01250b582b4ca605628e657cd65bebb516ac3998823c61807a74e"
+					],
+					"tmkp_confidence_score": 0.9324937933333333,
+					"publications": ["PMC:7892453", "PMC:3919703", "PMC:6538646"],
+					"object_aspect_qualifier": "activity_or_abundance",
+					"source": "FOXP3",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5600278",
+				"target": "5598799",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0114",
+					"publications": ["PMID:10518213"],
+					"source": "TNFRSF4",
+					"target": "TRAF2"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5598799",
+				"target": "5597452",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:2289",
+					"publications": ["PMID:30561431"],
+					"source": "TRAF2",
+					"target": "TNF"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5598799",
+				"target": "5600278",
+				"label": "biolink:genetically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:hetionet",
+					"aggregator_knowledge_source": ["infores:hetionet"],
+					"source": "TRAF2",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5600278",
+				"target": "5635483",
+				"label": "biolink:affects",
+				"properties": {
+					"agent_type": "text_mining_agent",
+					"object_direction_qualifier": "decreased",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:text-mining-provider-targeted",
+					"qualified_predicate": "biolink:causes",
+					"sentences": "Firstly, we compared immune checkpoint gene enrichment in different subgroups, and found that multiple genes were enriched in the low-risk group and negatively related to risk score (BTLA, TNFRSF14,LAIR1,CD244,LAG3,ICOS,CD40LG,CTLA4,CD48,CD28,CD200R1,HAVCR2,ADORA2A,CD80,PDCD1,CD160,IDO2,PDCD1LG2,TNFSF18,BTNL2,CD70,TNFRSF8,CD27,TNFRSF25,VSIR,TNFRSF4,CD40,TIGIT,CD274,CD86,CD44), only CD276 and TNFSF9 were enriched in the low-risk group and positively related to risk score, while PD-L1 (CD274) was not differentially expressed in the high- and low-risk groups (Figures 7A,B).|NA",
+					"tmkp_ids": [
+						"tmkp:e0805f837a090cd1a06358b2da2d6d68a80f302d77762f53c9a3190401b3ba5e"
+					],
+					"tmkp_confidence_score": 0.9797416,
+					"publications": ["PMC:9157820"],
+					"object_aspect_qualifier": "activity_or_abundance",
+					"source": "TNFRSF4",
+					"target": "TNFSF9"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5597452",
+				"target": "5635483",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0007",
+					"publications": ["PMID:28514442"],
+					"source": "TNF",
+					"target": "TNFSF9"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5635483",
+				"target": "5600278",
+				"label": "biolink:affects",
+				"properties": {
+					"agent_type": "text_mining_agent",
+					"object_direction_qualifier": "decreased",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:text-mining-provider-targeted",
+					"qualified_predicate": "biolink:causes",
+					"sentences": "Among these DEGs, 11 genes (NGFR, TNFSF11, PDCD1LG2, CD274, TNFRSF1A, TNFRSF11B, TMIGD2, FAS, TNFRSF10D, TNFSF13 and CD86) were down-regulated while 29 genes (TNFRSF17, TNFRSF13B, CD276, TNFRSF12A, LTBR, TNFSF18, EDAR, TNFRSF14, ICOSLG, RELT, CD28, ICOS, LTA, TNFRSF21, TNFRSF10C, VTCN1, TNFRSF11A, LTB, EDA2RC, TLA4, TNFSF9, TNFRSF25, PDCD1, CD70, TNFSF4, TNFRSF9, TNFRSF18, TNFSF15 and TNFRSF4) were up-regulated in tumor tissues (Fig.?2A and Additional file 1: Table S1).|NA",
+					"tmkp_ids": [
+						"tmkp:42d6ee9f28302d35fa91a5b2b17cd7c4ea7153fd6d8335a6d8cf724cb64cada1"
+					],
+					"tmkp_confidence_score": 0.9809686,
+					"publications": ["PMC:8864933"],
+					"object_aspect_qualifier": "activity_or_abundance",
+					"source": "TNFSF9",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5600278",
+				"target": "5635483",
+				"label": "biolink:physically_interacts_with",
+				"properties": {
+					"agent_type": "manual_agent",
+					"Combined_score": "980",
+					"knowledge_level": "knowledge_assertion",
+					"Textmining_transferred": "0",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Database": "0",
+					"Textmining": "980",
+					"Homology": "0",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"source": "TNFRSF4",
+					"target": "TNFSF9"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5635483",
+				"target": "5600278",
+				"label": "biolink:physically_interacts_with",
+				"properties": {
+					"agent_type": "manual_agent",
+					"Combined_score": "980",
+					"knowledge_level": "knowledge_assertion",
+					"Textmining_transferred": "0",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Database": "0",
+					"Textmining": "980",
+					"Homology": "0",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"source": "TNFSF9",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5597452",
+				"target": "5598799",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0007",
+					"publications": ["PMID:12887920"],
+					"source": "TNF",
+					"target": "TRAF2"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5600278",
+				"target": "5540924",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "174",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "74",
+					"Textmining": "145",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "TNFRSF4",
+					"target": "BIRC3"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5597452",
+				"target": "5540924",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0007",
+					"publications": ["PMID:21822306"],
+					"source": "TNF",
+					"target": "BIRC3"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5540924",
+				"target": "5600278",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "174",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "74",
+					"Textmining": "145",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "0",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "BIRC3",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5600278",
+				"target": "5588248",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "602",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "87",
+					"Textmining": "507",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "187",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "TNFRSF4",
+					"target": "VSIR"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5597452",
+				"target": "5588248",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0397|MI:1112|MI:1356",
+					"publications": ["PMID:32296183"],
+					"source": "TNF",
+					"target": "VSIR"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5588248",
+				"target": "5600278",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "602",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "87",
+					"Textmining": "507",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "187",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "VSIR",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5597452",
+				"target": "5597465",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0007",
+					"publications": ["PMID:23032186"],
+					"source": "TNF",
+					"target": "TNFAIP3"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5597452",
+				"target": "5600278",
+				"label": "biolink:affects",
+				"properties": {
+					"agent_type": "text_mining_agent",
+					"object_direction_qualifier": "increased",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:text-mining-provider-targeted",
+					"qualified_predicate": "biolink:causes",
+					"sentences": "Tumor necrosis factor receptor superfamily member OX40 is a key costimulator in the activation of T cells.|NA|Consistent with this, an agonist antibody targeting the tumor necrosis factor receptor superfamily member OX40 (TNFRSF4) enhanced effector T cell differentiation and increased the number of interferon ??producing T cells, thus limiting virus replication in the salivary glands.|NA|We show that Tregs protect LSCs from elimination by CD8+ CTLs and that this process can be successfully inhibited by activation of tumor necrosis factor receptor 4 (Tnfrsf4) signaling on Tregs.|NA|The tumor necrosis factor receptor OX40, activated by its cognate ligand OX40L, functions as a T-cell costimulatory molecule.|NA|Consistent with this, an agonist antibody targeting the tumor necrosis factor receptor superfamily member OX40 (TNFRSF4) enhanced effector T cell differentiation and increased the number of interferon gamma-producing T cells, thus limiting virus replication in the salivary glands.|NA",
+					"tmkp_ids": [
+						"tmkp:313d4503eecc4d1d3f30e1497df0557426c16f1b5db98e799652e1bbb7ffbf3b",
+						"tmkp:60dbf67bb956e11d8362a3875c9444215915206b4bf59498d1233a5e51bb4587",
+						"tmkp:cbdd7265de39c205b3a5037fcfe9a8e7222feb2565152eb0c2d18451f9367b51",
+						"tmkp:1b592f87fc7d19491aef3fdddf27add94c8aa6e01b66c796843b36bdf476925c",
+						"tmkp:565079677ad2723dd456923608f18078a4f328924bdc0fc3dd6d536213eb94ec"
+					],
+					"tmkp_confidence_score": 0.9410085020000001,
+					"publications": [
+						"PMC:5359925",
+						"PMC:2118568",
+						"PMC:8675189",
+						"PMC:5681999",
+						"PMID:17485516"
+					],
+					"object_aspect_qualifier": "activity_or_abundance",
+					"source": "TNF",
+					"target": "TNFRSF4"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5597452",
+				"target": "5597452",
+				"label": "biolink:directly_physically_interacts_with",
+				"properties": {
+					"agent_type": "not_provided",
+					"knowledge_level": "not_provided",
+					"primary_knowledge_source": "infores:intact",
+					"detection_method": "MI:0071",
+					"publications": ["PMID:19838188"],
+					"source": "TNF",
+					"target": "TNF"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5600278",
+				"target": "5597452",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "797",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "162",
+					"Textmining": "766",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "51",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "TNFRSF4",
+					"target": "TNF"
+				}
+			}
+		},
+		{
+			"data": {
+				"source": "5597452",
+				"target": "5600278",
+				"label": "biolink:coexpressed_with",
+				"properties": {
+					"Combined_score": "797",
+					"knowledge_level": "knowledge_assertion",
+					"primary_knowledge_source": "infores:string",
+					"Database_transferred": "0",
+					"Experiments_transferred": "0",
+					"Coexpression": "162",
+					"Textmining": "766",
+					"Experiments": "0",
+					"species_context_qualifier": "NCBITaxon:9606",
+					"agent_type": "manual_agent",
+					"Textmining_transferred": "51",
+					"Database": "0",
+					"Cooccurance": "0",
+					"Coexpression_transferred": "0",
+					"source": "TNF",
+					"target": "TNFRSF4"
+				}
+			}
+		}
+	]
+}

@@ -1,0 +1,4954 @@
+{
+	"target_details": {
+		"ensembl_id": "ENSG00000282608",
+		"hgnc_id": "HGNC:268",
+		"uniprot_id": "P0DMS8"
+	},
+	"about_target": {
+		"introduction": {
+			"Accession": "P0DMS8",
+			"Protein": "Adenosine receptor A3",
+			"Gene": "ADORA3",
+			"Status": "UniProtKB reviewed (Swiss-Prot)",
+			"Organism": "Homo sapiens",
+			"Protein Existence": "1: Evidence at protein level",
+			"Annotation Score": 5
+		},
+		"summary_and_characteristics": {
+			"Target ID": "ENSG00000282608",
+			"Function Descriptions": "[Isoform 2]: Receptor for adenosine. The activity of this receptor is mediated by G proteins which inhibits adenylyl cyclase (PubMed:8234299). .",
+			"Synonyms": {
+				"UniProt Synonyms": ["Adenosine receptor A3", "ADORA3"]
+			}
+		},
+		"taxonomy": {
+			"Taxonomic Identifier": 9606,
+			"Organism": "Homo sapiens (Human)",
+			"Taxonomic Lineage": [
+				"Eukaryota",
+				"Metazoa",
+				"Chordata",
+				"Craniata",
+				"Vertebrata",
+				"Euteleostomi",
+				"Mammalia",
+				"Eutheria",
+				"Euarchontoglires",
+				"Primates",
+				"Haplorrhini",
+				"Catarrhini",
+				"Hominidae",
+				"Homo"
+			]
+		}
+	},
+	"target_biology": {
+		"ontology": [
+			{
+				"GO ID": "GO:0030336",
+				"Name": "negative regulation of cell migration",
+				"Aspect": "Biological Process",
+				"Evidence": "IMP",
+				"Gene Product": "P0DMS8",
+				"Source": "PMID:27886186",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0030336"
+			},
+			{
+				"GO ID": "GO:0007165",
+				"Name": "signal transduction",
+				"Aspect": "Biological Process",
+				"Evidence": "TAS",
+				"Gene Product": "P0DMS8",
+				"Source": "PMID:9380026",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0007165"
+			},
+			{
+				"GO ID": "GO:0008016",
+				"Name": "regulation of heart contraction",
+				"Aspect": "Biological Process",
+				"Evidence": "TAS",
+				"Gene Product": "P0DMS8",
+				"Source": "PMID:9837869",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0008016"
+			},
+			{
+				"GO ID": "GO:0032088",
+				"Name": "negative regulation of NF-kappaB transcription factor activity",
+				"Aspect": "Biological Process",
+				"Evidence": "IMP",
+				"Gene Product": "P0DMS8",
+				"Source": "PMID:27886186",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0032088"
+			},
+			{
+				"GO ID": "GO:0005886",
+				"Name": "plasma membrane",
+				"Aspect": "Cellular Component",
+				"Evidence": "IBA",
+				"Gene Product": "P0DMS8",
+				"Source": "GO_REF:0000033",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0005886"
+			},
+			{
+				"GO ID": "GO:0001609",
+				"Name": "G protein-coupled adenosine receptor activity",
+				"Aspect": "Molecular Function",
+				"Evidence": "IBA",
+				"Gene Product": "P0DMS8",
+				"Source": "GO_REF:0000033",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0001609"
+			},
+			{
+				"GO ID": "GO:0005886",
+				"Name": "plasma membrane",
+				"Aspect": "Cellular Component",
+				"Evidence": "TAS",
+				"Gene Product": "P0DMS8",
+				"Source": "Reactome:R-HSA-380073",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0005886"
+			},
+			{
+				"GO ID": "GO:0042734",
+				"Name": "presynaptic membrane",
+				"Aspect": "Cellular Component",
+				"Evidence": "IEA",
+				"Gene Product": "P0DMS8",
+				"Source": "GO_REF:0000107",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0042734"
+			},
+			{
+				"GO ID": "GO:0014061",
+				"Name": "regulation of norepinephrine secretion",
+				"Aspect": "Biological Process",
+				"Evidence": "IEA",
+				"Gene Product": "P0DMS8",
+				"Source": "GO_REF:0000107",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0014061"
+			},
+			{
+				"GO ID": "GO:0099171",
+				"Name": "presynaptic modulation of chemical synaptic transmission",
+				"Aspect": "Biological Process",
+				"Evidence": "IEA",
+				"Gene Product": "P0DMS8",
+				"Source": "GO_REF:0000107",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0099171"
+			},
+			{
+				"GO ID": "GO:0005886",
+				"Name": "plasma membrane",
+				"Aspect": "Cellular Component",
+				"Evidence": "TAS",
+				"Gene Product": "P0DMS8",
+				"Source": "Reactome:R-HSA-749456",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0005886"
+			},
+			{
+				"GO ID": "GO:0045202",
+				"Name": "synapse",
+				"Aspect": "Cellular Component",
+				"Evidence": "IBA",
+				"Gene Product": "P0DMS8",
+				"Source": "GO_REF:0000033",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0045202"
+			},
+			{
+				"GO ID": "GO:0098685",
+				"Name": "Schaffer collateral - CA1 synapse",
+				"Aspect": "Cellular Component",
+				"Evidence": "IEA",
+				"Gene Product": "P0DMS8",
+				"Source": "GO_REF:0000107",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0098685"
+			},
+			{
+				"GO ID": "GO:0030425",
+				"Name": "dendrite",
+				"Aspect": "Cellular Component",
+				"Evidence": "IBA",
+				"Gene Product": "P0DMS8",
+				"Source": "GO_REF:0000033",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0030425"
+			},
+			{
+				"GO ID": "GO:0005886",
+				"Name": "plasma membrane",
+				"Aspect": "Cellular Component",
+				"Evidence": "TAS",
+				"Gene Product": "P0DMS8",
+				"Source": "Reactome:R-HSA-749454",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0005886"
+			},
+			{
+				"GO ID": "GO:0001973",
+				"Name": "G protein-coupled adenosine receptor signaling pathway",
+				"Aspect": "Biological Process",
+				"Evidence": "IBA",
+				"Gene Product": "P0DMS8",
+				"Source": "GO_REF:0000033",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0001973"
+			},
+			{
+				"GO ID": "GO:0006954",
+				"Name": "inflammatory response",
+				"Aspect": "Biological Process",
+				"Evidence": "TAS",
+				"Gene Product": "P0DMS8",
+				"Source": "PMID:9164961",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0006954"
+			},
+			{
+				"GO ID": "GO:0007165",
+				"Name": "signal transduction",
+				"Aspect": "Biological Process",
+				"Evidence": "TAS",
+				"Gene Product": "P0DMS8",
+				"Source": "PMID:8399349",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0007165"
+			},
+			{
+				"GO ID": "GO:0008285",
+				"Name": "negative regulation of cell population proliferation",
+				"Aspect": "Biological Process",
+				"Evidence": "IMP",
+				"Gene Product": "P0DMS8",
+				"Source": "PMID:27886186",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0008285"
+			},
+			{
+				"GO ID": "GO:0005886",
+				"Name": "plasma membrane",
+				"Aspect": "Cellular Component",
+				"Evidence": "TAS",
+				"Gene Product": "P0DMS8",
+				"Source": "Reactome:R-HSA-418904",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0005886"
+			},
+			{
+				"GO ID": "GO:0007190",
+				"Name": "activation of adenylate cyclase activity",
+				"Aspect": "Biological Process",
+				"Evidence": "TAS",
+				"Gene Product": "P0DMS8",
+				"Source": "PMID:9380026",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0007190"
+			},
+			{
+				"GO ID": "GO:0009611",
+				"Name": "response to wounding",
+				"Aspect": "Biological Process",
+				"Evidence": "TAS",
+				"Gene Product": "P0DMS8",
+				"Source": "PMID:9837869",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0009611"
+			}
+		],
+		"protein_expressions": {
+			"data": [
+				{
+					"immune organ": [
+						{
+							"Tissue": "macrophage",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "memory B cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "regulatory T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "plasma cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD34-negative, CD41-positive, CD42-positive megakaryocyte cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "mature neutrophil",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "granulocyte monocyte progenitor cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD4-positive, alpha-beta T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD14-positive, CD16-negative classical monocyte",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "effector memory CD4-positive, alpha-beta T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "central memory CD8-positive, alpha-beta T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "segmented neutrophil of bone marrow",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "inflammatory macrophage",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "leukocyte",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD4-positive, alpha-beta thymocyte",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "spleen",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "conventional dendritic cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "alternatively activated macrophage",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "mature eosinophil",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "EBV-transformed lymphocyte",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD38-negative naive B cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD8-positive, alpha-beta T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "neutrophilic metamyelocyte",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "class switched memory B cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD8-positive, alpha-beta thymocyte",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "cytotoxic CD56-dim natural killer cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD3-positive, CD4-positive, CD8-positive, double positive thymocyte",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "effector memory CD8-positive, alpha-beta T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "lymph node",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "central memory CD4-positive, alpha-beta T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"blood": [
+						{
+							"Tissue": "macrophage",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "memory B cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "regulatory T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "endothelial cell of umbilical vein (resting)",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "plasma cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD34-negative, CD41-positive, CD42-positive megakaryocyte cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "mature neutrophil",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "granulocyte monocyte progenitor cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD4-positive, alpha-beta T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD14-positive, CD16-negative classical monocyte",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "endothelial cell of umbilical vein (proliferating)",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "hematopoietic stem cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "common myeloid progenitor",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "effector memory CD4-positive, alpha-beta T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "central memory CD8-positive, alpha-beta T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "inflammatory macrophage",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "hematopoietic multipotent progenitor cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "conventional dendritic cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "alternatively activated macrophage",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "mature eosinophil",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD38-negative naive B cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "erythroblast",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "common lymphoid progenitor",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD8-positive, alpha-beta T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "neutrophilic metamyelocyte",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "class switched memory B cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "cytotoxic CD56-dim natural killer cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "megakaryocyte-erythroid progenitor cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "blood",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "effector memory CD8-positive, alpha-beta T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "central memory CD4-positive, alpha-beta T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"brain": [
+						{
+							"Tissue": "putamen",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "cerebral cortex",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "amygdala",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "brain",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "cerebellum",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "caudate nucleus",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "Brodmann (1909) area 24",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "frontal lobe",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "temporal lobe",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "prefrontal cortex",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "Brodmann (1909) area 9",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "hippocampus proper",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "hypothalamus",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "nucleus accumbens",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "cerebellar hemisphere",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "pituitary gland",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "substantia nigra",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"reproductive organ": [
+						{
+							"Tissue": "uterus",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "endometrium",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "testis",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "ectocervix",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "vagina",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "ovary",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"reproductive structure": [
+						{
+							"Tissue": "uterus",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "endometrium",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "testis",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "ectocervix",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "vagina",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "endocervix",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "prostate gland",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "fallopian tube",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "placenta",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"connective tissue": [
+						{
+							"Tissue": "subcutaneous adipose tissue",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "adipose tissue",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "transformed skin fibroblast",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"stomach": [
+						{
+							"Tissue": "stomach",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"endocrine gland": [
+						{
+							"Tissue": "adrenal gland",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "thyroid gland",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD4-positive, alpha-beta thymocyte",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD8-positive, alpha-beta thymocyte",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "liver",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "pituitary gland",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD3-positive, CD4-positive, CD8-positive, double positive thymocyte",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"bladder organ": [
+						{
+							"Tissue": "gall bladder",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "urinary bladder",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"musculature": [
+						{
+							"Tissue": "skeletal muscle tissue",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "smooth muscle tissue",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "esophagus muscularis mucosa",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"intestine": [
+						{
+							"Tissue": "vermiform appendix",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "colon",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "small intestine",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "duodenum",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "small intestine Peyer's patch",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "sigmoid colon",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "transverse colon",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "rectum",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"colon": [
+						{
+							"Tissue": "vermiform appendix",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "colon",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "sigmoid colon",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "transverse colon",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"mucosa": [
+						{
+							"Tissue": "endometrium",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "small intestine Peyer's patch",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "esophagus mucosa",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "minor salivary gland",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "esophagus muscularis mucosa",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"skeletal element": [
+						{
+							"Tissue": "bone marrow",
+							"RNA Z-Score": 1,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD34-negative, CD41-positive, CD42-positive megakaryocyte cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "granulocyte monocyte progenitor cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "segmented neutrophil of bone marrow",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"skin of body": [
+						{
+							"Tissue": "suprapubic skin",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "zone of skin",
+							"RNA Z-Score": 1,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "lower leg skin",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"heart": [
+						{
+							"Tissue": "coronary artery",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "atrium auricular region",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "heart left ventricle",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "heart",
+							"RNA Z-Score": 1,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"vasculature": [
+						{
+							"Tissue": "coronary artery",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "tibial artery",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "aorta",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"pharynx": [
+						{
+							"Tissue": "tonsil",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"spinal cord": [
+						{
+							"Tissue": "C1 segment of cervical spinal cord",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"exocrine gland": [
+						{
+							"Tissue": "saliva-secreting gland",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "minor salivary gland",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "liver",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"oral gland": [
+						{
+							"Tissue": "saliva-secreting gland",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "minor salivary gland",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"peritoneum": [
+						{
+							"Tissue": "greater omentum",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"esophagus": [
+						{
+							"Tissue": "esophagus mucosa",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "esophagus",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "esophagus muscularis mucosa",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"spleen": [
+						{
+							"Tissue": "spleen",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"pancreas": [
+						{
+							"Tissue": "pancreas",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"rectum": [
+						{
+							"Tissue": "rectum",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"esophagogastric junction": [
+						{
+							"Tissue": "esophagogastric junction",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"kidney": [
+						{
+							"Tissue": "cortex of kidney",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "kidney",
+							"RNA Z-Score": 1,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"liver": [
+						{
+							"Tissue": "liver",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"nerve": [
+						{
+							"Tissue": "tibial nerve",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"lung": [
+						{
+							"Tissue": "lung",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"breast": [
+						{
+							"Tissue": "breast",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				}
+			]
+		},
+		"subcellular": [
+			{
+				"Type": "Topological domain",
+				"Positions": "1-14",
+				"Description": "Extracellular",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000250",
+				"Blast Link": "https://www.uniprot.org/blast?ids=P0DMS8[1-14]"
+			},
+			{
+				"Type": "Transmembrane",
+				"Positions": "15-37",
+				"Description": "Helical; Name=1",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000250",
+				"Blast Link": "https://www.uniprot.org/blast?ids=P0DMS8[15-37]"
+			},
+			{
+				"Type": "Topological domain",
+				"Positions": "38-48",
+				"Description": "Cytoplasmic",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000250",
+				"Blast Link": "https://www.uniprot.org/blast?ids=P0DMS8[38-48]"
+			},
+			{
+				"Type": "Transmembrane",
+				"Positions": "49-72",
+				"Description": "Helical; Name=2",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000250",
+				"Blast Link": "https://www.uniprot.org/blast?ids=P0DMS8[49-72]"
+			},
+			{
+				"Type": "Topological domain",
+				"Positions": "73-84",
+				"Description": "Extracellular",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000250",
+				"Blast Link": "https://www.uniprot.org/blast?ids=P0DMS8[73-84]"
+			},
+			{
+				"Type": "Transmembrane",
+				"Positions": "85-106",
+				"Description": "Helical; Name=3",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000250",
+				"Blast Link": "https://www.uniprot.org/blast?ids=P0DMS8[85-106]"
+			},
+			{
+				"Type": "Topological domain",
+				"Positions": "107-126",
+				"Description": "Cytoplasmic",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000250",
+				"Blast Link": "https://www.uniprot.org/blast?ids=P0DMS8[107-126]"
+			},
+			{
+				"Type": "Transmembrane",
+				"Positions": "127-148",
+				"Description": "Helical; Name=4",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000250",
+				"Blast Link": "https://www.uniprot.org/blast?ids=P0DMS8[127-148]"
+			},
+			{
+				"Type": "Topological domain",
+				"Positions": "149-177",
+				"Description": "Extracellular",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000250",
+				"Blast Link": "https://www.uniprot.org/blast?ids=P0DMS8[149-177]"
+			},
+			{
+				"Type": "Transmembrane",
+				"Positions": "178-198",
+				"Description": "Helical; Name=5",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000250",
+				"Blast Link": "https://www.uniprot.org/blast?ids=P0DMS8[178-198]"
+			},
+			{
+				"Type": "Topological domain",
+				"Positions": "199-231",
+				"Description": "Cytoplasmic",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000250",
+				"Blast Link": "https://www.uniprot.org/blast?ids=P0DMS8[199-231]"
+			},
+			{
+				"Type": "Transmembrane",
+				"Positions": "232-255",
+				"Description": "Helical; Name=6",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000250",
+				"Blast Link": "https://www.uniprot.org/blast?ids=P0DMS8[232-255]"
+			},
+			{
+				"Type": "Topological domain",
+				"Positions": "256-261",
+				"Description": "Extracellular",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000250",
+				"Blast Link": "https://www.uniprot.org/blast?ids=P0DMS8[256-261]"
+			},
+			{
+				"Type": "Transmembrane",
+				"Positions": "262-284",
+				"Description": "Helical; Name=7",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000250",
+				"Blast Link": "https://www.uniprot.org/blast?ids=P0DMS8[262-284]"
+			},
+			{
+				"Type": "Topological domain",
+				"Positions": "285-318",
+				"Description": "Cytoplasmic",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000250",
+				"Blast Link": "https://www.uniprot.org/blast?ids=P0DMS8[285-318]"
+			}
+		]
+	},
+	"competitive_landscape": {
+		"known_drugs": [
+			{
+				"Drug": "AMINOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1370561",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Acute kidney injury",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0001919",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01594489"],
+				"Sponsor": "Ospedale Misericordia e Dolce"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "migraine disorder",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0005277",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01248468"],
+				"Sponsor": "Novartis"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Apnea",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0002104",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT04868565"],
+				"Sponsor": "Children&#x27;s Hospital of Chongqing Medical University"
+			},
+			{
+				"Drug": "AMINOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1370561",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "chronic kidney disease",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003884",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01336140"],
+				"Sponsor": "Rush University Medical Center"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "common cold",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0007214",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01466348"],
+				"Sponsor": "GlaxoSmithKline"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "pain",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003843",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": [
+					"https://clinicaltrials.gov/study/NCT02862977",
+					"https://clinicaltrials.gov/study/NCT02863575"
+				],
+				"Sponsor": "EMS"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "atherosclerosis",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003914",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00851175"],
+				"Sponsor": "Radboud University Medical Center"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "asthma",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0004979",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": [
+					"https://clinicaltrials.gov/study/NCT02537691",
+					"https://clinicaltrials.gov/study/NCT00756418",
+					"https://clinicaltrials.gov/study/NCT01696214"
+				],
+				"Sponsor": "Hoffmann-La Roche"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "chronic kidney disease",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003884",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01336140"],
+				"Sponsor": "Rush University Medical Center"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Headache",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0002315",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03910088"],
+				"Sponsor": "Cairo University"
+			},
+			{
+				"Drug": "AMINOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1370561",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Headache",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0002315",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03997006"],
+				"Sponsor": "Damanhour Teaching Hospital"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Bronchiectasis",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0002110",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": [
+					"https://clinicaltrials.gov/study/NCT01684683",
+					"https://clinicaltrials.gov/study/NCT01769898"
+				],
+				"Sponsor": "The First Affiliated Hospital of Guangzhou Medical University"
+			},
+			{
+				"Drug": "OXTRIPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1200434",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Airway obstruction",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0006536",
+				"Phase": "Phase 4",
+				"Status": "N/A",
+				"Source URLs": ["https://www.whocc.no/atc_ddd_index/?code=R03DA02"],
+				"Sponsor": "Unknown"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "cardiovascular disease",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000319",
+				"Phase": "Phase 4",
+				"Status": "N/A",
+				"Source URLs": ["https://www.whocc.no/atc_ddd_index/?code=C01EB10"],
+				"Sponsor": "Unknown"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "cognition",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003925",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00981955"],
+				"Sponsor": "Northumbria University"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "energy expenditure",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0005109",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00781586"],
+				"Sponsor": "Bayer"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Headache",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0002315",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": [
+					"https://clinicaltrials.gov/study/NCT03997006",
+					"https://clinicaltrials.gov/study/NCT04257851"
+				],
+				"Sponsor": "Damanhour Teaching Hospital"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "Takotsubo cardiomyopathy",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_1002000",
+				"Phase": "Phase 2",
+				"Status": "Terminated",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02867878"],
+				"Sponsor": "University Hospital of Ferrara"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "cocaine dependence",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0002610",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00495092"],
+				"Sponsor": "Hospital Universitari Vall d&#x27;Hebron Research Institute"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "Wolff-Parkinson-White Syndrome",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_1001450",
+				"Phase": "Phase 4",
+				"Status": "N/A",
+				"Source URLs": [
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=8f433e01-8554-4b05-84b1-d21c21ba68bd",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=aef664c9-d1e6-4d1a-b127-3326bdc47b7e",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=5a55b45d-9cee-4c0c-9e44-021dbf70a018",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=356dac0f-258b-48a4-b7de-528ba2d241c8",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=ee89d63b-123d-4995-b7cc-822c5bee16aa",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3c04c033-72e5-469e-83ec-0182cad8be6e",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=ab2edabd-e57d-4754-9822-93bd17af9e88",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=a68d1eff-5cbb-4a6e-98e7-0fb6590ce2a0"
+				],
+				"Sponsor": "Unknown"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "ischemia reperfusion injury",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0002687",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": [
+					"https://clinicaltrials.gov/study/NCT00430170",
+					"https://clinicaltrials.gov/study/NCT01610401"
+				],
+				"Sponsor": "Radboud University Medical Center"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "kidney failure",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_1002048",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00492518"],
+				"Sponsor": "Technical University of Munich"
+			},
+			{
+				"Drug": "CAFFEINE CITRATE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1200569",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Apnea",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0002104",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT04868565"],
+				"Sponsor": "Children&#x27;s Hospital of Chongqing Medical University"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "chronic bronchitis",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0006505",
+				"Phase": "Phase 4",
+				"Status": "N/A",
+				"Source URLs": [
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=c3bb34c1-89b2-48c3-9ad2-16b4b2bce5f9",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=02fcc06e-2a81-404f-a7cd-313fcb0d833c"
+				],
+				"Sponsor": "Unknown"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "paroxysmal tachycardia",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0009493",
+				"Phase": "Phase 4",
+				"Status": "N/A",
+				"Source URLs": [
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=356dac0f-258b-48a4-b7de-528ba2d241c8",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b4a82bd5-74d9-427f-a6b5-95d02c660447",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=5bca8860-de02-4c7f-bb43-01dfe4aea139",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b827e3f8-dd63-4e54-90f4-0eded943de9f",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3d8fc3cd-6ff4-4ee3-98cb-1875775bbbe6",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=aef664c9-d1e6-4d1a-b127-3326bdc47b7e",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=a68d1eff-5cbb-4a6e-98e7-0fb6590ce2a0",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=45faaa70-54cf-4f82-bf7e-8bdd3865e1d6",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=5a55b45d-9cee-4c0c-9e44-021dbf70a018",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=8f433e01-8554-4b05-84b1-d21c21ba68bd",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=ca4520ad-7f42-4632-8065-5b88a0ca7f2f",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=ab2edabd-e57d-4754-9822-93bd17af9e88",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3c04c033-72e5-469e-83ec-0182cad8be6e",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=f0e32589-dad9-4887-8481-bcf7f6618466",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=f3fa566a-d2d8-4d73-b8bf-33ad0f4ca746",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=ee89d63b-123d-4995-b7cc-822c5bee16aa",
+					"https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=e660f71c-35ed-438e-8505-4538f5e925a2"
+				],
+				"Sponsor": "Unknown"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "ventricular ectopy",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0009276",
+				"Phase": "Phase 4",
+				"Status": "Recruiting",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03218137"],
+				"Sponsor": "Weill Medical College of Cornell University"
+			},
+			{
+				"Drug": "AMINOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1370561",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "asthma",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0004979",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00442338"],
+				"Sponsor": "Organon and Co"
+			},
+			{
+				"Drug": "AMINOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1370561",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Airway obstruction",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0006536",
+				"Phase": "Phase 4",
+				"Status": "N/A",
+				"Source URLs": [
+					"https://www.whocc.no/atc_ddd_index/?code=R03DA05",
+					"https://www.whocc.no/atc_ddd_index/?code=R03DA55"
+				],
+				"Sponsor": "Unknown"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "Supraventricular tachycardia",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0004755",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00413712"],
+				"Sponsor": "Singapore General Hospital"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Airway obstruction",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0006536",
+				"Phase": "Phase 4",
+				"Status": "N/A",
+				"Source URLs": [
+					"https://www.whocc.no/atc_ddd_index/?code=R03DA02",
+					"https://www.whocc.no/atc_ddd_index/?code=R03DA04",
+					"https://www.whocc.no/atc_ddd_index/?code=R03DA55",
+					"https://www.whocc.no/atc_ddd_index/?code=R03DA05",
+					"https://www.whocc.no/atc_ddd_index/?code=R03DA54",
+					"https://www.whocc.no/atc_ddd_index/?code=R03DA74"
+				],
+				"Sponsor": "Unknown"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "ulcerative colitis",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000729",
+				"Phase": "Phase 1",
+				"Status": "Suspended",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03358706"],
+				"Sponsor": "Janssen Research &amp; Development, LLC"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "idiopathic scoliosis",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0000726",
+				"Phase": "Phase 4",
+				"Status": "Recruiting",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT04950660"],
+				"Sponsor": "Children&#x27;s Mercy Hospital Kansas City"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "chronic obstructive pulmonary disease",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000341",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": [
+					"https://clinicaltrials.gov/study/NCT01415518",
+					"https://clinicaltrials.gov/study/NCT01010178",
+					"https://clinicaltrials.gov/study/NCT02261727"
+				],
+				"Sponsor": "AstraZeneca"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Crohn's disease",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000384",
+				"Phase": "Phase 1",
+				"Status": "Suspended",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03358706"],
+				"Sponsor": "Janssen Research &amp; Development, LLC"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Acute kidney injury",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0001919",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01594489"],
+				"Sponsor": "Ospedale Misericordia e Dolce"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "coronary artery disease",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0001645",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00564824"],
+				"Sponsor": "Sheba Medical Center"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "hypertension",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000537",
+				"Phase": "Phase 4",
+				"Status": "Terminated",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01918111"],
+				"Sponsor": "Yonsei University"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "attention deficit hyperactivity disorder",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003888",
+				"Phase": "Phase 0.5",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03533556"],
+				"Sponsor": "Texas Tech University"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "acute coronary syndrome",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0005672",
+				"Phase": "Phase 4",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT04699110"],
+				"Sponsor": "National Institute of Cardiovascular Diseases, Pakistan"
+			},
+			{
+				"Drug": "CAFFEINE CITRATE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1200569",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "premature birth",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003917",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": [
+					"https://clinicaltrials.gov/study/NCT04001712",
+					"https://clinicaltrials.gov/study/NCT02103777"
+				],
+				"Sponsor": "Ain Shams University"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "angina pectoris",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003913",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01123525"],
+				"Sponsor": "University Hospital of North Norway"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Low back pain",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0003419",
+				"Phase": "Phase 3",
+				"Status": "Unknown status",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02985671"],
+				"Sponsor": "Ache Laboratorios Farmaceuticos S.A."
+			},
+			{
+				"Drug": "PICLIDENOSON",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL3989873",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine A3 receptor agonist",
+				"Disease": "rheumatoid arthritis",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000685",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": [
+					"https://clinicaltrials.gov/study/NCT00280917",
+					"https://clinicaltrials.gov/study/NCT01034306",
+					"https://clinicaltrials.gov/study/NCT00556894"
+				],
+				"Sponsor": "Can-Fite BioPharma"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "atrial fibrillation",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000275",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01932112"],
+				"Sponsor": "Seoul St. Mary&#x27;s Hospital"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "Myocardial Ischemia",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_1001375",
+				"Phase": "Phase 3",
+				"Status": "Not yet recruiting",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT05014061"],
+				"Sponsor": "Vastra Gotaland Region"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "migraine without aura",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0100431",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00471952"],
+				"Sponsor": "Diamond Headache Clinic"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Alzheimer disease",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0004975",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": [
+					"https://clinicaltrials.gov/study/NCT00726726",
+					"https://clinicaltrials.gov/study/NCT00692510"
+				],
+				"Sponsor": "Bristol-Myers Squibb"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "atrial fibrillation",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000275",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01999829"],
+				"Sponsor": "Assistance Publique Hopitaux De Marseille"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "bronchopulmonary dysplasia",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0019091",
+				"Phase": "Phase 3",
+				"Status": "Recruiting",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT05682807"],
+				"Sponsor": "Tanta University"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "ventricular tachycardia",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0005306",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT04392362"],
+				"Sponsor": "University of Pretoria"
+			},
+			{
+				"Drug": "PICLIDENOSON",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL3989873",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine A3 receptor agonist",
+				"Disease": "dry eye syndrome",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_1000906",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01235234"],
+				"Sponsor": "Can-Fite BioPharma"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "toothache",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0010072",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT05485805"],
+				"Sponsor": "Bayer"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "intermittent vascular claudication",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003876",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00388128"],
+				"Sponsor": "University of Aarhus"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "coronary stenosis",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0006715",
+				"Phase": "Phase 3",
+				"Status": "Terminated",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00612521"],
+				"Sponsor": "Ottawa Heart Institute Research Corporation"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "hypoxia",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0009444",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01875159"],
+				"Sponsor": "American SIDS Institute"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "cancer",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0004992",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00565188"],
+				"Sponsor": "Maastricht University Medical Center"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "obesity",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0001073",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02048215"],
+				"Sponsor": "Istituto Auxologico Italiano"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "respiratory failure",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0009686",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00003684"],
+				"Sponsor": "Canadian Cancer Trials Group"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "acute myocardial infarction",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0008583",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00781404"],
+				"Sponsor": "Hospital Universitari Vall d&#x27;Hebron Research Institute"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "migraine with aura",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0005475",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00471952"],
+				"Sponsor": "Diamond Headache Clinic"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Parkinson disease",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0005180",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01738178"],
+				"Sponsor": "McGill University Health Centre&#x2F;Research Institute of the McGill University Health Centre"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Back pain",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0003418",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03003000"],
+				"Sponsor": "Boehringer Ingelheim"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Dysmenorrhea",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0100607",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01462370"],
+				"Sponsor": "Organon and Co"
+			},
+			{
+				"Drug": "PICLIDENOSON",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL3989873",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine A3 receptor agonist",
+				"Disease": "psoriasis",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000676",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03168256"],
+				"Sponsor": "Can-Fite BioPharma"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "premature birth",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003917",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": [
+					"https://clinicaltrials.gov/study/NCT04001712",
+					"https://clinicaltrials.gov/study/NCT02103777"
+				],
+				"Sponsor": "Ain Shams University"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "relapsing-remitting multiple sclerosis",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003929",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01462318"],
+				"Sponsor": "Biogen"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Neck pain",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0030833",
+				"Phase": "Phase 3",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03003000"],
+				"Sponsor": "Boehringer Ingelheim"
+			},
+			{
+				"Drug": "CAFFEINE CITRATE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1200569",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "ileus",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0004567",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03097900"],
+				"Sponsor": "Hadassah Medical Organization"
+			},
+			{
+				"Drug": "NAMODENOSON",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL431733",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine A3 receptor agonist",
+				"Disease": "non-alcoholic steatohepatitis",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_1001249",
+				"Phase": "Phase 2",
+				"Status": "Recruiting",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT04697810"],
+				"Sponsor": "Can-Fite BioPharma"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "acute respiratory distress syndrome",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_1000637",
+				"Phase": "Phase 2",
+				"Status": "Not yet recruiting",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT04588441"],
+				"Sponsor": "University of Florida"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "coronary artery disease",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0001645",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01690884"],
+				"Sponsor": "Vanderbilt University Medical Center"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "kidney disease",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003086",
+				"Phase": "Phase 2",
+				"Status": "Unknown status",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02088502"],
+				"Sponsor": "Isfahan University of Medical Sciences"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "ileus",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0004567",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03097900"],
+				"Sponsor": "Hadassah Medical Organization"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Albright hereditary osteodystrophy",
+				"Disease URL": "https://platform.opentargets.org/disease/Orphanet_665",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02463409"],
+				"Sponsor": "Vanderbilt University Medical Center"
+			},
+			{
+				"Drug": "CAFFEINE CITRATE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1200569",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Encephalopathy",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0001298",
+				"Phase": "Phase 2",
+				"Status": "Recruiting",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT05232734"],
+				"Sponsor": "Singapore General Hospital"
+			},
+			{
+				"Drug": "NAMODENOSON",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL431733",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine A3 receptor agonist",
+				"Disease": "non-alcoholic fatty liver disease",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003095",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02927314"],
+				"Sponsor": "Can-Fite BioPharma"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "pseudohypoparathyroidism type 1A",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0007078",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02463409"],
+				"Sponsor": "Vanderbilt University Medical Center"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "ST Elevation Myocardial Infarction",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0008585",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01747174"],
+				"Sponsor": "University Hospitals, Leicester"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "cardiac arrest",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0009492",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00312273"],
+				"Sponsor": "Vancouver General Hospital"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "cellulitis",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003035",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03556917"],
+				"Sponsor": "Universidade Norte do Paraná"
+			},
+			{
+				"Drug": "CAFFEINE CITRATE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1200569",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "retinopathy of prematurity",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_1001158",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02344225"],
+				"Sponsor": "State University of New York - Downstate Medical Center"
+			},
+			{
+				"Drug": "AMINOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1370561",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "cardiac arrest",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0009492",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00312273"],
+				"Sponsor": "Vancouver General Hospital"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Dyspnea",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0002094",
+				"Phase": "Phase 2",
+				"Status": "Terminated",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02311088"],
+				"Sponsor": "Uppsala University"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "viral disease",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000763",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03990766"],
+				"Sponsor": "Washington University School of Medicine"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "altitude sickness",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_1000782",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01902758"],
+				"Sponsor": "University of Montana"
+			},
+			{
+				"Drug": "NAMODENOSON",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL431733",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine A3 receptor agonist",
+				"Disease": "hepatocellular carcinoma",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000182",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02128958"],
+				"Sponsor": "Can-Fite BioPharma"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "myocardial infarction",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000612",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00590070"],
+				"Sponsor": "Catholic University of the Sacred Heart"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Tension-type headache",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0012228",
+				"Phase": "Phase 2",
+				"Status": "Terminated",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01755702"],
+				"Sponsor": "GlaxoSmithKline"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Encephalopathy",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0001298",
+				"Phase": "Phase 2",
+				"Status": "Recruiting",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT05232734"],
+				"Sponsor": "Singapore General Hospital"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "pain",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003843",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": [
+					"https://clinicaltrials.gov/study/NCT00349921",
+					"https://clinicaltrials.gov/study/NCT00298636"
+				],
+				"Sponsor": "Wake Forest University Health Sciences"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "pseudohypoparathyroidism",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0019992",
+				"Phase": "Phase 2",
+				"Status": "Recruiting",
+				"Source URLs": [
+					"https://clinicaltrials.gov/study/NCT03029429",
+					"https://clinicaltrials.gov/study/NCT04551170"
+				],
+				"Sponsor": "Vanderbilt University Medical Center"
+			},
+			{
+				"Drug": "PICLIDENOSON",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL3989873",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine A3 receptor agonist",
+				"Disease": "intermediate uveitis",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_1000986",
+				"Phase": "Phase 2",
+				"Status": "Withdrawn",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01905124"],
+				"Sponsor": "Can-Fite BioPharma"
+			},
+			{
+				"Drug": "PICLIDENOSON",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL3989873",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine A3 receptor agonist",
+				"Disease": "ocular hypertension",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_1001069",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01033422"],
+				"Sponsor": "Can-Fite BioPharma"
+			},
+			{
+				"Drug": "PICLIDENOSON",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL3989873",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine A3 receptor agonist",
+				"Disease": "osteoarthritis, knee",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0004616",
+				"Phase": "Phase 2",
+				"Status": "Withdrawn",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00837291"],
+				"Sponsor": "Can-Fite BioPharma"
+			},
+			{
+				"Drug": "PICLIDENOSON",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL3989873",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine A3 receptor agonist",
+				"Disease": "glaucoma",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0005041",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01033422"],
+				"Sponsor": "Can-Fite BioPharma"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "congenital heart disease",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0005207",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT05717049"],
+				"Sponsor": "Oslo University Hospital"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "breast carcinoma",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000305",
+				"Phase": "Phase 2",
+				"Status": "Active, not recruiting",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03768492"],
+				"Sponsor": "NYU Langone Health"
+			},
+			{
+				"Drug": "PICLIDENOSON",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL3989873",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine A3 receptor agonist",
+				"Disease": "COVID-19",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0100096",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT04333472"],
+				"Sponsor": "Can-Fite BioPharma"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "cardiomyopathy",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000318",
+				"Phase": "Phase 2",
+				"Status": "Unknown status",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02681913"],
+				"Sponsor": "Amphia Hospital"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Apnea",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0002104",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01066728"],
+				"Sponsor": "University of Manitoba"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Spinal cord injury",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_1001919",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02323698"],
+				"Sponsor": "Spaulding Rehabilitation Hospital"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "retinopathy of prematurity",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_1001158",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02344225"],
+				"Sponsor": "State University of New York - Downstate Medical Center"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "leukemia",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000565",
+				"Phase": "Phase 2",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00003808"],
+				"Sponsor": "Eastern Cooperative Oncology Group"
+			},
+			{
+				"Drug": "CAFFEINE CITRATE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1200569",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "pain",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003843",
+				"Phase": "Phase 0.5",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03577730"],
+				"Sponsor": "University of Michigan"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "COVID-19",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0100096",
+				"Phase": "Phase 2",
+				"Status": "Recruiting",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT05947643"],
+				"Sponsor": "Washington University School of Medicine"
+			},
+			{
+				"Drug": "PICLIDENOSON",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL3989873",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine A3 receptor agonist",
+				"Disease": "posterior uveitis",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_1001119",
+				"Phase": "Phase 2",
+				"Status": "Withdrawn",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01905124"],
+				"Sponsor": "Can-Fite BioPharma"
+			},
+			{
+				"Drug": "AMINOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1370561",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "premature birth",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003917",
+				"Phase": "Phase 1",
+				"Status": "Unknown status",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03152942"],
+				"Sponsor": "St Stephens Aids Trust"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "brain ischemia",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0005299",
+				"Phase": "Phase 1",
+				"Status": "Active, not recruiting",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03913221"],
+				"Sponsor": "University of North Carolina, Chapel Hill"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "leukemia",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000565",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00714103"],
+				"Sponsor": "M.D. Anderson Cancer Center"
+			},
+			{
+				"Drug": "CAFFEINE CITRATE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1200569",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "liver disease",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0001421",
+				"Phase": "Phase 1",
+				"Status": "Withdrawn",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02098785"],
+				"Sponsor": "University of Birmingham"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "atopic eczema",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000274",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": [
+					"https://clinicaltrials.gov/study/NCT02647086",
+					"https://clinicaltrials.gov/study/NCT03556592"
+				],
+				"Sponsor": "Regeneron Pharmaceuticals"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "COVID-19",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0100096",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT05594615"],
+				"Sponsor": "Enanta Pharmaceuticals, Inc"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "ischemia",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000556",
+				"Phase": "Phase 1",
+				"Status": "Terminated",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00179010"],
+				"Sponsor": "Vanderbilt University Medical Center"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "prostate carcinoma",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0001663",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01017939"],
+				"Sponsor": "Janssen Research &amp; Development, LLC"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "non-small cell lung carcinoma",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003060",
+				"Phase": "Phase 1",
+				"Status": "Terminated",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02080078"],
+				"Sponsor": "AHS Cancer Control Alberta"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "type 2 diabetes mellitus",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0005148",
+				"Phase": "Phase 0.5",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00432887"],
+				"Sponsor": "National Institute of Diabetes and Digestive and Kidney Diseases (NIDDK)"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "prostate cancer",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0008315",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02225093"],
+				"Sponsor": "Astellas Pharma Inc"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "neoplasm",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000616",
+				"Phase": "Phase 1",
+				"Status": "Unknown status",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00845689"],
+				"Sponsor": "Ludwig-Maximilians - University of Munich"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "narcolepsy",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0021107",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02832336"],
+				"Sponsor": "King Saud University"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "metastatic melanoma",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0002617",
+				"Phase": "Phase 1",
+				"Status": "Active, not recruiting",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03864042"],
+				"Sponsor": "Pfizer"
+			},
+			{
+				"Drug": "AMINOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1370561",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "altitude sickness",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_1000782",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": [
+					"https://clinicaltrials.gov/study/NCT01587027",
+					"https://clinicaltrials.gov/study/NCT01794078"
+				],
+				"Sponsor": "Poudre Valley Health System"
+			},
+			{
+				"Drug": "AMINOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1370561",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "pulmonary arterial hypertension",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0001361",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01530464"],
+				"Sponsor": "Duke University"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "chronic hepatitis C virus infection",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0004220",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01525628"],
+				"Sponsor": "Boehringer Ingelheim"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "Chronic pain",
+				"Disease URL": "https://platform.opentargets.org/disease/HP_0012532",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00930306"],
+				"Sponsor": "AstraZeneca"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "acute myeloid leukemia",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000222",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00175812"],
+				"Sponsor": "University of Bergen"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "serum lipopolysaccharide activity",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0600064",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00513110"],
+				"Sponsor": "Radboud University Medical Center"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "amblyopia",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0001020",
+				"Phase": "Phase 1",
+				"Status": "Withdrawn",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02594358"],
+				"Sponsor": "Johns Hopkins University"
+			},
+			{
+				"Drug": "NAMODENOSON",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL431733",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine A3 receptor agonist",
+				"Disease": "chronic hepatitis C virus infection",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0004220",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00790673"],
+				"Sponsor": "Can-Fite BioPharma"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "rheumatoid arthritis",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000685",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": [
+					"https://clinicaltrials.gov/study/NCT03131973",
+					"https://clinicaltrials.gov/study/NCT04246762",
+					"https://clinicaltrials.gov/study/NCT01636557"
+				],
+				"Sponsor": "Bristol-Myers Squibb"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "pulmonary arterial hypertension",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0001361",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": [
+					"https://clinicaltrials.gov/study/NCT01566565",
+					"https://clinicaltrials.gov/study/NCT01530464"
+				],
+				"Sponsor": "Norwegian Armed Forces Medical Service"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "liver disease",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0001421",
+				"Phase": "Phase 1",
+				"Status": "Withdrawn",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02098785"],
+				"Sponsor": "University of Birmingham"
+			},
+			{
+				"Drug": "CAFFEINE CITRATE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1200569",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "brain ischemia",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0005299",
+				"Phase": "Phase 1",
+				"Status": "Active, not recruiting",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03913221"],
+				"Sponsor": "University of North Carolina, Chapel Hill"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "HIV infection",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000764",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT04425902"],
+				"Sponsor": "ViiV Healthcare"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "alcohol dependence",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0007079",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01289561"],
+				"Sponsor": "Johns Hopkins University"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "inflammation",
+				"Disease URL": "https://platform.opentargets.org/disease/MP_0001845",
+				"Phase": "Phase 1",
+				"Status": "Terminated",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00580905"],
+				"Sponsor": "Vanderbilt University Medical Center"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "amyotrophic lateral sclerosis",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0004976",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02655614"],
+				"Sponsor": "Genentech, Inc."
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "sexual dysfunction",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0004714",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT05685407"],
+				"Sponsor": "University of Texas at Austin"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "orthostatic hypotension",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0005252",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00223691"],
+				"Sponsor": "Vanderbilt University Medical Center"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "metastasis",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0009708",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT02688088"],
+				"Sponsor": "Eli Lilly and Company"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "substance dependence",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0004938",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00437632"],
+				"Sponsor": "GlaxoSmithKline"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "major depressive disorder",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0002009",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01263106"],
+				"Sponsor": "Eli Lilly and Company"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "non-alcoholic steatohepatitis",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_1001249",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03187496"],
+				"Sponsor": "Enanta Pharmaceuticals, Inc"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "anemia (phenotype)",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0004272",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00443170"],
+				"Sponsor": "GlaxoSmithKline"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "melanoma",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000756",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01001299"],
+				"Sponsor": "Hoffmann-La Roche"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "psoriasis",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000676",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": [
+					"https://clinicaltrials.gov/study/NCT02772601",
+					"https://clinicaltrials.gov/study/NCT03718884",
+					"https://clinicaltrials.gov/study/NCT02397382",
+					"https://clinicaltrials.gov/study/NCT02993471"
+				],
+				"Sponsor": "AbbVie"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "neoplasm",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000616",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": [
+					"https://clinicaltrials.gov/study/NCT02740712",
+					"https://clinicaltrials.gov/study/NCT02520752",
+					"https://clinicaltrials.gov/study/NCT01596647",
+					"https://clinicaltrials.gov/study/NCT01517399",
+					"https://clinicaltrials.gov/study/NCT03333824"
+				],
+				"Sponsor": "pharmaand GmbH"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "mitochondrial disease",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0044970",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT04643249"],
+				"Sponsor": "Abliva AB"
+			},
+			{
+				"Drug": "ADENOSINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL477",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor agonist",
+				"Disease": "chronic lymphocytic leukemia",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0000095",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT00714103"],
+				"Sponsor": "M.D. Anderson Cancer Center"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "premature birth",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0003917",
+				"Phase": "Phase 1",
+				"Status": "Unknown status",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT03152942"],
+				"Sponsor": "St Stephens Aids Trust"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "infectious disease",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0005741",
+				"Phase": "Phase 1",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01275170"],
+				"Sponsor": "Merck Sharp &amp; Dohme LLC"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "lung cancer",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0008903",
+				"Phase": "Phase 1",
+				"Status": "Withdrawn",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01799161"],
+				"Sponsor": "University of Miami"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "depressive disorder",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0002050",
+				"Phase": "Phase 0.5",
+				"Status": "Withdrawn",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT04309877"],
+				"Sponsor": "University of California, Los Angeles"
+			},
+			{
+				"Drug": "CAFFEINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL113",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "voice disorders",
+				"Disease URL": "https://platform.opentargets.org/disease/EFO_0009692",
+				"Phase": "Phase 0.5",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01435837"],
+				"Sponsor": "Southern Illinois University Carbondale"
+			},
+			{
+				"Drug": "AMINOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL1370561",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "urinary bladder cancer",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0001187",
+				"Phase": "Phase 0.5",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01240824"],
+				"Sponsor": "University of Virginia"
+			},
+			{
+				"Drug": "THEOPHYLLINE",
+				"Drug URL": "https://platform.opentargets.org/drug/CHEMBL190",
+				"Type": "Small molecule",
+				"Mechanism of Action": "Adenosine receptor antagonist",
+				"Disease": "urinary bladder cancer",
+				"Disease URL": "https://platform.opentargets.org/disease/MONDO_0001187",
+				"Phase": "Phase 0.5",
+				"Status": "Completed",
+				"Source URLs": ["https://clinicaltrials.gov/study/NCT01240824"],
+				"Sponsor": "University of Virginia"
+			}
+		],
+		"safety": {
+			"Safety Events": [
+				{
+					"Safety Event": {
+						"Event": "hypotension",
+						"EventLink": "https://platform.opentargets.org/disease/EFO_0005251"
+					},
+					"Biosystems": [
+						{
+							"tissueLabel": "cardiovascular system",
+							"tissueLink": "https://identifiers.org/UBERON:0004535"
+						},
+						{
+							"tissueLabel": "immune",
+							"tissueLink": "https://identifiers.org/UBERON:0002405"
+						}
+					],
+					"Dosing Effect": {
+						"Direction": "Activation/Increase/Upregulation",
+						"Dosing": "general"
+					},
+					"Experimental Studies": "N/A",
+					"Source": {
+						"Source": "Urban et al. (2012)",
+						"SourceURL": "https://doi.org/10.1002/9781118098141.ch2"
+					}
+				},
+				{
+					"Safety Event": {
+						"Event": "proischemic (cerebral)",
+						"EventLink": null
+					},
+					"Biosystems": [
+						{
+							"tissueLabel": "cardiovascular system",
+							"tissueLink": "https://identifiers.org/UBERON:0004535"
+						},
+						{
+							"tissueLabel": "immune",
+							"tissueLink": "https://identifiers.org/UBERON:0002405"
+						}
+					],
+					"Dosing Effect": {
+						"Direction": "Activation/Increase/Upregulation",
+						"Dosing": "general"
+					},
+					"Experimental Studies": "N/A",
+					"Source": {
+						"Source": "Urban et al. (2012)",
+						"SourceURL": "https://doi.org/10.1002/9781118098141.ch2"
+					}
+				},
+				{
+					"Safety Event": {
+						"Event": "decreased locomotor activity",
+						"EventLink": "https://platform.opentargets.org/disease/GO_0040013"
+					},
+					"Biosystems": [
+						{
+							"tissueLabel": "nervous system",
+							"tissueLink": "https://identifiers.org/UBERON:0001016"
+						},
+						{
+							"tissueLabel": "respiratory",
+							"tissueLink": "https://identifiers.org/UBERON:0001004"
+						}
+					],
+					"Dosing Effect": {
+						"Direction": "Activation/Increase/Upregulation",
+						"Dosing": "acute"
+					},
+					"Experimental Studies": "N/A",
+					"Source": {
+						"Source": "Lynch et al. (2017)",
+						"SourceURL": "https://europepmc.org/abstract/med/28216264"
+					}
+				},
+				{
+					"Safety Event": {
+						"Event": "cell proliferation",
+						"EventLink": "https://platform.opentargets.org/disease/GO_0008283"
+					},
+					"Biosystems": [
+						{
+							"tissueLabel": "cardiovascular system",
+							"tissueLink": "https://identifiers.org/UBERON:0004535"
+						},
+						{
+							"tissueLabel": "immune",
+							"tissueLink": "https://identifiers.org/UBERON:0002405"
+						}
+					],
+					"Dosing Effect": {
+						"Direction": "Activation/Increase/Upregulation",
+						"Dosing": "general"
+					},
+					"Experimental Studies": "N/A",
+					"Source": {
+						"Source": "Urban et al. (2012)",
+						"SourceURL": "https://doi.org/10.1002/9781118098141.ch2"
+					}
+				},
+				{
+					"Safety Event": {
+						"Event": "antiischaemic (cardioprotective)",
+						"EventLink": null
+					},
+					"Biosystems": [
+						{
+							"tissueLabel": "cardiovascular system",
+							"tissueLink": "https://identifiers.org/UBERON:0004535"
+						},
+						{
+							"tissueLabel": "immune",
+							"tissueLink": "https://identifiers.org/UBERON:0002405"
+						}
+					],
+					"Dosing Effect": {
+						"Direction": "Activation/Increase/Upregulation",
+						"Dosing": "general"
+					},
+					"Experimental Studies": "N/A",
+					"Source": {
+						"Source": "Urban et al. (2012)",
+						"SourceURL": "https://doi.org/10.1002/9781118098141.ch2"
+					}
+				},
+				{
+					"Safety Event": {
+						"Event": "hypertension (inferred by author)",
+						"EventLink": "https://platform.opentargets.org/disease/EFO_0000537"
+					},
+					"Biosystems": [
+						{
+							"tissueLabel": "cardiovascular system",
+							"tissueLink": "https://identifiers.org/UBERON:0004535"
+						},
+						{
+							"tissueLabel": "immune",
+							"tissueLink": "https://identifiers.org/UBERON:0002405"
+						}
+					],
+					"Dosing Effect": {
+						"Direction": "Inhibition/Decrease/Downregulation",
+						"Dosing": "general"
+					},
+					"Experimental Studies": "N/A",
+					"Source": {
+						"Source": "Urban et al. (2012)",
+						"SourceURL": "https://doi.org/10.1002/9781118098141.ch2"
+					}
+				},
+				{
+					"Safety Event": {
+						"Event": "interference with the regulation of cell growth (inferred by author)",
+						"EventLink": null
+					},
+					"Biosystems": [
+						{
+							"tissueLabel": "cardiovascular system",
+							"tissueLink": "https://identifiers.org/UBERON:0004535"
+						},
+						{
+							"tissueLabel": "immune",
+							"tissueLink": "https://identifiers.org/UBERON:0002405"
+						}
+					],
+					"Dosing Effect": {
+						"Direction": "Inhibition/Decrease/Downregulation",
+						"Dosing": "general"
+					},
+					"Experimental Studies": "N/A",
+					"Source": {
+						"Source": "Urban et al. (2012)",
+						"SourceURL": "https://doi.org/10.1002/9781118098141.ch2"
+					}
+				},
+				{
+					"Safety Event": {
+						"Event": "cell necrosis",
+						"EventLink": "https://platform.opentargets.org/disease/EFO_0009426"
+					},
+					"Biosystems": [
+						{
+							"tissueLabel": "cardiovascular system",
+							"tissueLink": "https://identifiers.org/UBERON:0004535"
+						},
+						{
+							"tissueLabel": "immune",
+							"tissueLink": "https://identifiers.org/UBERON:0002405"
+						}
+					],
+					"Dosing Effect": {
+						"Direction": "Activation/Increase/Upregulation",
+						"Dosing": "general"
+					},
+					"Experimental Studies": "N/A",
+					"Source": {
+						"Source": "Urban et al. (2012)",
+						"SourceURL": "https://doi.org/10.1002/9781118098141.ch2"
+					}
+				},
+				{
+					"Safety Event": {
+						"Event": "decreased pain",
+						"EventLink": "https://platform.opentargets.org/disease/GO_1904057"
+					},
+					"Biosystems": [
+						{
+							"tissueLabel": "nervous system",
+							"tissueLink": "https://identifiers.org/UBERON:0001016"
+						},
+						{
+							"tissueLabel": "respiratory",
+							"tissueLink": "https://identifiers.org/UBERON:0001004"
+						}
+					],
+					"Dosing Effect": {
+						"Direction": "Activation/Increase/Upregulation",
+						"Dosing": "acute"
+					},
+					"Experimental Studies": "N/A",
+					"Source": {
+						"Source": "Lynch et al. (2017)",
+						"SourceURL": "https://europepmc.org/abstract/med/28216264"
+					}
+				},
+				{
+					"Safety Event": {
+						"Event": "decreased convulsions",
+						"EventLink": "https://platform.opentargets.org/disease/EFO_0009853"
+					},
+					"Biosystems": [
+						{
+							"tissueLabel": "nervous system",
+							"tissueLink": "https://identifiers.org/UBERON:0001016"
+						},
+						{
+							"tissueLabel": "respiratory",
+							"tissueLink": "https://identifiers.org/UBERON:0001004"
+						}
+					],
+					"Dosing Effect": {
+						"Direction": "Activation/Increase/Upregulation",
+						"Dosing": "acute"
+					},
+					"Experimental Studies": "N/A",
+					"Source": {
+						"Source": "Lynch et al. (2017)",
+						"SourceURL": "https://europepmc.org/abstract/med/28216264"
+					}
+				},
+				{
+					"Safety Event": {
+						"Event": "immunosuppression",
+						"EventLink": "https://platform.opentargets.org/disease/GO_0050777"
+					},
+					"Biosystems": [
+						{
+							"tissueLabel": "cardiovascular system",
+							"tissueLink": "https://identifiers.org/UBERON:0004535"
+						},
+						{
+							"tissueLabel": "immune",
+							"tissueLink": "https://identifiers.org/UBERON:0002405"
+						}
+					],
+					"Dosing Effect": {
+						"Direction": "Activation/Increase/Upregulation",
+						"Dosing": "general"
+					},
+					"Experimental Studies": "N/A",
+					"Source": {
+						"Source": "Urban et al. (2012)",
+						"SourceURL": "https://doi.org/10.1002/9781118098141.ch2"
+					}
+				},
+				{
+					"Safety Event": {
+						"Event": "increased bronchoconstriction",
+						"EventLink": "https://platform.opentargets.org/disease/EFO_0009836"
+					},
+					"Biosystems": [
+						{
+							"tissueLabel": "nervous system",
+							"tissueLink": "https://identifiers.org/UBERON:0001016"
+						},
+						{
+							"tissueLabel": "respiratory",
+							"tissueLink": "https://identifiers.org/UBERON:0001004"
+						}
+					],
+					"Dosing Effect": {
+						"Direction": "Activation/Increase/Upregulation",
+						"Dosing": "acute"
+					},
+					"Experimental Studies": "N/A",
+					"Source": {
+						"Source": "Lynch et al. (2017)",
+						"SourceURL": "https://europepmc.org/abstract/med/28216264"
+					}
+				},
+				{
+					"Safety Event": {
+						"Event": "myocardial ischemia (inferred by author)",
+						"EventLink": "https://platform.opentargets.org/disease/EFO_1001375"
+					},
+					"Biosystems": [
+						{
+							"tissueLabel": "cardiovascular system",
+							"tissueLink": "https://identifiers.org/UBERON:0004535"
+						},
+						{
+							"tissueLabel": "immune",
+							"tissueLink": "https://identifiers.org/UBERON:0002405"
+						}
+					],
+					"Dosing Effect": {
+						"Direction": "Inhibition/Decrease/Downregulation",
+						"Dosing": "general"
+					},
+					"Experimental Studies": "N/A",
+					"Source": {
+						"Source": "Urban et al. (2012)",
+						"SourceURL": "https://doi.org/10.1002/9781118098141.ch2"
+					}
+				},
+				{
+					"Safety Event": {
+						"Event": "increased convulsions",
+						"EventLink": "https://platform.opentargets.org/disease/EFO_0009853"
+					},
+					"Biosystems": [
+						{
+							"tissueLabel": "nervous system",
+							"tissueLink": "https://identifiers.org/UBERON:0001016"
+						},
+						{
+							"tissueLabel": "respiratory",
+							"tissueLink": "https://identifiers.org/UBERON:0001004"
+						}
+					],
+					"Dosing Effect": {
+						"Direction": "Inhibition/Decrease/Downregulation",
+						"Dosing": "acute"
+					},
+					"Experimental Studies": "N/A",
+					"Source": {
+						"Source": "Lynch et al. (2017)",
+						"SourceURL": "https://europepmc.org/abstract/med/28216264"
+					}
+				},
+				{
+					"Safety Event": {
+						"Event": "proinflammatory effects (inferred by author)",
+						"EventLink": "https://platform.opentargets.org/disease/GO_0050729"
+					},
+					"Biosystems": [
+						{
+							"tissueLabel": "cardiovascular system",
+							"tissueLink": "https://identifiers.org/UBERON:0004535"
+						},
+						{
+							"tissueLabel": "immune",
+							"tissueLink": "https://identifiers.org/UBERON:0002405"
+						}
+					],
+					"Dosing Effect": {
+						"Direction": "Inhibition/Decrease/Downregulation",
+						"Dosing": "general"
+					},
+					"Experimental Studies": "N/A",
+					"Source": {
+						"Source": "Urban et al. (2012)",
+						"SourceURL": "https://doi.org/10.1002/9781118098141.ch2"
+					}
+				},
+				{
+					"Safety Event": {
+						"Event": "angiogenesis",
+						"EventLink": null
+					},
+					"Biosystems": [
+						{
+							"tissueLabel": "cardiovascular system",
+							"tissueLink": "https://identifiers.org/UBERON:0004535"
+						},
+						{
+							"tissueLabel": "immune",
+							"tissueLink": "https://identifiers.org/UBERON:0002405"
+						}
+					],
+					"Dosing Effect": {
+						"Direction": "Activation/Increase/Upregulation",
+						"Dosing": "general"
+					},
+					"Experimental Studies": "N/A",
+					"Source": {
+						"Source": "Urban et al. (2012)",
+						"SourceURL": "https://doi.org/10.1002/9781118098141.ch2"
+					}
+				}
+			]
+		}
+	},
+	"target_prioritisation": {
+		"targetability": {
+			"Approved Symbol": "ADORA3",
+			"Prioritisation": {
+				"Target in clinic": 1,
+				"Membrane protein": 1,
+				"Secreted protein": 0,
+				"Ligand binder": 1,
+				"Small molecule binder": 1,
+				"Predicted pockets": 0,
+				"Mouse ortholog identity": 0,
+				"Chemical probes": 0,
+				"Genetic constraint": "no data",
+				"Mouse models": -0.8270992553125023,
+				"Gene essentiality": 0,
+				"Known safety events": -1,
+				"Cancer driver gene": "no data",
+				"Paralogues": 0,
+				"Tissue specificity": 0.5,
+				"Tissue distribution": 0
+			}
+		},
+		"tractability": {
+			"Small molecule": {
+				"Items": {
+					"Approved Drug": {
+						"Value": true,
+						"Link": ""
+					},
+					"Advanced Clinical": {
+						"Value": false,
+						"Link": ""
+					},
+					"Phase 1 Clinical": {
+						"Value": false,
+						"Link": ""
+					},
+					"Structure with Ligand": {
+						"Value": false,
+						"Link": ""
+					},
+					"High-Quality Ligand": {
+						"Value": true,
+						"Link": ""
+					},
+					"High-Quality Pocket": {
+						"Value": false,
+						"Link": ""
+					},
+					"Med-Quality Pocket": {
+						"Value": false,
+						"Link": ""
+					},
+					"Druggable Family": {
+						"Value": true,
+						"Link": ""
+					}
+				},
+				"Links": []
+			},
+			"Antibody": {
+				"Items": {
+					"Approved Drug": {
+						"Value": false,
+						"Link": ""
+					},
+					"Advanced Clinical": {
+						"Value": false,
+						"Link": ""
+					},
+					"Phase 1 Clinical": {
+						"Value": false,
+						"Link": ""
+					},
+					"UniProt loc high conf": {
+						"Value": false,
+						"Link": ""
+					},
+					"GO CC high conf": {
+						"Value": true,
+						"Link": ""
+					},
+					"UniProt loc med conf": {
+						"Value": true,
+						"Link": ""
+					},
+					"UniProt SigP or TMHMM": {
+						"Value": true,
+						"Link": ""
+					},
+					"GO CC med conf": {
+						"Value": false,
+						"Link": ""
+					},
+					"Human Protein Atlas loc": {
+						"Value": false,
+						"Link": ""
+					}
+				},
+				"Links": []
+			},
+			"PROTAC": {
+				"Items": {
+					"Approved Drug": {
+						"Value": false,
+						"Link": ""
+					},
+					"Advanced Clinical": {
+						"Value": false,
+						"Link": ""
+					},
+					"Phase 1 Clinical": {
+						"Value": false,
+						"Link": ""
+					},
+					"Literature": {
+						"Value": false,
+						"Link": ""
+					},
+					"UniProt Ubiquitination": {
+						"Value": false,
+						"Link": ""
+					},
+					"Database Ubiquitination": {
+						"Value": false,
+						"Link": ""
+					},
+					"Half-life Data": {
+						"Value": false,
+						"Link": ""
+					},
+					"Small Molecule Binder": {
+						"Value": true,
+						"Link": ""
+					}
+				},
+				"Links": []
+			},
+			"Other modalities": {
+				"Items": {
+					"Approved Drug": {
+						"Value": false,
+						"Link": ""
+					},
+					"Advanced Clinical": {
+						"Value": false,
+						"Link": ""
+					},
+					"Phase 1 Clinical": {
+						"Value": false,
+						"Link": ""
+					}
+				},
+				"Links": []
+			}
+		}
+	},
+	"disease_association": [],
+	"mouse_phenotypes": {
+		"increased coronary flow rate": {
+			"Gene": {
+				"Name": "Adora3",
+				"Link": "https://www.informatics.jax.org/marker/MGI:104847"
+			},
+			"Phenotype": {
+				"Label": "increased coronary flow rate",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0003022"
+			},
+			"Categories": [
+				{
+					"Label": "cardiovascular system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005385"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Adora3<tm1Jbsn>/Adora3<tm1Jbsn>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4943461"
+				}
+			]
+		},
+		"decreased tumor necrosis factor secretion": {
+			"Gene": {
+				"Name": "Adora3",
+				"Link": "https://www.informatics.jax.org/marker/MGI:104847"
+			},
+			"Phenotype": {
+				"Label": "decreased tumor necrosis factor secretion",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0008561"
+			},
+			"Categories": [
+				{
+					"Label": "immune system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005387"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Adora3<tm1Jbsn>/Adora3<tm1Jbsn>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:2653748"
+				}
+			]
+		},
+		"abnormal mast cell degranulation": {
+			"Gene": {
+				"Name": "Adora3",
+				"Link": "https://www.informatics.jax.org/marker/MGI:104847"
+			},
+			"Phenotype": {
+				"Label": "abnormal mast cell degranulation",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0008763"
+			},
+			"Categories": [
+				{
+					"Label": "hematopoietic system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005397"
+				},
+				{
+					"Label": "immune system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005387"
+				},
+				{
+					"Label": "cellular phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005384"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Adora3<tm1Jbsn>/Adora3<tm1Jbsn>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4943477"
+				}
+			]
+		},
+		"impaired neutrophil recruitment": {
+			"Gene": {
+				"Name": "Adora3",
+				"Link": "https://www.informatics.jax.org/marker/MGI:104847"
+			},
+			"Phenotype": {
+				"Label": "impaired neutrophil recruitment",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0008719"
+			},
+			"Categories": [
+				{
+					"Label": "hematopoietic system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005397"
+				},
+				{
+					"Label": "immune system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005387"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Adora3<tm1Jbsn>/Adora3<tm1Jbsn>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4943477"
+				}
+			]
+		},
+		"decreased myocardial infarct size": {
+			"Gene": {
+				"Name": "Adora3",
+				"Link": "https://www.informatics.jax.org/marker/MGI:104847"
+			},
+			"Phenotype": {
+				"Label": "decreased myocardial infarct size",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0003038"
+			},
+			"Categories": [
+				{
+					"Label": "homeostasis/metabolism phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005376"
+				},
+				{
+					"Label": "cardiovascular system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005385"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Adora3<tm1Jbsn>/Adora3<tm1Jbsn>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4943461"
+				}
+			]
+		},
+		"decreased systemic arterial blood pressure": {
+			"Gene": {
+				"Name": "Adora3",
+				"Link": "https://www.informatics.jax.org/marker/MGI:104847"
+			},
+			"Phenotype": {
+				"Label": "decreased systemic arterial blood pressure",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0002843"
+			},
+			"Categories": [
+				{
+					"Label": "cardiovascular system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005385"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Adora3<tm1Jbsn>/Adora3<tm1Jbsn>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4943461"
+				}
+			]
+		},
+		"decreased acute inflammation": {
+			"Gene": {
+				"Name": "Adora3",
+				"Link": "https://www.informatics.jax.org/marker/MGI:104847"
+			},
+			"Phenotype": {
+				"Label": "decreased acute inflammation",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0005087"
+			},
+			"Categories": [
+				{
+					"Label": "immune system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005387"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Adora3<tm1Jbsn>/Adora3<tm1Jbsn>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4943461"
+				}
+			]
+		},
+		"decreased susceptibility to kidney reperfusion injury": {
+			"Gene": {
+				"Name": "Adora3",
+				"Link": "https://www.informatics.jax.org/marker/MGI:104847"
+			},
+			"Phenotype": {
+				"Label": "decreased susceptibility to kidney reperfusion injury",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0004042"
+			},
+			"Categories": [
+				{
+					"Label": "homeostasis/metabolism phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005376"
+				},
+				{
+					"Label": "renal/urinary system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005367"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Adora3<tm1Jbsn>/Adora3<tm1Jbsn>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4943477"
+				}
+			]
+		},
+		"abnormal response/metabolism to endogenous compounds": {
+			"Gene": {
+				"Name": "Adora3",
+				"Link": "https://www.informatics.jax.org/marker/MGI:104847"
+			},
+			"Phenotype": {
+				"Label": "abnormal response/metabolism to endogenous compounds",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0003638"
+			},
+			"Categories": [
+				{
+					"Label": "homeostasis/metabolism phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005376"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Adora3<tm1Jbsn>/Adora3<tm1Jbsn>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4943477"
+				},
+				{
+					"Composition": "Adora3<tm1Jbsn>/Adora3<tm1Jbsn>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4943461"
+				}
+			]
+		},
+		"decreased mast cell degranulation": {
+			"Gene": {
+				"Name": "Adora3",
+				"Link": "https://www.informatics.jax.org/marker/MGI:104847"
+			},
+			"Phenotype": {
+				"Label": "decreased mast cell degranulation",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0008765"
+			},
+			"Categories": [
+				{
+					"Label": "hematopoietic system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005397"
+				},
+				{
+					"Label": "immune system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005387"
+				},
+				{
+					"Label": "cellular phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005384"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Adora3<tm1(ADORA3)Msth>/Adora3<tm1(ADORA3)Msth>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:3613463"
+				}
+			]
+		},
+		"abnormal nociception after inflammation": {
+			"Gene": {
+				"Name": "Adora3",
+				"Link": "https://www.informatics.jax.org/marker/MGI:104847"
+			},
+			"Phenotype": {
+				"Label": "abnormal nociception after inflammation",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0002736"
+			},
+			"Categories": [
+				{
+					"Label": "behavior/neurological phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005386"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Adora3<tm1Jbsn>/Adora3<tm1Jbsn>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4943461"
+				}
+			]
+		},
+		"decreased circulating creatinine level": {
+			"Gene": {
+				"Name": "Adora3",
+				"Link": "https://www.informatics.jax.org/marker/MGI:104847"
+			},
+			"Phenotype": {
+				"Label": "decreased circulating creatinine level",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0005554"
+			},
+			"Categories": [
+				{
+					"Label": "homeostasis/metabolism phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005376"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Adora3<tm1Jbsn>/Adora3<tm1Jbsn>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4943477"
+				}
+			]
+		},
+		"abnormal mast cell physiology": {
+			"Gene": {
+				"Name": "Adora3",
+				"Link": "https://www.informatics.jax.org/marker/MGI:104847"
+			},
+			"Phenotype": {
+				"Label": "abnormal mast cell physiology",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0002423"
+			},
+			"Categories": [
+				{
+					"Label": "hematopoietic system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005397"
+				},
+				{
+					"Label": "immune system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005387"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Adora3<tm1Jbsn>/Adora3<tm1Jbsn>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:2653748"
+				},
+				{
+					"Composition": "Adora3<tm1(ADORA3)Msth>/Adora3<tm1(ADORA3)Msth>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:3613463"
+				}
+			]
+		},
+		"decreased airway responsiveness": {
+			"Gene": {
+				"Name": "Adora3",
+				"Link": "https://www.informatics.jax.org/marker/MGI:104847"
+			},
+			"Phenotype": {
+				"Label": "decreased airway responsiveness",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0002335"
+			},
+			"Categories": [
+				{
+					"Label": "respiratory system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005388"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Adora3<tm1Jbsn>/Adora3<tm1Jbsn>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4943477"
+				}
+			]
+		},
+		"ocular hypotension": {
+			"Gene": {
+				"Name": "Adora3",
+				"Link": "https://www.informatics.jax.org/marker/MGI:104847"
+			},
+			"Phenotype": {
+				"Label": "ocular hypotension",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0005260"
+			},
+			"Categories": [
+				{
+					"Label": "vision/eye phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005391"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Adora3<tm1Jbsn>/Adora3<tm1Jbsn>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4943477"
+				}
+			]
+		}
+	},
+	"off_target_effects": {
+		"human": [
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "ADORA3",
+				"Paralog Score": "3.40",
+				"DIOPT Score": "4",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2906284",
+				"Gene2 Symbol": "ADORA1",
+				"1-Protein Acc": "NP_000668",
+				"2-Protein Acc": "NP_000665",
+				"Alignment Length": "322",
+				"Identity Score": "0.49",
+				"Similarity Score": "0.69",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0005623(cell);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "mAChR-C(DIOPT=1,1);AdoR(DIOPT=5,7);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "2",
+				"Tissue Expression Correlation": "0.16309",
+				"Cell Line Expression Correlation": "-0.12740"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "ADORA3",
+				"Paralog Score": "3.12",
+				"DIOPT Score": "4",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2906286",
+				"Gene2 Symbol": "ADORA2B",
+				"1-Protein Acc": "NP_000668",
+				"2-Protein Acc": "NP_000667",
+				"Alignment Length": "315",
+				"Identity Score": "0.39",
+				"Similarity Score": "0.58",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0005623(cell);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AdoR(DIOPT=5,8);mAChR-C(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "0",
+				"Tissue Expression Correlation": "-0.25230",
+				"Cell Line Expression Correlation": "-0.14580"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "ADORA3",
+				"Paralog Score": "3.04",
+				"DIOPT Score": "4",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2906285",
+				"Gene2 Symbol": "ADORA2A",
+				"1-Protein Acc": "NP_000668",
+				"2-Protein Acc": "NP_000666",
+				"Alignment Length": "336",
+				"Identity Score": "0.39",
+				"Similarity Score": "0.59",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0005623(cell);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "mAChR-C(DIOPT=1,1);AdoR(DIOPT=5,6);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "1",
+				"Tissue Expression Correlation": "-0.12997",
+				"Cell Line Expression Correlation": "0.05964"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "ADORA3",
+				"Paralog Score": "2.55",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2906296",
+				"Gene2 Symbol": "GPBAR1",
+				"1-Protein Acc": "NP_000668",
+				"2-Protein Acc": "NP_001070659",
+				"Alignment Length": "355",
+				"Identity Score": "0.20",
+				"Similarity Score": "0.37",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0005623(cell);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AdoR(DIOPT=5,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "0",
+				"Tissue Expression Correlation": "0.10893",
+				"Cell Line Expression Correlation": "0.01933"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "ADORA3",
+				"Paralog Score": "1.30",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2906299",
+				"Gene2 Symbol": "CD300H",
+				"1-Protein Acc": "NP_000668",
+				"2-Protein Acc": "NP_001311002",
+				"Alignment Length": "77",
+				"Identity Score": "0.29",
+				"Similarity Score": "0.45",
+				"Common GO slim": "",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "0",
+				"Tissue Expression Correlation": "0.00000",
+				"Cell Line Expression Correlation": "0.00000"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "ADORA3",
+				"Paralog Score": "1.23",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2906294",
+				"Gene2 Symbol": "CD300LF",
+				"1-Protein Acc": "NP_000668",
+				"2-Protein Acc": "XP_016879701",
+				"Alignment Length": "100",
+				"Identity Score": "0.25",
+				"Similarity Score": "0.39",
+				"Common GO slim": "GO:0005623(cell);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "0",
+				"Tissue Expression Correlation": "0.08985",
+				"Cell Line Expression Correlation": "0.50067"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "ADORA3",
+				"Paralog Score": "1.21",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2906300",
+				"Gene2 Symbol": "CD300LD",
+				"1-Protein Acc": "NP_000668",
+				"2-Protein Acc": "NP_001108624",
+				"Alignment Length": "24",
+				"Identity Score": "0.42",
+				"Similarity Score": "0.62",
+				"Common GO slim": "GO:0005623(cell)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "0",
+				"Tissue Expression Correlation": "-0.01759",
+				"Cell Line Expression Correlation": "0.04177"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "ADORA3",
+				"Paralog Score": "1.12",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2906295",
+				"Gene2 Symbol": "CD300LG",
+				"1-Protein Acc": "NP_000668",
+				"2-Protein Acc": "XP_006721784",
+				"Alignment Length": "47",
+				"Identity Score": "0.30",
+				"Similarity Score": "0.57",
+				"Common GO slim": "GO:0005623(cell)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "1",
+				"Tissue Expression Correlation": "0.03582",
+				"Cell Line Expression Correlation": "0.10099"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "ADORA3",
+				"Paralog Score": "1.09",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2906297",
+				"Gene2 Symbol": "TREML1",
+				"1-Protein Acc": "NP_000668",
+				"2-Protein Acc": "XP_016866311",
+				"Alignment Length": "57",
+				"Identity Score": "0.32",
+				"Similarity Score": "0.46",
+				"Common GO slim": "GO:0005623(cell)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "0",
+				"Tissue Expression Correlation": "0.09517",
+				"Cell Line Expression Correlation": "0.13923"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "ADORA3",
+				"Paralog Score": "1.06",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2906287",
+				"Gene2 Symbol": "PIGR",
+				"1-Protein Acc": "NP_000668",
+				"2-Protein Acc": "NP_002635",
+				"Alignment Length": "90",
+				"Identity Score": "0.27",
+				"Similarity Score": "0.41",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0005623(cell);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "1",
+				"Tissue Expression Correlation": "0.03952",
+				"Cell Line Expression Correlation": "0.00328"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "ADORA3",
+				"Paralog Score": "1.05",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2906289",
+				"Gene2 Symbol": "CD300C",
+				"1-Protein Acc": "NP_000668",
+				"2-Protein Acc": "XP_016879522",
+				"Alignment Length": "66",
+				"Identity Score": "0.23",
+				"Similarity Score": "0.39",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0005623(cell)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "1",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "0",
+				"Tissue Expression Correlation": "0.15210",
+				"Cell Line Expression Correlation": "0.44463"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "ADORA3",
+				"Paralog Score": "1.04",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2906290",
+				"Gene2 Symbol": "CD300A",
+				"1-Protein Acc": "NP_000668",
+				"2-Protein Acc": "NP_009192",
+				"Alignment Length": "63",
+				"Identity Score": "0.21",
+				"Similarity Score": "0.46",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0005623(cell);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "4",
+				"Tissue Expression Correlation": "-0.00904",
+				"Cell Line Expression Correlation": "0.34754"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "ADORA3",
+				"Paralog Score": "1.00",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2906288",
+				"Gene2 Symbol": "FCMR",
+				"1-Protein Acc": "NP_000668",
+				"2-Protein Acc": "NP_005440",
+				"Alignment Length": "31",
+				"Identity Score": "0.29",
+				"Similarity Score": "0.55",
+				"Common GO slim": "",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "1",
+				"Tissue Expression Correlation": "-0.02826",
+				"Cell Line Expression Correlation": "0.03825"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "ADORA3",
+				"Paralog Score": "0.99",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2906298",
+				"Gene2 Symbol": "CD300E",
+				"1-Protein Acc": "NP_000668",
+				"2-Protein Acc": "XP_016880064",
+				"Alignment Length": "76",
+				"Identity Score": "0.18",
+				"Similarity Score": "0.34",
+				"Common GO slim": "GO:0005623(cell)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "0",
+				"Tissue Expression Correlation": "0.02194",
+				"Cell Line Expression Correlation": "0.00366"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "ADORA3",
+				"Paralog Score": "0.98",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2906293",
+				"Gene2 Symbol": "CD300LB",
+				"1-Protein Acc": "NP_000668",
+				"2-Protein Acc": "XP_005257084",
+				"Alignment Length": "22",
+				"Identity Score": "0.27",
+				"Similarity Score": "0.55",
+				"Common GO slim": "GO:0005623(cell)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "0",
+				"Tissue Expression Correlation": "0.00809",
+				"Cell Line Expression Correlation": "0.52850"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "ADORA3",
+				"Paralog Score": "0.93",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2906292",
+				"Gene2 Symbol": "FCAMR",
+				"1-Protein Acc": "NP_000668",
+				"2-Protein Acc": "NP_001164102",
+				"Alignment Length": "52",
+				"Identity Score": "0.31",
+				"Similarity Score": "0.37",
+				"Common GO slim": "GO:0005623(cell)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "0",
+				"Tissue Expression Correlation": "-0.18655",
+				"Cell Line Expression Correlation": "0.10941"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "ADORA3",
+				"Paralog Score": "0.83",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2906291",
+				"Gene2 Symbol": "TREM2",
+				"1-Protein Acc": "NP_000668",
+				"2-Protein Acc": "NP_061838",
+				"Alignment Length": "43",
+				"Identity Score": "0.23",
+				"Similarity Score": "0.30",
+				"Common GO slim": "GO:0005623(cell);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "4",
+				"Tissue Expression Correlation": "0.79346",
+				"Cell Line Expression Correlation": "0.15894"
+			}
+		],
+		"mouse": [
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "3.22",
+				"DIOPT Score": "3",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340597",
+				"Gene2 Symbol": "Adora1",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_001008533",
+				"Alignment Length": "310",
+				"Identity Score": "0.47",
+				"Similarity Score": "0.69",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0006810(transport);GO:0006950(response to stress);GO:0040011(locomotion);GO:0005623(cell);GO:0005886(plasma membrane);GO:0007165(signal transduction);GO:0007267(cell-cell signaling);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AdoR(DIOPT=5,7);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "3.10",
+				"DIOPT Score": "4",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340599",
+				"Gene2 Symbol": "Adora2b",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_031439",
+				"Alignment Length": "304",
+				"Identity Score": "0.40",
+				"Similarity Score": "0.60",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0006810(transport);GO:0006950(response to stress);GO:0005623(cell);GO:0007165(signal transduction);GO:0016192(vesicle-mediated transport);GO:0002376(immune system process)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "mAChR-C(DIOPT=1,1);AdoR(DIOPT=5,8);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "2.95",
+				"DIOPT Score": "4",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340598",
+				"Gene2 Symbol": "Adora2a",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_001318024",
+				"Alignment Length": "297",
+				"Identity Score": "0.43",
+				"Similarity Score": "0.64",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0006810(transport);GO:0006950(response to stress);GO:0040011(locomotion);GO:0005623(cell);GO:0005886(plasma membrane);GO:0007165(signal transduction);GO:0007267(cell-cell signaling);GO:0002376(immune system process)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AdoR(DIOPT=5,9);mAChR-C(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "2.32",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340611",
+				"Gene2 Symbol": "Gpbar1",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_778150",
+				"Alignment Length": "316",
+				"Identity Score": "0.22",
+				"Similarity Score": "0.38",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0005623(cell);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AdoR(DIOPT=5,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "1.84",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340613",
+				"Gene2 Symbol": "Cd300ld3",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_954671",
+				"Alignment Length": "203",
+				"Identity Score": "0.21",
+				"Similarity Score": "0.33",
+				"Common GO slim": "GO:0006950(response to stress);GO:0005623(cell);GO:0002376(immune system process);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "1.84",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340616",
+				"Gene2 Symbol": "Cd300ld5",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_001095127",
+				"Alignment Length": "203",
+				"Identity Score": "0.21",
+				"Similarity Score": "0.33",
+				"Common GO slim": "",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "1.58",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340606",
+				"Gene2 Symbol": "Cd300c2",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_598919",
+				"Alignment Length": "146",
+				"Identity Score": "0.21",
+				"Similarity Score": "0.38",
+				"Common GO slim": "GO:0005623(cell);GO:0006810(transport)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "1.54",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340609",
+				"Gene2 Symbol": "Cd300ld",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_663412",
+				"Alignment Length": "145",
+				"Identity Score": "0.20",
+				"Similarity Score": "0.33",
+				"Common GO slim": "GO:0005623(cell)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "1.54",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340615",
+				"Gene2 Symbol": "Cd300ld4",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "XP_017169686",
+				"Alignment Length": "134",
+				"Identity Score": "0.25",
+				"Similarity Score": "0.39",
+				"Common GO slim": "",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "1.21",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340614",
+				"Gene2 Symbol": "Cd300c",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_001355168",
+				"Alignment Length": "74",
+				"Identity Score": "0.22",
+				"Similarity Score": "0.43",
+				"Common GO slim": "GO:0005623(cell)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "1.19",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340610",
+				"Gene2 Symbol": "Cd300e",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_742047",
+				"Alignment Length": "26",
+				"Identity Score": "0.42",
+				"Similarity Score": "0.58",
+				"Common GO slim": "GO:0005623(cell)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "1.18",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340607",
+				"Gene2 Symbol": "Cd300a",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_001346741",
+				"Alignment Length": "118",
+				"Identity Score": "0.22",
+				"Similarity Score": "0.36",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0006810(transport);GO:0006950(response to stress);GO:0040011(locomotion);GO:0005623(cell);GO:0007165(signal transduction);GO:0016192(vesicle-mediated transport);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "1.13",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340602",
+				"Gene2 Symbol": "Fcamr",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_001164103",
+				"Alignment Length": "71",
+				"Identity Score": "0.30",
+				"Similarity Score": "0.49",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0005623(cell);GO:0002376(immune system process)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "1.13",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340605",
+				"Gene2 Symbol": "Trem2",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_001259007",
+				"Alignment Length": "94",
+				"Identity Score": "0.19",
+				"Similarity Score": "0.34",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0006810(transport);GO:0006950(response to stress);GO:0005623(cell);GO:0007165(signal transduction);GO:0016192(vesicle-mediated transport);GO:0002376(immune system process)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "1.08",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340608",
+				"Gene2 Symbol": "Cd300lb",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_954691",
+				"Alignment Length": "55",
+				"Identity Score": "0.22",
+				"Similarity Score": "0.42",
+				"Common GO slim": "GO:0005623(cell);GO:0002376(immune system process)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "1.06",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340612",
+				"Gene2 Symbol": "Cd300lf",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_001162624",
+				"Alignment Length": "65",
+				"Identity Score": "0.29",
+				"Similarity Score": "0.38",
+				"Common GO slim": "GO:0005623(cell);GO:0002376(immune system process);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "1.03",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340603",
+				"Gene2 Symbol": "Fcmr",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_081252",
+				"Alignment Length": "58",
+				"Identity Score": "0.29",
+				"Similarity Score": "0.43",
+				"Common GO slim": "GO:0005623(cell);GO:0005886(plasma membrane);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "1.00",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340601",
+				"Gene2 Symbol": "Cd300lg",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_001154183",
+				"Alignment Length": "35",
+				"Identity Score": "0.34",
+				"Similarity Score": "0.49",
+				"Common GO slim": "GO:0016192(vesicle-mediated transport);GO:0005623(cell);GO:0006810(transport);GO:0005886(plasma membrane)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "0.97",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340600",
+				"Gene2 Symbol": "Pigr",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_035212",
+				"Alignment Length": "43",
+				"Identity Score": "0.23",
+				"Similarity Score": "0.56",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0006810(transport);GO:0005623(cell);GO:0007165(signal transduction);GO:0016192(vesicle-mediated transport);GO:0002376(immune system process)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Adora3",
+				"Paralog Score": "0.96",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3340604",
+				"Gene2 Symbol": "Treml1",
+				"1-Protein Acc": "NP_033761",
+				"2-Protein Acc": "NP_082039",
+				"Alignment Length": "28",
+				"Identity Score": "0.29",
+				"Similarity Score": "0.50",
+				"Common GO slim": "GO:0006950(response to stress);GO:0005623(cell);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			}
+		],
+		"worm": [],
+		"zebrafish": []
+	}
+}

@@ -1,0 +1,351 @@
+countries:
+  - code: WO
+    name: WORLD INTELLECTUAL PROPERTY ORGANIZATION
+  - code: US
+    name: UNITED STATES OF AMERICA
+  - code: EP
+    name: EUROPEAN PATENT OFFICE (EPO)
+  - code: JP
+    name: JAPAN
+  - code: KR
+    name: REPUBLIC OF KOREA
+  - code: CN
+    name: CHINA
+  - code: AE
+    name: UNITED ARAB EMIRATES
+  - code: AG
+    name: ANTIGUA AND BARBUDA
+  - code: AL
+    name: ALBANIA
+  - code: AM
+    name: ARMENIA
+  - code: AO
+    name: ANGOLA
+  - code: AP
+    name: AFRICAN REGIONAL INTELLECTUAL PROPERTY ORGANIZATION (ARIPO)
+  - code: AR
+    name: ARGENTINA
+  - code: AT
+    name: AUSTRIA
+  - code: AU
+    name: AUSTRALIA
+  - code: AW
+    name: ARUBA
+  - code: AZ
+    name: AZERBAIJAN
+  - code: BA
+    name: BOSNIA AND HERZEGOVINA
+  - code: BB
+    name: BARBADOS
+  - code: BD
+    name: BANGLADESH
+  - code: BE
+    name: BELGIUM
+  - code: BF
+    name: BURKINA FASO
+  - code: BG
+    name: BULGARIA
+  - code: BH
+    name: BAHRAIN
+  - code: BJ
+    name: BENIN
+  - code: BN
+    name: BRUNEI DARUSSALAM
+  - code: BO
+    name: BOLIVIA
+  - code: BR
+    name: BRAZIL
+  - code: BW
+    name: BOTSWANA
+  - code: BX
+    name: BENELUX OFFICE FOR INTELLECTUAL PROPERTY (BOIP)
+  - code: BY
+    name: BELARUS
+  - code: BZ
+    name: BELIZE
+  - code: CA
+    name: CANADA
+  - code: CF
+    name: CENTRAL AFRICAN REPUBLIC
+  - code: CG
+    name: CONGO
+  - code: CH
+    name: SWITZERLAND
+  - code: CI
+    name: CÔTE D'IVOIRE
+  - code: CL
+    name: CHILE
+  - code: CM
+    name: CAMEROON
+  - code: CO
+    name: COLOMBIA
+  - code: CR
+    name: COSTA RICA
+  - code: CS
+    name: CZECHOSLOVAKIA
+  - code: CU
+    name: CUBA
+  - code: CY
+    name: CYPRUS
+  - code: CZ
+    name: CZECH REPUBLIC
+  - code: DD
+    name: GERMAN DEMOCRATIC REPUBLIC
+  - code: DE
+    name: GERMANY
+  - code: DJ
+    name: DJIBOUTI
+  - code: DK
+    name: DENMARK
+  - code: DM
+    name: DOMINICA
+  - code: DO
+    name: DOMINICAN REPUBLIC
+  - code: DZ
+    name: ALGERIA
+  - code: EA
+    name: EURASIAN PATENT ORGANIZATION (EAPO)
+  - code: EC
+    name: ECUADOR
+  - code: EE
+    name: ESTONIA
+  - code: EG
+    name: EGYPT
+  - code: EM
+    name: OFFICE FOR HARMONIZATION IN THE INTERNAL MARKET (TRADE MARKS AND DESIGNS) (OHIM)
+  - code: ES
+    name: SPAIN
+  - code: FI
+    name: FINLAND
+  - code: FR
+    name: FRANCE
+  - code: GA
+    name: GABON
+  - code: GB
+    name: UNITED KINGDOM
+  - code: GC
+    name: PATENT OFFICE OF THE COOPERATION COUNCIL FOR THE ARAB STATES OF THE GULF (GCC)
+  - code: GD
+    name: GRENADA
+  - code: GE
+    name: GEORGIA
+  - code: GH
+    name: GHANA
+  - code: GM
+    name: GAMBIA
+  - code: GN
+    name: GUINEA
+  - code: GQ
+    name: EQUATORIAL GUINEA
+  - code: GR
+    name: GREECE
+  - code: GT
+    name: GUATEMALA
+  - code: GW
+    name: GUINEA-BISSAU
+  - code: HK
+    name: THE HONG KONG SPECIAL ADMINISTRATIVE REGION OF THE PEOPLE'S REPUBLIC OF CHINA
+  - code: HN
+    name: HONDURAS
+  - code: HR
+    name: CROATIA
+  - code: HU
+    name: HUNGARY
+  - code: IB
+    name: INTERNATIONAL BUREAU OF
+  - code: ID
+    name: INDONESIA
+  - code: IE
+    name: IRELAND
+  - code: IL
+    name: ISRAEL
+  - code: IN
+    name: INDIA
+  - code: IR
+    name: IRAN, ISLAMIC REPUBLIC OF
+  - code: IS
+    name: ICELAND
+  - code: IT
+    name: ITALY
+  - code: JO
+    name: JORDAN
+  - code: KE
+    name: KENYA
+  - code: KG
+    name: KYRGYZSTAN
+  - code: KH
+    name: CAMBODIA
+  - code: KM
+    name: COMOROS
+  - code: KN
+    name: SAINT KITTS AND NEVIS
+  - code: KP
+    name: DEMOCRATIC PEOPLE'S REPUBLIC OF KOREA
+  - code: KW
+    name: KUWAIT
+  - code: KZ
+    name: KAZAKHSTAN
+  - code: LA
+    name: LAO PEOPLE'S DEMOCRATIC REPUBLIC
+  - code: LC
+    name: SAINT LUCIA
+  - code: LI
+    name: LIECHTENSTEIN
+  - code: LK
+    name: SRI LANKA
+  - code: LR
+    name: LIBERIA
+  - code: LS
+    name: LESOTHO
+  - code: LT
+    name: LITHUANIA
+  - code: LU
+    name: LUXEMBOURG
+  - code: LV
+    name: LATVIA
+  - code: LY
+    name: LIBYAN ARAB JAMAHIRIYA
+  - code: MA
+    name: MOROCCO
+  - code: MC
+    name: MONACO
+  - code: MD
+    name: REPUBLIC OF MOLDOVA
+  - code: ME
+    name: MONTENEGRO
+  - code: MG
+    name: MADAGASCAR
+  - code: MK
+    name: THE FORMER YUGOSLAV REPUBLIC OF MACEDONIA
+  - code: ML
+    name: MALI
+  - code: MN
+    name: MONGOLIA
+  - code: MO
+    name: MACAO
+  - code: MR
+    name: MAURITANIA
+  - code: MT
+    name: MALTA
+  - code: MW
+    name: MALAWI
+  - code: MX
+    name: MEXICO
+  - code: MY
+    name: MALAYSIA
+  - code: MZ
+    name: MOZAMBIQUE
+  - code: NA
+    name: NAMIBIA
+  - code: NE
+    name: NIGER
+  - code: NG
+    name: NIGERIA
+  - code: NI
+    name: NICARAGUA
+  - code: NL
+    name: NETHERLANDS
+  - code: NO
+    name: NORWAY
+  - code: NZ
+    name: NEW ZEALAND
+  - code: OA
+    name: AFRICAN INTELLECTUAL PROPERTY ORGANIZATION (OAPI)
+  - code: OM
+    name: OMAN
+  - code: PA
+    name: PANAMA
+  - code: PE
+    name: PERU
+  - code: PG
+    name: PAPUA NEW GUINEA
+  - code: PH
+    name: PHILIPPINES
+  - code: PL
+    name: POLAND
+  - code: PT
+    name: PORTUGAL
+  - code: PY
+    name: PARAGUAY
+  - code: QA
+    name: QATAR
+  - code: RO
+    name: ROMANIA
+  - code: RS
+    name: SERBIA
+  - code: RU
+    name: RUSSIAN FEDERATION
+  - code: RW
+    name: RWANDA
+  - code: SA
+    name: SAUDI ARABIA
+  - code: SC
+    name: SEYCHELLES
+  - code: SD
+    name: SUDAN
+  - code: SE
+    name: SWEDEN
+  - code: SG
+    name: SINGAPORE
+  - code: SI
+    name: SLOVENIA
+  - code: SK
+    name: SLOVAKIA
+  - code: SL
+    name: SIERRA LEONE
+  - code: SM
+    name: SAN MARINO
+  - code: SN
+    name: SENEGAL
+  - code: ST
+    name: SAO TOME AND PRINCIPE
+  - code: SU
+    name: UNION OF SOVIET SOCIALIST REPUBLICS
+  - code: SV
+    name: EL SALVADOR
+  - code: SY
+    name: SYRIAN ARAB REPUBLIC
+  - code: SZ
+    name: SWAZILAND
+  - code: TD
+    name: CHAD
+  - code: TG
+    name: TOGO
+  - code: TH
+    name: THAILAND
+  - code: TJ
+    name: TAJIKISTAN
+  - code: TM
+    name: TURKMENISTAN
+  - code: TN
+    name: TUNISIA
+  - code: TR
+    name: TURKEY
+  - code: TT
+    name: TRINIDAD AND TOBAGO
+  - code: TW
+    name: TAIWAN, PROVINCE OF CHINA
+  - code: TZ
+    name: UNITED REPUBLIC OF TANZANIA
+  - code: UA
+    name: UKRAINE
+  - code: UG
+    name: UGANDA
+  - code: UY
+    name: URUGUAY
+  - code: UZ
+    name: UZBEKISTAN
+  - code: VC
+    name: SAINT VINCENT AND THE GRENADINES
+  - code: VE
+    name: VENEZUELA
+  - code: VN
+    name: VIET NAM
+  - code: YU
+    name: YUGOSLAVIA
+  - code: ZA
+    name: SOUTH AFRICA
+  - code: ZM
+    name: ZAMBIA
+  - code: ZW
+    name: ZIMBABWE

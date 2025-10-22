@@ -246,8 +246,7 @@ const ApprovedDrug = ({
       {indications.length > 0 ? (
         <p className="mt-2 font-medium mb-2">
           This section lists drugs targeting {target} that have been approved by
-          regulatory authorities for {indications.join(", ")} and/or other
-          diseases.
+          regulatory authorities for {indications.join(", ")} { diseaseAreaFilter && " and/or other diseases."}
         </p>
       ) : (
         <p className="mt-2 font-medium mb-2">
