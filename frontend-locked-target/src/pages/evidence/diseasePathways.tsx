@@ -84,7 +84,7 @@ const DiseasePathways: React.FC<NetworkBiologyProps> = ({ indications, target })
     const hasTarget = target && target.trim().length > 0;
     const hasIndications = indications && indications.length > 0;
 
-    if (hasTarget && hasIndications) {
+    if (hasTarget ) {
       // Use target-literature-images endpoint only when we have BOTH target AND diseases
       return {
         endpoint: "/evidence/target-literature-images/",
@@ -104,9 +104,12 @@ const DiseasePathways: React.FC<NetworkBiologyProps> = ({ indications, target })
     } else {
       // Target-only or no data - don't fetch anything
       return {
-        endpoint: "",
-        payload: {},
-        queryKey: ["DiseasePathways-Empty"]
+        endpoint: "/evidence/target-literature-images/",
+        payload: { 
+          target: target, 
+          diseases: indications
+        },
+                queryKey: ["DiseasePathways-Target",target]
       };
     }
   };
@@ -114,7 +117,7 @@ const DiseasePathways: React.FC<NetworkBiologyProps> = ({ indications, target })
   const { endpoint, payload, queryKey } = getQueryConfig();
   
   // Should fetch for target+disease combination OR disease-only queries
-  const shouldFetch = (target && target.trim().length > 0 && indications && indications.length > 0) || 
+  const shouldFetch = (target && target.trim().length > 0 ) || 
                      (!target && indications && indications.length > 0);
 
   const {
@@ -263,8 +266,8 @@ const DiseasePathways: React.FC<NetworkBiologyProps> = ({ indications, target })
           {filteredData.map(({ disease, results }, index) => (
             <span key={index}>
               <span className="text-sky-600">{results.length}</span> pathway
-              figure{results.length > 1 ? "s" : ""} of{" "}
-             { selectedDiseases.length==0 && <span>{capitalizeFirstLetter(disease)}</span>}
+              figure{results.length > 1 ? "s" : ""} 
+             { selectedDiseases.length==0 && indications.length>0 && <span> of {capitalizeFirstLetter(disease)}</span>}
               {selectedDiseases.join(", ")}
               {selectedDiseases.length==0 &&(index < filteredData.length - 1 ? ", " : ".")}
             </span>
@@ -287,8 +290,8 @@ const DiseasePathways: React.FC<NetworkBiologyProps> = ({ indications, target })
                      filteredData.map(({ disease, results }, index) => (
                       <span key={index}>
                         <span className="text-sky-600">{results.length}</span> pathway
-                        figure{results.length > 1 ? "s" : ""} of{" "}
-                       { selectedDiseases.length==0 && <span>{capitalizeFirstLetter(disease)}</span>}
+                        figure{results.length > 1 ? "s" : ""} 
+                       { selectedDiseases.length==0 && indications.length>0 && <span>of {capitalizeFirstLetter(disease)}</span>}
                         {selectedDiseases.join(", ")}
                         {selectedDiseases.length==0 &&(index < filteredData.length - 1 ? ", " : ".")}
                       </span>
@@ -339,7 +342,7 @@ const DiseasePathways: React.FC<NetworkBiologyProps> = ({ indications, target })
             placeholder="Select a gene"
             value={selectedTarget}
             onChange={handleTargetChange}
-            allowClear
+            allowClear={indications.length>0}
             options={geneSet
               .map((gene) => ({
                 label: gene,
@@ -397,7 +400,7 @@ const DiseasePathways: React.FC<NetworkBiologyProps> = ({ indications, target })
             {filteredData.map((diseaseData, index) => (
               <Collapse.Panel
                 key={String(index + 1)}
-                header={capitalizeFirstLetter(diseaseData.disease)}
+                header={capitalizeFirstLetter(diseaseData.disease)=="No-disease"?selectedTarget:capitalizeFirstLetter(diseaseData.disease)}
                 style={panelStyle}
               >
               <CarouselComponent

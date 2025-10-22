@@ -84,6 +84,10 @@ const Header = ({ app_state }) => {
       label: "Evidence",
       children: [
         { key: "literature-evidence", label: "Literature" },
+        {
+          key: "knowledge-graph-evidence",
+          label: "Disease pathways",
+        },
        
         { key: "model-studies", label: "Target perturbation phenotypes" },
       ],

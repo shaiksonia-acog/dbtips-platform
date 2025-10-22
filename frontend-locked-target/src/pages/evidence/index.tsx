@@ -19,10 +19,12 @@ const Evidence = () => {
     setIndications(indications);
     setDiseaseArea(diseaseArea);
     setTarget(target?.split("(")[0]);
+
   }, [location]);
 
   const hasIndications = indications?.length > 0|| diseaseArea?.length > 0;
   const showTargetLiterature = target && (hasIndications || !hasIndications);
+
 
   return (
     <div className="evidence-page mt-8">
@@ -32,8 +34,8 @@ const Evidence = () => {
       ) : (
         <Literature indications={indications} />
       )}
-     { !showTargetLiterature && <DiseasePathways indications={indications.length > 0 ? indications : diseaseArea} 
-         target={target} />}
+       <DiseasePathways indications={indications.length > 0 ? indications : diseaseArea} 
+         target={target} />
       
       {showTargetLiterature && <TargetPerturbation target={target} />}
     </div>
