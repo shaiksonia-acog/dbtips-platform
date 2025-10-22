@@ -40,7 +40,7 @@ def fetch_literature_images_data(db, target: str = "no-target", diseases: List[s
                 SELECT DISTINCT ON (pmid, image_caption) * 
                 FROM public.literature_images_analysis 
                 WHERE {' AND '.join(conditions)}
-                ORDER BY pmid, image_caption, id
+                ORDER BY pmid, image_caption, index
             """
         else:
             # Regular query for other cases

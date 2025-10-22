@@ -55,7 +55,8 @@ def should_run_image_analyzer(disease: str, target: str) -> bool:
     # Target-only case: skip image analyzer
     if target != "no-target" and disease == "no-disease":
         logger.info("Target-only analysis detected - skipping image analyzer")
-        return False
+        # return False
+        return True
     
     # Disease-only case: run image analyzer
     if disease != "no-disease" and target == "no-target":
