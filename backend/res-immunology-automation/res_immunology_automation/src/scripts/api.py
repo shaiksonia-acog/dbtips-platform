@@ -2797,10 +2797,10 @@ async def get_target_literature_images_evidence(request: TargetRequest,
                 try:
                     cached_responses = load_response_from_file(record.file_path)
                     if endpoint in cached_responses:
-                        if is_combination:
+                        # if is_combination:
                             # For combinations, extract disease name from target-disease format
-                            disease_name = clean_item.split(':')[-1].replace("_", " ")
-                            cached_data[disease_name] = cached_responses[endpoint]
+                        disease_name = clean_item.split(':')[-1].replace("_", " ")
+                        cached_data[disease_name] = cached_responses[endpoint]
                         continue
                 except Exception as cache_error:
                     print(f"Error loading cache for {item}: {cache_error}")
