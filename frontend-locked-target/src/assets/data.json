@@ -1,0 +1,817 @@
+{
+	"about_target": {
+		"metadata": [
+			{
+				"field": "Accession",
+				"value": "P43489"
+			},
+			{
+				"field": "Protein",
+				"value": "Tumor necrosis factor receptor superfamily member 4"
+			},
+			{
+				"field": "Gene",
+				"value": "TNFRSF4"
+			},
+			{
+				"field": "Status",
+				"value": "UniProtKB reviewed (Swiss-Prot)"
+			},
+			{
+				"field": "Organism",
+				"value": "Homo sapiens"
+			},
+			{
+				"field": "Protein Existence",
+				"value": "1: Evidence at protein level"
+			},
+			{
+				"field": "Annotation Score",
+				"value": "5.0"
+			}
+		],
+		"descriptions": [
+			"Receptor for TNFSF4/OX40L/GP34. Is a costimulatory molecule implicated in long-term T-cell immunity. .",
+			"(Microbial infection) Acts as a receptor for human herpesvirus 6B/HHV-6B."
+		],
+		"synonyms": [
+			"Tumor necrosis factor receptor superfamily member 4",
+			"TNFRSF4",
+			"TXGP1L",
+			"CD134",
+			"ACT35 antigen",
+			"OX40L receptor",
+			"TAX transcriptionally-activated glycoprotein 1 receptor"
+		]
+	},
+	"disease_association": [
+		{
+			"disease_name": "platelet crit",
+			"overall_association_score": 0.003696,
+			"ot_genetics_portal": 0.0,
+			"gene_burden": 0.0,
+			"eva": 0.0,
+			"genomics_england": 0.0,
+			"gene2phenotype": 0.0,
+			"uniprot_literature": 0.0,
+			"uniprot_variants": 0.0,
+			"orphanet": 0.0,
+			"chembl": 0.0,
+			"crispr_screen": 0.0,
+			"crispr": 0.0,
+			"slapenrich": 0.0,
+			"progeny": 0.0,
+			"reactome": 0.0,
+			"sysbio": 0.0,
+			"europepmc": 0.030397,
+			"expression_atlas": 0.0,
+			"impc": 0.0
+		},
+		{
+			"disease_name": "Corpuscular Hemoglobin Content",
+			"overall_association_score": 0.003696,
+			"ot_genetics_portal": 0.0,
+			"gene_burden": 0.0,
+			"eva": 0.0,
+			"genomics_england": 0.0,
+			"gene2phenotype": 0.0,
+			"uniprot_literature": 0.0,
+			"uniprot_variants": 0.0,
+			"orphanet": 0.0,
+			"chembl": 0.0,
+			"crispr_screen": 0.0,
+			"crispr": 0.0,
+			"slapenrich": 0.0,
+			"progeny": 0.0,
+			"reactome": 0.0,
+			"sysbio": 0.0,
+			"europepmc": 0.030397,
+			"expression_atlas": 0.0,
+			"impc": 0.0
+		},
+		{
+			"disease_name": "lymphocyte percentage of leukocytes",
+			"overall_association_score": 0.03482,
+			"ot_genetics_portal": 0.057276,
+			"gene_burden": 0.0,
+			"eva": 0.0,
+			"genomics_england": 0.0,
+			"gene2phenotype": 0.0,
+			"uniprot_literature": 0.0,
+			"uniprot_variants": 0.0,
+			"orphanet": 0.0,
+			"chembl": 0.0,
+			"crispr_screen": 0.0,
+			"crispr": 0.0,
+			"slapenrich": 0.0,
+			"progeny": 0.0,
+			"reactome": 0.0,
+			"sysbio": 0.0,
+			"europepmc": 0.0,
+			"expression_atlas": 0.0,
+			"impc": 0.0
+		},
+		{
+			"disease_name": "hematocrit",
+			"overall_association_score": 0.002217,
+			"ot_genetics_portal": 0.0,
+			"gene_burden": 0.0,
+			"eva": 0.0,
+			"genomics_england": 0.0,
+			"gene2phenotype": 0.0,
+			"uniprot_literature": 0.0,
+			"uniprot_variants": 0.0,
+			"orphanet": 0.0,
+			"chembl": 0.0,
+			"crispr_screen": 0.0,
+			"crispr": 0.0,
+			"slapenrich": 0.0,
+			"progeny": 0.0,
+			"reactome": 0.0,
+			"sysbio": 0.0,
+			"europepmc": 0.018238,
+			"expression_atlas": 0.0,
+			"impc": 0.0
+		},
+		{
+			"disease_name": "immature platelet fraction",
+			"overall_association_score": 0.007392,
+			"ot_genetics_portal": 0.0,
+			"gene_burden": 0.0,
+			"eva": 0.0,
+			"genomics_england": 0.0,
+			"gene2phenotype": 0.0,
+			"uniprot_literature": 0.0,
+			"uniprot_variants": 0.0,
+			"orphanet": 0.0,
+			"chembl": 0.0,
+			"crispr_screen": 0.0,
+			"crispr": 0.0,
+			"slapenrich": 0.0,
+			"progeny": 0.0,
+			"reactome": 0.0,
+			"sysbio": 0.0,
+			"europepmc": 0.060793,
+			"expression_atlas": 0.0,
+			"impc": 0.0
+		}
+	],
+	"target_biology": {
+		"ontology": [
+			{
+				"go_id": "GO:0010759",
+				"name": "positive regulation of macrophage chemotaxis",
+				"aspect": "Biological Process",
+				"evidence": "IMP",
+				"gene_product": "Q99788",
+				"source": "PMID:19443732"
+			},
+			{
+				"go_id": "GO:0007204",
+				"name": "positive regulation of cytosolic calcium ion concentration",
+				"aspect": "Biological Process",
+				"evidence": "IBA",
+				"gene_product": "Q99788",
+				"source": "GO_REF:0000033"
+			},
+			{
+				"go_id": "GO:0001501",
+				"name": "skeletal system development",
+				"aspect": "Biological Process",
+				"evidence": "TAS",
+				"gene_product": "Q99788",
+				"source": "PMID:9144535"
+			},
+			{
+				"go_id": "GO:0007186",
+				"name": "G protein-coupled receptor signaling pathway",
+				"aspect": "Biological Process",
+				"evidence": "NAS",
+				"gene_product": "Q99788",
+				"source": "PMID:9603476"
+			},
+			{
+				"go_id": "GO:0007186",
+				"name": "G protein-coupled receptor signaling pathway",
+				"aspect": "Biological Process",
+				"evidence": "IDA",
+				"gene_product": "Q99788",
+				"source": "PMID:27716822"
+			},
+			{
+				"go_id": "GO:0006935",
+				"name": "chemotaxis",
+				"aspect": "Biological Process",
+				"evidence": "IDA",
+				"gene_product": "Q99788",
+				"source": "PMID:14530373"
+			},
+			{
+				"go_id": "GO:0006955",
+				"name": "immune response",
+				"aspect": "Biological Process",
+				"evidence": "TAS",
+				"gene_product": "Q99788",
+				"source": "PMID:9452581"
+			},
+			{
+				"go_id": "GO:0006935",
+				"name": "chemotaxis",
+				"aspect": "Biological Process",
+				"evidence": "IDA",
+				"gene_product": "Q99788",
+				"source": "PMID:14530373"
+			},
+			{
+				"go_id": "GO:0045600",
+				"name": "positive regulation of fat cell differentiation",
+				"aspect": "Biological Process",
+				"evidence": "ISS",
+				"gene_product": "Q99788",
+				"source": "GO_REF:0000024"
+			},
+			{
+				"go_id": "GO:0050848",
+				"name": "regulation of calcium-mediated signaling",
+				"aspect": "Biological Process",
+				"evidence": "IDA",
+				"gene_product": "Q99788",
+				"source": "PMID:14530373"
+			}
+		],
+		"sub_cellular_location": [
+			{
+				"type": "Topological domain",
+				"positions": "1-41",
+				"description": "Extracellular",
+				"blast": "blast"
+			},
+			{
+				"type": "Transmembrane",
+				"positions": "42-64",
+				"description": "Helical; Name=1",
+				"blast": "blast"
+			},
+			{
+				"type": "Topological domain",
+				"positions": "65-75",
+				"description": "Cytoplasmic",
+				"blast": "blast"
+			},
+			{
+				"type": "Transmembrane",
+				"positions": "76-97",
+				"description": "Helical; Name=2",
+				"blast": "blast"
+			},
+			{
+				"type": "Topological domain",
+				"positions": "98-114",
+				"description": "Extracellular",
+				"blast": "blast"
+			},
+			{
+				"type": "Transmembrane",
+				"positions": "115-135",
+				"description": "Helical; Name=3",
+				"blast": "blast"
+			},
+			{
+				"type": "Topological domain",
+				"positions": "136-154",
+				"description": "Cytoplasmic",
+				"blast": "blast"
+			},
+			{
+				"type": "Transmembrane",
+				"positions": "155-176",
+				"description": "Helical; Name=4",
+				"blast": "blast"
+			},
+			{
+				"type": "Topological domain",
+				"positions": "177-224",
+				"description": "Extracellular",
+				"blast": "blast"
+			},
+			{
+				"type": "Transmembrane",
+				"positions": "225-245",
+				"description": "Helical; Name=5",
+				"blast": "blast"
+			},
+			{
+				"type": "Topological domain",
+				"positions": "246-261",
+				"description": "Cytoplasmic",
+				"blast": "blast"
+			},
+			{
+				"type": "Transmembrane",
+				"positions": "262-282",
+				"description": "Helical; Name=6",
+				"blast": "blast"
+			},
+			{
+				"type": "Topological domain",
+				"positions": "283-300",
+				"description": "Extracellular",
+				"blast": "blast"
+			},
+			{
+				"type": "Transmembrane",
+				"positions": "301-320",
+				"description": "Helical; Name=7",
+				"blast": "blast"
+			},
+			{
+				"type": "Topological domain",
+				"positions": "321-373",
+				"description": "Cytoplasmic",
+				"blast": "blast"
+			}
+		]
+	},
+	"competitive_landscape": {
+		"known_drugs": [
+			{
+				"drug_link": "AMINOPHYLLINE",
+				"type": "Small molecule",
+				"mechanism_of_action": "Adenosine receptor antagonist",
+				"disease_link": "Acute kidney injury",
+				"phase": "Phase 4",
+				"status": "Completed",
+				"source_link": "ClinicalTrials",
+				"sponsor": "Ospedale Misericordia e Dolce"
+			},
+			{
+				"drug_link": "CAFFEINE",
+				"type": "Small molecule",
+				"mechanism_of_action": "Adenosine receptor antagonist",
+				"disease_link": "migraine disorder",
+				"phase": "Phase 4",
+				"status": "Completed",
+				"source_link": "ClinicalTrials",
+				"sponsor": "Novartis"
+			},
+			{
+				"drug_link": "CAFFEINE",
+				"type": "Small molecule",
+				"mechanism_of_action": "Adenosine receptor antagonist",
+				"disease_link": "Apnea",
+				"phase": "Phase 4",
+				"status": "Completed",
+				"source_link": "ClinicalTrials",
+				"sponsor": "Children's Hospital of Chongqing Medical University"
+			},
+			{
+				"drug_link": "AMINOPHYLLINE",
+				"type": "Small molecule",
+				"mechanism_of_action": "Adenosine receptor antagonist",
+				"disease_link": "chronic kidney disease",
+				"phase": "Phase 4",
+				"status": "Completed",
+				"source_link": "ClinicalTrials",
+				"sponsor": "Rush University Medical Center"
+			},
+			{
+				"drug_link": "CAFFEINE",
+				"type": "Small molecule",
+				"mechanism_of_action": "Adenosine receptor antagonist",
+				"disease_link": "common cold",
+				"phase": "Phase 4",
+				"status": "Completed",
+				"source_link": "ClinicalTrials",
+				"sponsor": "GlaxoSmithKline"
+			},
+			{
+				"drug_link": "CAFFEINE",
+				"type": "Small molecule",
+				"mechanism_of_action": "Adenosine receptor antagonist",
+				"disease_link": "pain",
+				"phase": "Phase 3",
+				"status": "Completed",
+				"source_link": "ClinicalTrials, ClinicalTrials",
+				"sponsor": "Pfizer"
+			},
+			{
+				"drug_link": "CAFFEINE",
+				"type": "Small molecule",
+				"mechanism_of_action": "Adenosine receptor antagonist",
+				"disease_link": "atherosclerosis",
+				"phase": "Phase 4",
+				"status": "Completed",
+				"source_link": "ClinicalTrials",
+				"sponsor": "Radboud University Medical Center"
+			},
+			{
+				"drug_link": "THEOPHYLLINE",
+				"type": "Small molecule",
+				"mechanism_of_action": "Adenosine receptor antagonist",
+				"disease_link": "asthma",
+				"phase": "Phase 4",
+				"status": "Completed",
+				"source_link": "ClinicalTrials, ClinicalTrials, ClinicalTrials",
+				"sponsor": "University of California, San Diego"
+			},
+			{
+				"drug_link": "THEOPHYLLINE",
+				"type": "Small molecule",
+				"mechanism_of_action": "Adenosine receptor antagonist",
+				"disease_link": "chronic kidney disease",
+				"phase": "Phase 4",
+				"status": "Completed",
+				"source_link": "ClinicalTrials",
+				"sponsor": "Rush University Medical Center"
+			},
+			{
+				"drug_link": "CAFFEINE",
+				"type": "Small molecule",
+				"mechanism_of_action": "Adenosine receptor antagonist",
+				"disease_link": "Headache",
+				"phase": "Phase 4",
+				"status": "Completed",
+				"source_link": "ClinicalTrials",
+				"sponsor": "Cairo University"
+			},
+			{
+				"drug_link": "AMINOPHYLLINE",
+				"type": "Small molecule",
+				"mechanism_of_action": "Adenosine receptor antagonist",
+				"disease_link": "Headache",
+				"phase": "Phase 4",
+				"status": "Completed",
+				"source_link": "ClinicalTrials",
+				"sponsor": "Damanhour Teaching Hospital"
+			},
+			{
+				"drug_link": "THEOPHYLLINE",
+				"type": "Small molecule",
+				"mechanism_of_action": "Adenosine receptor antagonist",
+				"disease_link": "Bronchiectasis",
+				"phase": "Phase 4",
+				"status": "Completed",
+				"source_link": "ClinicalTrials, ClinicalTrials",
+				"sponsor": "The First Affiliated Hospital of Guangzhou Medical University"
+			},
+			{
+				"drug_link": "OXTRIPHYLLINE",
+				"type": "Small molecule",
+				"mechanism_of_action": "Adenosine receptor antagonist",
+				"disease_link": "Airway obstruction",
+				"phase": "Phase 4",
+				"status": "N/A",
+				"source_link": "ATC",
+				"sponsor": "-NA-"
+			},
+			{
+				"drug_link": "ADENOSINE",
+				"type": "Small molecule",
+				"mechanism_of_action": "Adenosine receptor agonist",
+				"disease_link": "cardiovascular disease",
+				"phase": "Phase 4",
+				"status": "N/A",
+				"source_link": "ATC",
+				"sponsor": "-NA-"
+			}
+		],
+		"safety": [
+			{
+				"safety_event": "hypotension",
+				"biosystems": "cardiovascular system, immune",
+				"dosing_effect": "Direction: Activation/Increase/Upregulation\nDosing: general",
+				"experimental_studies": "N/A",
+				"source": "Urban et al. (2012)"
+			},
+			{
+				"safety_event": "proischemic (cerebral)",
+				"biosystems": "cardiovascular system, immune",
+				"dosing_effect": "Direction: Activation/Increase/Upregulation\nDosing: general",
+				"experimental_studies": "N/A",
+				"source": "Urban et al. (2012)"
+			},
+			{
+				"safety_event": "decreased locomotor activity",
+				"biosystems": "nervous system, respiratory",
+				"dosing_effect": "Direction: Activation/Increase/Upregulation\nDosing: acute",
+				"experimental_studies": "N/A",
+				"source": "Lynch et al. (2017)"
+			},
+			{
+				"safety_event": "cell proliferation",
+				"biosystems": "cardiovascular system, immune",
+				"dosing_effect": "Direction: Activation/Increase/Upregulation\nDosing: general",
+				"experimental_studies": "N/A",
+				"source": "Urban et al. (2012)"
+			},
+			{
+				"safety_event": "antiischaemic (cardioprotective)",
+				"biosystems": "cardiovascular system, immune",
+				"dosing_effect": "Direction: Activation/Increase/Upregulation\nDosing: general",
+				"experimental_studies": "N/A",
+				"source": "Urban et al. (2012)"
+			},
+			{
+				"safety_event": "hypertension (inferred by author)",
+				"biosystems": "cardiovascular system, immune",
+				"dosing_effect": "Direction: Inhibition/Decrease/Downregulation\nDosing: general",
+				"experimental_studies": "N/A",
+				"source": "Urban et al. (2012)"
+			},
+			{
+				"safety_event": "interference with the regulation of cell growth (inferred by author)",
+				"biosystems": "cardiovascular system, immune",
+				"dosing_effect": "Direction: Inhibition/Decrease/Downregulation\nDosing: general",
+				"experimental_studies": "N/A",
+				"source": "Urban et al. (2012)"
+			},
+			{
+				"safety_event": "cell necrosis",
+				"biosystems": "cardiovascular system, immune",
+				"dosing_effect": "Direction: Activation/Increase/Upregulation\nDosing: general",
+				"experimental_studies": "N/A",
+				"source": "Urban et al. (2012)"
+			},
+			{
+				"safety_event": "decreased pain",
+				"biosystems": "nervous system, respiratory",
+				"dosing_effect": "Direction: Activation/Increase/Upregulation\nDosing: acute",
+				"experimental_studies": "N/A",
+				"source": "Lynch et al. (2017)"
+			},
+			{
+				"safety_event": "decreased convulsions",
+				"biosystems": "nervous system, respiratory",
+				"dosing_effect": "Direction: Activation/Increase/Upregulation\nDosing: acute",
+				"experimental_studies": "N/A",
+				"source": "Lynch et al. (2017)"
+			},
+			{
+				"safety_event": "immunosuppression",
+				"biosystems": "cardiovascular system, immune",
+				"dosing_effect": "Direction: Activation/Increase/Upregulation\nDosing: general",
+				"experimental_studies": "N/A",
+				"source": "Urban et al. (2012)"
+			},
+			{
+				"safety_event": "increased bronchoconstriction",
+				"biosystems": "nervous system, respiratory",
+				"dosing_effect": "Direction: Activation/Increase/Upregulation\nDosing: acute",
+				"experimental_studies": "N/A",
+				"source": "Lynch et al. (2017)"
+			},
+			{
+				"safety_event": "myocardial ischemia (inferred by author)",
+				"biosystems": "cardiovascular system, immune",
+				"dosing_effect": "Direction: Inhibition/Decrease/Downregulation\nDosing: general",
+				"experimental_studies": "N/A",
+				"source": "Urban et al. (2012)"
+			},
+			{
+				"safety_event": "increased convulsions",
+				"biosystems": "nervous system, respiratory",
+				"dosing_effect": "Direction: Inhibition/Decrease/Downregulation\nDosing: acute",
+				"experimental_studies": "N/A",
+				"source": "Lynch et al. (2017)"
+			},
+			{
+				"safety_event": "proinflammatory effects (inferred by author)",
+				"biosystems": "cardiovascular system, immune",
+				"dosing_effect": "Direction: Inhibition/Decrease/Downregulation\nDosing: general",
+				"experimental_studies": "N/A",
+				"source": "Urban et al. (2012)"
+			},
+			{
+				"safety_event": "angiogenesis",
+				"biosystems": "cardiovascular system, immune",
+				"dosing_effect": "Direction: Activation/Increase/Upregulation\nDosing: general",
+				"experimental_studies": "N/A",
+				"source": "Urban et al. (2012)"
+			}
+		]
+	},
+	"mouse_phenotypes": [
+		{
+			"gene": "Cmklr1",
+			"phenotype": "lung inflammation",
+			"category": "immune system phenotype, respiratory system phenotype",
+			"allelic_composition": "Cmkrl1/Cmkrl1"
+		},
+		{
+			"gene": "Cmklr1",
+			"phenotype": "abnormal dendritic cell physiology",
+			"category": "immune system phenotype",
+			"allelic_composition": "Cmkrl1/Cmkrl1"
+		},
+		{
+			"gene": "Cmklr1",
+			"phenotype": "abnormal macrophage chemotaxis",
+			"category": "hematopoietic system phenotype, immune system phenotype, cellular phenotype",
+			"allelic_composition": "Cmkrl1/Cmkrl1"
+		},
+		{
+			"gene": "Cmklr1",
+			"phenotype": "abnormal definitive hematopoiesis",
+			"category": "hematopoietic system phenotype",
+			"allelic_composition": "Cmkrl1/Cmkrl1"
+		},
+		{
+			"gene": "Cmklr1",
+			"phenotype": "increased susceptibility to endotoxin shock",
+			"category": "immune system phenotype",
+			"allelic_composition": "Cmkrl1/Cmkrl1"
+		},
+		{
+			"gene": "Cmklr1",
+			"phenotype": "abnormal alveolar macrophage morphology",
+			"category": "hematopoietic system phenotype, immune system phenotype, respiratory system phenotype",
+			"allelic_composition": "Cmkrl1/Cmkrl1"
+		},
+		{
+			"gene": "Cmklr1",
+			"phenotype": "increased neutrophil cell number",
+			"category": "hematopoietic system phenotype, immune system phenotype",
+			"allelic_composition": "Cmkrl1/Cmkrl1"
+		},
+		{
+			"gene": "Cmklr1",
+			"phenotype": "abnormal immune system morphology",
+			"category": "immune system phenotype",
+			"allelic_composition": "Cmkrl1/Cmkrl1"
+		},
+		{
+			"gene": "Cmklr1",
+			"phenotype": "abnormal professional antigen presenting cell physiology",
+			"category": "immune system phenotype",
+			"allelic_composition": "Cmkrl1/Cmkrl1"
+		},
+		{
+			"gene": "Cmklr1",
+			"phenotype": "impaired neutrophil recruitment",
+			"category": "hematopoietic system phenotype, immune system phenotype",
+			"allelic_composition": "Cmkrl1/Cmkrl1"
+		},
+		{
+			"gene": "Cmklr1",
+			"phenotype": "impaired macrophage chemotaxis",
+			"category": "hematopoietic system phenotype, immune system phenotype, cellular phenotype",
+			"allelic_composition": "Cmkrl1/Cmkrl1"
+		}
+	],
+	"off_target_effects": [
+		{
+			"species": "human",
+			"species_id": 9606,
+			"gene_symbol_1": "CMKLR1",
+			"paralog_score": 2.96,
+			"DIOPT_score": 3,
+			"paralog_pair": "text show expression data",
+			"gene_symbol_2": "FPR3",
+			"protein_acc_1": "NP_001135815",
+			"protein_acc_2": "NP_002021",
+			"alignment_length": 352,
+			"identity_score": 0.36,
+			"similarity_score": 0.56,
+			"common_GO_slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005886(plasma membrane);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+			"common_yeast_paralogs": "",
+			"common_fly_paralogs": "",
+			"common_protein_interactors": 0,
+			"common_genetic_interactors": 0,
+			"coexpressed_samples": 8,
+			"tissue_expression_correlation": 0.68675,
+			"cell_line_expression_correlation": 0.00952
+		},
+		{
+			"species": "human",
+			"species_id": 9606,
+			"gene_symbol_1": "CMKLR1",
+			"paralog_score": 2.92,
+			"DIOPT_score": 2,
+			"paralog_pair": "text show expression data",
+			"gene_symbol_2": "C5AR1",
+			"protein_acc_1": "NP_001135815",
+			"protein_acc_2": "NP_001727",
+			"alignment_length": 381,
+			"identity_score": 0.34,
+			"similarity_score": 0.52,
+			"common_GO_slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0009058(biosynthetic process);GO:0048856(anatomical structure development);GO:0040011(locomotion);GO:0005886(plasma membrane);GO:0005623(cell);GO:0007165(signal transduction);GO:0034641(cellular nitrogen compound metabolic process);GO:0048870(cell motility)",
+			"common_yeast_paralogs": "",
+			"common_fly_paralogs": "",
+			"common_protein_interactors": 0,
+			"common_genetic_interactors": 0,
+			"coexpressed_samples": 23,
+			"tissue_expression_correlation": 0.13267,
+			"cell_line_expression_correlation": 0.11562
+		},
+		{
+			"species": "human",
+			"species_id": 9606,
+			"gene_symbol_1": "CMKLR1",
+			"paralog_score": 2.91,
+			"DIOPT_score": 3,
+			"paralog_pair": "text show expression data",
+			"gene_symbol_2": "FPR2",
+			"protein_acc_1": "NP_001135815",
+			"protein_acc_2": "NP_001005738",
+			"alignment_length": 336,
+			"identity_score": 0.36,
+			"similarity_score": 0.56,
+			"common_GO_slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005886(plasma membrane);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+			"common_yeast_paralogs": "",
+			"common_fly_paralogs": "",
+			"common_protein_interactors": 0,
+			"common_genetic_interactors": 0,
+			"coexpressed_samples": 2,
+			"tissue_expression_correlation": 0.05281,
+			"cell_line_expression_correlation": 0.06273
+		},
+		{
+			"species": "human",
+			"species_id": 9606,
+			"gene_symbol_1": "CMKLR1",
+			"paralog_score": 2.84,
+			"DIOPT_score": 2,
+			"paralog_pair": "text show expression data",
+			"gene_symbol_2": "GPR33",
+			"protein_acc_1": "NP_001135815",
+			"protein_acc_2": "NP_001184113",
+			"alignment_length": 330,
+			"identity_score": 0.36,
+			"similarity_score": 0.57,
+			"common_GO_slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005886(plasma membrane);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+			"common_yeast_paralogs": "",
+			"common_fly_paralogs": "",
+			"common_protein_interactors": 0,
+			"common_genetic_interactors": 0,
+			"coexpressed_samples": 0,
+			"tissue_expression_correlation": -0.05544,
+			"cell_line_expression_correlation": -0.0244
+		},
+		{
+			"species": "human",
+			"species_id": 9606,
+			"gene_symbol_1": "CMKLR1",
+			"paralog_score": 2.83,
+			"DIOPT_score": 3,
+			"paralog_pair": "text show expression data",
+			"gene_symbol_2": "FPR1",
+			"protein_acc_1": "NP_001135815",
+			"protein_acc_2": "NP_001180235",
+			"alignment_length": 318,
+			"identity_score": 0.38,
+			"similarity_score": 0.57,
+			"common_GO_slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005886(plasma membrane);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+			"common_yeast_paralogs": "",
+			"common_fly_paralogs": "",
+			"common_protein_interactors": 0,
+			"common_genetic_interactors": 0,
+			"coexpressed_samples": 10,
+			"tissue_expression_correlation": 0.00988,
+			"cell_line_expression_correlation": 0.23407
+		},
+		{
+			"species": "human",
+			"species_id": 9606,
+			"gene_symbol_1": "CMKLR1",
+			"paralog_score": 2.79,
+			"DIOPT_score": 2,
+			"paralog_pair": "text show expression data",
+			"gene_symbol_2": "C5AR2",
+			"protein_acc_1": "NP_001135815",
+			"protein_acc_2": "NP_001258678",
+			"alignment_length": 370,
+			"identity_score": 0.29,
+			"similarity_score": 0.46,
+			"common_GO_slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005886(plasma membrane);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+			"common_yeast_paralogs": "",
+			"common_fly_paralogs": "",
+			"common_protein_interactors": 0,
+			"common_genetic_interactors": 0,
+			"coexpressed_samples": 2,
+			"tissue_expression_correlation": 0.28466,
+			"cell_line_expression_correlation": 0.12731
+		},
+		{
+			"species": "human",
+			"species_id": 9606,
+			"gene_symbol_1": "CMKLR1",
+			"paralog_score": 2.68,
+			"DIOPT_score": 2,
+			"paralog_pair": "text show expression data",
+			"gene_symbol_2": "GPR32",
+			"protein_acc_1": "NP_001135815",
+			"protein_acc_2": "NP_001497",
+			"alignment_length": 314,
+			"identity_score": 0.36,
+			"similarity_score": 0.54,
+			"common_GO_slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005886(plasma membrane);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+			"common_yeast_paralogs": "",
+			"common_fly_paralogs": "",
+			"common_protein_interactors": 0,
+			"common_genetic_interactors": 0,
+			"coexpressed_samples": 0,
+			"tissue_expression_correlation": -0.05544,
+			"cell_line_expression_correlation": -0.02759
+		}
+	]
+}

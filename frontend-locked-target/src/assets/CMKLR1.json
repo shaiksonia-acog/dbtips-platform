@@ -1,0 +1,3300 @@
+{
+	"target_details": {
+		"ensembl_id": "ENSG00000174600",
+		"hgnc_id": "HGNC:2121",
+		"uniprot_id": "Q99788"
+	},
+	"about_target": {
+		"introduction": {
+			"Accession": "Q99788",
+			"Protein": "Chemerin-like receptor 1",
+			"Gene": "CMKLR1",
+			"Status": "UniProtKB reviewed (Swiss-Prot)",
+			"Organism": "Homo sapiens",
+			"Protein Existence": "1: Evidence at protein level",
+			"Annotation Score": 5
+		},
+		"summary_and_characteristics": {
+			"Target ID": "ENSG00000174600",
+			"Function Descriptions": "Receptor for the chemoattractant adipokine chemerin/RARRES2 and for the omega-3 fatty acid derived molecule resolvin E1. Interaction with RARRES2 initiates activation of G proteins G(i)/G(o) and beta-arrestin pathways inducing cellular responses via second messenger pathways such as intracellular calcium mobilization, phosphorylation of MAP kinases MAPK1/MAPK3 (ERK1/2), TYRO3, MAPK14/P38MAPK and PI3K leading to multifunctional effects, like reduction of immune responses, enhancing of adipogenesis and angionesis (PubMed:27716822). Resolvin E1 down-regulates cytokine production in macrophages by reducing the activation of MAPK1/3 (ERK1/2) and NF- kappa-B. Positively regulates adipogenesis and adipocyte metabolism. {ECO:0000269|PubMed:15728234, ECO:0000269|PubMed:15753205, ECO:0000269|PubMed:20044979, ECO:0000269|PubMed:27716822}. (Microbial infection) Acts as a coreceptor for several SIV strains (SIVMAC316, SIVMAC239, SIVMACL7E-FR and SIVSM62A), as well as a primary HIV-1 strain (92UG024-2). .",
+			"Synonyms": {
+				"UniProt Synonyms": [
+					"Chemerin-like receptor 1",
+					"CMKLR1",
+					"CHEMR23",
+					"DEZ",
+					"Chemokine-like receptor 1",
+					"G-protein coupled receptor ChemR23",
+					"G-protein coupled receptor DEZ"
+				]
+			}
+		},
+		"taxonomy": {
+			"Taxonomic Identifier": 9606,
+			"Organism": "Homo sapiens (Human)",
+			"Taxonomic Lineage": [
+				"Eukaryota",
+				"Metazoa",
+				"Chordata",
+				"Craniata",
+				"Vertebrata",
+				"Euteleostomi",
+				"Mammalia",
+				"Eutheria",
+				"Euarchontoglires",
+				"Primates",
+				"Haplorrhini",
+				"Catarrhini",
+				"Hominidae",
+				"Homo"
+			]
+		}
+	},
+	"target_biology": {
+		"ontology": [
+			{
+				"GO ID": "GO:0010759",
+				"Name": "positive regulation of macrophage chemotaxis",
+				"Aspect": "Biological Process",
+				"Evidence": "IMP",
+				"Gene Product": "Q99788",
+				"Source": "PMID:19443732",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0010759"
+			},
+			{
+				"GO ID": "GO:0120162",
+				"Name": "positive regulation of cold-induced thermogenesis",
+				"Aspect": "Biological Process",
+				"Evidence": "ISS",
+				"Gene Product": "Q99788",
+				"Source": "PMID:26972253",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0120162"
+			},
+			{
+				"GO ID": "GO:0010759",
+				"Name": "positive regulation of macrophage chemotaxis",
+				"Aspect": "Biological Process",
+				"Evidence": "IBA",
+				"Gene Product": "Q99788",
+				"Source": "GO_REF:0000033",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0010759"
+			},
+			{
+				"GO ID": "GO:0004930",
+				"Name": "G protein-coupled receptor activity",
+				"Aspect": "Molecular Function",
+				"Evidence": "NAS",
+				"Gene Product": "Q99788",
+				"Source": "PMID:9603476",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0004930"
+			},
+			{
+				"GO ID": "GO:0002430",
+				"Name": "complement receptor mediated signaling pathway",
+				"Aspect": "Biological Process",
+				"Evidence": "IBA",
+				"Gene Product": "Q99788",
+				"Source": "GO_REF:0000033",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0002430"
+			},
+			{
+				"GO ID": "GO:0004930",
+				"Name": "G protein-coupled receptor activity",
+				"Aspect": "Molecular Function",
+				"Evidence": "IBA",
+				"Gene Product": "Q99788",
+				"Source": "GO_REF:0000033",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0004930"
+			},
+			{
+				"GO ID": "GO:0032088",
+				"Name": "negative regulation of NF-kappaB transcription factor activity",
+				"Aspect": "Biological Process",
+				"Evidence": "IDA",
+				"Gene Product": "Q99788",
+				"Source": "PMID:15753205",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0032088"
+			},
+			{
+				"GO ID": "GO:0070098",
+				"Name": "chemokine-mediated signaling pathway",
+				"Aspect": "Biological Process",
+				"Evidence": "IEA",
+				"Gene Product": "Q99788",
+				"Source": "GO_REF:0000108",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0070098"
+			},
+			{
+				"GO ID": "GO:0005515",
+				"Name": "protein binding",
+				"Aspect": "Molecular Function",
+				"Evidence": "IPI",
+				"Gene Product": "Q99788",
+				"Source": "PMID:14530373",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0005515"
+			},
+			{
+				"GO ID": "GO:0097003",
+				"Name": "adipokinetic hormone receptor activity",
+				"Aspect": "Molecular Function",
+				"Evidence": "IDA",
+				"Gene Product": "Q99788",
+				"Source": "PMID:27716822",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0097003"
+			},
+			{
+				"GO ID": "GO:0050848",
+				"Name": "regulation of calcium-mediated signaling",
+				"Aspect": "Biological Process",
+				"Evidence": "IBA",
+				"Gene Product": "Q99788",
+				"Source": "GO_REF:0000033",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0050848"
+			},
+			{
+				"GO ID": "GO:0004875",
+				"Name": "complement receptor activity",
+				"Aspect": "Molecular Function",
+				"Evidence": "IBA",
+				"Gene Product": "Q99788",
+				"Source": "GO_REF:0000033",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0004875"
+			},
+			{
+				"GO ID": "GO:0005886",
+				"Name": "plasma membrane",
+				"Aspect": "Cellular Component",
+				"Evidence": "TAS",
+				"Gene Product": "Q99788",
+				"Source": "Reactome:R-HSA-8862700",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0005886"
+			},
+			{
+				"GO ID": "GO:0016020",
+				"Name": "membrane",
+				"Aspect": "Cellular Component",
+				"Evidence": "NAS",
+				"Gene Product": "Q99788",
+				"Source": "PMID:9603476",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0016020"
+			},
+			{
+				"GO ID": "GO:0007200",
+				"Name": "phospholipase C-activating G protein-coupled receptor signaling pathway",
+				"Aspect": "Biological Process",
+				"Evidence": "IBA",
+				"Gene Product": "Q99788",
+				"Source": "GO_REF:0000033",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0007200"
+			},
+			{
+				"GO ID": "GO:0005886",
+				"Name": "plasma membrane",
+				"Aspect": "Cellular Component",
+				"Evidence": "IDA",
+				"Gene Product": "Q99788",
+				"Source": "PMID:14530373",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0005886"
+			},
+			{
+				"GO ID": "GO:0032695",
+				"Name": "negative regulation of interleukin-12 production",
+				"Aspect": "Biological Process",
+				"Evidence": "ISS",
+				"Gene Product": "Q99788",
+				"Source": "GO_REF:0000024",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0032695"
+			},
+			{
+				"GO ID": "GO:0097004",
+				"Name": "adipokinetic hormone binding",
+				"Aspect": "Molecular Function",
+				"Evidence": "IDA",
+				"Gene Product": "Q99788",
+				"Source": "PMID:27716822",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0097004"
+			},
+			{
+				"GO ID": "GO:0050848",
+				"Name": "regulation of calcium-mediated signaling",
+				"Aspect": "Biological Process",
+				"Evidence": "IDA",
+				"Gene Product": "Q99788",
+				"Source": "PMID:14530373",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0050848"
+			},
+			{
+				"GO ID": "GO:0005886",
+				"Name": "plasma membrane",
+				"Aspect": "Cellular Component",
+				"Evidence": "IBA",
+				"Gene Product": "Q99788",
+				"Source": "GO_REF:0000033",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0005886"
+			},
+			{
+				"GO ID": "GO:0045600",
+				"Name": "positive regulation of fat cell differentiation",
+				"Aspect": "Biological Process",
+				"Evidence": "ISS",
+				"Gene Product": "Q99788",
+				"Source": "GO_REF:0000024",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0045600"
+			},
+			{
+				"GO ID": "GO:0006935",
+				"Name": "chemotaxis",
+				"Aspect": "Biological Process",
+				"Evidence": "IDA",
+				"Gene Product": "Q99788",
+				"Source": "PMID:14530373",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0006935"
+			},
+			{
+				"GO ID": "GO:0006955",
+				"Name": "immune response",
+				"Aspect": "Biological Process",
+				"Evidence": "TAS",
+				"Gene Product": "Q99788",
+				"Source": "PMID:9425281",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0006955"
+			},
+			{
+				"GO ID": "GO:0038023",
+				"Name": "signaling receptor activity",
+				"Aspect": "Molecular Function",
+				"Evidence": "TAS",
+				"Gene Product": "Q99788",
+				"Source": "PMID:9144535",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0038023"
+			},
+			{
+				"GO ID": "GO:0006935",
+				"Name": "chemotaxis",
+				"Aspect": "Biological Process",
+				"Evidence": "IBA",
+				"Gene Product": "Q99788",
+				"Source": "GO_REF:0000033",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0006935"
+			},
+			{
+				"GO ID": "GO:0007186",
+				"Name": "G protein-coupled receptor signaling pathway",
+				"Aspect": "Biological Process",
+				"Evidence": "IDA",
+				"Gene Product": "Q99788",
+				"Source": "PMID:14530373",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0007186"
+			},
+			{
+				"GO ID": "GO:0007186",
+				"Name": "G protein-coupled receptor signaling pathway",
+				"Aspect": "Biological Process",
+				"Evidence": "IDA",
+				"Gene Product": "Q99788",
+				"Source": "PMID:27716822",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0007186"
+			},
+			{
+				"GO ID": "GO:0007186",
+				"Name": "G protein-coupled receptor signaling pathway",
+				"Aspect": "Biological Process",
+				"Evidence": "NAS",
+				"Gene Product": "Q99788",
+				"Source": "PMID:9603476",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0007186"
+			},
+			{
+				"GO ID": "GO:0004950",
+				"Name": "chemokine receptor activity",
+				"Aspect": "Molecular Function",
+				"Evidence": "TAS",
+				"Gene Product": "Q99788",
+				"Source": "PMID:9425281",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0004950"
+			},
+			{
+				"GO ID": "GO:0001501",
+				"Name": "skeletal system development",
+				"Aspect": "Biological Process",
+				"Evidence": "TAS",
+				"Gene Product": "Q99788",
+				"Source": "PMID:9144535",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0001501"
+			},
+			{
+				"GO ID": "GO:0007204",
+				"Name": "positive regulation of cytosolic calcium ion concentration",
+				"Aspect": "Biological Process",
+				"Evidence": "IBA",
+				"Gene Product": "Q99788",
+				"Source": "GO_REF:0000033",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0007204"
+			},
+			{
+				"GO ID": "GO:0006954",
+				"Name": "inflammatory response",
+				"Aspect": "Biological Process",
+				"Evidence": "IBA",
+				"Gene Product": "Q99788",
+				"Source": "GO_REF:0000033",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0006954"
+			},
+			{
+				"GO ID": "GO:0005886",
+				"Name": "plasma membrane",
+				"Aspect": "Cellular Component",
+				"Evidence": "IDA",
+				"Gene Product": "Q99788",
+				"Source": "PMID:27716822",
+				"Link": "https://amigo.geneontology.org/amigo/term/GO:0005886"
+			}
+		],
+		"protein_expressions": {
+			"data": [
+				{
+					"heart": [
+						{
+							"Tissue": "heart muscle",
+							"RNA Z-Score": 0,
+							"Protein Level": 1
+						},
+						{
+							"Tissue": "coronary artery",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "heart left ventricle",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "atrium auricular region",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "heart",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"blood": [
+						{
+							"Tissue": "granulocyte monocyte progenitor cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "erythroblast",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "central memory CD8-positive, alpha-beta T cell",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "plasma cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "hematopoietic multipotent progenitor cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "common lymphoid progenitor",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "neutrophilic metamyelocyte",
+							"RNA Z-Score": 1,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD14-positive, CD16-negative classical monocyte",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "hematopoietic stem cell",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "endothelial cell of umbilical vein (resting)",
+							"RNA Z-Score": 1,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD4-positive, alpha-beta T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "memory B cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "alternatively activated macrophage",
+							"RNA Z-Score": 1,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "macrophage",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "blood",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "endothelial cell of umbilical vein (proliferating)",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "common myeloid progenitor",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "cytotoxic CD56-dim natural killer cell",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "regulatory T cell",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "mature neutrophil",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "class switched memory B cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD8-positive, alpha-beta T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD38-negative naive B cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "effector memory CD8-positive, alpha-beta T cell",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "effector memory CD4-positive, alpha-beta T cell",
+							"RNA Z-Score": 1,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "central memory CD4-positive, alpha-beta T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "conventional dendritic cell",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD34-negative, CD41-positive, CD42-positive megakaryocyte cell",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "megakaryocyte-erythroid progenitor cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "inflammatory macrophage",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "mature eosinophil",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"immune organ": [
+						{
+							"Tissue": "granulocyte monocyte progenitor cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "central memory CD8-positive, alpha-beta T cell",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "plasma cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "neutrophilic metamyelocyte",
+							"RNA Z-Score": 1,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD3-positive, CD4-positive, CD8-positive, double positive thymocyte",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD14-positive, CD16-negative classical monocyte",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD8-positive, alpha-beta thymocyte",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD4-positive, alpha-beta T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "memory B cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "alternatively activated macrophage",
+							"RNA Z-Score": 1,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "macrophage",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "EBV-transformed lymphocyte",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "lymph node",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "cytotoxic CD56-dim natural killer cell",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "regulatory T cell",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "leukocyte",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "mature neutrophil",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD4-positive, alpha-beta thymocyte",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "class switched memory B cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD8-positive, alpha-beta T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD38-negative naive B cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "effector memory CD8-positive, alpha-beta T cell",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "effector memory CD4-positive, alpha-beta T cell",
+							"RNA Z-Score": 1,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "central memory CD4-positive, alpha-beta T cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "conventional dendritic cell",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "spleen",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "segmented neutrophil of bone marrow",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD34-negative, CD41-positive, CD42-positive megakaryocyte cell",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "inflammatory macrophage",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "mature eosinophil",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"skeletal element": [
+						{
+							"Tissue": "granulocyte monocyte progenitor cell",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "bone marrow",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "segmented neutrophil of bone marrow",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD34-negative, CD41-positive, CD42-positive megakaryocyte cell",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"intestine": [
+						{
+							"Tissue": "transverse colon",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "rectum",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "colon",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "duodenum",
+							"RNA Z-Score": 3,
+							"Protein Level": 1
+						},
+						{
+							"Tissue": "sigmoid colon",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "small intestine Peyer's patch",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "small intestine",
+							"RNA Z-Score": 3,
+							"Protein Level": 1
+						},
+						{
+							"Tissue": "vermiform appendix",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"colon": [
+						{
+							"Tissue": "transverse colon",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "colon",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "sigmoid colon",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "vermiform appendix",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"brain": [
+						{
+							"Tissue": "nucleus accumbens",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "caudate-putamen",
+							"RNA Z-Score": 0,
+							"Protein Level": 1
+						},
+						{
+							"Tissue": "hippocampus",
+							"RNA Z-Score": 0,
+							"Protein Level": 1
+						},
+						{
+							"Tissue": "substantia nigra",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "amygdala",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "hypothalamus",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "Brodmann (1909) area 24",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "cerebral cortex",
+							"RNA Z-Score": 2,
+							"Protein Level": 1
+						},
+						{
+							"Tissue": "Brodmann (1909) area 9",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "temporal lobe",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "pituitary gland",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "putamen",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "brain",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "frontal lobe",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "caudate nucleus",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "cerebellar hemisphere",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "cerebellum",
+							"RNA Z-Score": 2,
+							"Protein Level": 1
+						},
+						{
+							"Tissue": "hippocampus proper",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "prefrontal cortex",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"nerve": [
+						{
+							"Tissue": "tibial nerve",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"reproductive organ": [
+						{
+							"Tissue": "testis",
+							"RNA Z-Score": 3,
+							"Protein Level": 2
+						},
+						{
+							"Tissue": "vagina",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "ovary",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "ectocervix",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "seminal vesicle",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "endometrium",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "uterus",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"reproductive structure": [
+						{
+							"Tissue": "testis",
+							"RNA Z-Score": 3,
+							"Protein Level": 2
+						},
+						{
+							"Tissue": "fallopian tube",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "epididymis",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "vagina",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "placenta",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "ectocervix",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "seminal vesicle",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "endometrium",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "endocervix",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "uterus",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "prostate gland",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"exocrine gland": [
+						{
+							"Tissue": "saliva-secreting gland",
+							"RNA Z-Score": 3,
+							"Protein Level": 1
+						},
+						{
+							"Tissue": "liver",
+							"RNA Z-Score": 3,
+							"Protein Level": 1
+						},
+						{
+							"Tissue": "minor salivary gland",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"oral gland": [
+						{
+							"Tissue": "saliva-secreting gland",
+							"RNA Z-Score": 3,
+							"Protein Level": 1
+						},
+						{
+							"Tissue": "minor salivary gland",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"rectum": [
+						{
+							"Tissue": "rectum",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"musculature": [
+						{
+							"Tissue": "smooth muscle tissue",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "esophagus muscularis mucosa",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "skeletal muscle tissue",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"spinal cord": [
+						{
+							"Tissue": "C1 segment of cervical spinal cord",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"endocrine gland": [
+						{
+							"Tissue": "thyroid gland",
+							"RNA Z-Score": 3,
+							"Protein Level": 1
+						},
+						{
+							"Tissue": "CD3-positive, CD4-positive, CD8-positive, double positive thymocyte",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "CD8-positive, alpha-beta thymocyte",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "pituitary gland",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "liver",
+							"RNA Z-Score": 3,
+							"Protein Level": 1
+						},
+						{
+							"Tissue": "CD4-positive, alpha-beta thymocyte",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "adrenal gland",
+							"RNA Z-Score": 3,
+							"Protein Level": 1
+						},
+						{
+							"Tissue": "parathyroid gland",
+							"RNA Z-Score": 0,
+							"Protein Level": 2
+						}
+					]
+				},
+				{
+					"skin of body": [
+						{
+							"Tissue": "lower leg skin",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "zone of skin",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "suprapubic skin",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"mucosa": [
+						{
+							"Tissue": "esophagus muscularis mucosa",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "esophagus mucosa",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "oral mucosa",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "small intestine Peyer's patch",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "endometrium",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "minor salivary gland",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"esophagus": [
+						{
+							"Tissue": "esophagus muscularis mucosa",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "esophagus",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "esophagus mucosa",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"kidney": [
+						{
+							"Tissue": "cortex of kidney",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "kidney",
+							"RNA Z-Score": 3,
+							"Protein Level": 2
+						}
+					]
+				},
+				{
+					"vasculature": [
+						{
+							"Tissue": "aorta",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "tibial artery",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "coronary artery",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"bladder organ": [
+						{
+							"Tissue": "gall bladder",
+							"RNA Z-Score": 3,
+							"Protein Level": 1
+						},
+						{
+							"Tissue": "urinary bladder",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"peritoneum": [
+						{
+							"Tissue": "greater omentum",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"breast": [
+						{
+							"Tissue": "breast",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"tracheobronchial tree": [
+						{
+							"Tissue": "bronchus",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"liver": [
+						{
+							"Tissue": "liver",
+							"RNA Z-Score": 3,
+							"Protein Level": 1
+						}
+					]
+				},
+				{
+					"pharynx": [
+						{
+							"Tissue": "nasopharynx",
+							"RNA Z-Score": 0,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "tonsil",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"connective tissue": [
+						{
+							"Tissue": "subcutaneous adipose tissue",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "adipose tissue",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						},
+						{
+							"Tissue": "transformed skin fibroblast",
+							"RNA Z-Score": 2,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"stomach": [
+						{
+							"Tissue": "stomach",
+							"RNA Z-Score": 3,
+							"Protein Level": 1
+						}
+					]
+				},
+				{
+					"pancreas": [
+						{
+							"Tissue": "pancreas",
+							"RNA Z-Score": 3,
+							"Protein Level": 1
+						}
+					]
+				},
+				{
+					"spleen": [
+						{
+							"Tissue": "spleen",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"esophagogastric junction": [
+						{
+							"Tissue": "esophagogastric junction",
+							"RNA Z-Score": 3,
+							"Protein Level": 0
+						}
+					]
+				},
+				{
+					"lung": [
+						{
+							"Tissue": "lung",
+							"RNA Z-Score": 4,
+							"Protein Level": 0
+						}
+					]
+				}
+			]
+		},
+		"subcellular": [
+			{
+				"Type": "Topological domain",
+				"Positions": "1-41",
+				"Description": "Extracellular",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000255",
+				"Blast Link": "https://www.uniprot.org/blast?ids=Q99788[1-41]"
+			},
+			{
+				"Type": "Transmembrane",
+				"Positions": "42-64",
+				"Description": "Helical; Name=1",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000255",
+				"Blast Link": "https://www.uniprot.org/blast?ids=Q99788[42-64]"
+			},
+			{
+				"Type": "Topological domain",
+				"Positions": "65-75",
+				"Description": "Cytoplasmic",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000255",
+				"Blast Link": "https://www.uniprot.org/blast?ids=Q99788[65-75]"
+			},
+			{
+				"Type": "Transmembrane",
+				"Positions": "76-97",
+				"Description": "Helical; Name=2",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000255",
+				"Blast Link": "https://www.uniprot.org/blast?ids=Q99788[76-97]"
+			},
+			{
+				"Type": "Topological domain",
+				"Positions": "98-114",
+				"Description": "Extracellular",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000255",
+				"Blast Link": "https://www.uniprot.org/blast?ids=Q99788[98-114]"
+			},
+			{
+				"Type": "Transmembrane",
+				"Positions": "115-135",
+				"Description": "Helical; Name=3",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000255",
+				"Blast Link": "https://www.uniprot.org/blast?ids=Q99788[115-135]"
+			},
+			{
+				"Type": "Topological domain",
+				"Positions": "136-154",
+				"Description": "Cytoplasmic",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000255",
+				"Blast Link": "https://www.uniprot.org/blast?ids=Q99788[136-154]"
+			},
+			{
+				"Type": "Transmembrane",
+				"Positions": "155-176",
+				"Description": "Helical; Name=4",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000255",
+				"Blast Link": "https://www.uniprot.org/blast?ids=Q99788[155-176]"
+			},
+			{
+				"Type": "Topological domain",
+				"Positions": "177-224",
+				"Description": "Extracellular",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000255",
+				"Blast Link": "https://www.uniprot.org/blast?ids=Q99788[177-224]"
+			},
+			{
+				"Type": "Transmembrane",
+				"Positions": "225-245",
+				"Description": "Helical; Name=5",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000255",
+				"Blast Link": "https://www.uniprot.org/blast?ids=Q99788[225-245]"
+			},
+			{
+				"Type": "Topological domain",
+				"Positions": "246-261",
+				"Description": "Cytoplasmic",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000255",
+				"Blast Link": "https://www.uniprot.org/blast?ids=Q99788[246-261]"
+			},
+			{
+				"Type": "Transmembrane",
+				"Positions": "262-282",
+				"Description": "Helical; Name=6",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000255",
+				"Blast Link": "https://www.uniprot.org/blast?ids=Q99788[262-282]"
+			},
+			{
+				"Type": "Topological domain",
+				"Positions": "283-300",
+				"Description": "Extracellular",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000255",
+				"Blast Link": "https://www.uniprot.org/blast?ids=Q99788[283-300]"
+			},
+			{
+				"Type": "Transmembrane",
+				"Positions": "301-320",
+				"Description": "Helical; Name=7",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000255",
+				"Blast Link": "https://www.uniprot.org/blast?ids=Q99788[301-320]"
+			},
+			{
+				"Type": "Topological domain",
+				"Positions": "321-373",
+				"Description": "Cytoplasmic",
+				"Description Link": "https://www.ebi.ac.uk/QuickGO/term/ECO:0000255",
+				"Blast Link": "https://www.uniprot.org/blast?ids=Q99788[321-373]"
+			}
+		]
+	},
+	"competitive_landscape": {
+		"known_drugs": [],
+		"safety": {
+			"error": "No Safety events found for target"
+		}
+	},
+	"target_prioritisation": {
+		"targetability": {
+			"Approved Symbol": "CMKLR1",
+			"Prioritisation": {
+				"Target in clinic": "no data",
+				"Membrane protein": 1,
+				"Secreted protein": 0,
+				"Ligand binder": 1,
+				"Small molecule binder": 1,
+				"Predicted pockets": 0,
+				"Mouse ortholog identity": 0,
+				"Chemical probes": "no data",
+				"Genetic constraint": 0.3613252760991874,
+				"Mouse models": -0.19037287424326255,
+				"Gene essentiality": 0,
+				"Known safety events": "no data",
+				"Cancer driver gene": "no data",
+				"Paralogues": 0,
+				"Tissue specificity": 0.5,
+				"Tissue distribution": 0
+			}
+		},
+		"tractability": {
+			"Small molecule": {
+				"Items": {
+					"Approved Drug": {
+						"Value": false,
+						"Link": ""
+					},
+					"Advanced Clinical": {
+						"Value": false,
+						"Link": ""
+					},
+					"Phase 1 Clinical": {
+						"Value": false,
+						"Link": ""
+					},
+					"Structure with Ligand": {
+						"Value": true,
+						"Link": ""
+					},
+					"High-Quality Ligand": {
+						"Value": true,
+						"Link": ""
+					},
+					"High-Quality Pocket": {
+						"Value": false,
+						"Link": ""
+					},
+					"Med-Quality Pocket": {
+						"Value": false,
+						"Link": ""
+					},
+					"Druggable Family": {
+						"Value": true,
+						"Link": ""
+					}
+				},
+				"Links": []
+			},
+			"Antibody": {
+				"Items": {
+					"Approved Drug": {
+						"Value": false,
+						"Link": ""
+					},
+					"Advanced Clinical": {
+						"Value": false,
+						"Link": ""
+					},
+					"Phase 1 Clinical": {
+						"Value": false,
+						"Link": ""
+					},
+					"UniProt loc high conf": {
+						"Value": true,
+						"Link": ""
+					},
+					"GO CC high conf": {
+						"Value": true,
+						"Link": ""
+					},
+					"UniProt loc med conf": {
+						"Value": false,
+						"Link": ""
+					},
+					"UniProt SigP or TMHMM": {
+						"Value": true,
+						"Link": ""
+					},
+					"GO CC med conf": {
+						"Value": false,
+						"Link": ""
+					},
+					"Human Protein Atlas loc": {
+						"Value": false,
+						"Link": ""
+					}
+				},
+				"Links": []
+			},
+			"PROTAC": {
+				"Items": {
+					"Approved Drug": {
+						"Value": false,
+						"Link": ""
+					},
+					"Advanced Clinical": {
+						"Value": false,
+						"Link": ""
+					},
+					"Phase 1 Clinical": {
+						"Value": false,
+						"Link": ""
+					},
+					"Literature": {
+						"Value": false,
+						"Link": ""
+					},
+					"UniProt Ubiquitination": {
+						"Value": false,
+						"Link": ""
+					},
+					"Database Ubiquitination": {
+						"Value": false,
+						"Link": ""
+					},
+					"Half-life Data": {
+						"Value": false,
+						"Link": ""
+					},
+					"Small Molecule Binder": {
+						"Value": true,
+						"Link": ""
+					}
+				},
+				"Links": []
+			},
+			"Other modalities": {
+				"Items": {
+					"Approved Drug": {
+						"Value": false,
+						"Link": ""
+					},
+					"Advanced Clinical": {
+						"Value": false,
+						"Link": ""
+					},
+					"Phase 1 Clinical": {
+						"Value": false,
+						"Link": ""
+					}
+				},
+				"Links": []
+			}
+		}
+	},
+	"disease_association": [],
+	"mouse_phenotypes": {
+		"lung inflammation": {
+			"Gene": {
+				"Name": "Cmklr1",
+				"Link": "https://www.informatics.jax.org/marker/MGI:109603"
+			},
+			"Phenotype": {
+				"Label": "lung inflammation",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0001861"
+			},
+			"Categories": [
+				{
+					"Label": "immune system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005387"
+				},
+				{
+					"Label": "respiratory system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005388"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Cmklr1<tm1Dgen>/Cmklr1<tm1Dgen>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4430513"
+				}
+			]
+		},
+		"abnormal dendritic cell physiology": {
+			"Gene": {
+				"Name": "Cmklr1",
+				"Link": "https://www.informatics.jax.org/marker/MGI:109603"
+			},
+			"Phenotype": {
+				"Label": "abnormal dendritic cell physiology",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0002376"
+			},
+			"Categories": [
+				{
+					"Label": "immune system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005387"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Cmklr1<tm1Dgen>/Cmklr1<tm1Dgen>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4430513"
+				}
+			]
+		},
+		"abnormal macrophage chemotaxis": {
+			"Gene": {
+				"Name": "Cmklr1",
+				"Link": "https://www.informatics.jax.org/marker/MGI:109603"
+			},
+			"Phenotype": {
+				"Label": "abnormal macrophage chemotaxis",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0010760"
+			},
+			"Categories": [
+				{
+					"Label": "hematopoietic system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005397"
+				},
+				{
+					"Label": "immune system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005387"
+				},
+				{
+					"Label": "cellular phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005384"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Cmklr1<tm1Dgen>/Cmklr1<tm1Dgen>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4430513"
+				}
+			]
+		},
+		"abnormal definitive hematopoiesis": {
+			"Gene": {
+				"Name": "Cmklr1",
+				"Link": "https://www.informatics.jax.org/marker/MGI:109603"
+			},
+			"Phenotype": {
+				"Label": "abnormal definitive hematopoiesis",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0002123"
+			},
+			"Categories": [
+				{
+					"Label": "hematopoietic system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005397"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Cmklr1<tm1Dgen>/Cmklr1<tm1Dgen>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4430513"
+				}
+			]
+		},
+		"increased susceptibility to endotoxin shock": {
+			"Gene": {
+				"Name": "Cmklr1",
+				"Link": "https://www.informatics.jax.org/marker/MGI:109603"
+			},
+			"Phenotype": {
+				"Label": "increased susceptibility to endotoxin shock",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0008735"
+			},
+			"Categories": [
+				{
+					"Label": "immune system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005387"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Cmklr1<tm1Dgen>/Cmklr1<tm1Dgen>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4430513"
+				}
+			]
+		},
+		"abnormal alveolar macrophage morphology": {
+			"Gene": {
+				"Name": "Cmklr1",
+				"Link": "https://www.informatics.jax.org/marker/MGI:109603"
+			},
+			"Phenotype": {
+				"Label": "abnormal alveolar macrophage morphology",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0008245"
+			},
+			"Categories": [
+				{
+					"Label": "hematopoietic system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005397"
+				},
+				{
+					"Label": "immune system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005387"
+				},
+				{
+					"Label": "respiratory system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005388"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Cmklr1<tm1Dgen>/Cmklr1<tm1Dgen>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4430513"
+				}
+			]
+		},
+		"increased neutrophil cell number": {
+			"Gene": {
+				"Name": "Cmklr1",
+				"Link": "https://www.informatics.jax.org/marker/MGI:109603"
+			},
+			"Phenotype": {
+				"Label": "increased neutrophil cell number",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0000219"
+			},
+			"Categories": [
+				{
+					"Label": "hematopoietic system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005397"
+				},
+				{
+					"Label": "immune system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005387"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Cmklr1<tm1Dgen>/Cmklr1<tm1Dgen>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4430513"
+				}
+			]
+		},
+		"abnormal immune system morphology": {
+			"Gene": {
+				"Name": "Cmklr1",
+				"Link": "https://www.informatics.jax.org/marker/MGI:109603"
+			},
+			"Phenotype": {
+				"Label": "abnormal immune system morphology",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0000685"
+			},
+			"Categories": [
+				{
+					"Label": "immune system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005387"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Cmklr1<tm1Dgen>/Cmklr1<tm1Dgen>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4430513"
+				}
+			]
+		},
+		"abnormal professional antigen presenting cell physiology": {
+			"Gene": {
+				"Name": "Cmklr1",
+				"Link": "https://www.informatics.jax.org/marker/MGI:109603"
+			},
+			"Phenotype": {
+				"Label": "abnormal professional antigen presenting cell physiology",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0002452"
+			},
+			"Categories": [
+				{
+					"Label": "immune system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005387"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Cmklr1<tm1Dgen>/Cmklr1<tm1Dgen>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:4430513"
+				}
+			]
+		},
+		"impaired neutrophil recruitment": {
+			"Gene": {
+				"Name": "Cmklr1",
+				"Link": "https://www.informatics.jax.org/marker/MGI:109603"
+			},
+			"Phenotype": {
+				"Label": "impaired neutrophil recruitment",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0008719"
+			},
+			"Categories": [
+				{
+					"Label": "hematopoietic system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005397"
+				},
+				{
+					"Label": "immune system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005387"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Cmklr1<tm1Drg>/Cmklr1<tm1Drg>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:3796052"
+				}
+			]
+		},
+		"impaired macrophage chemotaxis": {
+			"Gene": {
+				"Name": "Cmklr1",
+				"Link": "https://www.informatics.jax.org/marker/MGI:109603"
+			},
+			"Phenotype": {
+				"Label": "impaired macrophage chemotaxis",
+				"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/terms?obo_id=MP:0003799"
+			},
+			"Categories": [
+				{
+					"Label": "hematopoietic system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005397"
+				},
+				{
+					"Label": "immune system phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005387"
+				},
+				{
+					"Label": "cellular phenotype",
+					"Link": "https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id=MP:0005384"
+				}
+			],
+			"Allelic Compositions": [
+				{
+					"Composition": "Cmklr1<tm1Drg>/Cmklr1<tm1Drg>",
+					"Link": "https://www.informatics.jax.org/allele/genoview/MGI:3796052"
+				}
+			]
+		}
+	},
+	"off_target_effects": {
+		"human": [
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "CMKLR1",
+				"Paralog Score": "2.96",
+				"DIOPT Score": "3",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2918157",
+				"Gene2 Symbol": "FPR3",
+				"1-Protein Acc": "NP_001135815",
+				"2-Protein Acc": "NP_002021",
+				"Alignment Length": "352",
+				"Identity Score": "0.36",
+				"Similarity Score": "0.56",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005886(plasma membrane);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "8",
+				"Tissue Expression Correlation": "0.68675",
+				"Cell Line Expression Correlation": "0.00952"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "CMKLR1",
+				"Paralog Score": "2.92",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2918154",
+				"Gene2 Symbol": "C5AR1",
+				"1-Protein Acc": "NP_001135815",
+				"2-Protein Acc": "NP_001727",
+				"Alignment Length": "381",
+				"Identity Score": "0.34",
+				"Similarity Score": "0.52",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0009058(biosynthetic process);GO:0048856(anatomical structure development);GO:0040011(locomotion);GO:0005886(plasma membrane);GO:0005623(cell);GO:0007165(signal transduction);GO:0034641(cellular nitrogen compound metabolic process);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "23",
+				"Tissue Expression Correlation": "0.13267",
+				"Cell Line Expression Correlation": "0.11562"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "CMKLR1",
+				"Paralog Score": "2.91",
+				"DIOPT Score": "3",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2918156",
+				"Gene2 Symbol": "FPR2",
+				"1-Protein Acc": "NP_001135815",
+				"2-Protein Acc": "NP_001005738",
+				"Alignment Length": "336",
+				"Identity Score": "0.36",
+				"Similarity Score": "0.56",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005886(plasma membrane);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "2",
+				"Tissue Expression Correlation": "0.05281",
+				"Cell Line Expression Correlation": "0.06273"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "CMKLR1",
+				"Paralog Score": "2.84",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2918160",
+				"Gene2 Symbol": "GPR33",
+				"1-Protein Acc": "NP_001135815",
+				"2-Protein Acc": "NP_001184113",
+				"Alignment Length": "330",
+				"Identity Score": "0.36",
+				"Similarity Score": "0.57",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005886(plasma membrane);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "0",
+				"Tissue Expression Correlation": "-0.05544",
+				"Cell Line Expression Correlation": "-0.02440"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "CMKLR1",
+				"Paralog Score": "2.83",
+				"DIOPT Score": "3",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2918155",
+				"Gene2 Symbol": "FPR1",
+				"1-Protein Acc": "NP_001135815",
+				"2-Protein Acc": "NP_001180235",
+				"Alignment Length": "318",
+				"Identity Score": "0.38",
+				"Similarity Score": "0.57",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005886(plasma membrane);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "10",
+				"Tissue Expression Correlation": "0.00988",
+				"Cell Line Expression Correlation": "0.23407"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "CMKLR1",
+				"Paralog Score": "2.79",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2918161",
+				"Gene2 Symbol": "C5AR2",
+				"1-Protein Acc": "NP_001135815",
+				"2-Protein Acc": "NP_001258678",
+				"Alignment Length": "370",
+				"Identity Score": "0.29",
+				"Similarity Score": "0.46",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005886(plasma membrane);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "2",
+				"Tissue Expression Correlation": "0.28466",
+				"Cell Line Expression Correlation": "0.12731"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "CMKLR1",
+				"Paralog Score": "2.68",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2918158",
+				"Gene2 Symbol": "GPR32",
+				"1-Protein Acc": "NP_001135815",
+				"2-Protein Acc": "NP_001497",
+				"Alignment Length": "314",
+				"Identity Score": "0.36",
+				"Similarity Score": "0.54",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005886(plasma membrane);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "0",
+				"Tissue Expression Correlation": "-0.05544",
+				"Cell Line Expression Correlation": "-0.02759"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "CMKLR1",
+				"Paralog Score": "2.62",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2918153",
+				"Gene2 Symbol": "C3AR1",
+				"1-Protein Acc": "NP_001135815",
+				"2-Protein Acc": "NP_001313404",
+				"Alignment Length": "462",
+				"Identity Score": "0.28",
+				"Similarity Score": "0.43",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0048856(anatomical structure development);GO:0040011(locomotion);GO:0005886(plasma membrane);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "21",
+				"Tissue Expression Correlation": "0.41097",
+				"Cell Line Expression Correlation": "0.02801"
+			},
+			{
+				"Species": "human",
+				"Species ID": "9606",
+				"Gene1 Symbol": "CMKLR1",
+				"Paralog Score": "0.00",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/2918159",
+				"Gene2 Symbol": "GPR32P1",
+				"1-Protein Acc": "NP_001135815",
+				"2-Protein Acc": "",
+				"Alignment Length": "0",
+				"Identity Score": "0.00",
+				"Similarity Score": "0.00",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0005623(cell);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0",
+				"Coexpressed Samples": "0",
+				"Tissue Expression Correlation": "-0.05544",
+				"Cell Line Expression Correlation": "0.00000"
+			}
+		],
+		"mouse": [
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Cmklr1",
+				"Paralog Score": "3.10",
+				"DIOPT Score": "4",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3369026",
+				"Gene2 Symbol": "Fpr1",
+				"1-Protein Acc": "NP_001345989",
+				"2-Protein Acc": "NP_038549",
+				"Alignment Length": "376",
+				"Identity Score": "0.36",
+				"Similarity Score": "0.51",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Cmklr1",
+				"Paralog Score": "3.08",
+				"DIOPT Score": "4",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3369027",
+				"Gene2 Symbol": "Fpr3",
+				"1-Protein Acc": "NP_001345989",
+				"2-Protein Acc": "NP_032068",
+				"Alignment Length": "377",
+				"Identity Score": "0.34",
+				"Similarity Score": "0.52",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Cmklr1",
+				"Paralog Score": "3.05",
+				"DIOPT Score": "4",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3369023",
+				"Gene2 Symbol": "Fpr2",
+				"1-Protein Acc": "NP_001345989",
+				"2-Protein Acc": "NP_032065",
+				"Alignment Length": "337",
+				"Identity Score": "0.37",
+				"Similarity Score": "0.57",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Cmklr1",
+				"Paralog Score": "2.96",
+				"DIOPT Score": "4",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3369024",
+				"Gene2 Symbol": "Fpr-rs3",
+				"1-Protein Acc": "NP_001345989",
+				"2-Protein Acc": "NP_032066",
+				"Alignment Length": "316",
+				"Identity Score": "0.37",
+				"Similarity Score": "0.57",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Cmklr1",
+				"Paralog Score": "2.96",
+				"DIOPT Score": "4",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3369025",
+				"Gene2 Symbol": "Fpr-rs4",
+				"1-Protein Acc": "NP_001345989",
+				"2-Protein Acc": "NP_032067",
+				"Alignment Length": "309",
+				"Identity Score": "0.35",
+				"Similarity Score": "0.56",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Cmklr1",
+				"Paralog Score": "2.96",
+				"DIOPT Score": "4",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3369030",
+				"Gene2 Symbol": "Fpr-rs6",
+				"1-Protein Acc": "NP_001345989",
+				"2-Protein Acc": "NP_796290",
+				"Alignment Length": "313",
+				"Identity Score": "0.36",
+				"Similarity Score": "0.57",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Cmklr1",
+				"Paralog Score": "2.84",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3369022",
+				"Gene2 Symbol": "C5ar1",
+				"1-Protein Acc": "NP_001345989",
+				"2-Protein Acc": "NP_001167021",
+				"Alignment Length": "377",
+				"Identity Score": "0.31",
+				"Similarity Score": "0.48",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0009058(biosynthetic process);GO:0040011(locomotion);GO:0005623(cell);GO:0007165(signal transduction);GO:0034641(cellular nitrogen compound metabolic process);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Cmklr1",
+				"Paralog Score": "2.78",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3369028",
+				"Gene2 Symbol": "Gpr33",
+				"1-Protein Acc": "NP_001345989",
+				"2-Protein Acc": "NP_032185",
+				"Alignment Length": "337",
+				"Identity Score": "0.35",
+				"Similarity Score": "0.53",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Cmklr1",
+				"Paralog Score": "2.68",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3369029",
+				"Gene2 Symbol": "C5ar2",
+				"1-Protein Acc": "NP_001345989",
+				"2-Protein Acc": "XP_006540120",
+				"Alignment Length": "366",
+				"Identity Score": "0.28",
+				"Similarity Score": "0.46",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Cmklr1",
+				"Paralog Score": "2.67",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3369021",
+				"Gene2 Symbol": "C3ar1",
+				"1-Protein Acc": "NP_001345989",
+				"2-Protein Acc": "NP_033909",
+				"Alignment Length": "463",
+				"Identity Score": "0.30",
+				"Similarity Score": "0.43",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0009058(biosynthetic process);GO:0040011(locomotion);GO:0005623(cell);GO:0007165(signal transduction);GO:0034641(cellular nitrogen compound metabolic process);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "mouse",
+				"Species ID": "10090",
+				"Gene1 Symbol": "Cmklr1",
+				"Paralog Score": "0.00",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/3369031",
+				"Gene2 Symbol": "Fpr-rs7",
+				"1-Protein Acc": "NP_001345989",
+				"2-Protein Acc": "",
+				"Alignment Length": "0",
+				"Identity Score": "0.00",
+				"Similarity Score": "0.00",
+				"Common GO slim": "GO:0002376(immune system process);GO:0004871(signal transducer activity);GO:0040011(locomotion);GO:0005623(cell);GO:0007165(signal transduction);GO:0048870(cell motility)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			}
+		],
+		"worm": [],
+		"zebrafish": [
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "3.30",
+				"DIOPT Score": "3",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992110",
+				"Gene2 Symbol": "cmklrl2",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_005165256",
+				"Alignment Length": "362",
+				"Identity Score": "0.50",
+				"Similarity Score": "0.65",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "3.23",
+				"DIOPT Score": "3",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992111",
+				"Gene2 Symbol": "cmklr1l1",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_001335526",
+				"Alignment Length": "342",
+				"Identity Score": "0.48",
+				"Similarity Score": "0.65",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "3.04",
+				"DIOPT Score": "3",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992098",
+				"Gene2 Symbol": "fpr1",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_003200236",
+				"Alignment Length": "348",
+				"Identity Score": "0.43",
+				"Similarity Score": "0.62",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.83",
+				"DIOPT Score": "3",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992108",
+				"Gene2 Symbol": "si:dkey-211g8.1",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "NP_001076360",
+				"Alignment Length": "304",
+				"Identity Score": "0.37",
+				"Similarity Score": "0.60",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.81",
+				"DIOPT Score": "3",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992105",
+				"Gene2 Symbol": "si:ch73-160i9.1",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_021323883",
+				"Alignment Length": "305",
+				"Identity Score": "0.36",
+				"Similarity Score": "0.57",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.80",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992104",
+				"Gene2 Symbol": "si:ch211-171h4.6",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_001332899",
+				"Alignment Length": "327",
+				"Identity Score": "0.36",
+				"Similarity Score": "0.55",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.79",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992136",
+				"Gene2 Symbol": "si:dkey-42l23.5",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_017206565",
+				"Alignment Length": "367",
+				"Identity Score": "0.29",
+				"Similarity Score": "0.47",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.78",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992120",
+				"Gene2 Symbol": "gpr1",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_001343514",
+				"Alignment Length": "350",
+				"Identity Score": "0.34",
+				"Similarity Score": "0.56",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,2);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.76",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992109",
+				"Gene2 Symbol": "c3ar1",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_009303337",
+				"Alignment Length": "333",
+				"Identity Score": "0.38",
+				"Similarity Score": "0.57",
+				"Common GO slim": "",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.74",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992117",
+				"Gene2 Symbol": "c5ar1",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_005159331",
+				"Alignment Length": "325",
+				"Identity Score": "0.31",
+				"Similarity Score": "0.54",
+				"Common GO slim": "",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "sNPF-R(DIOPT=1,1);AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.74",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992129",
+				"Gene2 Symbol": "si:ch211-137j23.9",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_021322202",
+				"Alignment Length": "324",
+				"Identity Score": "0.32",
+				"Similarity Score": "0.52",
+				"Common GO slim": "",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.73",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992107",
+				"Gene2 Symbol": "si:ch73-160i9.3",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_001333235",
+				"Alignment Length": "303",
+				"Identity Score": "0.37",
+				"Similarity Score": "0.57",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "sNPF-R(DIOPT=1,1);AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.73",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992131",
+				"Gene2 Symbol": "si:dkey-42l23.7",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_017206711",
+				"Alignment Length": "348",
+				"Identity Score": "0.32",
+				"Similarity Score": "0.49",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.72",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992086",
+				"Gene2 Symbol": "cxcr4b",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "NP_571909",
+				"Alignment Length": "373",
+				"Identity Score": "0.31",
+				"Similarity Score": "0.47",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.70",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992087",
+				"Gene2 Symbol": "cxcr4a",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "NP_571957",
+				"Alignment Length": "369",
+				"Identity Score": "0.28",
+				"Similarity Score": "0.48",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.68",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992100",
+				"Gene2 Symbol": "cxcr3.1",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "NP_001082899",
+				"Alignment Length": "374",
+				"Identity Score": "0.29",
+				"Similarity Score": "0.47",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.68",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992112",
+				"Gene2 Symbol": "si:dkey-42l23.2",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_005173460",
+				"Alignment Length": "326",
+				"Identity Score": "0.38",
+				"Similarity Score": "0.55",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,2);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.68",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992130",
+				"Gene2 Symbol": "si:dkey-117a8.1",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_017206709",
+				"Alignment Length": "314",
+				"Identity Score": "0.34",
+				"Similarity Score": "0.53",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.66",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992124",
+				"Gene2 Symbol": "si:dkey-42l23.4",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_001921702",
+				"Alignment Length": "331",
+				"Identity Score": "0.33",
+				"Similarity Score": "0.50",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.64",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992113",
+				"Gene2 Symbol": "cxcr2",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_017213388",
+				"Alignment Length": "331",
+				"Identity Score": "0.31",
+				"Similarity Score": "0.51",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.63",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992089",
+				"Gene2 Symbol": "ccr10",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "NP_001002675",
+				"Alignment Length": "384",
+				"Identity Score": "0.28",
+				"Similarity Score": "0.45",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.63",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992102",
+				"Gene2 Symbol": "ccr8.1",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_009290350",
+				"Alignment Length": "377",
+				"Identity Score": "0.28",
+				"Similarity Score": "0.48",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.61",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992103",
+				"Gene2 Symbol": "ccr12b.1",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_021325909",
+				"Alignment Length": "339",
+				"Identity Score": "0.26",
+				"Similarity Score": "0.46",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.61",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992106",
+				"Gene2 Symbol": "si:ch73-160i9.2",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_017207817",
+				"Alignment Length": "299",
+				"Identity Score": "0.37",
+				"Similarity Score": "0.58",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.61",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992123",
+				"Gene2 Symbol": "rxfp3.3a2",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_001921035",
+				"Alignment Length": "369",
+				"Identity Score": "0.25",
+				"Similarity Score": "0.47",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.60",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992090",
+				"Gene2 Symbol": "ccr9a",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "NP_001231645",
+				"Alignment Length": "353",
+				"Identity Score": "0.30",
+				"Similarity Score": "0.49",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.60",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992092",
+				"Gene2 Symbol": "ccr6a",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "NP_001093461",
+				"Alignment Length": "369",
+				"Identity Score": "0.26",
+				"Similarity Score": "0.46",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.60",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992137",
+				"Gene2 Symbol": "LOC110437916",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_021322149",
+				"Alignment Length": "299",
+				"Identity Score": "0.32",
+				"Similarity Score": "0.52",
+				"Common GO slim": "",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.59",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992127",
+				"Gene2 Symbol": "xcr1b.1",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_021323805",
+				"Alignment Length": "379",
+				"Identity Score": "0.25",
+				"Similarity Score": "0.42",
+				"Common GO slim": "",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.58",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992091",
+				"Gene2 Symbol": "xcr1a.1",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_001332348",
+				"Alignment Length": "361",
+				"Identity Score": "0.23",
+				"Similarity Score": "0.43",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.57",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992119",
+				"Gene2 Symbol": "ackr4a",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_005163521",
+				"Alignment Length": "380",
+				"Identity Score": "0.24",
+				"Similarity Score": "0.47",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.56",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992094",
+				"Gene2 Symbol": "ccr12a",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "NP_001038492",
+				"Alignment Length": "333",
+				"Identity Score": "0.29",
+				"Similarity Score": "0.47",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.56",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992126",
+				"Gene2 Symbol": "cabz01093075.1",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_005173520",
+				"Alignment Length": "375",
+				"Identity Score": "0.26",
+				"Similarity Score": "0.48",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.56",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992135",
+				"Gene2 Symbol": "LOC101887081",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_005163720",
+				"Alignment Length": "381",
+				"Identity Score": "0.23",
+				"Similarity Score": "0.41",
+				"Common GO slim": "",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.55",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992093",
+				"Gene2 Symbol": "ackr3b",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "NP_001077301",
+				"Alignment Length": "350",
+				"Identity Score": "0.24",
+				"Similarity Score": "0.45",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.53",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992118",
+				"Gene2 Symbol": "rxfp3.3a3",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_001342267",
+				"Alignment Length": "328",
+				"Identity Score": "0.27",
+				"Similarity Score": "0.48",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.52",
+				"DIOPT Score": "2",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992122",
+				"Gene2 Symbol": "rxfp3.3a1",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_005169010",
+				"Alignment Length": "288",
+				"Identity Score": "0.28",
+				"Similarity Score": "0.52",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.49",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992097",
+				"Gene2 Symbol": "ccr12b.2",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_002666623",
+				"Alignment Length": "333",
+				"Identity Score": "0.26",
+				"Similarity Score": "0.46",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.48",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992114",
+				"Gene2 Symbol": "LOC797181",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_021334740",
+				"Alignment Length": "362",
+				"Identity Score": "0.26",
+				"Similarity Score": "0.46",
+				"Common GO slim": "",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.47",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992088",
+				"Gene2 Symbol": "ccr6b",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_002665313",
+				"Alignment Length": "309",
+				"Identity Score": "0.28",
+				"Similarity Score": "0.52",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.46",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992116",
+				"Gene2 Symbol": "ackr3a",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_005167578",
+				"Alignment Length": "362",
+				"Identity Score": "0.24",
+				"Similarity Score": "0.42",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.43",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992096",
+				"Gene2 Symbol": "ccr7",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "NP_001092213",
+				"Alignment Length": "305",
+				"Identity Score": "0.30",
+				"Similarity Score": "0.49",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.43",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992125",
+				"Gene2 Symbol": "xcr1b.3",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_002667428",
+				"Alignment Length": "340",
+				"Identity Score": "0.25",
+				"Similarity Score": "0.47",
+				"Common GO slim": "",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.43",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992134",
+				"Gene2 Symbol": "LOC101885604",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_005168072",
+				"Alignment Length": "334",
+				"Identity Score": "0.25",
+				"Similarity Score": "0.47",
+				"Common GO slim": "",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.40",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992133",
+				"Gene2 Symbol": "xcr1b.2",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_005171500",
+				"Alignment Length": "317",
+				"Identity Score": "0.23",
+				"Similarity Score": "0.44",
+				"Common GO slim": "",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.38",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992099",
+				"Gene2 Symbol": "ackr4b",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_005162666",
+				"Alignment Length": "353",
+				"Identity Score": "0.26",
+				"Similarity Score": "0.44",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.36",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992115",
+				"Gene2 Symbol": "cxcr3.3",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_005173552",
+				"Alignment Length": "345",
+				"Identity Score": "0.23",
+				"Similarity Score": "0.41",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.32",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992132",
+				"Gene2 Symbol": "rxfp3.3b",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_005174282",
+				"Alignment Length": "291",
+				"Identity Score": "0.32",
+				"Similarity Score": "0.52",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.29",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992101",
+				"Gene2 Symbol": "cxcr3.2",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "NP_001007315",
+				"Alignment Length": "307",
+				"Identity Score": "0.25",
+				"Similarity Score": "0.46",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "AstC-R2(DIOPT=1,1);",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.29",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992121",
+				"Gene2 Symbol": "ccr9b",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_021329427",
+				"Alignment Length": "365",
+				"Identity Score": "0.30",
+				"Similarity Score": "0.48",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "2.27",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992095",
+				"Gene2 Symbol": "ora5",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_002663506",
+				"Alignment Length": "319",
+				"Identity Score": "0.22",
+				"Similarity Score": "0.35",
+				"Common GO slim": "GO:0004871(signal transducer activity);GO:0007165(signal transduction)",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			},
+			{
+				"Species": "zebrafish",
+				"Species ID": "7955",
+				"Gene1 Symbol": "cmklr1",
+				"Paralog Score": "1.73",
+				"DIOPT Score": "1",
+				"Paralog Pair URL": "https://www.flyrnai.org/tools/paralogs/web/expression/4992128",
+				"Gene2 Symbol": "LOC100331422",
+				"1-Protein Acc": "NP_001076281",
+				"2-Protein Acc": "XP_021322203",
+				"Alignment Length": "105",
+				"Identity Score": "0.34",
+				"Similarity Score": "0.51",
+				"Common GO slim": "",
+				"Common Yeast Paralogs": "",
+				"Common Fly Paralogs": "",
+				"Common Protein Interactors": "0",
+				"Common Genetic Interactors": "0"
+			}
+		]
+	}
+}

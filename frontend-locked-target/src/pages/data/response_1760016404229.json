@@ -1,0 +1,3010 @@
+{
+  "obesity": [
+    {
+      "First author": "Schlauch KA",
+      "Study accession": "GCST006492",
+      "Pub. date": "2018-08-17",
+      "Journal": "Int J Obes (Lond)",
+      "Title": "Single-nucleotide polymorphisms in a cohort of significantly obese women without cardiometabolic diseases.",
+      "Reported trait": "Obesity without metabolic disease",
+      "Trait(s)": "metabolically healthy obesity",
+      "Discovery sample ancestry": [
+        "70 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 14,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Liu TY",
+      "Study accession": "GCST90651236",
+      "Pub. date": "2025-06-04",
+      "Journal": "Sci Adv",
+      "Title": "Diversity and longitudinal records: Genetic architecture of disease associations and polygenic risk in the Taiwanese Han population.",
+      "Reported trait": "Morbid obesity (PheCode 278.11)",
+      "Trait(s)": "morbid obesity",
+      "Discovery sample ancestry": [
+        "232718 East Asian"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 1,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Verma A",
+      "Study accession": "GCST90479951",
+      "Pub. date": "2024-07-19",
+      "Journal": "Science",
+      "Title": "Diversity and scale: Genetic architecture of 2068 traits in the VA Million Veteran Program.",
+      "Reported trait": "Morbid obesity (PheCode 278.11)",
+      "Trait(s)": "morbid obesity",
+      "Discovery sample ancestry": [
+        "115819 African American or Afro-Caribbean",
+        "57136 Hispanic or Latin American",
+        "6711 East Asian",
+        "431717 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 31,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90479001-GCST90480000/GCST90479951"
+    },
+    {
+      "First author": "Verma A",
+      "Study accession": "GCST90481638",
+      "Pub. date": "2024-07-19",
+      "Journal": "Science",
+      "Title": "Diversity and scale: Genetic architecture of 2068 traits in the VA Million Veteran Program.",
+      "Reported trait": "Morbid obesity (PheCode 278.11)",
+      "Trait(s)": "morbid obesity",
+      "Discovery sample ancestry": [
+        "6711 East Asian"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Verma A",
+      "Study accession": "GCST90475763",
+      "Pub. date": "2024-07-19",
+      "Journal": "Science",
+      "Title": "Diversity and scale: Genetic architecture of 2068 traits in the VA Million Veteran Program.",
+      "Reported trait": "Morbid obesity (PheCode 278.11)",
+      "Trait(s)": "morbid obesity",
+      "Discovery sample ancestry": [
+        "57136 Hispanic or Latin American"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 1,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90475001-GCST90476000/GCST90475763"
+    },
+    {
+      "First author": "Verma A",
+      "Study accession": "GCST90475764",
+      "Pub. date": "2024-07-19",
+      "Journal": "Science",
+      "Title": "Diversity and scale: Genetic architecture of 2068 traits in the VA Million Veteran Program.",
+      "Reported trait": "Morbid obesity (PheCode 278.11)",
+      "Trait(s)": "morbid obesity",
+      "Discovery sample ancestry": [
+        "115819 African American or Afro-Caribbean"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 1,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90475001-GCST90476000/GCST90475764"
+    },
+    {
+      "First author": "Verma A",
+      "Study accession": "GCST90475765",
+      "Pub. date": "2024-07-19",
+      "Journal": "Science",
+      "Title": "Diversity and scale: Genetic architecture of 2068 traits in the VA Million Veteran Program.",
+      "Reported trait": "Morbid obesity (PheCode 278.11)",
+      "Trait(s)": "morbid obesity",
+      "Discovery sample ancestry": [
+        "431717 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 56,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90475001-GCST90476000/GCST90475765"
+    },
+    {
+      "First author": "Wilson CL",
+      "Study accession": "GCST002904",
+      "Pub. date": "2015-05-11",
+      "Journal": "Cancer",
+      "Title": "Genetic and clinical factors associated with obesity among adult survivors of childhood cancer: A report from the St. Jude Lifetime Cohort.",
+      "Reported trait": "Obesity in adult survivors of childhood cancer not exposed to cranial radiation",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "1220 NR, European, African unspecified"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 1,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Schlauch KA",
+      "Study accession": "GCST009700",
+      "Pub. date": "2019-12-30",
+      "Journal": "G3 (Bethesda)",
+      "Title": "A Comprehensive Genome-Wide and Phenome-Wide Examination of BMI and Obesity in a Northern Nevadan Cohort.",
+      "Reported trait": "Obesity (extreme)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "81 Hispanic or Latin American",
+        "84 Asian unspecified",
+        "2653 European",
+        "18 Native American",
+        "156 NR",
+        "4 Oceanian"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 9,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Park S",
+      "Study accession": "GCST90093121",
+      "Pub. date": "2021-10-25",
+      "Journal": "Nutrients",
+      "Title": "Interactions between Polygenic Risk Scores, Dietary Pattern, and Menarche Age with the Obesity Risk in a Large Hospital-Based Cohort.",
+      "Reported trait": "Obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "53828 East Asian"
+      ],
+      "Replication sample ancestry": [
+        "8151 East Asian"
+      ],
+      "Association count": 1,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Herbert A",
+      "Study accession": "GCST000003",
+      "Pub. date": "2006-04-14",
+      "Journal": "Science",
+      "Title": "A common genetic variant is associated with adult and childhood obesity.",
+      "Reported trait": "Obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "694 NR"
+      ],
+      "Replication sample ancestry": [
+        "866 African American or Afro-Caribbean",
+        "10527 European",
+        "229 NR"
+      ],
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Jiao H",
+      "Study accession": "GCST001130",
+      "Pub. date": "2011-06-28",
+      "Journal": "BMC Med Genomics",
+      "Title": "Genome wide association study identifies KCNMA1 contributing to human obesity.",
+      "Reported trait": "Obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "327 European"
+      ],
+      "Replication sample ancestry": [
+        "10337 European"
+      ],
+      "Association count": 2,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Scherag A",
+      "Study accession": "GCST000663",
+      "Pub. date": "2010-04-22",
+      "Journal": "PLoS Genet",
+      "Title": "Two new Loci for body-weight regulation identified in a joint analysis of genome-wide association studies for early-onset extreme obesity in French and german study groups.",
+      "Reported trait": "Obesity (early onset extreme)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "2258 European"
+      ],
+      "Replication sample ancestry": [
+        "5552 European"
+      ],
+      "Association count": 5,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Paternoster L",
+      "Study accession": "GCST001240",
+      "Pub. date": "2011-09-15",
+      "Journal": "PLoS One",
+      "Title": "Genome-wide population-based association study of extremely overweight young adults--the GOYA study.",
+      "Reported trait": "Obesity (extreme)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "5373 European"
+      ],
+      "Replication sample ancestry": [
+        "29181 European"
+      ],
+      "Association count": 4,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Chiang KM",
+      "Study accession": "GCST009673",
+      "Pub. date": "2019-12-18",
+      "Journal": "BMC Genet",
+      "Title": "Genome-wide association study of morbid obesity in Han Chinese.",
+      "Reported trait": "Obesity (extreme)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "2282 East Asian"
+      ],
+      "Replication sample ancestry": [
+        "9680 East Asian"
+      ],
+      "Association count": 2,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Hinney A",
+      "Study accession": "GCST000129",
+      "Pub. date": "2007-12-26",
+      "Journal": "PLoS One",
+      "Title": "Genome wide association (GWA) study for early onset extreme obesity supports the role of fat mass and obesity associated gene (FTO) variants.",
+      "Reported trait": "Obesity (early onset extreme)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "929 European"
+      ],
+      "Replication sample ancestry": [
+        "2269 European"
+      ],
+      "Association count": 1,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Meyre D",
+      "Study accession": "GCST000317",
+      "Pub. date": "2009-01-18",
+      "Journal": "Nat Genet",
+      "Title": "Genome-wide association study for early-onset and morbid adult obesity identifies three new risk loci in European populations.",
+      "Reported trait": "Obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "2796 European"
+      ],
+      "Replication sample ancestry": [
+        "14186 European"
+      ],
+      "Association count": 13,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Liu YJ",
+      "Study accession": "GCST000159",
+      "Pub. date": "2008-03-05",
+      "Journal": "Hum Mol Genet",
+      "Title": "Genome-wide association scans identified CTNNBL1 as a novel gene for obesity.",
+      "Reported trait": "Obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "1000 European"
+      ],
+      "Replication sample ancestry": [
+        "3812 European"
+      ],
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Wheeler E",
+      "Study accession": "GCST001957",
+      "Pub. date": "2013-04-07",
+      "Journal": "Nat Genet",
+      "Title": "Genome-wide SNP and CNV analysis identifies common and low-frequency variants associated with severe early-onset obesity.",
+      "Reported trait": "Obesity (early onset extreme)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "6889 European"
+      ],
+      "Replication sample ancestry": [
+        "2961 European"
+      ],
+      "Association count": 18,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Lindgren CM",
+      "Study accession": "GCST000428",
+      "Pub. date": "2009-06-26",
+      "Journal": "PLoS Genet",
+      "Title": "Genome-wide association scan meta-analysis identifies three Loci influencing adiposity and fat distribution.",
+      "Reported trait": "Adiposity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "38580 European"
+      ],
+      "Replication sample ancestry": [
+        "102064 European"
+      ],
+      "Association count": 4,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Dorajoo R",
+      "Study accession": "GCST001046",
+      "Pub. date": "2011-04-19",
+      "Journal": "Int J Obes (Lond)",
+      "Title": "Replication of 13 obesity loci among Singaporean Chinese, Malay and Asian-Indian populations.",
+      "Reported trait": "Obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "2431 South East Asian",
+        "5429 East Asian",
+        "2531 South Asian"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 1,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Plourde M",
+      "Study accession": "GCST001583",
+      "Pub. date": "2012-06-28",
+      "Journal": "Obesity (Silver Spring)",
+      "Title": "A variant in the LRRFIP1 gene is associated with adiposity and inflammation.",
+      "Reported trait": "Adiposity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "928 Other"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 1,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Kilpeläinen TO",
+      "Study accession": "GCST001128",
+      "Pub. date": "2011-06-26",
+      "Journal": "Nat Genet",
+      "Title": "Genetic variation near IRS1 associates with reduced adiposity and an impaired metabolic profile.",
+      "Reported trait": "Adiposity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "7557 South Asian",
+        "29069 European"
+      ],
+      "Replication sample ancestry": [
+        "39576 European"
+      ],
+      "Association count": 3,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Wang K",
+      "Study accession": "GCST001057",
+      "Pub. date": "2011-04-28",
+      "Journal": "PLoS One",
+      "Title": "A genome-wide association study on obesity and obesity-related traits.",
+      "Reported trait": "Obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "1060 European"
+      ],
+      "Replication sample ancestry": [
+        "1196 European"
+      ],
+      "Association count": 14,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Cotsapas C",
+      "Study accession": "GCST000426",
+      "Pub. date": "2009-06-24",
+      "Journal": "Hum Mol Genet",
+      "Title": "Common body mass index-associated variants confer risk of extreme obesity.",
+      "Reported trait": "Obesity (extreme)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "3972 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 13,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Bradfield JP",
+      "Study accession": "GCST001475",
+      "Pub. date": "2012-04-08",
+      "Journal": "Nat Genet",
+      "Title": "A genome-wide association meta-analysis identifies new childhood  obesity loci.",
+      "Reported trait": "Obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "13848 European"
+      ],
+      "Replication sample ancestry": [
+        "4888 European"
+      ],
+      "Association count": 5,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST001001-GCST002000/GCST001475"
+    },
+    {
+      "First author": "Kim HJ",
+      "Study accession": "GCST001732",
+      "Pub. date": "2012-11-06",
+      "Journal": "Obesity (Silver Spring)",
+      "Title": "Combined linkage and association analyses identify a novel locus for obesity near PROX1 in Asians.",
+      "Reported trait": "Obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "756 East Asian"
+      ],
+      "Replication sample ancestry": [
+        "1301 East Asian"
+      ],
+      "Association count": 3,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Jiao H",
+      "Study accession": "GCST007997",
+      "Pub. date": "2019-05-01",
+      "Journal": "Front Genet",
+      "Title": "Genome-Wide Interaction and Pathway Association Studies for Body Mass Index.",
+      "Reported trait": "Obesity (extreme) (SNP x SNP interaction)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "1030 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 39,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Zhou W",
+      "Study accession": "GCST90435786",
+      "Pub. date": "2018-08-13",
+      "Journal": "Nat Genet",
+      "Title": "Efficiently controlling for case-control imbalance and sample relatedness in large-scale genetic association studies.",
+      "Reported trait": "Obesity (PheCode 278.1)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "408792 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90435001-GCST90436000/GCST90435786"
+    },
+    {
+      "First author": "Zhou W",
+      "Study accession": "GCST90435787",
+      "Pub. date": "2018-08-13",
+      "Journal": "Nat Genet",
+      "Title": "Efficiently controlling for case-control imbalance and sample relatedness in large-scale genetic association studies.",
+      "Reported trait": "Localized adiposity (PheCode 278.3)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "398077 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90435001-GCST90436000/GCST90435787"
+    },
+    {
+      "First author": "Jiang L",
+      "Study accession": "GCST90043672",
+      "Pub. date": "2021-11-04",
+      "Journal": "Nat Genet",
+      "Title": "A generalized linear mixed model association tool for biobank-scale data. ",
+      "Reported trait": "Obesity (PheCode 278.1)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "456348 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90043001-GCST90044000/GCST90043672"
+    },
+    {
+      "First author": "Bradfield JP",
+      "Study accession": "GCST009383",
+      "Pub. date": "2019-07-05",
+      "Journal": "Hum Mol Genet",
+      "Title": "A Trans-ancestral Meta-Analysis of Genome-Wide Association Studies Reveals Loci Associated with Childhood Obesity.",
+      "Reported trait": "Childhood obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "4605 African American or Afro-Caribbean",
+        "578 East Asian",
+        "133 Greater Middle Eastern (Middle Eastern, North African or Persian)",
+        "21309 European",
+        "1979 Hispanic or Latin American"
+      ],
+      "Replication sample ancestry": [
+        "2851 European",
+        "2848 Native American",
+        "878 Hispanic or Latin American"
+      ],
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Bradfield JP",
+      "Study accession": "GCST009382",
+      "Pub. date": "2019-07-05",
+      "Journal": "Hum Mol Genet",
+      "Title": "A Trans-ancestral Meta-Analysis of Genome-Wide Association Studies Reveals Loci Associated with Childhood Obesity.",
+      "Reported trait": "Childhood obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "578 East Asian",
+        "133 Greater Middle Eastern (Middle Eastern, North African or Persian)",
+        "21309 European",
+        "1979 Hispanic or Latin American",
+        "4605 African American or Afro-Caribbean"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 57,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Backman JD",
+      "Study accession": "GCST90079763",
+      "Pub. date": "2021-10-18",
+      "Journal": "Nature",
+      "Title": "Exome sequencing and analysis of 454,787 UK Biobank participants. ",
+      "Reported trait": "ICD10 E66.9: Obesity, unspecified",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "366735 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90079001-GCST90080000/GCST90079763"
+    },
+    {
+      "First author": "Backman JD",
+      "Study accession": "GCST90079764",
+      "Pub. date": "2021-10-18",
+      "Journal": "Nature",
+      "Title": "Exome sequencing and analysis of 454,787 UK Biobank participants. ",
+      "Reported trait": "ICD10 E66: Overweight and obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "366468 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90079001-GCST90080000/GCST90079764"
+    },
+    {
+      "First author": "Backman JD",
+      "Study accession": "GCST90085508",
+      "Pub. date": "2021-10-18",
+      "Journal": "Nature",
+      "Title": "Exome sequencing and analysis of 454,787 UK Biobank participants. ",
+      "Reported trait": "Obesity (Gene-based burden)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "246639 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90085001-GCST90086000/GCST90085508"
+    },
+    {
+      "First author": "Backman JD",
+      "Study accession": "GCST90085514",
+      "Pub. date": "2021-10-18",
+      "Journal": "Nature",
+      "Title": "Exome sequencing and analysis of 454,787 UK Biobank participants. ",
+      "Reported trait": "Severe obesity (Gene-based burden)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "150526 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90085001-GCST90086000/GCST90085514"
+    },
+    {
+      "First author": "Backman JD",
+      "Study accession": "GCST90081522",
+      "Pub. date": "2021-10-18",
+      "Journal": "Nature",
+      "Title": "Exome sequencing and analysis of 454,787 UK Biobank participants. ",
+      "Reported trait": "Obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "246639 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90081001-GCST90082000/GCST90081522"
+    },
+    {
+      "First author": "Backman JD",
+      "Study accession": "GCST90083750",
+      "Pub. date": "2021-10-18",
+      "Journal": "Nature",
+      "Title": "Exome sequencing and analysis of 454,787 UK Biobank participants. ",
+      "Reported trait": "ICD10 E66: Overweight and obesity (Gene-based burden)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "366468 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90083001-GCST90084000/GCST90083750"
+    },
+    {
+      "First author": "Backman JD",
+      "Study accession": "GCST90083748",
+      "Pub. date": "2021-10-18",
+      "Journal": "Nature",
+      "Title": "Exome sequencing and analysis of 454,787 UK Biobank participants. ",
+      "Reported trait": "ICD10 E66.8: Other obesity (Gene-based burden)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "387930 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90083001-GCST90084000/GCST90083748"
+    },
+    {
+      "First author": "Backman JD",
+      "Study accession": "GCST90083749",
+      "Pub. date": "2021-10-18",
+      "Journal": "Nature",
+      "Title": "Exome sequencing and analysis of 454,787 UK Biobank participants. ",
+      "Reported trait": "ICD10 E66.9: Obesity, unspecified (Gene-based burden)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "366735 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90083001-GCST90084000/GCST90083749"
+    },
+    {
+      "First author": "Backman JD",
+      "Study accession": "GCST90079762",
+      "Pub. date": "2021-10-18",
+      "Journal": "Nature",
+      "Title": "Exome sequencing and analysis of 454,787 UK Biobank participants. ",
+      "Reported trait": "ICD10 E66.8: Other obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "387930 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90079001-GCST90080000/GCST90079762"
+    },
+    {
+      "First author": "Backman JD",
+      "Study accession": "GCST90081528",
+      "Pub. date": "2021-10-18",
+      "Journal": "Nature",
+      "Title": "Exome sequencing and analysis of 454,787 UK Biobank participants. ",
+      "Reported trait": "Severe obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "150526 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90081001-GCST90082000/GCST90081528"
+    },
+    {
+      "First author": "Odoemelam CS",
+      "Study accession": "GCST90590336",
+      "Pub. date": "2025-04-24",
+      "Journal": "Diabetes",
+      "Title": "Identifying four obesity axes through integrative multi-omics and imaging analysis.",
+      "Reported trait": "General obesity axis",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "25637 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90590001-GCST90591000/GCST90590336"
+    },
+    {
+      "First author": "Kyrgiafini MA",
+      "Study accession": "GCST90274858",
+      "Pub. date": "2023-03-26",
+      "Journal": "Genes (Basel)",
+      "Title": "Gene-by-Sex Interactions: Genome-Wide Association Study Reveals Five SNPs Associated with Obesity and Overweight in a Male Population.",
+      "Reported trait": "Obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "151 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 1,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "UK Biobank Whole-Genome Sequencing Consortium",
+      "Study accession": "GCST90473207",
+      "Pub. date": "2025-08-06",
+      "Journal": "Nature",
+      "Title": "Whole-genome sequencing of 490,640 UK Biobank participants.",
+      "Reported trait": "ICD10 E66: Obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "9215 African unspecified"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90473001-GCST90474000/GCST90473207"
+    },
+    {
+      "First author": "UK Biobank Whole-Genome Sequencing Consortium",
+      "Study accession": "GCST90473208",
+      "Pub. date": "2025-08-06",
+      "Journal": "Nature",
+      "Title": "Whole-genome sequencing of 490,640 UK Biobank participants.",
+      "Reported trait": "ICD10 E66: Obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "2863 Other"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90473001-GCST90474000/GCST90473208"
+    },
+    {
+      "First author": "UK Biobank Whole-Genome Sequencing Consortium",
+      "Study accession": "GCST90473209",
+      "Pub. date": "2025-08-06",
+      "Journal": "Nature",
+      "Title": "Whole-genome sequencing of 490,640 UK Biobank participants.",
+      "Reported trait": "ICD10 E66: Obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "458440 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90473001-GCST90474000/GCST90473209"
+    },
+    {
+      "First author": "UK Biobank Whole-Genome Sequencing Consortium",
+      "Study accession": "GCST90473210",
+      "Pub. date": "2025-08-06",
+      "Journal": "Nature",
+      "Title": "Whole-genome sequencing of 490,640 UK Biobank participants.",
+      "Reported trait": "ICD10 E66: Obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "9613 South Asian"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90473001-GCST90474000/GCST90473210"
+    },
+    {
+      "First author": "Wang Z",
+      "Study accession": "GCST90131480",
+      "Pub. date": "2022-05-03",
+      "Journal": "Front Endocrinol (Lausanne)",
+      "Title": "The Value of Rare Genetic Variation in the Prediction of Common Obesity in European Ancestry Populations.",
+      "Reported trait": "Obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "451145 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Wang Z",
+      "Study accession": "GCST90131481",
+      "Pub. date": "2022-05-03",
+      "Journal": "Front Endocrinol (Lausanne)",
+      "Title": "The Value of Rare Genetic Variation in the Prediction of Common Obesity in European Ancestry Populations.",
+      "Reported trait": "Obesity (extreme)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "451145 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Wang Z",
+      "Study accession": "GCST90131483",
+      "Pub. date": "2022-05-03",
+      "Journal": "Front Endocrinol (Lausanne)",
+      "Title": "The Value of Rare Genetic Variation in the Prediction of Common Obesity in European Ancestry Populations.",
+      "Reported trait": "Obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "184385 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Wang Z",
+      "Study accession": "GCST90131484",
+      "Pub. date": "2022-05-03",
+      "Journal": "Front Endocrinol (Lausanne)",
+      "Title": "The Value of Rare Genetic Variation in the Prediction of Common Obesity in European Ancestry Populations.",
+      "Reported trait": "Obesity (extreme)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "184385 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "UK Biobank Whole-Genome Sequencing Consortium",
+      "Study accession": "GCST90667820",
+      "Pub. date": "2025-08-06",
+      "Journal": "Nature",
+      "Title": "Whole-genome sequencing of 490,640 UK Biobank participants.",
+      "Reported trait": "ICD10 E66: Obesity",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "458440 European",
+        "9215 African unspecified",
+        "2863 Other",
+        "9613 South Asian"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 56,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Liu TY",
+      "Study accession": "GCST90651394",
+      "Pub. date": "2025-06-04",
+      "Journal": "Sci Adv",
+      "Title": "Diversity and longitudinal records: Genetic architecture of disease associations and polygenic risk in the Taiwanese Han population.",
+      "Reported trait": "Obesity (PheCode 278.1)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "233980 East Asian"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 1,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Arehart CH",
+      "Study accession": "GCST90624107",
+      "Pub. date": "2025-08-13",
+      "Journal": "Nat Commun",
+      "Title": "Modeling the genomic architecture of adiposity and anthropometrics across the lifespan.",
+      "Reported trait": "Adiposity (multivariate analysis)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "393268 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 520,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90624001-GCST90625000/GCST90624107"
+    },
+    {
+      "First author": "Verma A",
+      "Study accession": "GCST90477436",
+      "Pub. date": "2024-07-19",
+      "Journal": "Science",
+      "Title": "Diversity and scale: Genetic architecture of 2068 traits in the VA Million Veteran Program.",
+      "Reported trait": "Obesity (PheCode 278.1)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "6346 East Asian"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90477001-GCST90478000/GCST90477436"
+    },
+    {
+      "First author": "Verma A",
+      "Study accession": "GCST90477437",
+      "Pub. date": "2024-07-19",
+      "Journal": "Science",
+      "Title": "Diversity and scale: Genetic architecture of 2068 traits in the VA Million Veteran Program.",
+      "Reported trait": "Localized adiposity (PheCode 278.3)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "450381 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90477001-GCST90478000/GCST90477437"
+    },
+    {
+      "First author": "Verma A",
+      "Study accession": "GCST90479952",
+      "Pub. date": "2024-07-19",
+      "Journal": "Science",
+      "Title": "Diversity and scale: Genetic architecture of 2068 traits in the VA Million Veteran Program.",
+      "Reported trait": "Obesity (PheCode 278.1)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "111076 African American or Afro-Caribbean",
+        "54309 Hispanic or Latin American",
+        "6346 East Asian",
+        "413854 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 42,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90479001-GCST90480000/GCST90479952"
+    },
+    {
+      "First author": "Verma A",
+      "Study accession": "GCST90479953",
+      "Pub. date": "2024-07-19",
+      "Journal": "Science",
+      "Title": "Diversity and scale: Genetic architecture of 2068 traits in the VA Million Veteran Program.",
+      "Reported trait": "Localized adiposity (PheCode 278.3)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "121606 African American or Afro-Caribbean",
+        "450381 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 22,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90479001-GCST90480000/GCST90479953"
+    },
+    {
+      "First author": "Verma A",
+      "Study accession": "GCST90481639",
+      "Pub. date": "2024-07-19",
+      "Journal": "Science",
+      "Title": "Diversity and scale: Genetic architecture of 2068 traits in the VA Million Veteran Program.",
+      "Reported trait": "Localized adiposity (PheCode 278.3)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "121606 African American or Afro-Caribbean"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Verma A",
+      "Study accession": "GCST90475762",
+      "Pub. date": "2024-07-19",
+      "Journal": "Science",
+      "Title": "Diversity and scale: Genetic architecture of 2068 traits in the VA Million Veteran Program.",
+      "Reported trait": "Obesity (PheCode 278.1)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "413854 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 134,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90475001-GCST90476000/GCST90475762"
+    },
+    {
+      "First author": "Verma A",
+      "Study accession": "GCST90475760",
+      "Pub. date": "2024-07-19",
+      "Journal": "Science",
+      "Title": "Diversity and scale: Genetic architecture of 2068 traits in the VA Million Veteran Program.",
+      "Reported trait": "Obesity (PheCode 278.1)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "54309 Hispanic or Latin American"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 1,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90475001-GCST90476000/GCST90475760"
+    },
+    {
+      "First author": "Verma A",
+      "Study accession": "GCST90475761",
+      "Pub. date": "2024-07-19",
+      "Journal": "Science",
+      "Title": "Diversity and scale: Genetic architecture of 2068 traits in the VA Million Veteran Program.",
+      "Reported trait": "Obesity (PheCode 278.1)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "111076 African American or Afro-Caribbean"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 4,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90475001-GCST90476000/GCST90475761"
+    },
+    {
+      "First author": "Wilson CL",
+      "Study accession": "GCST002900",
+      "Pub. date": "2015-05-11",
+      "Journal": "Cancer",
+      "Title": "Genetic and clinical factors associated with obesity among adult survivors of childhood cancer: A report from the St. Jude Lifetime Cohort.",
+      "Reported trait": "Obesity in adult survivors of childhood cancer exposed to cranial radiation",
+      "Trait(s)": "response to radiation",
+      "Discovery sample ancestry": [
+        "776 NR, European, African unspecified"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 4,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Liu YZ",
+      "Study accession": "GCST000469",
+      "Pub. date": "2009-08-28",
+      "Journal": "PLoS One",
+      "Title": "Powerful bivariate genome-wide association analyses suggest the SOX6 gene influencing both obesity and osteoporosis phenotypes in males.",
+      "Reported trait": "Obesity and osteoporosis",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "1000 European"
+      ],
+      "Replication sample ancestry": [
+        "3355 European"
+      ],
+      "Association count": 2,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Hu Y",
+      "Study accession": "GCST005114",
+      "Pub. date": "2017-11-14",
+      "Journal": "J Clin Endocrinol Metab",
+      "Title": "Identification of Novel Potentially Pleiotropic Variants Associated With Osteoporosis and Obesity Using the cFDR Method.",
+      "Reported trait": "Osteoporosis or obesity (pleiotropy)",
+      "Trait(s)": "obesity",
+      "Discovery sample ancestry": [
+        "31441 NR",
+        "585478 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Zhou W",
+      "Study accession": "GCST90435785",
+      "Pub. date": "2018-08-13",
+      "Journal": "Nat Genet",
+      "Title": "Efficiently controlling for case-control imbalance and sample relatedness in large-scale genetic association studies.",
+      "Reported trait": "Overweight, obesity and other hyperalimentation (PheCode 278)",
+      "Trait(s)": "overnutrition",
+      "Discovery sample ancestry": [
+        "408961 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90435001-GCST90436000/GCST90435785"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624576",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class III and attention deficit hyperactivity disorder",
+      "Trait(s)": "attention deficit hyperactivity disorder",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "53293 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624577",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class III and Anorexia nervosa",
+      "Trait(s)": "anorexia nervosa",
+      "Discovery sample ancestry": [
+        "72517 European",
+        "72546 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624578",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class III and Major depressive disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "500199 European",
+        "72546 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624482",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder",
+      "Trait(s)": "attention deficit hyperactivity disorder",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "53293 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624483",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Anorexia nervosa",
+      "Trait(s)": "anorexia nervosa",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "72517 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624484",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Major depressive disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "500199 European",
+        "98697 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624485",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Obsesive-compulsive disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "9725 European",
+        "98697 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624545",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and attention deficit hyperactivity disorder",
+      "Trait(s)": "attention deficit hyperactivity disorder",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "53293 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 3,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624549",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Schizophrenia",
+      "Trait(s)": "schizophrenia",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "105318 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 14,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624547",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Major depressive disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "500199 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 4,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624548",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Obsesive-compulsive disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "9725 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 2,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624546",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Anorexia nervosa",
+      "Trait(s)": "anorexia nervosa",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "72517 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624487",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Autism spectrum disorder",
+      "Trait(s)": "autism spectrum disorder",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "46350 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624486",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Schizophrenia",
+      "Trait(s)": "schizophrenia",
+      "Discovery sample ancestry": [
+        "105318 European",
+        "98697 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Guo H",
+      "Study accession": "GCST90225534",
+      "Pub. date": "2022-09-15",
+      "Journal": "Front Microbiol",
+      "Title": "Identifying shared genetic loci between coronavirus disease 2019 and cardiovascular diseases based on cross-trait meta-analysis.",
+      "Reported trait": "COVID-19 or obesity (pleiotropy)",
+      "Trait(s)": "COVID-19",
+      "Discovery sample ancestry": [
+        "106257 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 5,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Verma A",
+      "Study accession": "GCST90477435",
+      "Pub. date": "2024-07-19",
+      "Journal": "Science",
+      "Title": "Diversity and scale: Genetic architecture of 2068 traits in the VA Million Veteran Program.",
+      "Reported trait": "Overweight, obesity and other hyperalimentation (PheCode 278)",
+      "Trait(s)": "overnutrition",
+      "Discovery sample ancestry": [
+        "6190 East Asian"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90477001-GCST90478000/GCST90477435"
+    },
+    {
+      "First author": "Verma A",
+      "Study accession": "GCST90479955",
+      "Pub. date": "2024-07-19",
+      "Journal": "Science",
+      "Title": "Diversity and scale: Genetic architecture of 2068 traits in the VA Million Veteran Program.",
+      "Reported trait": "Overweight, obesity and other hyperalimentation (PheCode 278)",
+      "Trait(s)": "overnutrition",
+      "Discovery sample ancestry": [
+        "109205 African American or Afro-Caribbean",
+        "53484 Hispanic or Latin American",
+        "6190 East Asian",
+        "406236 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 36,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90479001-GCST90480000/GCST90479955"
+    },
+    {
+      "First author": "Verma A",
+      "Study accession": "GCST90475757",
+      "Pub. date": "2024-07-19",
+      "Journal": "Science",
+      "Title": "Diversity and scale: Genetic architecture of 2068 traits in the VA Million Veteran Program.",
+      "Reported trait": "Overweight, obesity and other hyperalimentation (PheCode 278)",
+      "Trait(s)": "overnutrition",
+      "Discovery sample ancestry": [
+        "53484 Hispanic or Latin American"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 1,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90475001-GCST90476000/GCST90475757"
+    },
+    {
+      "First author": "Verma A",
+      "Study accession": "GCST90475758",
+      "Pub. date": "2024-07-19",
+      "Journal": "Science",
+      "Title": "Diversity and scale: Genetic architecture of 2068 traits in the VA Million Veteran Program.",
+      "Reported trait": "Overweight, obesity and other hyperalimentation (PheCode 278)",
+      "Trait(s)": "overnutrition",
+      "Discovery sample ancestry": [
+        "109205 African American or Afro-Caribbean"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 2,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90475001-GCST90476000/GCST90475758"
+    },
+    {
+      "First author": "Verma A",
+      "Study accession": "GCST90475759",
+      "Pub. date": "2024-07-19",
+      "Journal": "Science",
+      "Title": "Diversity and scale: Genetic architecture of 2068 traits in the VA Million Veteran Program.",
+      "Reported trait": "Overweight, obesity and other hyperalimentation (PheCode 278)",
+      "Trait(s)": "overnutrition",
+      "Discovery sample ancestry": [
+        "406236 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 91,
+      "Summary statistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90475001-GCST90476000/GCST90475759"
+    },
+    {
+      "First author": "Melka MG",
+      "Study accession": "GCST001288",
+      "Pub. date": "2011-10-19",
+      "Journal": "J Clin Endocrinol Metab",
+      "Title": "Genome-wide scan for loci of adolescent obesity and their relationship with blood pressure.",
+      "Reported trait": "Obesity-related traits",
+      "Trait(s)": "body mass index",
+      "Discovery sample ancestry": [
+        "598 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 5,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Jia X",
+      "Study accession": "GCST008976",
+      "Pub. date": "2018-10-31",
+      "Journal": "Int J Cardiol",
+      "Title": "Multivariate analysis of genome-wide data to identify potential pleiotropic genes for type 2 diabetes, obesity and coronary artery disease using MetaCCA.",
+      "Reported trait": "Type 2 diabetes or obesity or coronary artery disease (pleiotropy)",
+      "Trait(s)": "type 2 diabetes mellitus",
+      "Discovery sample ancestry": [
+        "620021 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624499",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Major depressive disorder or Autism spectrum disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "46350 European",
+        "500199 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624500",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Obsesive-compulsive disorder or Schizophrenia",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "9725 European",
+        "105318 European",
+        "98697 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624502",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Schizophrenia or Autism spectrum disorder",
+      "Trait(s)": "autism spectrum disorder",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "105318 European",
+        "46350 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624503",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Anorexia nervosa or Major depressive disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "53293 European",
+        "72517 European",
+        "98697 European",
+        "500199 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624504",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Anorexia nervosa or Obsesive-compulsive disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "9725 European",
+        "98697 European",
+        "72517 European",
+        "53293 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624501",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Obsesive-compulsive disorder or Autism spectrum disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "46350 European",
+        "9725 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624505",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Anorexia nervosa or Schizophrenia",
+      "Trait(s)": "attention deficit hyperactivity disorder",
+      "Discovery sample ancestry": [
+        "53293 European",
+        "72517 European",
+        "98697 European",
+        "105318 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624506",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Anorexia nervosa or Autism spectrum disorder",
+      "Trait(s)": "attention deficit hyperactivity disorder",
+      "Discovery sample ancestry": [
+        "72517 European",
+        "53293 European",
+        "98697 European",
+        "46350 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624507",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Major depressive disorder or Obsesive-compulsive disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "500199 European",
+        "53293 European",
+        "9725 European",
+        "98697 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624508",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Major depressive disorder or Schizophrenia",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "53293 European",
+        "500199 European",
+        "98697 European",
+        "105318 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624509",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Major depressive disorder or Autism spectrum disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "500199 European",
+        "98697 European",
+        "53293 European",
+        "46350 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624510",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Obsesive-compulsive disorder or Schizophrenia",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "105318 European",
+        "98697 European",
+        "9725 European",
+        "53293 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624511",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Obsesive-compulsive disorder or Autism spectrum disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "9725 European",
+        "53293 European",
+        "46350 European",
+        "98697 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624512",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Schizophrenia or Autism spectrum disorder",
+      "Trait(s)": "attention deficit hyperactivity disorder",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "46350 European",
+        "53293 European",
+        "105318 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624513",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Anorexia nervosa or Major depressive disorder or Obsesive-compulsive disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "500199 European",
+        "72517 European",
+        "98697 European",
+        "9725 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624516",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Anorexia nervosa or Obsesive-compulsive disorder or Schizophrenia",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "9725 European",
+        "105318 European",
+        "98697 European",
+        "72517 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624514",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Anorexia nervosa or Major depressive disorder or Schizophrenia",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "500199 European",
+        "98697 European",
+        "72517 European",
+        "105318 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624515",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Anorexia nervosa or Major depressive disorder or Autism spectrum disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "72517 European",
+        "500199 European",
+        "46350 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624517",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Anorexia nervosa or Obsesive-compulsive disorder or Autism spectrum disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "9725 European",
+        "72517 European",
+        "98697 European",
+        "46350 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624518",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Anorexia nervosa or Schizophrenia or Autism spectrum disorder",
+      "Trait(s)": "autism spectrum disorder",
+      "Discovery sample ancestry": [
+        "72517 European",
+        "105318 European",
+        "98697 European",
+        "46350 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624520",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Major depressive disorder or Obsesive-compulsive disorder or Autism spectrum disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "9725 European",
+        "500199 European",
+        "98697 European",
+        "46350 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624519",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Major depressive disorder or Obsesive-compulsive disorder or Schizophrenia",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "500199 European",
+        "105318 European",
+        "9725 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624521",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Major depressive disorder or Schizophrenia or Autism spectrum disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "500199 European",
+        "46350 European",
+        "105318 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624522",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Obsesive-compulsive disorder or Schizophrenia or Autism spectrum disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "9725 European",
+        "105318 European",
+        "46350 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624563",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Attention deficit hyperactivity disorder or Major depressive disorder or Obsesive-compulsive disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "53293 European",
+        "500199 European",
+        "9725 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 2,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624562",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Attention deficit hyperactivity disorder or Anorexia nervosa or Schizophrenia",
+      "Trait(s)": "attention deficit hyperactivity disorder",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "53293 European",
+        "72517 European",
+        "105318 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 4,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624564",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Attention deficit hyperactivity disorder or Major depressive disorder or Schizophrenia",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "500199 European",
+        "72546 European",
+        "105318 European",
+        "53293 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 7,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624566",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Anorexia nervosa or Major depressive disorder or Obsesive-compulsive disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "9725 European",
+        "72517 European",
+        "500199 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 1,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624565",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Attention deficit hyperactivity disorder or Obsesive-compulsive disorder or Schizophrenia",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "53293 European",
+        "72546 European",
+        "9725 European",
+        "105318 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 2,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624567",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Anorexia nervosa or Major depressive disorder or Schizophrenia",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "72517 European",
+        "9725 European",
+        "500199 European",
+        "72546 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 6,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624568",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Anorexia nervosa or Obsesive-compulsive disorder or Schizophrenia",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "72517 European",
+        "9725 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 3,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624569",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Major depressive disorder or Obsesive-compulsive disorder or Schizophrenia",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "500199 European",
+        "9725 European",
+        "105318 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 3,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624579",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class III and Attention deficit hyperactivity disorder or Anorexia nervosa",
+      "Trait(s)": "attention deficit hyperactivity disorder",
+      "Discovery sample ancestry": [
+        "72517 European",
+        "72546 European",
+        "53293 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624580",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class III and Attention deficit hyperactivity disorder or Major depressive disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "53293 European",
+        "72546 European",
+        "500199 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624581",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class III and Anorexia nervosa or Major depressive disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "500199 European",
+        "72517 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624582",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class III and Attention deficit hyperactivity disorder or Anorexia nervosa or Major depressive disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "72517 European",
+        "72546 European",
+        "500199 European",
+        "53293 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624559",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Obsesive-compulsive disorder or Schizophrenia",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "105318 European",
+        "9725 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 7,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624560",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Attention deficit hyperactivity disorder or Anorexia nervosa or Major depressive disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "53293 European",
+        "72517 European",
+        "72546 European",
+        "500199 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 4,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624561",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Attention deficit hyperactivity disorder or Anorexia nervosa or Obsesive-compulsive disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "53293 European",
+        "72546 European",
+        "9725 European",
+        "72517 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624550",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Attention deficit hyperactivity disorder or Anorexia nervosa",
+      "Trait(s)": "attention deficit hyperactivity disorder",
+      "Discovery sample ancestry": [
+        "53293 European",
+        "72517 European",
+        "72546 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624553",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Attention deficit hyperactivity disorder or Schizophrenia",
+      "Trait(s)": "attention deficit hyperactivity disorder",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "105318 European",
+        "53293 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 10,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624554",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Anorexia nervosa or Major depressive disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "500199 European",
+        "72517 European",
+        "72546 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 1,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624551",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Attention deficit hyperactivity disorder or Major depressive disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "500199 European",
+        "53293 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 8,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624552",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Attention deficit hyperactivity disorder or Obsesive-compulsive disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "53293 European",
+        "72546 European",
+        "9725 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624555",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Anorexia nervosa or Obsesive-compulsive disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "72517 European",
+        "9725 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624556",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Anorexia nervosa or Schizophrenia",
+      "Trait(s)": "schizophrenia",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "105318 European",
+        "72517 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 6,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624557",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Major depressive disorder or Obsesive-compulsive disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "500199 European",
+        "9725 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624558",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Major depressive disorder or Schizophrenia",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "500199 European",
+        "105318 European",
+        "72546 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 3,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624489",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Major depressive disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "53293 European",
+        "98697 European",
+        "500199 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624488",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Anorexia nervosa",
+      "Trait(s)": "attention deficit hyperactivity disorder",
+      "Discovery sample ancestry": [
+        "72517 European",
+        "53293 European",
+        "98697 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624490",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Obsesive-compulsive disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "9725 European",
+        "53293 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624491",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Schizophrenia",
+      "Trait(s)": "attention deficit hyperactivity disorder",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "105318 European",
+        "53293 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624492",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Autism spectrum disorder",
+      "Trait(s)": "attention deficit hyperactivity disorder",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "46350 European",
+        "53293 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624493",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Anorexia nervosa or Major depressive disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "72517 European",
+        "98697 European",
+        "500199 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624494",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Anorexia nervosa or Obsesive-compulsive disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "9725 European",
+        "98697 European",
+        "72517 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624498",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Major depressive disorder or Schizophrenia",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "500199 European",
+        "105318 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624495",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Anorexia nervosa or Schizophrenia",
+      "Trait(s)": "schizophrenia",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "105318 European",
+        "72517 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624496",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Anorexia nervosa or Autism spectrum disorder",
+      "Trait(s)": "autism spectrum disorder",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "72517 European",
+        "46350 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624497",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Major depressive disorder or Obsesive-compulsive disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "9725 European",
+        "500199 European",
+        "98697 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624524",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Anorexia nervosa or Major depressive disorder or Schizophrenia",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "53293 European",
+        "500199 European",
+        "72517 European",
+        "105318 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624570",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Attention deficit hyperactivity disorder or Anorexia nervosa or Major depressive disorder or Obsesive-compulsive disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "500199 European",
+        "9725 European",
+        "72546 European",
+        "72517 European",
+        "53293 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 4,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624571",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Attention deficit hyperactivity disorder or Anorexia nervosa or Major depressive disorder or Schizophrenia",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "53293 European",
+        "500199 European",
+        "105318 European",
+        "72546 European",
+        "72517 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 4,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624572",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Attention deficit hyperactivity disorder or Anorexia nervosa or Obsesive-compulsive disorder or Schizophrenia",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "72517 European",
+        "105318 European",
+        "53293 European",
+        "72546 European",
+        "9725 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 2,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624573",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Attention deficit hyperactivity disorder or Major depressive disorder or Obsesive-compulsive disorder or Schizophrenia",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "72546 European",
+        "53293 European",
+        "500199 European",
+        "9725 European",
+        "105318 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 5,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624574",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Anorexia nervosa or Major depressive disorder or Obsesive-compulsive disorder or Schizophrenia",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "72517 European",
+        "72546 European",
+        "9725 European",
+        "105318 European",
+        "500199 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 6,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624523",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Anorexia nervosa or Major depressive disorder or Obsesive-compulsive disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "72517 European",
+        "9725 European",
+        "53293 European",
+        "500199 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624525",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Anorexia nervosa or Major depressive disorder or Autism spectrum disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "53293 European",
+        "46350 European",
+        "500199 European",
+        "72517 European",
+        "98697 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624526",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Anorexia nervosa or Obsesive-compulsive disorder or Schizophrenia",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "105318 European",
+        "98697 European",
+        "53293 European",
+        "72517 European",
+        "9725 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624527",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Anorexia nervosa or Obsesive-compulsive disorder or Autism spectrum disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "53293 European",
+        "46350 European",
+        "9725 European",
+        "98697 European",
+        "72517 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624528",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Anorexia nervosa or Schizophrenia or Autism spectrum disorder",
+      "Trait(s)": "attention deficit hyperactivity disorder",
+      "Discovery sample ancestry": [
+        "53293 European",
+        "72517 European",
+        "105318 European",
+        "98697 European",
+        "46350 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624529",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Major depressive disorder or Obsesive-compulsive disorder or Schizophrenia",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "53293 European",
+        "9725 European",
+        "105318 European",
+        "500199 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624530",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Major depressive disorder or Obsesive-compulsive disorder or Autism spectrum disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "500199 European",
+        "46350 European",
+        "53293 European",
+        "9725 European",
+        "98697 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624531",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Major depressive disorder or Schizophrenia or Autism spectrum disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "105318 European",
+        "53293 European",
+        "500199 European",
+        "46350 European",
+        "98697 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624532",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Obsesive-compulsive disorder or Schizophrenia or Autism spectrum disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "53293 European",
+        "98697 European",
+        "9725 European",
+        "46350 European",
+        "105318 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624533",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Anorexia nervosa or Major depressive disorder or Obsesive-compulsive disorder or Schizophrenia",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "500199 European",
+        "9725 European",
+        "72517 European",
+        "105318 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624534",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Anorexia nervosa or Major depressive disorder or Obsesive-compulsive disorder or Autism spectrum disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "500199 European",
+        "72517 European",
+        "46350 European",
+        "9725 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624535",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Anorexia nervosa or Major depressive disorder or Schizophrenia or Autism spectrum disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "72517 European",
+        "46350 European",
+        "98697 European",
+        "105318 European",
+        "500199 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624536",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Anorexia nervosa or Obsesive-compulsive disorder or Schizophrenia or Autism spectrum disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "72517 European",
+        "9725 European",
+        "105318 European",
+        "98697 European",
+        "46350 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624537",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Major depressive disorder or Obsesive-compulsive disorder or Schizophrenia or Autism spectrum disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "9725 European",
+        "105318 European",
+        "46350 European",
+        "98697 European",
+        "500199 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624575",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class II and Attention deficit hyperactivity disorder or Anorexia nervosa or Major depressive disorder or Obsesive-compulsive disorder or Schizophrenia",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "9725 European",
+        "105318 European",
+        "53293 European",
+        "72546 European",
+        "500199 European",
+        "72517 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 9,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624539",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Anorexia nervosa or Major depressive disorder or Obsesive-compulsive disorder or Autism spectrum disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "72517 European",
+        "500199 European",
+        "9725 European",
+        "46350 European",
+        "98697 European",
+        "53293 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624538",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Anorexia nervosa or Major depressive disorder or Obsesive-compulsive disorder or Schizophrenia",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "53293 European",
+        "98697 European",
+        "9725 European",
+        "105318 European",
+        "500199 European",
+        "72517 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624540",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Anorexia nervosa or Major depressive disorder or Schizophrenia or Autism spectrum disorder",
+      "Trait(s)": "major depressive episode",
+      "Discovery sample ancestry": [
+        "105318 European",
+        "46350 European",
+        "72517 European",
+        "98697 European",
+        "500199 European",
+        "53293 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624542",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Major depressive disorder or Obsesive-compulsive disorder or Schizophrenia or Autism spectrum disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "9725 European",
+        "98697 European",
+        "53293 European",
+        "105318 European",
+        "46350 European",
+        "500199 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624543",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Anorexia nervosa or Major depressive disorder or Obsesive-compulsive disorder or Schizophrenia or Autism spectrum disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "105318 European",
+        "500199 European",
+        "98697 European",
+        "9725 European",
+        "46350 European",
+        "72517 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624541",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Anorexia nervosa or Obsesive-compulsive disorder or Schizophrenia or Autism spectrum disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "53293 European",
+        "98697 European",
+        "72517 European",
+        "105318 European",
+        "46350 European",
+        "9725 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    },
+    {
+      "First author": "Ding H",
+      "Study accession": "GCST90624544",
+      "Pub. date": "2022-09-06",
+      "Journal": "J Psychosom Res",
+      "Title": "Shared genetics between classes of obesity and psychiatric disorders: A large-scale genome-wide cross-trait analysis.",
+      "Reported trait": "Obesity class I and Attention deficit hyperactivity disorder or Anorexia nervosa or Major depressive disorder or Obsesive-compulsive disorder or Schizophrenia or Autism spectrum disorder",
+      "Trait(s)": "obsessive-compulsive disorder",
+      "Discovery sample ancestry": [
+        "98697 European",
+        "9725 European",
+        "72517 European",
+        "46350 European",
+        "53293 European",
+        "105318 European",
+        "500199 European"
+      ],
+      "Replication sample ancestry": "Not available",
+      "Association count": 0,
+      "Summary statistics": "NA"
+    }
+  ]
+}

@@ -1,0 +1,3393 @@
+{
+  "elements": [
+    {
+      "data": {
+        "id": "5445223",
+        "label": "dermatitis, atopic",
+        "type": "Disease",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:DiseaseOrPhenotypicFeature",
+          "biolink:Disease",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing"
+        ],
+        "properties": {
+          "MONDO_SUPERCLASS_immune_system_disorder": true,
+          "MONDO_SUPERCLASS_dermatitis": true,
+          "MONDO_SUPERCLASS_inflammatory_disease": true,
+          "MONDO_SUPERCLASS_hereditary_skin_disorder": true,
+          "description": "Atopic dermatitis (AD) or atopic eczema is an itchy, inflammatory skin condition with a predilection for the skin flexures. It is characterized by poorly defined erythema with edema, vesicles, and weeping in the acute stage and skin thickening (lichenification) in the chronic stage.",
+          "MONDO_SUPERCLASS_human_disease": true,
+          "equivalent_identifiers": [
+            "MEDDRA:10001712",
+            "HP:0001047",
+            "MEDDRA:10003639",
+            "OMIM:603165",
+            "MEDDRA:10001711",
+            "MEDDRA:10012438",
+            "SNOMEDCT:24079001",
+            "MEDDRA:10089311",
+            "UMLS:C0011615",
+            "SNOMEDCT:200775004",
+            "MESH:C566404",
+            "MEDDRA:10014191",
+            "MEDDRA:10014188",
+            "MONDO:0011292",
+            "UMLS:C4280605",
+            "MESH:D003876",
+            "MEDDRA:10012434",
+            "MEDDRA:10003641",
+            "UMLS:C1864155"
+          ],
+          "MONDO_SUPERCLASS_disease": true,
+          "MONDO_SUPERCLASS_hereditary_disease": true,
+          "name": "dermatitis, atopic",
+          "MONDO_SUPERCLASS_integumentary_system_disorder": true,
+          "id": "MONDO:0011292",
+          "information_content": 84.2,
+          "MONDO_SUPERCLASS_skin_disorder": true
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5546447",
+        "label": "IL6ST",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "IL6ST",
+          "locus_group": "protein-coding gene",
+          "name": "IL6ST",
+          "description": "An interleukin-6 receptor subunit beta that is encoded in the genome of human.",
+          "location": "5q11.2",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:3572",
+          "information_content": 100,
+          "NCBITaxon": "10090",
+          "equivalent_identifiers": [
+            "UMLS:C1325331",
+            "UniProtKB:P40189",
+            "ENSEMBL:ENSG00000134352",
+            "OMIM:600694",
+            "UMLS:C1366325",
+            "HGNC:6021",
+            "PR:P40189",
+            "UniProtKB:A0A0A0N0L2",
+            "UniProtKB:Q17RA0",
+            "NCBIGene:3572"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5367663",
+        "label": "cytokine-mediated signaling pathway",
+        "type": "Pathway",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:BiologicalProcess",
+          "biolink:Pathway",
+          "biolink:BiologicalProcessOrActivity",
+          "biolink:BiologicalEntity",
+          "biolink:Occurrent",
+          "biolink:NamedThing"
+        ],
+        "properties": {
+          "name": "cytokine-mediated signaling pathway",
+          "description": "The series of molecular signals initiated by the binding of a cytokine to a receptor on the surface of a cell, and ending with the regulation of a downstream cellular process, e.g. transcription.",
+          "definition": "The series of molecular signals initiated by the binding of a cytokine to a receptor on the surface of a cell, and ending with the regulation of a downstream cellular process, e.g. transcription.",
+          "id": "GO:0019221",
+          "information_content": 64.8,
+          "url": "https://www.ebi.ac.uk/QuickGO/term/GO:0019221",
+          "equivalent_identifiers": [
+            "GO:0019221"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5600278",
+        "label": "TNFRSF4",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "TNFRSF4",
+          "locus_group": "protein-coding gene",
+          "name": "TNFRSF4",
+          "description": "A tumor necrosis factor receptor superfamily member 4 that is encoded in the genome of human.",
+          "location": "1p36.33",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:7293",
+          "information_content": 100,
+          "NCBITaxon": "10090",
+          "equivalent_identifiers": [
+            "HGNC:11918",
+            "ENSEMBL:ENSP00000368538",
+            "PR:P43489",
+            "UMLS:C1420812",
+            "UniProtKB:P43489",
+            "ENSEMBL:ENSP00000368538.3",
+            "NCBIGene:7293",
+            "UMLS:C1608540",
+            "OMIM:600315",
+            "ENSEMBL:ENSG00000186827"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5440767",
+        "label": "hidradenitis suppurativa",
+        "type": "Disease",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:DiseaseOrPhenotypicFeature",
+          "biolink:Disease",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing"
+        ],
+        "properties": {
+          "MONDO_SUPERCLASS_disease": true,
+          "MONDO_SUPERCLASS_inflammatory_disease": true,
+          "name": "hidradenitis suppurativa",
+          "description": "A chronic suppurative and cicatricial disease of the apocrine glands occurring chiefly in the axillae in women and in the groin and anal regions in men. It is characterized by poral occlusion with secondary bacterial infection, evolving into abscesses which eventually rupture. As the disease becomes chronic, ulcers appear, sinus tracts enlarge, fistulas develop, and fibrosis and scarring become evident.",
+          "MONDO_SUPERCLASS_integumentary_system_disorder": true,
+          "id": "MONDO:0006559",
+          "MONDO_SUPERCLASS_human_disease": true,
+          "information_content": 100,
+          "MONDO_SUPERCLASS_skin_disorder": true,
+          "equivalent_identifiers": [
+            "MEDDRA:10020041",
+            "DOID:2280",
+            "MESH:D017497",
+            "UMLS:C0162836",
+            "NCIT:C128429",
+            "ICD10:L73.2",
+            "MEDDRA:10076650",
+            "MEDDRA:10085165",
+            "EFO:1000710",
+            "HP:0040154",
+            "MONDO:0006559",
+            "SNOMEDCT:59393003"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5583994",
+        "label": "PSEN1",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "PSEN1",
+          "locus_group": "protein-coding gene",
+          "name": "PSEN1",
+          "description": "A presenilin-1 that is encoded in the genome of human.",
+          "location": "14q24.2",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:5663",
+          "information_content": 100,
+          "NCBITaxon": "9606",
+          "equivalent_identifiers": [
+            "NCBIGene:5663",
+            "ENSEMBL:ENSG00000080815",
+            "PR:P49768",
+            "UniProtKB:P49768",
+            "UMLS:C1418985",
+            "UniProtKB:A0A024R6A3",
+            "OMIM:104311",
+            "UMLS:C1311407",
+            "HGNC:9508",
+            "UniProtKB:A0A0S2Z4D2"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5390443",
+        "label": "apoptotic signaling pathway",
+        "type": "Pathway",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:BiologicalProcess",
+          "biolink:Pathway",
+          "biolink:BiologicalProcessOrActivity",
+          "biolink:BiologicalEntity",
+          "biolink:Occurrent",
+          "biolink:NamedThing"
+        ],
+        "properties": {
+          "name": "apoptotic signaling pathway",
+          "description": "The series of molecular signals which triggers the apoptotic death of a cell. The pathway starts with reception of a signal, and ends when the execution phase of apoptosis is triggered.",
+          "definition": "The series of molecular signals which triggers the apoptotic death of a cell. The pathway starts with reception of a signal, and ends when the execution phase of apoptosis is triggered.",
+          "id": "GO:0097190",
+          "information_content": 66.1,
+          "url": "https://www.ebi.ac.uk/QuickGO/term/GO:0097190",
+          "equivalent_identifiers": [
+            "GO:0097190"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5453783",
+        "label": "scleroderma",
+        "type": "Disease",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:DiseaseOrPhenotypicFeature",
+          "biolink:Disease",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing"
+        ],
+        "properties": {
+          "MONDO_SUPERCLASS_connective_tissue_disorder": true,
+          "MONDO_SUPERCLASS_disease": true,
+          "MONDO_SUPERCLASS_immune_system_disorder": true,
+          "MONDO_SUPERCLASS_rheumatic_disorder": true,
+          "name": "scleroderma",
+          "description": "Scleroderma is a rare autoimmune connective tissue disorder characterized by abnormal hardening of the skin and, sometimes, other organs. It is classified into two main forms: localized scleroderma and systemic sclerosis (SSc), the latter comprising three subsets; diffuse cutaneous SSc (dcSSc), limited cutaneous SSc (lcSSc) and limited SSc (lSSc).",
+          "MONDO_SUPERCLASS_autoimmune_disease": true,
+          "id": "MONDO:0019340",
+          "MONDO_SUPERCLASS_human_disease": true,
+          "information_content": 81.7,
+          "equivalent_identifiers": [
+            "MEDDRA:10039710",
+            "MONDO:0019340",
+            "MEDDRA:10012517",
+            "SNOMEDCT:403524003",
+            "SNOMEDCT:267874003",
+            "orphanet:801",
+            "DOID:419",
+            "UMLS:C0011644",
+            "UMLS:C1274865",
+            "HP:0100324",
+            "NCIT:C26746"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5596085",
+        "label": "STAT4",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "STAT4",
+          "locus_group": "protein-coding gene",
+          "name": "STAT4",
+          "description": "A signal transducer and activator of transcription 4 that is encoded in the genome of human.",
+          "location": "2q32.2-q32.3",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:6775",
+          "information_content": 100,
+          "NCBITaxon": "9606",
+          "equivalent_identifiers": [
+            "ENSEMBL:ENSG00000138378",
+            "ENSEMBL:ENSP00000376134.2",
+            "ENSEMBL:ENSP00000376134",
+            "NCBIGene:6775",
+            "UMLS:C1530119",
+            "ENSEMBL:ENSP00000351255.4",
+            "OMIM:600558",
+            "ENSEMBL:ENSP00000351255",
+            "UniProtKB:Q14765",
+            "PR:Q14765",
+            "UMLS:C1335874",
+            "HGNC:11365"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5600246",
+        "label": "TNFSF4",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "TNFSF4",
+          "locus_group": "protein-coding gene",
+          "name": "TNFSF4",
+          "description": "A tumor necrosis factor ligand superfamily member 4 that is encoded in the genome of human.",
+          "location": "1q25.1",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:7292",
+          "information_content": 100,
+          "NCBITaxon": "10116",
+          "equivalent_identifiers": [
+            "UMLS:C0257572",
+            "UniProtKB:P23510",
+            "NCBIGene:7292",
+            "HGNC:11934",
+            "PR:P23510",
+            "UMLS:C1336648",
+            "ENSEMBL:ENSG00000117586",
+            "OMIM:603594",
+            "UniProtKB:A0A024R937"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5373390",
+        "label": "tumor necrosis factor-mediated signaling pathway",
+        "type": "Pathway",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:BiologicalProcess",
+          "biolink:Pathway",
+          "biolink:BiologicalProcessOrActivity",
+          "biolink:BiologicalEntity",
+          "biolink:Occurrent",
+          "biolink:NamedThing"
+        ],
+        "properties": {
+          "name": "tumor necrosis factor-mediated signaling pathway",
+          "description": "The series of molecular signals initiated by tumor necrosis factor binding to its receptor on the surface of a cell, and ending with the regulation of a downstream cellular process, e.g. transcription.",
+          "definition": "The series of molecular signals initiated by tumor necrosis factor binding to its receptor on the surface of a cell, and ending with the regulation of a downstream cellular process, e.g. transcription.",
+          "id": "GO:0033209",
+          "information_content": 89.4,
+          "url": "https://www.ebi.ac.uk/QuickGO/term/GO:0033209",
+          "equivalent_identifiers": [
+            "GO:0033209"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5597452",
+        "label": "TNF",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "TNF",
+          "locus_group": "protein-coding gene",
+          "name": "TNF",
+          "description": "A tumor necrosis factor that is encoded in the genome of human.",
+          "location": "6p21.33",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:7124",
+          "information_content": 100,
+          "NCBITaxon": "10090",
+          "equivalent_identifiers": [
+            "ENSEMBL:ENSP00000389492.2",
+            "ENSEMBL:ENSG00000232810",
+            "UMLS:C0812246",
+            "ENSEMBL:ENSP00000365290",
+            "ENSEMBL:ENSP00000389490.2",
+            "HGNC:11892",
+            "ENSEMBL:ENSP00000410668",
+            "ENSEMBL:ENSP00000389490",
+            "PR:P01375",
+            "ENSEMBL:ENSP00000365290.3",
+            "OMIM:191160",
+            "UMLS:C1448177",
+            "ENSEMBL:ENSP00000372988",
+            "ENSEMBL:ENSP00000392858.2",
+            "ENSEMBL:ENSP00000392858",
+            "ENSEMBL:ENSP00000410668.2",
+            "NCBIGene:7124",
+            "UniProtKB:Q5STB3",
+            "UniProtKB:P01375",
+            "ENSEMBL:ENSP00000372988.4",
+            "ENSEMBL:ENSP00000398698",
+            "ENSEMBL:ENSP00000389492",
+            "ENSEMBL:ENSP00000398698.2"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5504871",
+        "label": "CSF3",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "CSF3",
+          "locus_group": "protein-coding gene",
+          "name": "CSF3",
+          "description": "A granulocyte colony-stimulating factor that is encoded in the genome of human.",
+          "location": "17q21.1",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:1440",
+          "information_content": 100,
+          "NCBITaxon": "9606",
+          "equivalent_identifiers": [
+            "OMIM:138970",
+            "ENSEMBL:ENSP00000327766",
+            "UniProtKB:P09919",
+            "ENSEMBL:ENSP00000327766.2",
+            "UMLS:C1332793",
+            "PR:P09919",
+            "ENSEMBL:ENSG00000108342",
+            "HGNC:2438",
+            "UniProtKB:Q8N4W3",
+            "UMLS:C5441740",
+            "NCBIGene:1440",
+            "UniProtKB:Q6FH65"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5546874",
+        "label": "IRF5",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "IRF5",
+          "locus_group": "protein-coding gene",
+          "name": "IRF5",
+          "description": "An interferon regulatory factor 5 that is encoded in the genome of human.",
+          "location": "7q32.1",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:3663",
+          "information_content": 100,
+          "NCBITaxon": "9606",
+          "equivalent_identifiers": [
+            "UMLS:C1416473",
+            "PR:Q13568",
+            "NCBIGene:3663",
+            "UMLS:C0968181",
+            "ENSEMBL:ENSG00000128604",
+            "OMIM:607218",
+            "UniProtKB:B7Z1M2",
+            "HGNC:6120",
+            "UniProtKB:A0A0G2USB5",
+            "UniProtKB:Q13568"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5548689",
+        "label": "JAK1",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "JAK1",
+          "locus_group": "protein-coding gene",
+          "name": "JAK1",
+          "description": "A tyrosine-protein kinase JAK1 that is encoded in the genome of human.",
+          "location": "1p31.3",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:3716",
+          "information_content": 100,
+          "NCBITaxon": "9606",
+          "equivalent_identifiers": [
+            "ENSEMBL:ENSP00000514240",
+            "ENSEMBL:ENSG00000162434",
+            "ENSEMBL:ENSP00000514291",
+            "PR:P23458",
+            "ENSEMBL:ENSP00000500296",
+            "ENSEMBL:ENSP00000499884",
+            "ENSEMBL:ENSP00000500296.1",
+            "ENSEMBL:ENSP00000514243",
+            "ENSEMBL:ENSP00000343204",
+            "NCBIGene:3716",
+            "ENSEMBL:ENSP00000500485.1",
+            "OMIM:147795",
+            "ENSEMBL:ENSP00000499900",
+            "ENSEMBL:ENSP00000500485",
+            "ENSEMBL:ENSP00000499900.1",
+            "ENSEMBL:ENSP00000499884.1",
+            "ENSEMBL:ENSP00000500841.1",
+            "UniProtKB:Q6P669",
+            "ENSEMBL:ENSP00000514241",
+            "ENSEMBL:ENSP00000514240.1",
+            "ENSEMBL:ENSP00000514243.1",
+            "ENSEMBL:ENSP00000514291.1",
+            "ENSEMBL:ENSP00000514241.1",
+            "ENSEMBL:ENSP00000343204.4",
+            "ENSEMBL:ENSP00000500745",
+            "UMLS:C1334290",
+            "ENSEMBL:ENSP00000500841",
+            "ENSEMBL:ENSP00000500745.2",
+            "UniProtKB:P23458",
+            "HGNC:6190",
+            "UMLS:C1527598",
+            "UniProtKB:A0A8V8TPQ9"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5546432",
+        "label": "IL6R",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "IL6R",
+          "locus_group": "protein-coding gene",
+          "name": "IL6R",
+          "description": "An interleukin-6 receptor subunit alpha that is encoded in the genome of human.",
+          "location": "1q21.3",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:3570",
+          "information_content": 100,
+          "NCBITaxon": "9606",
+          "equivalent_identifiers": [
+            "OMIM:147880",
+            "UMLS:C1416409",
+            "ENSEMBL:ENSP00000477739.1",
+            "NCBIGene:3570",
+            "UniProtKB:A0A087WTB5",
+            "UniProtKB:P08887",
+            "UMLS:C1699800",
+            "HGNC:6019",
+            "ENSEMBL:ENSP00000477739",
+            "UMLS:C4724117",
+            "PR:P08887",
+            "ENSEMBL:ENSG00000160712",
+            "UniProtKB:A0N0L5"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5591388",
+        "label": "CCL17",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "CCL17",
+          "locus_group": "protein-coding gene",
+          "name": "CCL17",
+          "description": "A C-C motif chemokine 17 that is encoded in the genome of human.",
+          "location": "16q21",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:6361",
+          "information_content": 100,
+          "NCBITaxon": "9606",
+          "equivalent_identifiers": [
+            "UMLS:C1332680",
+            "UniProtKB:Q92583",
+            "PR:Q92583",
+            "OMIM:601520",
+            "NCBIGene:6361",
+            "ENSEMBL:ENSP00000219244.4",
+            "ENSEMBL:ENSG00000102970",
+            "ENSEMBL:ENSP00000219244",
+            "UMLS:C0539535",
+            "ENSEMBL:ENSP00000480147.1",
+            "ENSEMBL:ENSP00000480147",
+            "HGNC:10615"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5545771",
+        "label": "CXCL10",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "CXCL10",
+          "locus_group": "protein-coding gene",
+          "name": "CXCL10",
+          "description": "A C-X-C motif chemokine 10 that is encoded in the genome of human.",
+          "location": "4q21.1",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:3627",
+          "information_content": 100,
+          "NCBITaxon": "9606",
+          "equivalent_identifiers": [
+            "PR:P02778",
+            "NCBIGene:3627",
+            "HGNC:10637",
+            "UMLS:C1367714",
+            "ENSEMBL:ENSP00000305651",
+            "ENSEMBL:ENSP00000305651.1",
+            "UMLS:C1308752",
+            "OMIM:147310",
+            "ENSEMBL:ENSG00000169245",
+            "UniProtKB:P02778"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5545617",
+        "label": "IL1B",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "IL1B",
+          "locus_group": "protein-coding gene",
+          "name": "IL1B",
+          "description": "An interleukin-1 beta that is encoded in the genome of human.",
+          "location": "2q14.1",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:3553",
+          "information_content": 100,
+          "NCBITaxon": "10090",
+          "equivalent_identifiers": [
+            "ENSEMBL:ENSG00000125538",
+            "UMLS:C1702300",
+            "PR:P01584",
+            "ENSEMBL:ENSP00000263341",
+            "HGNC:5992",
+            "OMIM:147720",
+            "UniProtKB:P01584",
+            "NCBIGene:3553",
+            "UMLS:C1334112",
+            "ENSEMBL:ENSP00000263341.2"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5591396",
+        "label": "CCL24",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "CCL24",
+          "locus_group": "protein-coding gene",
+          "name": "CCL24",
+          "description": "A C-C motif chemokine 24 that is encoded in the genome of human.",
+          "location": "7q11.23",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:6369",
+          "information_content": 100,
+          "NCBITaxon": "10090",
+          "equivalent_identifiers": [
+            "ENSEMBL:ENSP00000222902.2",
+            "NCBIGene:6369",
+            "ENSEMBL:ENSP00000400533.1",
+            "ENSEMBL:ENSP00000400533",
+            "PR:O00175",
+            "UMLS:C1332687",
+            "ENSEMBL:ENSP00000222902",
+            "UMLS:C1701443",
+            "OMIM:602495",
+            "HGNC:10623",
+            "UniProtKB:O00175",
+            "ENSEMBL:ENSG00000106178"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5499580",
+        "label": "CCR3",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "CCR3",
+          "locus_group": "protein-coding gene",
+          "name": "CCR3",
+          "description": "A C-C chemokine receptor type 3 that is encoded in the genome of human.",
+          "location": "3p21.31",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:1232",
+          "information_content": 100,
+          "NCBITaxon": "10090",
+          "equivalent_identifiers": [
+            "ENSEMBL:ENSP00000389336.1",
+            "NCBIGene:1232",
+            "UniProtKB:Q8TDP5",
+            "PR:P51677",
+            "UniProtKB:P51677",
+            "ENSEMBL:ENSP00000401822",
+            "UMLS:C1413189",
+            "UniProtKB:Q8TDP4",
+            "OMIM:601268",
+            "ENSEMBL:ENSG00000183625",
+            "HGNC:1604",
+            "ENSEMBL:ENSP00000389336",
+            "UMLS:C1871518",
+            "ENSEMBL:ENSP00000401822.1"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5533249",
+        "label": "CXCR3",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "CXCR3",
+          "locus_group": "protein-coding gene",
+          "name": "CXCR3",
+          "description": "A C-X-C chemokine receptor type 3 that is encoded in the genome of human.",
+          "location": "Xq13.1",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:2833",
+          "information_content": 100,
+          "equivalent_identifiers": [
+            "ENSEMBL:ENSG00000186810",
+            "UniProtKB:P49682",
+            "UMLS:C1741914",
+            "PR:P49682",
+            "HGNC:4540",
+            "UMLS:C1332822",
+            "OMIM:300574",
+            "NCBIGene:2833"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5596143",
+        "label": "STAT6",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "STAT6",
+          "locus_group": "protein-coding gene",
+          "name": "STAT6",
+          "description": "A signal transducer and activator of transcription 6 that is encoded in the genome of human.",
+          "location": "12q13.3",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:6778",
+          "information_content": 100,
+          "NCBITaxon": "10090",
+          "equivalent_identifiers": [
+            "OMIM:601512",
+            "UniProtKB:A8K4S9",
+            "NCBIGene:6778",
+            "UMLS:C1335877",
+            "HGNC:11368",
+            "PR:P42226",
+            "UniProtKB:B4DQB3",
+            "UniProtKB:P42226",
+            "ENSEMBL:ENSG00000166888",
+            "UMLS:C0297890"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5546405",
+        "label": "IL5",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "IL5",
+          "locus_group": "protein-coding gene",
+          "name": "IL5",
+          "description": "An interleukin-5 that is encoded in the genome of human.",
+          "location": "5q31.1",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:3567",
+          "information_content": 100,
+          "NCBITaxon": "10090",
+          "equivalent_identifiers": [
+            "NCBIGene:3567",
+            "UMLS:C1334121",
+            "UniProtKB:P05113",
+            "PR:P05113",
+            "ENSEMBL:ENSP00000231454.1",
+            "UMLS:C1702088",
+            "OMIM:147850",
+            "ENSEMBL:ENSG00000113525",
+            "ENSEMBL:ENSP00000231454",
+            "HGNC:6016"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5591381",
+        "label": "CCL11",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "CCL11",
+          "locus_group": "protein-coding gene",
+          "name": "CCL11",
+          "description": "An eotaxin that is encoded in the genome of human.",
+          "location": "17q12",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:6356",
+          "information_content": 100,
+          "NCBITaxon": "9606",
+          "equivalent_identifiers": [
+            "ENSEMBL:ENSP00000302234",
+            "ENSEMBL:ENSG00000172156",
+            "PR:P51671",
+            "UMLS:C1332676",
+            "HGNC:10610",
+            "ENSEMBL:ENSP00000302234.3",
+            "UMLS:C1667077",
+            "UniProtKB:P51671",
+            "UniProtKB:Q6I9T4",
+            "NCBIGene:6356",
+            "OMIM:601156"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5543996",
+        "label": "IFNG",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "IFNG",
+          "locus_group": "protein-coding gene",
+          "name": "IFNG",
+          "description": "An interferon gamma that is encoded in the genome of human.",
+          "location": "12q15",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:3458",
+          "information_content": 100,
+          "NCBITaxon": "10090",
+          "equivalent_identifiers": [
+            "UMLS:C1334085",
+            "ENSEMBL:ENSP00000229135",
+            "UniProtKB:P01579",
+            "UMLS:C0021745",
+            "UniProtKB:A0A7R8GUN6",
+            "OMIM:147570",
+            "ENSEMBL:ENSP00000229135.3",
+            "ENSEMBL:ENSG00000111537",
+            "NCBIGene:3458",
+            "PR:P01579",
+            "HGNC:5438"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5499606",
+        "label": "CCR5",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "CCR5",
+          "locus_group": "protein-coding gene",
+          "name": "CCR5",
+          "description": "A C-C chemokine receptor type 5 that is encoded in the genome of human.",
+          "location": "3p21.31",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:1234",
+          "information_content": 100,
+          "NCBITaxon": "10090",
+          "equivalent_identifiers": [
+            "UniProtKB:P51681",
+            "ENSEMBL:ENSP00000292303",
+            "UMLS:C3711103",
+            "ENSEMBL:ENSG00000160791",
+            "PR:P51681",
+            "HGNC:1606",
+            "UMLS:C1332700",
+            "OMIM:601373",
+            "UniProtKB:Q38L21",
+            "ENSEMBL:ENSP00000292303.4",
+            "ENSEMBL:ENSP00000404881",
+            "NCBIGene:1234",
+            "ENSEMBL:ENSP00000404881.1"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5546280",
+        "label": "IL4",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "IL4",
+          "locus_group": "protein-coding gene",
+          "name": "IL4",
+          "description": "An interleukin-4 that is encoded in the genome of human.",
+          "location": "5q31.1",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:3565",
+          "information_content": 100,
+          "NCBITaxon": "9606",
+          "equivalent_identifiers": [
+            "PR:P05112",
+            "UniProtKB:Q5FC01",
+            "ENSEMBL:ENSG00000113520",
+            "UniProtKB:P05112",
+            "UMLS:C1701589",
+            "NCBIGene:3565",
+            "OMIM:147780",
+            "HGNC:6014",
+            "UniProtKB:D4HNR6",
+            "UMLS:C1334119"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5591377",
+        "label": "CCL5",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "CCL5",
+          "locus_group": "protein-coding gene",
+          "name": "CCL5",
+          "description": "A C-C motif chemokine 5 that is encoded in the genome of human.",
+          "location": "17q12",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:6352",
+          "information_content": 100,
+          "NCBITaxon": "9541",
+          "equivalent_identifiers": [
+            "UniProtKB:D0EI67",
+            "OMIM:187011",
+            "UniProtKB:P13501",
+            "UniProtKB:A0A494C1Q1",
+            "ENSEMBL:ENSP00000479894.1",
+            "ENSEMBL:ENSP00000499138",
+            "ENSEMBL:ENSP00000484921.2",
+            "ENSEMBL:ENSP00000499138.1",
+            "ENSEMBL:ENSP00000484921",
+            "ENSEMBL:ENSP00000474141.2",
+            "ENSEMBL:ENSP00000475057.1",
+            "ENSEMBL:ENSG00000271503",
+            "NCBIGene:6352",
+            "ENSEMBL:ENSP00000474141",
+            "ENSEMBL:ENSP00000479894",
+            "UMLS:C1436337",
+            "UMLS:C1332691",
+            "HGNC:10632",
+            "ENSEMBL:ENSP00000475057",
+            "PR:P13501"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5640183",
+        "label": "IL33",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "IL33",
+          "locus_group": "protein-coding gene",
+          "name": "IL33",
+          "description": "An interleukin-33 that is encoded in the genome of human.",
+          "location": "9p24.1",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:90865",
+          "information_content": 100,
+          "NCBITaxon": "10090",
+          "equivalent_identifiers": [
+            "UniProtKB:O95760",
+            "OMIM:608678",
+            "UMLS:C1825595",
+            "UMLS:C1667752",
+            "ENSEMBL:ENSG00000137033",
+            "HGNC:16028",
+            "NCBIGene:90865",
+            "PR:O95760"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5591393",
+        "label": "CCL22",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "CCL22",
+          "locus_group": "protein-coding gene",
+          "name": "CCL22",
+          "description": "A C-C motif chemokine 22 that is encoded in the genome of human.",
+          "location": "16q21",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:6367",
+          "information_content": 100,
+          "NCBITaxon": "9606",
+          "equivalent_identifiers": [
+            "PR:O00626",
+            "UMLS:C1332685",
+            "UMLS:C0674299",
+            "ENSEMBL:ENSP00000219235.4",
+            "HGNC:10621",
+            "ENSEMBL:ENSG00000102962",
+            "ENSEMBL:ENSP00000219235",
+            "OMIM:602957",
+            "NCBIGene:6367",
+            "UniProtKB:O00626"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5583499",
+        "label": "MAPK8",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "MAPK8",
+          "locus_group": "protein-coding gene",
+          "name": "MAPK8",
+          "description": "A mitogen-activated protein kinase 8 that is encoded in the genome of human.",
+          "location": "10q11.22",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:5599",
+          "information_content": 100,
+          "NCBITaxon": "10116",
+          "equivalent_identifiers": [
+            "HGNC:6881",
+            "NCBIGene:5599",
+            "UMLS:C5441984",
+            "UniProtKB:A1L4K2",
+            "PR:P45983",
+            "UMLS:C1367731",
+            "UniProtKB:P45983",
+            "ENSEMBL:ENSG00000107643",
+            "OMIM:601158"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5546423",
+        "label": "IL6",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "IL6",
+          "locus_group": "protein-coding gene",
+          "name": "IL6",
+          "description": "An interleukin-6 that is encoded in the genome of human.",
+          "location": "7p15.3",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:3569",
+          "information_content": 100,
+          "NCBITaxon": "9606",
+          "equivalent_identifiers": [
+            "UniProtKB:B4DNQ5",
+            "ENSEMBL:ENSP00000258743.5",
+            "UMLS:C0878479",
+            "NCBIGene:3569",
+            "ENSEMBL:ENSG00000136244",
+            "ENSEMBL:ENSP00000385675",
+            "UniProtKB:Q75MH2",
+            "UMLS:C1334122",
+            "ENSEMBL:ENSP00000385043.1",
+            "HGNC:6018",
+            "UniProtKB:B5MC21",
+            "ENSEMBL:ENSP00000258743",
+            "PR:P05231",
+            "UniProtKB:B4DVM1",
+            "UMLS:C1527132",
+            "UniProtKB:P05231",
+            "UMLS:C1698754",
+            "ENSEMBL:ENSP00000385675.1",
+            "OMIM:147620",
+            "ENSEMBL:ENSP00000385043"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5519724",
+        "label": "FKBP1A",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "FKBP1A",
+          "locus_group": "protein-coding gene",
+          "name": "FKBP1A",
+          "description": "A peptidyl-prolyl cis-trans isomerase FKBP1A that is encoded in the genome of human.",
+          "location": "20p13",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:2280",
+          "information_content": 100,
+          "NCBITaxon": "9606",
+          "equivalent_identifiers": [
+            "UMLS:C2934980",
+            "UniProtKB:Q0VDC6",
+            "ENSEMBL:ENSP00000503033",
+            "ENSEMBL:ENSP00000383003",
+            "ENSEMBL:ENSP00000503152.1",
+            "ENSEMBL:ENSP00000383003.4",
+            "ENSEMBL:ENSP00000503152",
+            "ENSEMBL:ENSP00000371138",
+            "ENSEMBL:ENSP00000478093.1",
+            "ENSEMBL:ENSP00000503033.1",
+            "ENSEMBL:ENSG00000088832",
+            "OMIM:186945",
+            "ENSEMBL:ENSP00000371143.4",
+            "PR:P62942",
+            "ENSEMBL:ENSP00000371138.3",
+            "ENSEMBL:ENSP00000371143",
+            "UniProtKB:A0A087WTS4",
+            "HGNC:3711",
+            "UniProtKB:P62942",
+            "UMLS:C1414618",
+            "ENSEMBL:ENSP00000478093",
+            "NCBIGene:2280"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5546396",
+        "label": "IL4R",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "IL4R",
+          "locus_group": "protein-coding gene",
+          "name": "IL4R",
+          "description": "An interleukin-4 receptor subunit alpha that is encoded in the genome of human.",
+          "location": "16p12.1",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:3566",
+          "information_content": 100,
+          "equivalent_identifiers": [
+            "UniProtKB:P24394",
+            "NCBIGene:3566",
+            "UniProtKB:B2RBY1",
+            "UMLS:C1334118",
+            "OMIM:147781",
+            "ENSEMBL:ENSG00000077238",
+            "UMLS:C1620077",
+            "PR:P24394",
+            "HGNC:6015"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5522969",
+        "label": "NCSTN",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "name": "NCSTN",
+          "description": "A nicastrin that is encoded in the genome of human.",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:23385",
+          "information_content": 100,
+          "NCBITaxon": "9606",
+          "equivalent_identifiers": [
+            "ENSEMBL:ENSP00000514429",
+            "ENSEMBL:ENSP00000514429.1",
+            "UniProtKB:A0A8V8TPQ8",
+            "UMLS:C5202778",
+            "UniProtKB:B4DR82",
+            "ENSEMBL:ENSG00000162736",
+            "UniProtKB:A0A8V8TPR8",
+            "UniProtKB:Q92542",
+            "OMIM:605254",
+            "PR:Q92542",
+            "NCBIGene:23385",
+            "HGNC:17091",
+            "ENSEMBL:ENSP00000514426",
+            "ENSEMBL:ENSP00000514419",
+            "UMLS:C1538050",
+            "ENSEMBL:ENSP00000514426.1",
+            "ENSEMBL:ENSP00000514419.1"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5545595",
+        "label": "IKBKB",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "symbol": "IKBKB",
+          "locus_group": "protein-coding gene",
+          "name": "IKBKB",
+          "description": "An inhibitor of nuclear factor kappa-B kinase subunit beta that is encoded in the genome of human.",
+          "location": "8p11.21",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:3551",
+          "information_content": 100,
+          "NCBITaxon": "9606",
+          "equivalent_identifiers": [
+            "OMIM:603258",
+            "HGNC:5960",
+            "PR:O14920",
+            "UMLS:C1442489",
+            "UMLS:C1565876",
+            "UniProtKB:O14920",
+            "ENSEMBL:ENSG00000104365",
+            "NCBIGene:3551"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "id": "5581626",
+        "label": "PSENEN",
+        "type": "Gene",
+        "labels": [
+          "biolink:ThingWithTaxon",
+          "biolink:ChemicalEntityOrGeneOrGeneProduct",
+          "biolink:PhysicalEssence",
+          "biolink:PhysicalEssenceOrOccurrent",
+          "biolink:OntologyClass",
+          "biolink:MacromolecularMachineMixin",
+          "biolink:GeneProductMixin",
+          "biolink:Polypeptide",
+          "biolink:Gene",
+          "biolink:GenomicEntity",
+          "biolink:GeneOrGeneProduct",
+          "biolink:ChemicalEntityOrProteinOrPolypeptide",
+          "biolink:BiologicalEntity",
+          "biolink:NamedThing",
+          "biolink:Protein"
+        ],
+        "properties": {
+          "name": "PSENEN",
+          "description": "A gamma-secretase subunit PEN-2 that is encoded in the genome of human.",
+          "taxon": "NCBITaxon:9606",
+          "id": "NCBIGene:55851",
+          "information_content": 100,
+          "equivalent_identifiers": [
+            "NCBIGene:55851",
+            "HGNC:30100",
+            "ENSEMBL:ENSP00000468411",
+            "UniProtKB:Q9NZ42",
+            "PR:Q9NZ42",
+            "OMIM:607632",
+            "ENSEMBL:ENSP00000468411.1",
+            "UMLS:C3537462",
+            "UMLS:C1538738",
+            "ENSEMBL:ENSP00000222266",
+            "ENSEMBL:ENSG00000205155",
+            "ENSEMBL:ENSP00000222266.1"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546447",
+        "target": "5445223",
+        "label": "biolink:has_phenotype",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hpo-annotations",
+          "aggregator_knowledge_source": [
+            "infores:monarchinitiative"
+          ],
+          "source": "IL6ST",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546447",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "IL6ST",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5600278",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "TNFRSF4",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5583994",
+        "target": "5440767",
+        "label": "biolink:has_phenotype",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hpo-annotations",
+          "aggregator_knowledge_source": [
+            "infores:monarchinitiative"
+          ],
+          "source": "PSEN1",
+          "target": "hidradenitis suppurativa"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5583994",
+        "target": "5390443",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "automated_agent",
+          "knowledge_level": "prediction",
+          "primary_knowledge_source": "infores:goa",
+          "source": "PSEN1",
+          "target": "apoptotic signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5600278",
+        "target": "5390443",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "TNFRSF4",
+          "target": "apoptotic signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5596085",
+        "target": "5453783",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:eram",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "STAT4",
+          "target": "scleroderma"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5596085",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "manual_validation_of_automated_agent",
+          "knowledge_level": "prediction",
+          "primary_knowledge_source": "infores:goa",
+          "source": "STAT4",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5596085",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "STAT4",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5600246",
+        "target": "5453783",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:eram",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "TNFSF4",
+          "target": "scleroderma"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5600246",
+        "target": "5373390",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "TNFSF4",
+          "target": "tumor necrosis factor-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5600278",
+        "target": "5373390",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "TNFRSF4",
+          "target": "tumor necrosis factor-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5600246",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "TNFSF4",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5600278",
+        "target": "5373390",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "automated_agent",
+          "knowledge_level": "prediction",
+          "primary_knowledge_source": "infores:goa",
+          "source": "TNFRSF4",
+          "target": "tumor necrosis factor-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5597452",
+        "target": "5453783",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.35,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "TNF",
+          "target": "scleroderma"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5597452",
+        "target": "5390443",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "TNF",
+          "target": "apoptotic signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5597452",
+        "target": "5373390",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "TNF",
+          "target": "tumor necrosis factor-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5597452",
+        "target": "5373390",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "knowledge_assertion",
+          "primary_knowledge_source": "infores:goa",
+          "publications": [
+            "PMID:10748004",
+            "PMID:23878390",
+            "PMID:28159925",
+            "PMID:31824476"
+          ],
+          "source": "TNF",
+          "target": "tumor necrosis factor-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5597452",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "TNF",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5504871",
+        "target": "5453783",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "prediction",
+          "primary_knowledge_source": "infores:ctd",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "CSF3",
+          "target": "scleroderma"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5504871",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "CSF3",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5504871",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "prediction",
+          "primary_knowledge_source": "infores:goa",
+          "publications": [
+            "PMID:15664994"
+          ],
+          "source": "CSF3",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546874",
+        "target": "5453783",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:eram",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "IRF5",
+          "target": "scleroderma"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546874",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "knowledge_assertion",
+          "primary_knowledge_source": "infores:goa",
+          "publications": [
+            "PMID:25326418"
+          ],
+          "source": "IRF5",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546874",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "IRF5",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5597452",
+        "target": "5453783",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "prediction",
+          "primary_knowledge_source": "infores:ctd",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "TNF",
+          "target": "scleroderma"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5504871",
+        "target": "5453783",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.3,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "CSF3",
+          "target": "scleroderma"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546447",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "knowledge_assertion",
+          "primary_knowledge_source": "infores:goa",
+          "publications": [
+            "PMID:2261637"
+          ],
+          "source": "IL6ST",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5548689",
+        "target": "5445223",
+        "label": "biolink:has_phenotype",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hpo-annotations",
+          "aggregator_knowledge_source": [
+            "infores:monarchinitiative"
+          ],
+          "source": "JAK1",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5548689",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "JAK1",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5548689",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "knowledge_assertion",
+          "primary_knowledge_source": "infores:goa",
+          "source": "JAK1",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5548689",
+        "target": "5367663",
+        "label": "biolink:regulates",
+        "properties": {
+          "agent_type": "manual_agent",
+          "object_direction_qualifier": "upregulates",
+          "knowledge_level": "knowledge_assertion",
+          "primary_knowledge_source": "infores:drugmechdb",
+          "drugmechdb_path_id": [
+            "DB11817_MESH_D001172_1"
+          ],
+          "source": "JAK1",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546432",
+        "target": "5445223",
+        "label": "biolink:has_phenotype",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hpo-annotations",
+          "aggregator_knowledge_source": [
+            "infores:monarchinitiative"
+          ],
+          "source": "IL6R",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546432",
+        "target": "5390443",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "IL6R",
+          "target": "apoptotic signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546432",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "knowledge_assertion",
+          "primary_knowledge_source": "infores:goa",
+          "publications": [
+            "PMID:2261637"
+          ],
+          "source": "IL6R",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546432",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "IL6R",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5591388",
+        "target": "5445223",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.4,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "CCL17",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5591388",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "CCL17",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5545771",
+        "target": "5445223",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.33,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "CXCL10",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5545771",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "CXCL10",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5545617",
+        "target": "5445223",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.37,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "IL1B",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5545617",
+        "target": "5390443",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "IL1B",
+          "target": "apoptotic signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5545617",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "knowledge_assertion",
+          "primary_knowledge_source": "infores:goa",
+          "publications": [
+            "PMID:10748004"
+          ],
+          "source": "IL1B",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5545617",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "IL1B",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5591396",
+        "target": "5445223",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.31,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "CCL24",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5591396",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "CCL24",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5499580",
+        "target": "5445223",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.33,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "CCR3",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5499580",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "CCR3",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5533249",
+        "target": "5445223",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.31,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "CXCR3",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5533249",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "CXCR3",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5596143",
+        "target": "5445223",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.4,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "STAT6",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5596143",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "knowledge_assertion",
+          "primary_knowledge_source": "infores:goa",
+          "publications": [
+            "PMID:36884218"
+          ],
+          "source": "STAT6",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5596143",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "STAT6",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546405",
+        "target": "5445223",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.4,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "IL5",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546405",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "IL5",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5591381",
+        "target": "5445223",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.33,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "CCL11",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5591381",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "CCL11",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5543996",
+        "target": "5445223",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.4,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "IFNG",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5543996",
+        "target": "5390443",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "IFNG",
+          "target": "apoptotic signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5543996",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "IFNG",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5499606",
+        "target": "5445223",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.3,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "CCR5",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5499606",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "CCR5",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546280",
+        "target": "5445223",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.6,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "IL4",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546280",
+        "target": "5390443",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "IL4",
+          "target": "apoptotic signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5591377",
+        "target": "5445223",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.4,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "CCL5",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5591377",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "CCL5",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5640183",
+        "target": "5445223",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.4,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "IL33",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5640183",
+        "target": "5390443",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "IL33",
+          "target": "apoptotic signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5591393",
+        "target": "5445223",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.38,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "CCL22",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5591393",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "CCL22",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5583499",
+        "target": "5445223",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.3,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "MAPK8",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5583499",
+        "target": "5390443",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "MAPK8",
+          "target": "apoptotic signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546423",
+        "target": "5445223",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "score": 0.4,
+          "primary_knowledge_source": "infores:disgenet",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "IL6",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546423",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "IL6",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546423",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "knowledge_assertion",
+          "primary_knowledge_source": "infores:goa",
+          "publications": [
+            "PMID:2261637",
+            "PMID:12643274"
+          ],
+          "source": "IL6",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5519724",
+        "target": "5445223",
+        "label": "biolink:target_for",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "knowledge_assertion",
+          "primary_knowledge_source": "infores:drugmechdb",
+          "drugmechdb_path_id": [
+            "DB00864_MESH_D003876_1"
+          ],
+          "source": "FKBP1A",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5519724",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "FKBP1A",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546396",
+        "target": "5445223",
+        "label": "biolink:target_for",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "knowledge_assertion",
+          "primary_knowledge_source": "infores:drugmechdb",
+          "drugmechdb_path_id": [
+            "DB12159_MESH_D003876_1"
+          ],
+          "source": "IL4R",
+          "target": "dermatitis, atopic"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546396",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "manual_validation_of_automated_agent",
+          "knowledge_level": "prediction",
+          "primary_knowledge_source": "infores:goa",
+          "source": "IL4R",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5546396",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "IL4R",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5522969",
+        "target": "5440767",
+        "label": "biolink:has_phenotype",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hpo-annotations",
+          "aggregator_knowledge_source": [
+            "infores:monarchinitiative"
+          ],
+          "source": "NCSTN",
+          "target": "hidradenitis suppurativa"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5522969",
+        "target": "5390443",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "NCSTN",
+          "target": "apoptotic signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5545595",
+        "target": "5440767",
+        "label": "biolink:has_phenotype",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hpo-annotations",
+          "aggregator_knowledge_source": [
+            "infores:monarchinitiative"
+          ],
+          "source": "IKBKB",
+          "target": "hidradenitis suppurativa"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5545595",
+        "target": "5373390",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "knowledge_assertion",
+          "primary_knowledge_source": "infores:goa",
+          "publications": [
+            "PMID:15084260",
+            "PMID:12656673",
+            "PMID:25816133"
+          ],
+          "source": "IKBKB",
+          "target": "tumor necrosis factor-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5545595",
+        "target": "5373390",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "IKBKB",
+          "target": "tumor necrosis factor-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5545595",
+        "target": "5367663",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "IKBKB",
+          "target": "cytokine-mediated signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5581626",
+        "target": "5440767",
+        "label": "biolink:has_phenotype",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hpo-annotations",
+          "aggregator_knowledge_source": [
+            "infores:monarchinitiative"
+          ],
+          "source": "PSENEN",
+          "target": "hidradenitis suppurativa"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5581626",
+        "target": "5390443",
+        "label": "biolink:actively_involved_in",
+        "properties": {
+          "agent_type": "not_provided",
+          "knowledge_level": "not_provided",
+          "primary_knowledge_source": "infores:hetionet",
+          "hetio_source": [
+            "NCBI gene2go"
+          ],
+          "source": "PSENEN",
+          "target": "apoptotic signaling pathway"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5581626",
+        "target": "5440767",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "knowledge_assertion",
+          "primary_knowledge_source": "infores:diseases",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "PSENEN",
+          "target": "hidradenitis suppurativa"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5597452",
+        "target": "5440767",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "knowledge_assertion",
+          "primary_knowledge_source": "infores:drugcentral",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "TNF",
+          "target": "hidradenitis suppurativa"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5522969",
+        "target": "5440767",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "knowledge_assertion",
+          "primary_knowledge_source": "infores:diseases",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "NCSTN",
+          "target": "hidradenitis suppurativa"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5583994",
+        "target": "5440767",
+        "label": "biolink:genetically_associated_with",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "knowledge_assertion",
+          "primary_knowledge_source": "infores:diseases",
+          "aggregator_knowledge_source": [
+            "infores:pharos"
+          ],
+          "source": "PSEN1",
+          "target": "hidradenitis suppurativa"
+        }
+      }
+    },
+    {
+      "data": {
+        "source": "5597452",
+        "target": "5440767",
+        "label": "biolink:target_for",
+        "properties": {
+          "agent_type": "manual_agent",
+          "knowledge_level": "knowledge_assertion",
+          "primary_knowledge_source": "infores:drugmechdb",
+          "drugmechdb_path_id": [
+            "DB00051_MESH_D017497_1"
+          ],
+          "source": "TNF",
+          "target": "hidradenitis suppurativa"
+        }
+      }
+    }
+  ]
+}
