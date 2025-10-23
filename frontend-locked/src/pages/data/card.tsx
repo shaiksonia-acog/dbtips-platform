@@ -143,7 +143,7 @@ const DataCard = ({ diseaseData }) => {
 
   return (
     <Card
-      title={<span className="custom-card-title">GEO accession: {GseID}</span>}
+      title={<span className="custom-card-title">GEO accession: <a target="_blank" rel="noopener noreferrer" className="underline visited:underline hover:underline " href={`https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=${GseID}`}>{GseID}</a></span>}
       bordered={true}
       className="mt-3"
       size="small"

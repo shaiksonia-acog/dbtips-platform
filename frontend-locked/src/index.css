@@ -96,11 +96,18 @@ h1{
     color:#1059a7;
 
 }
+.custom-card-title a,
+.custom-card-title a:visited,
+.custom-card-title a:hover,
+.custom-card-title a:active {
+  text-decoration: underline;
+}
 .custom-card-title {
     color: #357eaf;
     font-weight: bold;
     font-size: 15px;
   }
+  
   .ant-card-body a{
     color: var(--color-black);
     text-decoration: underline;

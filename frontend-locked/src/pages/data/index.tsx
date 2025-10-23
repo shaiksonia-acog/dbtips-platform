@@ -9,11 +9,13 @@ const Data = () => {
     const location = useLocation();
     const [indications, setIndications] = useState([]);
     const [diseaseArea, setDiseaseArea] = useState([]);
+    const [target, setTarget] = useState("");
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
-        const {  indications,diseaseArea } = parseQueryParams(queryParams);
+        const {  target,indications,diseaseArea } = parseQueryParams(queryParams);
         setIndications(indications);
         setDiseaseArea(diseaseArea);
+        setTarget(target);
       }, [location]);
     
 
@@ -28,7 +30,7 @@ const Data = () => {
         <h1 className="text-3xl font-semibold">Genomics studies</h1>
 
       <AssociatePlot indications={indications.length > 0 ? indications : diseaseArea} 
-        diseaseAreaFilter={diseaseArea.length > 0}  />
+        diseaseAreaFilter={diseaseArea.length > 0} target={target} />
       <Variantplot diseases={indications.length > 0 ? indications : diseaseArea} 
         diseaseAreaFilter={diseaseArea.length > 0}/>
       <PgsCatalog indications={indications.length > 0 ? indications : diseaseArea} 

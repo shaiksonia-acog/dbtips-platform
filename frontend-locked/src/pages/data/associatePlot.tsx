@@ -79,9 +79,9 @@ function convertToArray(data) {
 
   return { result, diseaseWithoutEFOID };
 }
-const AssociatePlot = ({ indications, diseaseAreaFilter }) => {
+const AssociatePlot = ({ indications, diseaseAreaFilter,target }) => {
   const [selectedDisease, setSelectedDisease] = useState([]);
-  const [activeTab, setActiveTab] = useState("studies");
+  const [activeTab, setActiveTab] = useState("association");
   // const [diseaseFilterOptions, setDiseaseFilterOptions] = useState<string[]>([]);
   const [selectedDiseaseAreas, setSelectedDiseaseAreas] = useState(indications);
   const [columns, setColumns] = useState([]);
@@ -108,7 +108,9 @@ const AssociatePlot = ({ indications, diseaseAreaFilter }) => {
       setSelectedDisease(indications);
     }
     setSelectedDiseaseAreas(indications);
-  }, [indications, diseaseAreaFilter]);
+    if (target)
+    setSelectedGene(target);
+  }, [indications, diseaseAreaFilter,target]);
   const [selectedAssociationColumns, setSelectedAssociationColumns] = useState([
     "DiseaseArea",
     "mapped_diseases",
@@ -146,6 +148,17 @@ const AssociatePlot = ({ indications, diseaseAreaFilter }) => {
       },
       {
         field: "Study accession",
+        cellRenderer: (params) => {
+          return (
+            <a
+              href={`https://www.ebi.ac.uk/gwas/studies/${params.value}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {params.value}
+            </a>
+          );
+        }
       },
       {
         field: "pubDate",
@@ -213,6 +226,17 @@ const AssociatePlot = ({ indications, diseaseAreaFilter }) => {
       {
         headerName: "Study Accession",
         field: "Study Accession",
+        cellRenderer: (params) => {
+          return (
+            <a
+              href={`https://www.ebi.ac.uk/gwas/studies/${params.value}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {params.value}
+            </a>
+          );
+        }
       },
       {
         headerName: "Variant and Risk Allele",
@@ -435,7 +459,6 @@ const AssociatePlot = ({ indications, diseaseAreaFilter }) => {
     }
     return combinedData;
   }, [combinedData, selectedDiseaseAreas, indications, diseaseAreaFilter]);
-  console.log("associationsRowData", associationsRowData);
   const filterAssociationData = useMemo(() => {
     if (!(selectedDisease.length > 0) && !selectedGene) {
       return associationsRowData;
@@ -462,28 +485,59 @@ const AssociatePlot = ({ indications, diseaseAreaFilter }) => {
         
         // Check if any of the genes exactly matches the selectedGene
         const matchesGene = genes.some((gene) => gene === selectedGene?.trim());
-      
-        if (matchesGene) {
-          const accession = row["Study Accession"];
-          // Add accession to selectedAccession if it's not already there
-          if (accession && !selectedAccession.includes(accession)) {
-            setSelectedAccession((prev) => [...prev, accession]);
-          }
-        }
         
         return matchesGene;  // Keep rows that have a gene matching the selectedGene
       });
       
     }
-    console.log("selected study accesion", selectedAccession);
 
     return filteredData;
-  }, [associationsRowData, selectedAccession, selectedDisease, selectedGene]);
+  }, [associationsRowData, selectedDisease, selectedGene]);
   useEffect(() => {
-    if (!selectedGene) {
-      setSelectedAccession([]);
+    // 1. First, calculate what the *new* accessions list should be.
+    let newAccessions = []; // <-- Starts empty every time
+
+    if (selectedGene) {
+      // Filter the base data to find all accessions related to the *current* gene
+      const geneFilteredData = associationsRowData.filter((row) => {
+         const genes = row["Mapped gene(s)"]
+           ? row["Mapped gene(s)"].split(/[;,]+/).map((g) => g.trim())
+           : [];
+         return genes.some((gene) => gene === selectedGene?.trim());
+      });
+
+      // Get all accessions from the filtered data
+      const accessions = geneFilteredData.map(
+        (row) => row["Study Accession"]
+      );
+
+      // Get only the unique accessions for *this* gene
+      newAccessions = [...new Set(accessions)]; // <-- This is a *new* list, not an appended one.
     }
-  }, [selectedGene]);
+
+    // 2. Use the functional update form to *conditionally* set state.
+    setSelectedAccession((prevAccessions) => {
+      // Sort both arrays to ensure order doesn't matter
+      const sortedPrev = [...prevAccessions].sort();
+      const sortedNew = [...newAccessions].sort();
+
+      // Check if the new array is *actually different* from the previous one.
+      const isSame =
+        sortedPrev.length === sortedNew.length &&
+        sortedPrev.every((val, index) => val === sortedNew[index]);
+
+      if (isSame) {
+        // If they are the same, return the *previous* state reference
+        // This prevents the infinite loop.
+        return prevAccessions;
+      } else {
+        // If they are different, return the *new* array.
+        // This *replaces* the old [1, 2] with the new [3, 4].
+        return newAccessions;
+      }
+    });
+    
+  }, [selectedGene, associationsRowData]);
   //  useEffect(() => {
   //     const diseases = Array.from(new Set(rowData.map(item => capitalizeFirstLetter(item["Trait(s)"])))).sort();
   //     setDiseaseFilterOptions(diseases);
@@ -497,14 +551,21 @@ const AssociatePlot = ({ indications, diseaseAreaFilter }) => {
       );
     }
     
+    // This logic is now correct. It will filter *after* the useEffect
+    // has successfully set the new accession list (if any).
     if (selectedAccession.length > 0) {
+      // console.log("applying accession filter", selectedAccession); // This log is fine
       filtered = filtered.filter((item) =>
         selectedAccession.includes(item["Study accession"])
       );
+    } else if (selectedGene) {
+      // If a gene is selected but the accession list is *still* empty
+      // (e.g., data is loading or no accessions found), show nothing.
+      filtered = [];
     }
     
     return filtered;
-  }, [rowData, selectedDisease, selectedAccession]);
+  }, [rowData, selectedDisease, selectedAccession, selectedGene]);
 
   useEffect(() => {
     const llmData = preprocessGWASStudiesData(rowData);
@@ -577,18 +638,19 @@ const AssociatePlot = ({ indications, diseaseAreaFilter }) => {
                   showSearch
                 >
                   {/* <Option value="">Select Gene (Coming soon)</Option> */}
-                  {Array.from(
-                    new Set(
-                      associationsRowData.flatMap(
-                        (item) => (item["Mapped gene(s)"] || "").split(/[,;]/) // Split by comma or semicolon
+                    {Array.from(
+                    new Set([
+                      ...(target ? [target] : []), // Add target if it exists
+                      ...associationsRowData.flatMap(
+                      (item) => (item["Mapped gene(s)"] || "").split(/[,;]/) // Split by comma or semicolon
                       )
+                    ])
                     )
-                  )
                     .filter((gene) => gene.trim() !== "") // Remove any empty strings
                     .sort()
                     .map((gene) => (
                       <Option key={gene} value={gene}>
-                        {gene}
+                      {gene}
                       </Option>
                     ))}
                 </Select>
@@ -619,8 +681,8 @@ const AssociatePlot = ({ indications, diseaseAreaFilter }) => {
               >
                 <Segmented
                   options={[
-                    { label: "Studies", value: "studies" },
                     { label: "Associations", value: "association" },
+                    { label: "Studies", value: "studies" },
                   ]}
                   value={activeTab}
                   onChange={(value) => setActiveTab(value)}
