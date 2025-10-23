@@ -2484,7 +2484,7 @@ async def get_mouse_studies(request: DiseasesRequest, redis: Redis = Depends(get
 semaphore = asyncio.Semaphore(1)
 @app.post("/evidence/disease-pathway-semaphore/", tags=["Evidence"])
 async def get_disease_pathway_semaphore(request: DiseasesRequest,
-                            db: Session = Depends(get_db), build_cache=False):
+                            db: Session = Depends(get_db), build_cache: bool=False):
     try:
         async with semaphore:  # This will block concurrent requests
             print(f"lock applied and processing {request.diseases}")
@@ -2498,7 +2498,7 @@ async def get_disease_pathway_semaphore(request: DiseasesRequest,
 @app.post("/evidence/disease-pathway/", tags=["Evidence"])
 async def get_disease_pathway(request: DiseasesRequest,
                             db: Session = Depends(get_db),
-                            build_cache=False):
+                            build_cache: bool=False):
     diseases: List[str] = request.diseases
     diseases = [s.strip().lower().replace(" ", "_") for s in diseases]
     diseases_str = "-".join(diseases)
