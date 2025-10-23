@@ -637,10 +637,10 @@ def search_pubmed_target(target_name: str, disease_name: str,target_terms_file: 
     if disease_name != 'no-disease':
 
         # Build the disease query
-        disease_query = f'"{disease_name}"[Title/Abstract]'
+        disease_query = f'"{disease_name}"[Title]'
 
         # Build the MeSH term query
-        mesh_query = f'"{mesh_major_term}"[MeSH Major Topic]'
+        mesh_query = f'("{mesh_major_term}"[MeSH Terms] OR {disease_query})'
 
         # Combine everything into the final query
         query = f'(({target_query}) AND ({mesh_query}) AND ({article_types_query}))'
@@ -1071,20 +1071,20 @@ def generate_mapped_diseases_for_disease_area(disease_area, articles_data):
         mapped_diseases = []
         mesh_details = article.get("mesh_details", {})
         if not mesh_details:
-            llmclient = LLMClient()
-            disease_efo_term = llmclient.identify_disease_efo_term(article.get("Title",""), article.get("Abstract","")).get('efo_term', "")
-            if disease_efo_term:
-                if disease_efo_term in tree_numbers_dict:
-                    tree_numbers = tree_numbers_dict[disease_efo_term]
-                else:
-                    tree_numbers = get_mesh_tree_numbers_of_disease(disease_efo_term)
-                    tree_numbers_dict[disease_efo_term] = tree_numbers
+            # llmclient = LLMClient()
+            # disease_efo_term = llmclient.identify_disease_efo_term(article.get("Title",""), article.get("Abstract","")).get('efo_term', "")
+            # if disease_efo_term:
+            #     if disease_efo_term in tree_numbers_dict:
+            #         tree_numbers = tree_numbers_dict[disease_efo_term]
+            #     else:
+            #         tree_numbers = get_mesh_tree_numbers_of_disease(disease_efo_term)
+            #         tree_numbers_dict[disease_efo_term] = tree_numbers
                 
-                is_child = filter_mapped_diseases(disease_area_mesh_tree_numbers, tree_numbers)
-                if is_child:
-                    print(f"Adding Mesh Term {disease_efo_term} for disease area {disease_area}")
-                    mapped_diseases.append(disease_efo_term)
-
+            #     is_child = filter_mapped_diseases(disease_area_mesh_tree_numbers, tree_numbers)
+            #     if is_child:
+            #         print(f"Adding Mesh Term {disease_efo_term} for disease area {disease_area}")
+            #         mapped_diseases.append(disease_efo_term)
+            pass
         else:
             for mesh_term, mesh_id in mesh_details.items():
                 # print("mesh_term, mesh_id: ", mesh_term, mesh_id)
@@ -1095,11 +1095,11 @@ def generate_mapped_diseases_for_disease_area(disease_area, articles_data):
                     tree_numbers = get_mesh_tree_numbers_of_disease(mesh_term, mesh_id)
                     print("tree_numbers: ", tree_numbers)
                     tree_numbers_dict[mesh_term] = tree_numbers
-            
-                is_child = filter_mapped_diseases(disease_area_mesh_tree_numbers, tree_numbers)
-                if is_child:
-                    print(f"Adding Mesh Term {mesh_term} for disease area {disease_area}")
-                    mapped_diseases.append(mesh_term)  
+                if tree_numbers:
+                    is_child = filter_mapped_diseases(disease_area_mesh_tree_numbers, tree_numbers)
+                    if is_child:
+                        print(f"Adding Mesh Term {mesh_term} for disease area {disease_area}")
+                        mapped_diseases.append(mesh_term)  
 
         article["mapped_diseases"] = list(set(mapped_diseases))
 
