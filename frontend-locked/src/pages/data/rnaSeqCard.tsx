@@ -46,7 +46,7 @@ const RnaSeqCard = () => {
 		
 		setIndications(newIndications.length > 0 ? newIndications : diseaseArea);
 	
-	}, [indications, location]);
+	}, [ location]);
 
 	const {
 		data: rnaSeqData,
