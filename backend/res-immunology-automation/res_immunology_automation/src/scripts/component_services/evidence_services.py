@@ -117,11 +117,11 @@ def build_query(target: str, disease: str, target_terms_file: str, disease_synon
     # Create the query for the disease and its synonyms
     disease_query = ""
     if synonyms:
-        synonym_query = " OR ".join([f'AB="{syn}"' for syn in synonyms])
+        synonym_query = " OR ".join([f'TI="{syn.strip()}" OR AB="{syn.strip()}"' for syn in synonyms])
         disease_query += f' ({synonym_query})'
     else:
     	# if no synonyms are found, use the disease name directly
-        disease_query = f'(AB="{disease}")'    
+        disease_query = f'(TI="{disease}" OR AB="{disease}")'    
 
     terms: List[str] = target_data.get(target.lower(), [])
     # filter synonyms which has multiple words
@@ -131,11 +131,11 @@ def build_query(target: str, disease: str, target_terms_file: str, disease_synon
     if terms:
         # Include the original target along with the terms
         terms_with_target = [target] + terms
-        target_query = " OR ".join([f'AB="{term.strip()}"' for term in terms_with_target])
+        target_query = " OR ".join([f'TI="{term.strip()}" OR AB="{term.strip()}"' for term in terms_with_target])
         target_query = f'({target_query})'  # Wrap in parentheses only if there are multiple terms
     else:
         # If no terms are found, use the target directly
-        target_query = f'AB="{target}"'
+        target_query = f'(TI="{target}" OR AB="{target}")'
 
 
     # Build the final query
@@ -169,11 +169,11 @@ def build_query_target(target: str, target_terms_file: str) -> str:
     if terms:
         # Include the original target along with the terms
         terms_with_target = [target] + terms
-        target_query = " OR ".join([f'AB="{term.strip()}"' for term in terms_with_target])
+        target_query = " OR ".join([f'TI="{term.strip()}" OR AB="{term.strip()}"' for term in terms_with_target])
         target_query = f'({target_query})'  # Wrap in parentheses only if there are multiple terms
     else:
         # If no terms are found, use the target directly
-        target_query = f'AB="{target}"'
+        target_query = f'TI="{target.strip()}" OR AB="{target}"'
 
     # Define the additional terms for the second part of the query
     additional_terms: List[str] = [
