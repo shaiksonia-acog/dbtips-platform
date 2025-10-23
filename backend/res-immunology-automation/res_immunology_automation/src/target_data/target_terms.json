@@ -176,35 +176,43 @@
     "svep1": [
         "ccp22"
     ],
-    "acviia": [
-        "acvr2a",
+    "acvr2a": [
+        "acviia",
         "actr-IIa",
         "activin a receptor type 2a",
-        "actrII"
+        "actrIIa"
     ],
-    "acviib": [
-        "acvr2b",
+    "acvr2b": [
+        "acviib",
         "actr-IIb",
         "activin receptor type-2b",
-        "actrII"
+        "actrIIb"
     ],
     "pde3b": [
         "phosphodiesterase 3b"
     ],
     "gipr": [
-        "glucose-dependent insulinotropic polypeptide receptor"
+        "glucose-dependent insulinotropic polypeptide receptor",
+        "PGQTL2"
     ],
     "aplnr": [
-        "apj"
+        "apj",
+        "apelin receptor"
     ],
     "crhr2": [
         "crf2",
-        "crfr2"
+        "crfr2",
+        "CRF-RB",	
+        "HM-CRF"
     ],
     "gpr75": [
-        "g protein-coupled receptor 75"
+        "g protein-coupled receptor 75",
+        "GPRchr2",	
+        "WI31133"
     ],
     "inhbe": [
-        "inhibin beta e"
+        "inhibin beta e",
+        "Activin E",	
+        "Activin beta-E"
     ]
 }
