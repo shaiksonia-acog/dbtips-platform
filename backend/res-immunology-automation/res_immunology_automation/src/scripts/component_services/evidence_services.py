@@ -1628,7 +1628,7 @@ def fetch_and_filter_figures_by_disease_and_pmids(disease: str) -> List[Dict[str
             # Add gene symbols to the figure dictionary
             figure["gene_symbols"] = gene_symbols
         # strapi_result=get_network_biology_strapi(disease_name=disease)
-        filtered_figures.extend(strapi_result)
+        # filtered_figures.extend(strapi_result)
     except HTTPException as e:
         raise e
     return filtered_figures
