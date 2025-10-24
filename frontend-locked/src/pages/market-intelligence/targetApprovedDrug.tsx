@@ -48,7 +48,7 @@ const ApprovedDrug = ({
   useEffect(() => {
     if(!diseaseAreaFilter)
     setSelectedDisease(indications);
-    setSelectedDiseaseArea(diseaseAreaFilter ? [...indications] : []);
+    setSelectedDiseaseArea( indications);
   }, [diseaseAreaFilter,indications]);
 
   const {
@@ -181,15 +181,16 @@ const ApprovedDrug = ({
     setSelectedColumns(columns);
   };
   const areaFilteredData = useMemo(() => {
-    if (!approvedDrugData) return [];
-    if (selectedDiseaseArea.length === 0) return [];
+    if (!approvedDrugData ) return [];
+    if (selectedDiseaseArea.length === 0&& selectedDisease.length==0) return [];
+    
     return approvedDrugData.filter((data) =>
       selectedDiseaseArea.some(
         (disease) =>
           disease.toLowerCase() === data.diseaseArea?.toLowerCase()
       )
     );
-  }, [approvedDrugData, selectedDiseaseArea]);
+  }, [approvedDrugData, selectedDiseaseArea,selectedDisease]);
   const filteredData = useMemo(() => {
     if (!approvedDrugData) return [];
     // const data = areaFilteredData
