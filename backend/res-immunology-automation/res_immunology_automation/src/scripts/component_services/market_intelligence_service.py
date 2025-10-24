@@ -1761,15 +1761,56 @@ def get_target_pipeline_strapi_all(diseases: List[str], target: str) -> List[Dic
         diseases_to_iterate = diseases
 
     # Iterate and collect
-    for disease in diseases_to_iterate:
-        params = {
-            "filters[target][$eqi]": target,
-            "pagination[page]": 1,
-            "pagination[pageSize]": 500
-        }
-        if disease:
-            params["filters[disease][$eqi]"] = disease
+    if len(diseases):
+        for disease in diseases_to_iterate:
+            params = {
+                "filters[target][$eqi]": target,
+                "pagination[page]": 1,
+                "pagination[pageSize]": 500
+            }
+            if disease:
+                params["filters[disease][$eqi]"] = disease
 
+            items = fetch_for_params(params)
+            for item in items:
+                phase = item.get("trialRecord", {}).get("phase")
+                trial_status = item.get("trialRecord", {}).get("trialStatus")
+                source_url = item.get("trialRecord", {}).get("url")
+                trial_id = item.get("trialRecord", {}).get("trialID")
+
+                # normalize to lists
+                if isinstance(source_url, str):
+                    source_url = [source_url]
+                elif not isinstance(source_url, list):
+                    source_url = []
+                if isinstance(trial_id, str):
+                    trial_id = [trial_id]
+                elif not isinstance(trial_id, list):
+                    trial_id = []
+
+                filtered_data.append({
+                    "Disease": (item.get("disease") or "").lower(),
+                    "Drug": item.get("drug", ""),
+                    "Modality": item.get("type", ""),
+                    "Mechanism of Action": item.get("MoA", ""),
+                    "Phase": f"Phase {phase}" if phase else "N/A",
+                    "Status": trial_status,
+                    "Target": item.get("target", ""),
+                    "Source URLs": source_url,
+                    "Sponsor": item.get("sponsor", ""),
+                    "ApprovalStatus": item.get("trialRecord", {}).get("approvalStatus"),
+                    "WhyStopped": get_why_stopped(nct_id=trial_id[0]) if trial_id else ""
+                })
+
+    else:
+        params = {
+                "filters[target][$eqi]": target,
+                "pagination[page]": 1,
+                "pagination[pageSize]": 500
+            }
+        # if disease:
+        #     params["filters[disease][$eqi]"] = disease
+        params["filters[target][$eqi]"] = target
         items = fetch_for_params(params)
         for item in items:
             phase = item.get("trialRecord", {}).get("phase")
@@ -1800,6 +1841,7 @@ def get_target_pipeline_strapi_all(diseases: List[str], target: str) -> List[Dic
                 "ApprovalStatus": item.get("trialRecord", {}).get("approvalStatus"),
                 "WhyStopped": get_why_stopped(nct_id=trial_id[0]) if trial_id else ""
             })
+
 
     return filtered_data
 def fetch_patient_stories_from_source(disease: str):
