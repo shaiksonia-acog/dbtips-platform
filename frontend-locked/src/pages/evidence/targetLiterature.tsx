@@ -22,6 +22,9 @@ function convertToArray(data) {
       result.push({
         ...record,
         DiseaseArea: capitalizeFirstLetter(disease), // Add the disease key
+        mapped_diseases: record["mapped_diseases"].length>0
+          ? record["mapped_diseases"]
+          : [disease],
       });
     });
   });
@@ -126,7 +129,7 @@ setUrl(url);
       if (diseaseAreaFilter) {
         setDiseaseOptions([...diseases.sort()]);
       } else {
-        const combinedDiseases = [...diseases, ...indications];
+        const combinedDiseases = [...new Set([...diseases.map(d => d.toLowerCase()), ...indications.map(i => i.toLowerCase())])];
         setDiseaseOptions([...combinedDiseases.sort()]);
       }
     }
@@ -138,8 +141,12 @@ setUrl(url);
     }
     return areaFilteredData.filter(
       (row) =>
-        row.mapped_diseases &&
-        row.mapped_diseases.some((d) => selectedDiseases.includes(d))
+      row.mapped_diseases &&
+      row.mapped_diseases.some((d) => 
+        selectedDiseases.some(selected => 
+        selected.toLowerCase() === d.toLowerCase()
+        )
+      )
     );
   }, [areaFilteredData, selectedDiseases]);
 
@@ -361,7 +368,7 @@ setUrl(url);
         </div>
         {indications.length > 0 ? (
           <p className="my-2  font-medium ">
-            This section offers a curated collection of recent research articles
+            This section offers a curated collection of research articles published within the past 10 years
             highlighting role of {target} in {indications.join(", ")}.
           </p>
         ) : (
