@@ -20,7 +20,7 @@ const fetchSession = async () => {
 };
 
 const ProtectedRoute: React.FC<Props> = ({ children }) => {
-	const { data, isLoading, isError } = useQuery("session", fetchSession, {
+	const {  isLoading, isError } = useQuery("session", fetchSession, {
 		retry: false, // don’t retry if unauthenticated
 	});
 
