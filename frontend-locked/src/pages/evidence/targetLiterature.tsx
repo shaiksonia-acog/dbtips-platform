@@ -22,7 +22,7 @@ function convertToArray(data) {
       result.push({
         ...record,
         DiseaseArea: capitalizeFirstLetter(disease), // Add the disease key
-        mapped_diseases: record["mapped_diseases"].length>0
+        mapped_diseases: record?.["mapped_diseases"]?.length > 0
           ? record["mapped_diseases"]
           : [disease],
       });
