@@ -42,7 +42,7 @@ async def check_status_and_run(disease: str, target: str,
         logger.info(f"Previous stages for {pipeline_type.upper()} not completed - TERMINATING")
         raise Exception(f"Previous stages for {pipeline_type.upper()} not completed - TERMINATING")
 
-def should_run_image_analyzer(disease: str, target: str) -> bool:
+def should_run_image_analyzer(disease: str, target: str, build_for_target: bool=False) -> bool:
     """
     Determine if image analyzer should run based on input parameters.
     Image analyzer runs only for:
@@ -54,9 +54,12 @@ def should_run_image_analyzer(disease: str, target: str) -> bool:
     """
     # Target-only case: skip image analyzer
     if target != "no-target" and disease == "no-disease":
-        logger.info("Target-only analysis detected - skipping image analyzer")
-        # return False
-        return True
+        if build_for_target:
+            logger.info("Target-only analysis detected - Enabling image analyzer")
+            return True
+        else:
+            logger.info("Target-only analysis detected - skipping image analyzer")
+            return False
     
     # Disease-only case: run image analyzer
     if disease != "no-disease" and target == "no-target":
@@ -72,7 +75,7 @@ def should_run_image_analyzer(disease: str, target: str) -> bool:
     logger.warning(f"Unexpected combination: disease={disease}, target={target} - defaulting to skip image analyzer")
     return False
 
-async def run_analyzers(disease: str, target: str = "no-target", pipeline_status: str = "completed"):
+async def run_analyzers(disease: str, target: str = "no-target", pipeline_status: str = "completed", build_for_target: bool=False):
     try:
         # Define all available pipelines
         all_pipelines = {
@@ -89,7 +92,7 @@ async def run_analyzers(disease: str, target: str = "no-target", pipeline_status
         pipelines_details["supplementary-data-analysis"] = all_pipelines["supplementary-data-analysis"]
         
         # Conditionally include image analyzer
-        if should_run_image_analyzer(disease, target):
+        if should_run_image_analyzer(disease, target, build_for_target):
             pipelines_details["image-analysis"] = all_pipelines["image-analysis"]
         
         logger.info(f"Starting analysis pipelines for disease: {disease}, target: {target}")

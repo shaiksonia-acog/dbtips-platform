@@ -23,7 +23,7 @@ logger = logging.getLogger(module_name)
 #         raise e
 
 # 
-async def run_enhancement_pipeline(disease: str = "no-disease", target: str = "no-target"):
+async def run_enhancement_pipeline(disease: str = "no-disease", target: str = "no-target", build_for_target: bool=False):
     logger.info(f"Starting enhancement pipeline for disease: {disease}, target: {target}")
     try:
         # Run extraction
@@ -35,7 +35,7 @@ async def run_enhancement_pipeline(disease: str = "no-disease", target: str = "n
         logger.info("Literature segregation completed successfully")
         
         # Run analyzers (will raise exception if any analyzer fails)
-        analyzer_results = await run_analyzers(disease, target)
+        analyzer_results = await run_analyzers(disease, target, build_for_target)
         logger.info("All analyzers completed successfully")
         
         logger.info("Enhancement pipeline completed successfully")
