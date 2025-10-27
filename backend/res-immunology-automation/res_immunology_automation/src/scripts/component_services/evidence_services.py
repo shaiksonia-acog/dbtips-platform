@@ -1633,6 +1633,81 @@ def fetch_and_filter_figures_by_disease_and_pmids(disease: str) -> List[Dict[str
         raise e
     return filtered_figures
 
+def fetch_and_filter_figures_by_target(target: str) -> List[Dict[str, str]]:
+    """
+    Fetch data from the API and filter figures based on:
+      1. Presence of a disease in the figtitle.
+      2. Inclusion of the pmid in a provided list.
+    Assigns blank strings to missing fields.
+    
+    Args:
+        api_url (str): The API URL to fetch data from.
+        disease (str): Disease name to filter by.
+        pmid_list (List[str]): List of PMIDs to filter against.
+    
+    Returns:
+        List[Dict[str, str]]: Filtered list containing the required fields.
+    """
+    try:
+        #Fetch Synonyms
+        target_terms_file = "/app/res-immunology-automation/res_immunology_automation/src/target_data/target_terms.json"
+        with open(target_terms_file, 'r') as f:
+            target_data = json.load(f)
+        target_synonyms = target_data.get(target.lower(), [])
+        target_synonyms.append(target)
+
+        api_url: str="https://pfocr.wikipathways.org/json/getFigureInfo.json"
+        # Fetch data from the API
+        response = requests.get(api_url)
+        
+        # Check if the request was successful
+        if response.status_code != 200:
+            raise Exception(f"Failed to fetch data from the API. Status code: {response.status_code}")
+        
+        data = response.json()
+        
+        filtered_figures = []
+        # print('Disease lower sending to get the mesh term', disease_lower)
+        # disease_mesh_term=get_mesh_term_for_disease(disease_lower)
+        # mesh_entry_terms_for_disease = fetch_mesh_entry_terms(disease_mesh_term)
+        # Filter the figures based on the disease name in the figtitle
+        for figure in data.get("figureInfo", []):
+            figtitle = figure.get("figtitle", "").lower().replace("’", "'").replace("&#39;", "'")
+            figid: str = figure.get("figid", "")
+            gene_symbols: List[str] = fetch_gene_symbols_from_figid(figid)
+
+            if any(target.upper() in gene_symbols for target in target_synonyms ):
+                
+                figid = figure.get("figid", "")
+                figid_parts = figid.split("__") if figid else []
+                
+                if len(figid_parts) == 2:
+                    first_part, second_part = figid_parts
+                    image_url = f"https://europepmc.org/articles/{first_part}/bin/{second_part}.jpg"
+                else:
+                    image_url = ""
+
+                print("Appending: ", figid)
+                filtered_figures.append({
+                    "url": figure.get("url", ""),
+                    "pmcid": figure.get("pmcid", ""),
+                    "figtitle": figure.get("figtitle", ""),
+                    "figid": figid,
+                    "image_url": image_url,
+                    "gene_symbols": gene_symbols
+                })
+        
+        # Print the length of the array before filtering by PMIDs
+        print(f"Number of records before filtering by PMIDs: {len(filtered_figures)}")
+        filtered_figures=enrich_with_pmid(filtered_figures)
+        
+        # # strapi_result=get_network_biology_strapi(disease_name=disease)
+        # # filtered_figures.extend(strapi_result)
+    except HTTPException as e:
+        raise e
+    return filtered_figures
+
+
 def get_doid(disease_name: str) -> str:
     """
     Fetch the Disease Ontology ID (DOID) for a given disease name using the OLS API.
@@ -2179,9 +2254,17 @@ if __name__ == "__main__":
     # rna_seq_updated = add_mapped_diseases(rna_seq_data)
     # with open("rna_seq_updated.json", 'w') as outfile:
     #     json.dump(rna_seq_updated, outfile, indent=4)
-    target_name = "gucy1a1"
-    disease_name = "cardiovascular diseases"
-    target_terms_file = "/app/res-immunology-automation/res_immunology_automation/src/scripts/target_data/target_terms.json"
-    mesh_major_term="cardiovascular diseases"  # cardiovascular diseases
-    search_pubmed_target(target_name, disease_name, target_terms_file, mesh_major_term)
+    # target_name = "gucy1a1"
+    # disease_name = "cardiovascular diseases"
+    # target_terms_file = "/app/res-immunology-automation/res_immunology_automation/src/scripts/target_data/target_terms.json"
+    # mesh_major_term="cardiovascular diseases"  # cardiovascular diseases
+    # search_pubmed_target(target_name, disease_name, target_terms_file, mesh_major_term)
+    target = "sav1"
+    import datetime
+    start = datetime.datetime.now()
+    pathways = fetch_and_filter_figures_by_target(target)
+    end = datetime.datetime.now()
+    print("time taken: ", end-start)
+    with open("target_pathways.json", "w") as f:
+        json.dump(pathways, f, indent=2)
     
