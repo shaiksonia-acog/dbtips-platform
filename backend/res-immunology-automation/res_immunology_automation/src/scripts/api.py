@@ -2566,6 +2566,82 @@ async def get_disease_pathway(request: DiseasesRequest,
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/evidence/pathway-by-target-semaphore/", tags=["Evidence"])
+async def get_pathway_by_target_semaphore(request: TargetOnlyRequest,
+                            db: Session = Depends(get_db), build_cache: bool=False):
+    try:
+        async with semaphore:  # This will block concurrent requests
+            print(f"lock applied and processing {request.target}")
+            response =  await get_pathway_by_target(request, db, build_cache)
+            print("lock removed")
+    except Exception as e:
+        raise e
+    return response
+
+
+@app.post("/evidence/pathway-by-target/", tags=["Evidence"])
+async def get_pathway_by_target(request: TargetOnlyRequest,
+                            db: Session = Depends(get_db),
+                            build_cache: bool=False):
+    target: str = request.target.lower()
+    
+    key: str = f"/evidence/disease-pathway-by-target/:{target}"
+    endpoint: str = "/evidence/disease-pathway-by-target/"
+
+    # Directory to store the cached JSON file
+    cache_dir: str = "cached_data_json/target"
+    os.makedirs(cache_dir, exist_ok=True)  # Ensure the directory exists
+    
+    cached_data: Dict[str,Any] = {}
+    target_record = db.query(Target).filter_by(id=f"{target}").first()
+    # 1. Check if the cached JSON file exists
+    if target_record is not None:
+        cached_file_path: str = target_record.file_path
+        print(f"Loading cached response from file: {cached_file_path}")
+        cached_responses: Dict = load_response_from_file(cached_file_path)
+        # Check if the endpoint response exists in the cached data
+        if f"{endpoint}" in cached_responses:  
+            print(f"Returning cached response from file: {cached_file_path}")
+            cached_data[target.replace("_"," ")]=cached_responses[f"{endpoint}"]
+
+        print("Fetching data from strapi")
+        # cached_data=enrich_disease_pathway_results(cached_data)
+        return cached_data
+
+    print("filtered diseases: ", filtered_diseases)
+
+    try:
+        if build_cache == True:
+            
+                target_record = db.query(Target).filter_by(id=f"{target}").first()
+                file_path: str = os.path.join(cache_dir, f"{target}.json")
+
+                data=fetch_and_filter_figures_by_target(target)
+                cached_data[target] = {"results": data}
+
+                if target_record is not None:
+                    cached_file_path: str = target_record.file_path
+                    cached_responses = load_response_from_file(cached_file_path)
+                else:
+                    cached_responses = {}
+
+                cached_responses[f"{endpoint}"] = {"results": data}
+
+                if target_record is None:
+                    save_response_to_file(file_path, cached_responses)
+                    new_record = Target(id=target, file_path=file_path)  # Create a new instance of the identified model
+                    db.add(new_record)  # Add the new record to the session
+                    db.commit()  # Commit the transaction to save the record to the database
+                    db.refresh(new_record)  # Refresh the instance to reflect any changes from the DB (like auto-generated
+                    # fields)
+                    print(f"Record with ID {target} added to the disease table.")
+                else:
+                    save_response_to_file(cached_file_path, cached_responses)
+            # cached_data=enrich_disease_pathway_results(cached_data)    
+        return cached_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/evidence/literature-images/", tags=["Evidence"])
 async def get_literature_images_evidence(request: DiseasesRequest,
                                         db: Session = Depends(get_db),
