@@ -149,8 +149,7 @@ const HomeLocked = ({ setAppState }) => {
     navigate(`/target-biology?target=${values.target}&indications=${encodeURIComponent(encodedIndications)}&diseaseArea=${encodeURIComponent(encodedDiseaseArea)}`);
   };
 
-  const isButtonEnabled = targetValue && 
-    ((indicationsValue?.length > 0) || (diseaseAreaValue?.length > 0));
+  const isButtonEnabled = targetValue;
 
   return (
     <div className="bg-gradient-to-b h-[86vh] from-indigo-50 to-white hero">
