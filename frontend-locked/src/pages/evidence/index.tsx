@@ -32,8 +32,8 @@ const Evidence = () => {
       ) : (
         <Literature indications={indications} />
       )}
-       <DiseasePathways indications={indications.length > 0 ? indications : diseaseArea} 
-         target={target} />
+       {hasIndications && <DiseasePathways indications={indications.length > 0 ? indications : diseaseArea} 
+         target={target} />}
       
       {showTargetLiterature && <TargetPerturbation target={target} />}
     </div>
