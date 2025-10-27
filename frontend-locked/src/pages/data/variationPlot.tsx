@@ -1,6 +1,6 @@
 import { useState, useEffect ,useRef} from "react";
 import Plotly from "plotly.js-dist-min";
-import LocusZoom from "locuszoom";
+// import LocusZoom from "locuszoom";
 import { Select, message, Empty,  Space, Tooltip } from "antd";
 import { useQuery } from "react-query";
 import { fetchData } from "../../utils/fetchData";
@@ -15,7 +15,7 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
   const plotRef = useRef(null);
 
   const [selectedDisease, setSelectedDisease] = useState("");
-  const [allPoints, setAllPoints] = useState([]);
+  // const [allPoints, setAllPoints] = useState([]);
   const [mondoId, setMondoId] = useState(null);
   const [rawData, setRawData] = useState([]);
   const [variantOptions, setVariantOptions] = useState([]);
@@ -27,7 +27,7 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
 
   // Reset data on disease change
   useEffect(() => {
-    setAllPoints([]);
+    // setAllPoints([]);
     setMondoId(null);
     setRawData([]);
     setVariantOptions([]);
@@ -142,7 +142,7 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
     // setDiseaseOptions(uniqueDisease.map(gene => ({ label: gene, value: gene })));
 
     // Store all points for LocusZoom interaction
-    setAllPoints(processedRows);
+    // setAllPoints(processedRows);
 
     // Render initial plot with all data
     renderManhattanPlot(processedRows);
@@ -287,65 +287,58 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
     };
 
     Plotly.newPlot(plotDiv, traces, layout).then((plot) => {
-      plot.on("plotly_click", function (data) {
-        const point = data.points[0];
-        const chr = point.data.locusX[point.pointIndex];
-        const pos = point.customdata[point.pointIndex];
-        const matchedPoint = allPoints.find(p => p.chr === chr && p.pos === pos);
-        const rsID = matchedPoint?.rsID || "Unknown";
-        renderLocusZoom(chr, pos, rsID);
-      });
+    console.log("Plotly plot created:", plot);
     });
   };
 
-  const renderLocusZoom = (chr, pos, rsID) => {
-    const apiBase = "https://portaldev.sph.umich.edu/api/v1/";
-    const data_sources = new LocusZoom.DataSources()
-      .add("assoc", [
-        "AssociationLZ",
-        {
-          url: apiBase + "statistic/single/",
-          source: 45,
-          id_field: "variant",
-        },
-      ])
-      .add("ld", ["LDServer", { url: "https://portaldev.sph.umich.edu/ld/" }])
-      .add("recomb", [
-        "RecombLZ",
-        { url: apiBase + "annotation/recomb/results/", build: "GRCh37" },
-      ])
-      .add("gene", [
-        "GeneLZ",
-        { url: apiBase + "annotation/genes/", build: "GRCh37" },
-      ])
-      .add("constraint", [
-        "GeneConstraintLZ",
-        { url: "https://gnomad.broadinstitute.org/api/", build: "GRCh37" },
-      ]);
+  // const renderLocusZoom = (chr, pos, rsID) => {
+  //   const apiBase = "https://portaldev.sph.umich.edu/api/v1/";
+  //   const data_sources = new LocusZoom.DataSources()
+  //     .add("assoc", [
+  //       "AssociationLZ",
+  //       {
+  //         url: apiBase + "statistic/single/",
+  //         source: 45,
+  //         id_field: "variant",
+  //       },
+  //     ])
+  //     .add("ld", ["LDServer", { url: "https://portaldev.sph.umich.edu/ld/" }])
+  //     .add("recomb", [
+  //       "RecombLZ",
+  //       { url: apiBase + "annotation/recomb/results/", build: "GRCh37" },
+  //     ])
+  //     .add("gene", [
+  //       "GeneLZ",
+  //       { url: apiBase + "annotation/genes/", build: "GRCh37" },
+  //     ])
+  //     .add("constraint", [
+  //       "GeneConstraintLZ",
+  //       { url: "https://gnomad.broadinstitute.org/api/", build: "GRCh37" },
+  //     ]);
 
-    const layout = LocusZoom.Layouts.get("plot", "standard_association", {
-      state: {
-        genome_build: "GRCh38",
-        chr,
-        start: pos - 50000,
-        end: pos + 50000,
-        highlight: rsID,
-      },
-      axes: {
-        x: {
-          label: "Genomic Position",
-        },
-        y1: {
-          label: "-log10(p-value)",
-        },
-      },
-    });
+  //   const layout = LocusZoom.Layouts.get("plot", "standard_association", {
+  //     state: {
+  //       genome_build: "GRCh38",
+  //       chr,
+  //       start: pos - 50000,
+  //       end: pos + 50000,
+  //       highlight: rsID,
+  //     },
+  //     axes: {
+  //       x: {
+  //         label: "Genomic Position",
+  //       },
+  //       y1: {
+  //         label: "-log10(p-value)",
+  //       },
+  //     },
+  //   });
     
-    const lzPlot = document.getElementById("lz-plot");
-    if (lzPlot) {
-      LocusZoom.populate("#lz-plot", data_sources, layout);
-    }
-  };
+  //   const lzPlot = document.getElementById("lz-plot");
+  //   if (lzPlot) {
+  //     LocusZoom.populate("#lz-plot", data_sources, layout);
+  //   }
+  // };
 
 
 
@@ -358,7 +351,8 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
     <div>
       <h2 className="text-xl subHeading font-semibold mb-3 mt-4" id="manhattanPlot">Manhattan Plot</h2>
       <p className="my-1 font-medium">
-      Displays genome-wide SNP associations, highlighting significant genetic loci linked to {diseases}. Clicking a point (variant) typically opens a LocusZoom plot showing nearby genes and linkage patterns.
+      Displays genome-wide SNP associations, highlighting significant genetic loci linked to {diseases}.
+       {/* Clicking a point (variant) typically opens a LocusZoom plot showing nearby genes and linkage patterns. */}
       </p>
       
       <div className="flex flex-wrap gap-2 mt-4">
