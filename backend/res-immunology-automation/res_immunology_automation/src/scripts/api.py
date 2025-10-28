@@ -3315,7 +3315,7 @@ async def search_patents(request: TargetRequest, redis: Redis = Depends(get_redi
         return cached_data
 
     print("filtered diseases: ", filtered_diseases)
-    target_terms_file: str = "../target_data/target_terms.json"
+    target_terms_file: str = "../target_data/target_terms_patents.json"
     disease_synonyms_file: str = "../disease_data/diseases_synonyms.json"
 
     try:
