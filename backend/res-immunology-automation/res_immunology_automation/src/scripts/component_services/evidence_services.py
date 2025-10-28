@@ -144,6 +144,23 @@ def build_query(target: str, disease: str, target_terms_file: str, disease_synon
 
     return query
 
+def add_pubmed_info(rna_seq_data: Dict[str, List[Dict[str, Any]]]) -> Dict[str, List[Dict[str, Any]]]:
+    for disease, records in rna_seq_data.items():
+        logging.info(f"Processing disease: {disease} with {len(records)} records")
+        
+        for i, record in enumerate(records):
+
+            pubmed_ids = record.get('PubMedIDs', [])
+            if len(pubmed_ids):
+                print("pubmed_ids: ", pubmed_ids)
+                pubmed_metadata = fetch_basic_literature_details_with_abstracts(pubmed_ids)
+                print("pubmed_metadata",pubmed_metadata)
+                record['pubmed_data'] = pubmed_metadata
+                time.sleep(0.1)
+            else:
+                record['pubmed_data'] = []
+    return rna_seq_data
+
 def build_query_target(target: str, target_terms_file: str) -> str:
     """
     Build a query string using only the target name.
@@ -879,6 +896,62 @@ def get_mesh_terms_in_article(article_content):
             #         mesh_ids.append(q.attrib.get("UI"))
 
     return mesh_details
+
+def fetch_basic_literature_details_with_abstracts(pmids: List[str]) -> List[Dict]:
+    """
+    Fetches detailed information including abstracts and publication type for a list of PMIDs.
+
+    Args:
+        pmids (List[str]): List of PubMed IDs.
+
+    Returns:
+        List[Dict]: A list of detailed information for the given PMIDs.
+    """
+    try:
+        
+        params = {
+            "db": "pubmed",
+            "id": ",".join(pmids),
+            "retmode": "xml",  # Use XML to retrieve detailed information
+            "api_key": NCBI_API_KEY
+        }
+
+        url = BASE_URL + "efetch.fcgi"
+        response = get_data_from_pubmed(url, params)
+        # print("pubmed response: ", response.text)
+        # Parse XML response
+        from xml.etree import ElementTree as ET
+        root = ET.fromstring(response.text)
+        
+        articles = []
+        for article in root.findall(".//PubmedArticle"):
+            # Safe extraction of data with default values if tags are missing
+            if article is None:
+                continue  # Skip if no article data is found
+            pmid = article.find(".//PMID")
+            pmid_text = pmid.text if pmid is not None else None
+            # print("pmid: ", pmid.text)
+            if pmid_text:
+                article_title = article.find(".//ArticleTitle")
+                vernacular_title=article.find(".//VernacularTitle")
+                abstract = article.find(".//Abstract/AbstractText")
+                
+                article_title_text = extract_article_title(article_title) if article_title is not None else ""
+                vernacular_title_text = extract_article_title(vernacular_title) if vernacular_title is not None else ""
+                abstract_text = abstract.text if abstract is not None else ""
+                articles.append({
+                    "PMID": pmid_text,
+                    "Title": article_title_text if article_title_text!="[Not Available]." else vernacular_title_text,
+                    "Abstract": abstract_text
+                })
+    except HTTPException as e:
+        raise e
+    
+    except Exception as e:
+        raise e
+    
+    return articles
+
 
 def fetch_literature_details_with_abstracts(disease_name: str,pmids: List[str]) -> List[Dict]:
     """
@@ -2246,25 +2319,25 @@ def fetch_mesh_entry_terms(disease_name):
 
 
 if __name__ == "__main__":
-    # rna_seq_data_path = "/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease/obesity.json"
-    # with open(rna_seq_data_path, 'r') as file:
-    #     data = json.load(file)
-    #     rna_seq_data = data["/evidence/rna-sequence/"] 
+    rna_seq_data_path = "/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease/cardiovascular_diseases.json"
+    with open(rna_seq_data_path, 'r') as file:
+        data = json.load(file)
+        rna_seq_data = data["/evidence/rna-sequence/"] 
     
-    # rna_seq_updated = add_mapped_diseases(rna_seq_data)
-    # with open("rna_seq_updated.json", 'w') as outfile:
-    #     json.dump(rna_seq_updated, outfile, indent=4)
+    rna_seq_updated = add_pubmed_info(rna_seq_data)
+    with open("rna_seq_updated.json", 'w') as outfile:
+        json.dump(rna_seq_updated, outfile, indent=4)
     # target_name = "gucy1a1"
     # disease_name = "cardiovascular diseases"
     # target_terms_file = "/app/res-immunology-automation/res_immunology_automation/src/scripts/target_data/target_terms.json"
     # mesh_major_term="cardiovascular diseases"  # cardiovascular diseases
     # search_pubmed_target(target_name, disease_name, target_terms_file, mesh_major_term)
-    target = "sav1"
-    import datetime
-    start = datetime.datetime.now()
-    pathways = fetch_and_filter_figures_by_target(target)
-    end = datetime.datetime.now()
-    print("time taken: ", end-start)
-    with open("target_pathways.json", "w") as f:
-        json.dump(pathways, f, indent=2)
+    # target = "sav1"
+    # import datetime
+    # start = datetime.datetime.now()
+    # pathways = fetch_and_filter_figures_by_target(target)
+    # end = datetime.datetime.now()
+    # print("time taken: ", end-start)
+    # with open("target_pathways.json", "w") as f:
+    #     json.dump(pathways, f, indent=2)
     

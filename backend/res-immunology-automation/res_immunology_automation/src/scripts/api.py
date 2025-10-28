@@ -3603,6 +3603,7 @@ async def get_rna_sequence(
             response=add_study_type(response)
             response=add_sample_type(response)
             # response=add_mapped_diseases(response)
+            response = add_pubmed_info(response)
 
 
             for disease, value in response.items():
@@ -3681,10 +3682,10 @@ async def pgs_catalog_data(request: DiseasesRequest, redis: Redis = Depends(get_
     diseases_str = "-".join(diseases)
 
     # Generate a cache key for the request using target and disease list
-    key: str = f"/genomics/pgscatalog:{diseases_str}-test"
-    endpoint: str = "/genomics/pgscatalog-test/"
+    key: str = f"/genomics/pgscatalog:{diseases_str}"
+    endpoint: str = "/genomics/pgscatalog/"
 
-    msmt_endpoint: str = "/genomics/pgs-measurements-test/"
+    msmt_endpoint: str = "/genomics/pgs-measurements/"
 
     # Directory to store the cached JSON file
     cache_dir: str = "cached_data_json/disease"
