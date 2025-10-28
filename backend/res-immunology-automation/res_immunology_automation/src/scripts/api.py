@@ -105,7 +105,7 @@ from component_services.excel_export import process_data_and_return_file_rna,pro
     process_patientStories_excel,process_target_literature_excel
 from fastapi.responses import FileResponse
 from cache_results import cache_all_data
-from component_services.genomics_services import fetch_pgs_data
+from component_services.genomics_services import fetch_pgs_data, fetch_ppm_from_pgs_results
 from component_services.entity_search_services import lexical_phenotype_search, get_db_connection, \
     get_gene_search_db_connection, lexical_gene_search
 import duckdb
@@ -3337,6 +3337,66 @@ async def search_patents(request: TargetRequest, redis: Redis = Depends(get_redi
                     query = build_query(target, disease, target_terms_file, disease_synonyms_file)
                 print(query)
 
+                # with pagination
+                # filtered_results = []
+                # start = 0
+                # num = 100  # SerpApi maximum results per page
+
+                # while True:
+                #     params = {
+                #         "engine": "google_patents",
+                #         "q": query,
+                #         "dups": "language",   # Deduplicate by language
+                #         "api_key": SERP_API_KEY,
+                #         "language": "ENGLISH",
+                #         "num": num,
+                #         "start": start
+                #     }
+                #     try:
+                #         response = requests.get(SERP_API_URL, params=params)
+                #         response.raise_for_status()
+                #         data = response.json()
+                #         keys_to_extract = ["patent_id", "pdf", "title", "assignee", "filing_date", "grant_date"]
+                #         results = data.get("organic_results", [])
+                #         if not results:
+                #             print("No more results found.")
+                #             break
+
+                #         for entry in results:
+                #             filtered_data = {key: entry.get(key, "") for key in keys_to_extract}
+                #             country_status = entry.get("country_status", {})
+                #             filtered_data["country_status"] = country_status
+                #             filtered_data["expiry_date"] = add_years(filtered_data["filing_date"], 20) if filtered_data["filing_date"] else ""
+                #             filtered_results.append(filtered_data)
+                        
+                #         # If fewer than `num` results are returned, it’s the last page
+                #         if len(results) < num:
+                #             break
+
+                #         # Increment for next page
+                #         start += num
+                #         time.sleep(1)
+
+                #     # except requests.RequestException as exc:
+                #     #     raise HTTPException(status_code=exc.response.status_code, detail=f"Error: {exc.response.text}")
+                #     except requests.RequestException as exc:
+                #         # raise HTTPException(status_code=exc.response.status_code, detail=f"Error: {exc.response.text}")
+                #         if exc.response is not None:
+                #             # Response exists → HTTP error (e.g., 404, 500)
+                #             raise HTTPException(
+                #                 status_code=exc.response.status_code,
+                #                 detail=f"Error: {exc.response.text}"
+                #             )
+                #         else:
+                #             # No response → Connection, timeout, DNS, etc.
+                #             raise HTTPException(
+                #                 status_code=500,
+                #                 detail=f"Request failed: {str(exc)}"
+                #             )
+                    
+                # cached_data[disease.replace("_", " ")] = {"results": filtered_results}
+                # cached_responses[f"{endpoint}"] = {"results": filtered_results}
+
                 params = {
                     "engine": "google_patents",
                     "q": query,
@@ -3621,8 +3681,10 @@ async def pgs_catalog_data(request: DiseasesRequest, redis: Redis = Depends(get_
     diseases_str = "-".join(diseases)
 
     # Generate a cache key for the request using target and disease list
-    key: str = f"/genomics/pgscatalog:{diseases_str}"
-    endpoint: str = "/genomics/pgscatalog/"
+    key: str = f"/genomics/pgscatalog:{diseases_str}-test"
+    endpoint: str = "/genomics/pgscatalog-test/"
+
+    msmt_endpoint: str = "/genomics/pgs-measurements-test/"
 
     # Directory to store the cached JSON file
     cache_dir: str = "cached_data_json/disease"
@@ -3630,7 +3692,8 @@ async def pgs_catalog_data(request: DiseasesRequest, redis: Redis = Depends(get_
 
     cached_diseases: Set[str] = set()
     cached_data: List = []
-    response = {}
+    response = {"pgs_data": {},
+                "metrics": {}}
     for disease in diseases:
         disease_record = db.query(Disease).filter_by(id=f"{disease}").first()
         # 1. Check if the cached JSON file exists
@@ -3640,10 +3703,11 @@ async def pgs_catalog_data(request: DiseasesRequest, redis: Redis = Depends(get_
             cached_responses: Dict = load_response_from_file(cached_file_path)
 
             # Check if the endpoint response exists in the cached data
-            if f"{endpoint}" in cached_responses:
+            if endpoint in cached_responses and msmt_endpoint in cached_responses:
                 cached_diseases.add(disease)
                 print(f"Returning cached response from file: {cached_file_path}")
-                response[disease.replace('_', ' ')] = cached_responses[endpoint]
+                response["pgs_data"][disease.replace('_', ' ')] = cached_responses[endpoint]
+                response["metrics"][disease.replace('_', ' ')] = cached_responses[msmt_endpoint]
 
     # filtering diseases whose response is not present in the json file
     filtered_diseases = [disease for disease in diseases if disease not in cached_diseases]
@@ -3688,12 +3752,21 @@ async def pgs_catalog_data(request: DiseasesRequest, redis: Redis = Depends(get_
                 if efo_id:
                     diseases_and_efo[disease_name] = efo_id.replace(':', '_')
                     genomics_data = fetch_pgs_data(disease.replace('_', ' '), efo_id)
+
+                    # Fetch measurement data
+                    logging.info(f"Fetching Measurements data for PGS Studies: {len(genomics_data)}")
+                    measurement_data = fetch_ppm_from_pgs_results(genomics_data)
+
                 else:
                     genomics_data = [f"EFO ID not found for {disease_name.replace('_', ' ')}"]
+                    measurement_data = []
+                cached_responses[endpoint] = genomics_data
+                print("cached_responses[endpoint]: ", cached_responses[endpoint])
+                cached_responses[msmt_endpoint] = measurement_data
 
-                cached_responses[f"{endpoint}"] = genomics_data
                 if disease_record is None:
                     save_response_to_file(file_path, cached_responses)
+                    print("saved response to file")
                     new_record = Disease(id=f"{disease}",
                                         file_path=file_path)  # Create a new instance of the identified model
                     db.add(new_record)  # Add the new record to the session
@@ -3703,8 +3776,9 @@ async def pgs_catalog_data(request: DiseasesRequest, redis: Redis = Depends(get_
                     print(f"Record with ID {disease} added to the disease table.")
                 else:
                     save_response_to_file(cached_file_path, cached_responses)
-                
-                response[disease.replace('_', ' ')]=cached_responses[f"{endpoint}"]
+                    print("saved response to file")
+                response['pgs_data'][disease.replace('_', ' ')]=cached_responses[endpoint]
+                response['metrics'][disease.replace('_', ' ')]=cached_responses[msmt_endpoint]
             await set_cached_response(redis, key, response)
 
         # Return the JSON response from the API

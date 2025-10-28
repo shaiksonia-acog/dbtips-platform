@@ -1,6 +1,12 @@
 import requests
 from datetime import datetime
+from urllib.parse import quote
 import time
+import json 
+
+max_retries = 3
+
+PGS_BASE = "https://www.pgscatalog.org/rest"
 
 def get_child_traits(trait_id):
     """
@@ -105,6 +111,66 @@ def fetch_pgs_data_for_single_trait(trait_id):
     
     return output
 
+def get_ppm_for_pgs_studies(pgs_id):
+    """Fetch all PPM metrics for a given PGS study (handles pagination)."""
+    url = f"{PGS_BASE}/performance/search/?pgs_id={pgs_id}"
+    metrics = []
+
+    session = requests.Session()
+    session.headers.update({"User-Agent": "pgs-fetcher/1.0"})
+
+    while url:
+        for attempt in range(max_retries):
+            try:
+                # Separate connect/read timeouts
+                r = session.get(url, timeout=(10, 30))
+                r.raise_for_status()
+                data = r.json()
+                break  # success → exit retry loop
+            except (requests.exceptions.ReadTimeout,
+                    requests.exceptions.ConnectionError) as e:
+                wait = 2 ** attempt
+                print(f"Network timeout fetching {url} (attempt {attempt+1}/{max_retries}), retrying in {wait}s...")
+                time.sleep(wait)
+            except requests.exceptions.RequestException as e:
+                # Other unrecoverable request errors — raise immediately
+                raise RuntimeError(f"Request failed for {url}: {e}") from e
+        else:
+            # Executed only if loop didn't break — all retries failed
+            raise RuntimeError(f"Max retries exceeded for {url}")
+
+
+        for record in data.get("results", []):
+            perf = record.get("performance_metrics", {})
+            pub = record.get("publication", {})
+            sample_set = record.get("sampleset", {})
+            sample = (sample_set.get("samples") or [{}])[0]  # get first sample safely
+
+            metrics.append({
+                "ppm_id": record.get("id"),
+                "associated_pgs_id": record.get("associated_pgs_id"),
+                "pgs_url": f"https://pgscatalog.org/score/{record.get('associated_pgs_id')}" if record.get("associated_pgs_id") else None,
+                "phenotyping_reported": record.get("phenotyping_reported"),
+                "performance_source": pub.get("id"),
+                "performance_source_url": f"https://pgscatalog.org/publication/{pub.get('id')}" if pub.get("id") else None,
+                "journal": pub.get("journal"),
+                "first_author": pub.get("firstauthor"),
+                "date_publication": pub.get("date_publication"),
+                "sampleset_id": sample_set.get("id"),
+                "sample_number": sample.get("sample_number"),
+                "other_metrics": perf.get("othermetrics"),
+                "classification_metrics": perf.get("class_acc"),
+                "pgs_effect_sizes": perf.get("effect_sizes"),
+                "covariates": record.get("covariates"),
+                "performance_comments": record.get("performance_comments"),
+                "ancestry_broad":sample.get("ancestry_broad")
+            })
+
+        # Move to next page if available
+        url = data.get("next")
+        time.sleep(0.3)
+
+    return metrics
 
 def fetch_pgs_data(disease_name, trait_id, include_child_traits=True):
     """
@@ -148,7 +214,7 @@ def fetch_pgs_data(disease_name, trait_id, include_child_traits=True):
             trait_data = fetch_pgs_data_for_single_trait(tid)
             
             if trait_data:
-                print(f"  ✓ Found {len(trait_data)} record(s)")
+                print(f" Found {len(trait_data)} record(s)")
                 for td in trait_data:
                     if td['PGS ID'] not in all_output:
                         td['mapped_diseases'] = [trait]
@@ -171,15 +237,32 @@ def fetch_pgs_data(disease_name, trait_id, include_child_traits=True):
         print(f"Exception occurred: {e}")
         raise e
 
+def fetch_ppm_from_pgs_results(pgs_results):
+    pgs_ids = [result['PGS ID'] for result in pgs_results]
+    measurement_data = []
+    for idx, pgs_id in enumerate(pgs_ids):
+        if idx % 10 == 0:
+            print(f"Fetching measurement for {idx}th PGSID: {pgs_id}")
+        try:
+            msmt_data = get_ppm_for_pgs_studies(pgs_id)
+            measurement_data.extend(msmt_data)
+            time.sleep(0.3)
+        except Exception as e:
+            raise e
+
+    return measurement_data
 if __name__ == "__main__":
     # Fetch and print the data
 
     disease_name = "urinary system disease"
     trait_id = "EFO_0009690"
     results = fetch_pgs_data(disease_name, trait_id, include_child_traits=True)
-    for entry in results:
-        print(json.dumps(entry, indent=2))
-    results_no_children = fetch_pgs_data(disease_name, trait_id, include_child_traits=False)
-    print (len(results_no_children))
-    for entry in results_no_children:
-        print(json.dumps(entry, indent=2))
+    # for entry in results:
+    #     print(json.dumps(entry, indent=2))
+    # results_no_children = fetch_pgs_data(disease_name, trait_id, include_child_traits=False)
+    # print (len(results_no_children))
+    # for entry in results_no_children:
+    #     print(json.dumps(entry, indent=2))
+    measurement_data = fetch_ppm_from_pgs_results(results)
+    for entry in measurement_data:
+        print(json.dumps(entry, indent=2))    
