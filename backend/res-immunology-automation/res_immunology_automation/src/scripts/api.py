@@ -85,7 +85,7 @@ from component_services.fetch_images import (
 from component_services.literature_enhancement_services import fetch_literature_table_analysis, fetch_literature_supplementary_materials_analysis
 from component_services.literature_cache_update import update_literature_caches_with_analysis
 from component_services.evidence_services import build_query, get_geo_data_for_diseases,fetch_mouse_models,\
-    fetch_and_filter_figures_by_disease_and_pmids,fetch_mouse_model_data_alliancegenome,\
+    fetch_and_filter_figures_by_disease_and_pmids,fetch_mouse_model_data_alliancegenome, fetch_patents_from_serpapi, \
     get_top_10_literature_helper,add_platform_name,add_study_type, add_sample_type, get_mesh_term_for_disease, add_pubmed_info, \
     build_query_target, add_mapped_diseases
 from component_services.disease_profile_llm import disease_interpreter
