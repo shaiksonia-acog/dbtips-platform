@@ -3,6 +3,7 @@ from datetime import datetime
 from urllib.parse import quote
 import time
 import json 
+from typing import List, Dict, Any
 
 max_retries = 3
 
@@ -111,8 +112,12 @@ def fetch_pgs_data_for_single_trait(trait_id):
     
     return output
 
-def get_ppm_for_pgs_studies(pgs_id):
+def get_ppm_for_pgs_studies(pgs_data: Dict[str, Any]):
     """Fetch all PPM metrics for a given PGS study (handles pagination)."""
+    pgs_id = pgs_data.get("PGS ID")
+    pgp_id = pgs_data.get("PGS Publication ID")
+    mapped_trait = pgs_data.get("mapped_diseases")
+    source_trait_id = pgs_data.get("Source Trait ID")
     url = f"{PGS_BASE}/performance/search/?pgs_id={pgs_id}"
     metrics = []
 
@@ -149,6 +154,9 @@ def get_ppm_for_pgs_studies(pgs_id):
             metrics.append({
                 "ppm_id": record.get("id"),
                 "associated_pgs_id": record.get("associated_pgs_id"),
+                "pgp_id": pgp_id,
+                "mapped_trait": mapped_trait,
+                "source_trait_id": source_trait_id,
                 "pgs_url": f"https://pgscatalog.org/score/{record.get('associated_pgs_id')}" if record.get("associated_pgs_id") else None,
                 "phenotyping_reported": record.get("phenotyping_reported"),
                 "performance_source": pub.get("id"),
@@ -238,13 +246,14 @@ def fetch_pgs_data(disease_name, trait_id, include_child_traits=True):
         raise e
 
 def fetch_ppm_from_pgs_results(pgs_results):
-    pgs_ids = [result['PGS ID'] for result in pgs_results]
+    # pgs_ids = [result['PGS ID'] for result in pgs_results]
     measurement_data = []
-    for idx, pgs_id in enumerate(pgs_ids):
+    for idx, pgs_data in enumerate(pgs_results):
         if idx % 10 == 0:
+            pgs_id = pgs_data.get('PGS ID')
             print(f"Fetching measurement for {idx}th PGSID: {pgs_id}")
         try:
-            msmt_data = get_ppm_for_pgs_studies(pgs_id)
+            msmt_data = get_ppm_for_pgs_studies(pgs_data)
             measurement_data.extend(msmt_data)
             time.sleep(0.3)
         except Exception as e:
@@ -254,8 +263,8 @@ def fetch_ppm_from_pgs_results(pgs_results):
 if __name__ == "__main__":
     # Fetch and print the data
 
-    disease_name = "urinary system disease"
-    trait_id = "EFO_0009690"
+    disease_name = "cardiovascular disease"
+    trait_id = "EFO_0000319"
     results = fetch_pgs_data(disease_name, trait_id, include_child_traits=True)
     # for entry in results:
     #     print(json.dumps(entry, indent=2))
@@ -266,3 +275,4 @@ if __name__ == "__main__":
     measurement_data = fetch_ppm_from_pgs_results(results)
     for entry in measurement_data:
         print(json.dumps(entry, indent=2))    
+
