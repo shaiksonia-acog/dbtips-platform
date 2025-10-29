@@ -59,7 +59,7 @@ from api_models import TargetRequest, GraphRequest, DiseaseRequest, SearchQueryM
     SearchRequest, TargetOnlyRequest,ExcelExportRequest, DiseaseDrugsMapping, DiseaseRequestOnto, DiseaseRequest, DossierRequest, \
     LoginRequest, EmailRequest, VerifyRequest
 from utils import format_for_cytoscape, get_efo_id, find_disease_id_by_name, send_graphql_request, \
-    save_response_to_file, load_response_from_file, calculate_expiry_date, add_years, \
+    save_response_to_file, load_response_from_file, \
     save_big_response_to_file, \
     get_associated_targets,get_mouse_phenotypes,fetch_all_publications,get_exact_synonyms, \
     get_conver_later_strapi,get_target_indication_pairs_strapi,enrich_disease_pathway_results, \
@@ -3800,7 +3800,7 @@ async def gwas_studies_data(request: DiseasesRequest, redis: Redis = Depends(get
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/genomics/locus-zoom-new", tags=["Genomics"])
-async def plot_locus_zoom(request: DiseaseRequest, redis: Redis = Depends(get_redis),
+async def plot_locus_zoom_new(request: DiseaseRequest, redis: Redis = Depends(get_redis),
                             db: Session = Depends(get_db)):
     try:
         disease: str = request.disease
@@ -3839,60 +3839,63 @@ async def plot_locus_zoom(request: DiseaseRequest, redis: Redis = Depends(get_re
 
 @app.post("/genomics/locus-zoom", tags=["Genomics"])
 async def plot_locus_zoom(request: DiseasesRequest, redis: Redis = Depends(get_redis),
-                            db: Session = Depends(get_db)):
+                            db: Session = Depends(get_db),
+                            build_cache: bool=False):
     try:
         diseases: str = [disease.lower() for disease in request.diseases]
         response = {}
         converter = MeSHToEFOConverter()
+        CACHE_DIR_PATH = "cached_data_json/disease"
         for disease in diseases:
-            # print('disease: ', disease)
-            # efo_id: str = get_efo_id(disease)
-            # gwas_disease_file_path = os.path.join(GWAS_DATA_DIR, f'{efo_id}.tsv')
-            # print("gwas_disease_file_path: ", gwas_disease_file_path)
-            # if not os.path.exists(gwas_disease_file_path):
-            #     print("path doesn't exists")
-            #     gwas_disease_file_path = load_data(efo_id)
-            # print("gwas_disease_file_path: ", gwas_disease_file_path)
-            efo_ids = []
-            # requested_efo = get_efo_id(disease.lower())
-            efo_details = converter.convert(disease.replace('_', ' ').lower())
-            if efo_details and efo_details.get('success'):
-                requested_efo = efo_details.get('efo_id').replace(":", "_")
-            print("efo_id: ", requested_efo)
-            gwas_disease_file_path = os.path.join(GWAS_DATA_DIR, f'{requested_efo}.tsv')
-            if not os.path.exists(gwas_disease_file_path):
-                print("requested_efo: ", requested_efo)
-                request_data = DiseasesRequest(diseases=[disease])
-                # Make the POST request to the internal API endpoint
-                response = client.post("/genomics/gwas-studies", json=request_data.dict())
-                if response.status_code != 200:
-                    raise HTTPException(status_code=response.status_code, detail=response.json())
+            if build_cache == True:
+                # print('disease: ', disease)
+                # efo_id: str = get_efo_id(disease)
+                # gwas_disease_file_path = os.path.join(GWAS_DATA_DIR, f'{efo_id}.tsv')
+                # print("gwas_disease_file_path: ", gwas_disease_file_path)
+                # if not os.path.exists(gwas_disease_file_path):
+                #     print("path doesn't exists")
+                #     gwas_disease_file_path = load_data(efo_id)
+                # print("gwas_disease_file_path: ", gwas_disease_file_path)
+                efo_ids = []
+                # requested_efo = get_efo_id(disease.lower())
+                efo_details = converter.convert(disease.replace('_', ' ').lower())
+                if efo_details and efo_details.get('success'):
+                    requested_efo = efo_details.get('efo_id').replace(":", "_")
+                print("efo_id: ", requested_efo)
+                gwas_disease_file_path = os.path.join(CACHE_DIR_PATH, f'{requested_efo}.tsv')
+                if not os.path.exists(gwas_disease_file_path):
+                    print("requested_efo: ", requested_efo)
+                    request_data = DiseasesRequest(diseases=[disease])
+                    # Make the POST request to the internal API endpoint
+                    response = client.post("/genomics/gwas-studies", json=request_data.dict())
+                    if response.status_code != 200:
+                        raise HTTPException(status_code=response.status_code, detail=response.json())
+                    
+                    gwas_studies = response.json()
+                    gwas_studies = gwas_studies[disease.replace(" ", "_")]
+                    # related_traits = list(set([item["Trait(s)"] for item in gwas_studies if "Trait(s)" in item]))
+                    # print("related_traits: ", related_traits)
+                    # for trait in related_traits:
+                    #     efo_id = get_efo_id(trait.lower())
+                    #     if efo_id:
+                    #         efo_ids.append(efo_id)
+                    #     else:
+                    #         print(f"EFO ID not found for trait: {trait}")
+                    #     time.sleep(1)
+                    # print("efo_ids: ", efo_ids)
+                    # gwas_disease_file_path = load_data(efo_ids, requested_efo)
+                    studies = list(set([item["Study accession"] for item in gwas_studies if "Study accession" in item]))
+                    print("studies: ", len(studies), studies)
+                    gwas_disease_file_path = load_data(studies, requested_efo, gwas_disease_file_path)
+                    
+                    if gwas_disease_file_path and os.path.isfile(gwas_disease_file_path):
+                        response[disease] = gwas_disease_file_path
                 
-                gwas_studies = response.json()
-                gwas_studies = gwas_studies[disease.replace(" ", "_")]
-                # related_traits = list(set([item["Trait(s)"] for item in gwas_studies if "Trait(s)" in item]))
-                # print("related_traits: ", related_traits)
-                # for trait in related_traits:
-                #     efo_id = get_efo_id(trait.lower())
-                #     if efo_id:
-                #         efo_ids.append(efo_id)
-                #     else:
-                #         print(f"EFO ID not found for trait: {trait}")
-                #     time.sleep(1)
-                # print("efo_ids: ", efo_ids)
-                # gwas_disease_file_path = load_data(efo_ids, requested_efo)
-                studies = list(set([item["Study accession"] for item in gwas_studies if "Study accession" in item]))
-                print("studies: ", len(studies), studies)
-                gwas_disease_file_path = load_data(studies, requested_efo)
-                
-                if gwas_disease_file_path and os.path.isfile(gwas_disease_file_path):
-                    response[disease] = gwas_disease_file_path
-            
+                    else:
+                        response[disease] = None
                 else:
-                    response[disease] = None
-            else:
-                response[disease] = gwas_disease_file_path
-            print("response: ", response)
+                    response[disease] = gwas_disease_file_path
+                print("response: ", response)
         return response
 
     except Exception as e:

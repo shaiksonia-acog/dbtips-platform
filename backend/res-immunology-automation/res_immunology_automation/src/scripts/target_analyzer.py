@@ -514,7 +514,7 @@ class TargetAnalyzer:
             "zebrafish": "7955",
             "Chimpanzee": "9598",
             "Fruitfly": "7227",
-            "Tropical clawed frog": "8364"
+            "Tropical clawed frog": "8364",
             "Domestic Pig": "9825",
             "Pig": "9823", 
             "Dog": "9615",

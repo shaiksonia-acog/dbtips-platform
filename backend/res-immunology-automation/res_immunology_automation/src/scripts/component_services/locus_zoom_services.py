@@ -163,11 +163,11 @@ def prepare_variants_data(df):
 
     # return new_df.sort_values("Chromosome")
 
-def load_data(studies: List[str], requested_efo:str) -> str:
+def load_data(studies: List[str], requested_efo:str, variants_associate_path: str) -> str:
 
     df = None
     try:
-        variants_associate_path = os.path.join(gwas_data_path, f'{requested_efo}.tsv')
+        # variants_associate_path = os.path.join(gwas_data_path, f'{requested_efo}.tsv')
         if not os.path.exists(variants_associate_path):
             df = filter_asso_by_efo_id(studies, requested_efo)
             if df.empty:
