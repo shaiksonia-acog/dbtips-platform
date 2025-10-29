@@ -138,8 +138,7 @@ app = FastAPI()
 
 client = TestClient(app)
 
-SERP_API_KEY: str = os.getenv('SERP_API_KEY')
-SERP_API_URL: str = "https://serpapi.com/search.json"
+
 GWAS_DATA_DIR = "/app/res-immunology-automation/res_immunology_automation/src/gwas_data"
 
 
@@ -3338,103 +3337,11 @@ async def search_patents(request: TargetRequest, redis: Redis = Depends(get_redi
                 print(query)
 
                 # with pagination
-                # filtered_results = []
-                # start = 0
-                # num = 100  # SerpApi maximum results per page
-
-                # while True:
-                #     params = {
-                #         "engine": "google_patents",
-                #         "q": query,
-                #         "dups": "language",   # Deduplicate by language
-                #         "api_key": SERP_API_KEY,
-                #         "language": "ENGLISH",
-                #         "num": num,
-                #         "start": start
-                #     }
-                #     try:
-                #         response = requests.get(SERP_API_URL, params=params)
-                #         response.raise_for_status()
-                #         data = response.json()
-                #         keys_to_extract = ["patent_id", "pdf", "title", "assignee", "filing_date", "grant_date"]
-                #         results = data.get("organic_results", [])
-                #         if not results:
-                #             print("No more results found.")
-                #             break
-
-                #         for entry in results:
-                #             filtered_data = {key: entry.get(key, "") for key in keys_to_extract}
-                #             country_status = entry.get("country_status", {})
-                #             filtered_data["country_status"] = country_status
-                #             filtered_data["expiry_date"] = add_years(filtered_data["filing_date"], 20) if filtered_data["filing_date"] else ""
-                #             filtered_results.append(filtered_data)
-                        
-                #         # If fewer than `num` results are returned, it’s the last page
-                #         if len(results) < num:
-                #             break
-
-                #         # Increment for next page
-                #         start += num
-                #         time.sleep(1)
-
-                #     # except requests.RequestException as exc:
-                #     #     raise HTTPException(status_code=exc.response.status_code, detail=f"Error: {exc.response.text}")
-                #     except requests.RequestException as exc:
-                #         # raise HTTPException(status_code=exc.response.status_code, detail=f"Error: {exc.response.text}")
-                #         if exc.response is not None:
-                #             # Response exists → HTTP error (e.g., 404, 500)
-                #             raise HTTPException(
-                #                 status_code=exc.response.status_code,
-                #                 detail=f"Error: {exc.response.text}"
-                #             )
-                #         else:
-                #             # No response → Connection, timeout, DNS, etc.
-                #             raise HTTPException(
-                #                 status_code=500,
-                #                 detail=f"Request failed: {str(exc)}"
-                #             )
+                patents = fetch_patents_from_serpapi(query)
                     
-                # cached_data[disease.replace("_", " ")] = {"results": filtered_results}
-                # cached_responses[f"{endpoint}"] = {"results": filtered_results}
+                cached_data[disease.replace("_", " ")] = {"results": patents}
+                cached_responses[f"{endpoint}"] = {"results": patents}
 
-                params = {
-                    "engine": "google_patents",
-                    "q": query,
-                    "api_key": SERP_API_KEY,
-                    "language": "ENGLISH",
-                    "num": 100
-                }
-
-                try:
-                    response = requests.get(SERP_API_URL, params=params)
-                    response.raise_for_status()
-                    data = response.json()
-                    keys_to_extract = ["patent_id", "pdf", "title", "assignee", "filing_date", "grant_date"]
-                    filtered_results = []
-                    for entry in data.get("organic_results", []):
-                        filtered_data = {key: entry.get(key, "") for key in keys_to_extract}
-                        country_status = entry.get("country_status", {})
-                        filtered_data["country_status"] = country_status
-                        filtered_data["expiry_date"] = add_years(filtered_data["filing_date"], 20) if filtered_data["filing_date"] else ""
-                        filtered_results.append(filtered_data)
-                    cached_data[disease.replace("_", " ")] = {"results": filtered_results}
-                    cached_responses[f"{endpoint}"] = {"results": filtered_results}
-                # except requests.RequestException as exc:
-                #     raise HTTPException(status_code=exc.response.status_code, detail=f"Error: {exc.response.text}")
-                except requests.RequestException as exc:
-                    # raise HTTPException(status_code=exc.response.status_code, detail=f"Error: {exc.response.text}")
-                    if exc.response is not None:
-                        # Response exists → HTTP error (e.g., 404, 500)
-                        raise HTTPException(
-                            status_code=exc.response.status_code,
-                            detail=f"Error: {exc.response.text}"
-                        )
-                    else:
-                        # No response → Connection, timeout, DNS, etc.
-                        raise HTTPException(
-                            status_code=500,
-                            detail=f"Request failed: {str(exc)}"
-                        )
                         
                 if target_disease_record is None:
                     save_response_to_file(file_path, cached_responses)
