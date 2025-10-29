@@ -300,6 +300,52 @@ const AssociatePlot = ({ indications, diseaseAreaFilter,target }) => {
         headerName: "Mapped Gene",
         field: "Mapped gene(s)",
       },
+      {
+        field:"Consequence",
+        headerName:"Consequence",
+        cellRenderer:(params)=>
+          params.value.replaceAll("_"," ")
+      },
+      {
+        headerName:"Alpha missense score",
+        field:"AlphaMissense",
+        cellRenderer:(params)=>
+           !params.value.includes("None") ? params.value.replace("_"," ") : ""
+      },
+      {
+        headerName:"SIFT",
+        field:"SIFT",
+        cellRenderer:(params)=>
+           !params.value.includes("None") ? params.value.replace("_"," ") : ""
+      },
+      {
+        headerName:"PolyPhen",
+        field:"PolyPhen",
+        cellRenderer:(params)=>
+           !params.value.includes("None") ? params.value.replace("_"," ") : ""
+      },
+      {
+        headerName:"CADD score",
+        field:"CADD"
+      },
+
+
+      {
+        headerName:"Protien family",
+        field:"Pfam",
+        cellRenderer:(params)=>
+       { if(params.value) 
+        return (
+       
+          <a href={params.data.Pfam_url } target="_blank" rel="noopener noreferrer">
+            {params.value}
+          </a>
+        )}
+
+      },
+      
+
+
     ],
     [diseaseAreaFilter]
   );
@@ -382,7 +428,7 @@ const AssociatePlot = ({ indications, diseaseAreaFilter,target }) => {
           }
         );
         const parsedData = parseTsvData(response.data);
-
+        console.log("Parsed Data for", item.mondoId, parsedData);
         // Add disease name to each record for better context
         return parsedData.map((record) => ({
           ...record,
@@ -463,9 +509,9 @@ const AssociatePlot = ({ indications, diseaseAreaFilter,target }) => {
     if (!(selectedDisease.length > 0) && !selectedGene) {
       return associationsRowData;
     }
-
+    console.log("Filtering associations data",associationsRowData,selectedDisease,selectedGene);
+   
     let filteredData = associationsRowData;
-
     if (selectedDisease.length !== 0) {
       filteredData = filteredData?.filter((row) =>
         row.mapped_diseases?.some((d: string) =>
@@ -490,7 +536,6 @@ const AssociatePlot = ({ indications, diseaseAreaFilter,target }) => {
       });
       
     }
-
     return filteredData;
   }, [associationsRowData, selectedDisease, selectedGene]);
   useEffect(() => {
