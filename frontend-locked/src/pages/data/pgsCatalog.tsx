@@ -14,6 +14,7 @@ import PieChart from "../../components/pieChart";
 import ColumnSelector from "../../components/columnFilter";
 import DiseaseFilter from "../../components/diseaseFilter";
 import CustomHeader from "../../components/customHeader";
+import PPM from "./ppm";
 
 // Cell renderers as separate components for clarity
 const PieChartRenderer = ({ chartData, symbol, heading }) => (
@@ -64,8 +65,6 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
   );
   const [selectedDiseaseAreas, setSelectedDiseaseAreas] = useState(indications);
 
- 
-
   // API request using react-query
   const {
     data: pgsCatalogData,
@@ -84,7 +83,11 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
 
   // Process data only when it changes
   const processedData = useMemo(
-    () => (pgsCatalogData ? convertToArray(pgsCatalogData) : []),
+    () => (pgsCatalogData ? convertToArray(pgsCatalogData?.pgs_data) : []),
+    [pgsCatalogData]
+  );
+  const processedPPMData = useMemo(
+    () => (pgsCatalogData ? convertToArray(pgsCatalogData?.metrics) : []),
     [pgsCatalogData]
   );
   useEffect(() => {
@@ -120,25 +123,30 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
       if (diseaseAreaFilter) {
         setDiseaseFilterOptions([...diseases.sort()]);
       } else {
-        const combinedDiseases = [...new Set([...diseases, ...indications.map(indication => indication.toLowerCase())])];
+        const combinedDiseases = [
+          ...new Set([
+            ...diseases,
+            ...indications.map((indication) => indication.toLowerCase()),
+          ]),
+        ];
         setDiseaseFilterOptions([...combinedDiseases.sort()]);
       }
     }
   }, [dataFilteredByArea, diseaseAreaFilter, indications]);
   // Filter data when processed data or selected diseases change
-  
+
   const filteredData = useMemo(() => {
     if (!(selectedDisease.length > 0)) {
       return dataFilteredByArea;
     }
     return dataFilteredByArea.filter(
       (row) =>
-      row.mapped_diseases &&
-      row.mapped_diseases.some((d) => 
-        selectedDisease.some(selected => 
-        selected.toLowerCase() === d.toLowerCase()
+        row.mapped_diseases &&
+        row.mapped_diseases.some((d) =>
+          selectedDisease.some(
+            (selected) => selected.toLowerCase() === d.toLowerCase()
+          )
         )
-      )
     );
   }, [dataFilteredByArea, selectedDisease]);
 
@@ -147,25 +155,23 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
     () => [
       ...(diseaseAreaFilter
         ? [
-          {
-            field: "DiseaseArea",
-            headerName: "Disease area",
-          },
+            {
+              field: "DiseaseArea",
+              headerName: "Disease area",
+            },
           ]
         : []),
       {
         field: "mapped_diseases",
         headerName: "Disease",
         cellRenderer: (params) => (
-          <div>
-            {params.value ? params.value.join(" | ") : "N/A"}
-          </div>
+          <div>{params.value ? params.value.join(" | ") : "N/A"}</div>
         ),
       },
       {
         field: "PGS ID",
         headerName: "Polygenic Score ID & Name",
-       
+
         headerComponent: CustomHeader,
         headerComponentParams: {
           title: "Unique identifier and name of the polygenic score entry",
@@ -184,7 +190,8 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
         headerName: "PGS Publication ID (PGP)",
         headerComponent: CustomHeader,
         headerComponentParams: {
-          title: "Reference to the publication describing how the score was developed and validated.",
+          title:
+            "Reference to the publication describing how the score was developed and validated.",
           displayName: "PGS Publication ID (PGP)",
         },
         valueGetter: (params) => `
@@ -211,7 +218,8 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
         headerName: "Number of Variants",
         headerComponent: CustomHeader,
         headerComponentParams: {
-          title: "Total number of genetic variants used to calculate the score.",
+          title:
+            "Total number of genetic variants used to calculate the score.",
           displayName: "Number of Variants",
         },
       },
@@ -220,7 +228,8 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
         headerName: "Ancestry distribution",
         headerComponent: CustomHeader,
         headerComponentParams: {
-          title: "Genetic ancestry composition of populations used for score development (Dev) and evaluation (Eval)",
+          title:
+            "Genetic ancestry composition of populations used for score development (Dev) and evaluation (Eval)",
           displayName: "Ancestry distribution (Dev/Eval)",
         },
         headerClass: "ag-header-cell-center",
@@ -262,7 +271,8 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
         headerName: "Scoring File (FTP Link)",
         headerComponent: CustomHeader,
         headerComponentParams: {
-          title: "Downloadable file containing variant weights and scoring details.",
+          title:
+            "Downloadable file containing variant weights and scoring details.",
           displayName: "Scoring File (FTP Link)",
         },
         maxWidth: 140,
@@ -332,7 +342,7 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
       {pgsCatalogData && (
         <div>
           <div className="flex justify-between mb-3">
-          <div className="flex gap-4">
+            <div className="flex gap-4">
               {diseaseAreaFilter && (
                 <DiseaseFilter
                   allDiseases={indications}
@@ -370,6 +380,11 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
               enableCellTextSelection={true}
             />
           </div>
+          <PPM
+            data={processedPPMData}
+            diseaseAreaFilter={diseaseAreaFilter}
+            indications={indications}
+          />
         </div>
       )}
     </div>
