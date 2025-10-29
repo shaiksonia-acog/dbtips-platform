@@ -55,6 +55,14 @@ def fetch_gwas_studies_including_related_measurements(efo_id, disease):
             "cardiovascular diseases": {
                 "with_child": ['EFO_0004298'],
                 "without_child": ['EFO_0005106', 'EFO_0004340', 'EFO_0004338', 'EFO_0007861']
+            },
+            "obesity": {
+                "with_child": [],
+                "without_child": ['EFO_0004302', 'EFO_0001074', 'EFO_0022016', 'EFO_0007830', 'EFO_0004529', 'EFO_0006842'] 
+            },
+            "urologic diseases":{
+                "with_child": [],
+                "without_child": ['OBA_0004158', 'EFO_0005116', 'OBA_VT0005265']
             }
         }
     genomics_data = []
