@@ -31,6 +31,8 @@ import socket
 from urllib.error import URLError
 from .disease_area_mapping_utils import get_mesh_tree_numbers_of_disease, pmid_to_meshid_mapper
 from .ollama_llm_client import LLMClient
+from dateutil.relativedelta import relativedelta
+
 
 MAX_RESULTS=500
 # NCBI API Base URL
@@ -42,6 +44,8 @@ RATE_LIMIT_RETRY_PERIOD = 300
 EMAIL = os.getenv('NCBI_EMAIL')
 JOURNAL_DATA_PATH = "/app/res-immunology-automation/res_immunology_automation/src/disease_data/scimagojr-journal-2023-cleaned.csv"
 OPEN_CITATIONS_API = os.getenv('OPEN_CITATIONS_API')
+SERP_API_KEY: str = os.getenv('SERP_API_KEY')
+SERP_API_URL: str = "https://serpapi.com/search.json"
 
 def get_mesh_term_for_disease(disease_name):
     """
@@ -206,6 +210,111 @@ def build_query_target(target: str, target_terms_file: str) -> str:
     print(query)
 
     return query
+
+def fetch_patents_from_serpapi(query: str)->List[Dict[str, Any]]:
+    #with paginations
+    filtered_results = []
+    page_num = 1
+    num = 100  # SerpApi maximum results per page
+    total_pages = 0
+
+    while True:
+        logging.info(f"Fetching patents from page {page_num}")
+        params = {
+            "engine": "google_patents",
+            "q": query,
+            "dups": "language",   # Deduplicate by Publication, default:Family
+            "api_key": SERP_API_KEY,
+            "language": "ENGLISH",
+            "num": num,
+            "page": page_num
+        }
+        try:
+            response = requests.get(SERP_API_URL, params=params)
+            response.raise_for_status()
+            data = response.json()
+            if total_pages == 0:
+                info = data.get("search_information", {})
+                if info:
+                    total_pages = info.get("total_pages", 1)
+            keys_to_extract = ["patent_id", "pdf", "title", "assignee", "filing_date", "grant_date"]
+            results = data.get("organic_results", [])
+            if not results:
+                print("No more results found.")
+                break
+
+            for entry in results:
+                filtered_data = {key: entry.get(key, "") for key in keys_to_extract}
+                country_status = entry.get("country_status", {})
+                filtered_data["country_status"] = country_status
+                filtered_data["expiry_date"] = add_years(filtered_data["filing_date"], 20) if filtered_data["filing_date"] else ""
+                filtered_results.append(filtered_data)
+            
+            
+
+            # Increment for next page
+            if page_num < total_pages:
+                page_num += 1
+            else:
+                break
+            time.sleep(1)
+
+        # except requests.RequestException as exc:
+        #     raise HTTPException(status_code=exc.response.status_code, detail=f"Error: {exc.response.text}")
+        except requests.RequestException as exc:
+            # raise HTTPException(status_code=exc.response.status_code, detail=f"Error: {exc.response.text}")
+            if exc.response is not None:
+                # Response exists → HTTP error (e.g., 404, 500)
+                raise HTTPException(
+                    status_code=exc.response.status_code,
+                    detail=f"Error: {exc.response.text}"
+                )
+            else:
+                # No response → Connection, timeout, DNS, etc.
+                raise HTTPException(
+                    status_code=500,
+                    detail=f"Request failed: {str(exc)}"
+                )
+    return filtered_results
+    # Without pagination
+    # params = {
+    #     "engine": "google_patents",
+    #     "q": query,
+    #     "api_key": SERP_API_KEY,
+    #     "language": "ENGLISH",
+    #     "num": 100
+    # }
+
+    # try:
+    #     response = requests.get(SERP_API_URL, params=params)
+    #     response.raise_for_status()
+    #     data = response.json()
+    #     keys_to_extract = ["patent_id", "pdf", "title", "assignee", "filing_date", "grant_date"]
+    #     filtered_results = []
+    #     for entry in data.get("organic_results", []):
+    #         filtered_data = {key: entry.get(key, "") for key in keys_to_extract}
+    #         country_status = entry.get("country_status", {})
+    #         filtered_data["country_status"] = country_status
+    #         filtered_data["expiry_date"] = add_years(filtered_data["filing_date"], 20) if filtered_data["filing_date"] else ""
+    #         filtered_results.append(filtered_data)
+    #     cached_data[disease.replace("_", " ")] = {"results": filtered_results}
+    #     cached_responses[f"{endpoint}"] = {"results": filtered_results}
+    # except requests.RequestException as exc:
+    #     raise HTTPException(status_code=exc.response.status_code, detail=f"Error: {exc.response.text}")
+    # except requests.RequestException as exc:
+    #     # raise HTTPException(status_code=exc.response.status_code, detail=f"Error: {exc.response.text}")
+    #     if exc.response is not None:
+    #         # Response exists → HTTP error (e.g., 404, 500)
+    #         raise HTTPException(
+    #             status_code=exc.response.status_code,
+    #             detail=f"Error: {exc.response.text}"
+    #         )
+    #     else:
+    #         # No response → Connection, timeout, DNS, etc.
+    #         raise HTTPException(
+    #             status_code=500,
+    #             detail=f"Request failed: {str(exc)}"
+    #         )
 
 def pubmed_to_pmc(pmid: str, tool: str = "my_tool", email: str = EMAIL) -> Optional[str]:
     """
@@ -2282,6 +2391,63 @@ def extract_mesh_terms(data, unique_id):
     
     return mesh_terms
 
+def add_years(date_str: str, years: int) -> str:
+    """
+    Add or subtract years from a given date in the format 'yyyy-mm-dd'.
+
+    Args:
+    date_str (str): The input date as a string in the format 'yyyy-mm-dd'.
+    years (int): The number of years to add (positive) or subtract (negative).
+
+    Returns:
+    str: The modified date as a string in the format 'yyyy-mm-dd'.
+    """
+    if not date_str:
+        return ""
+
+    # Parse the input date string to a datetime object
+    date: datetime = datetime.strptime(date_str, "%Y-%m-%d")
+
+    # Modify the date by adding/subtracting the given number of years
+    new_date: datetime = date + relativedelta(years=years)
+
+    # Return the new date formatted back into 'dd-mm-yyyy' string
+    return new_date.strftime("%Y-%m-%d")
+
+
+def calculate_expiry_date(filing_date: str, invention_type: str, publication_date: str) -> str:
+    """
+    Calculate the expiry date of the patent based on its type (UTILITY, DESIGN, PLANT).
+
+    Args:
+    filing_date (str): Filing date of the patent in 'dd-mm-yyyy' format.
+    invention_type (str): Type of patent - UTILITY, DESIGN, or PLANT.
+    publication_date (str): Publication date (for design patents) in 'dd-mm-yyyy' format, if applicable.
+
+    Returns:
+    str: The calculated expiry date in 'dd-mm-yyyy' format.
+    """
+    # Convert the invention type to lowercase for case-insensitive comparison
+    invention_type = invention_type.lower()
+
+    if invention_type == "utility" or invention_type == "plant":
+        # Utility and Plant patents expire 20 years from the filing date
+        return add_years(filing_date, 20)
+    elif invention_type == "design":
+        # Parse the filing date to check if it is before or after May 13, 2015
+        date_filed: datetime = datetime.strptime(filing_date, "%m-%d-%Y")
+        cutoff_date: datetime = datetime(2015, 5, 13)
+
+        # Design patents filed after May 13, 2015 expire 15 years from publication date
+        # Design patents filed on or before May 13, 2015 expire 14 years from publication date
+        years_to_add: int = 15 if date_filed > cutoff_date else 14
+
+        # If the publication date is not provided, use the filing date instead
+        return add_years(publication_date, years_to_add)
+    else:
+        # For unknown invention types, return 20 years from the filing date
+        return add_years(filing_date, 20)
+    
 
 
 def fetch_mesh_entry_terms(disease_name):
@@ -2319,17 +2485,22 @@ def fetch_mesh_entry_terms(disease_name):
 
 
 if __name__ == "__main__":
-    rna_seq_data_path = "/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease/cardiovascular_diseases.json"
-    with open(rna_seq_data_path, 'r') as file:
-        data = json.load(file)
-        rna_seq_data = data["/evidence/rna-sequence/"] 
+    # rna_seq_data_path = "/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease/cardiovascular_diseases.json"
+    # with open(rna_seq_data_path, 'r') as file:
+    #     data = json.load(file)
+    #     rna_seq_data = data["/evidence/rna-sequence/"] 
     
-    rna_seq_updated = add_pubmed_info(rna_seq_data)
-    with open("rna_seq_updated.json", 'w') as outfile:
-        json.dump(rna_seq_updated, outfile, indent=4)
-    # target_name = "gucy1a1"
+    # rna_seq_updated = add_pubmed_info(rna_seq_data)
+    # with open("rna_seq_updated.json", 'w') as outfile:
+    #     json.dump(rna_seq_updated, outfile, indent=4)
+    
+    target_terms_file = "/app/res-immunology-automation/res_immunology_automation/src/target_data/target_terms_patents.json"
+    target_name = "acvr2b"
+    query = query = build_query_target(target_name, target_terms_file)
+    patents = fetch_patents_from_serpapi(query)
+    with open("target_patents.json", "w") as f:
+        json.dump(patents, f, indent=2)
     # disease_name = "cardiovascular diseases"
-    # target_terms_file = "/app/res-immunology-automation/res_immunology_automation/src/scripts/target_data/target_terms.json"
     # mesh_major_term="cardiovascular diseases"  # cardiovascular diseases
     # search_pubmed_target(target_name, disease_name, target_terms_file, mesh_major_term)
     # target = "sav1"
