@@ -110,7 +110,7 @@ from component_services.entity_search_services import lexical_phenotype_search, 
     get_gene_search_db_connection, lexical_gene_search
 import duckdb
 from duckdb import DuckDBPyConnection
-from component_services.gwas_services import get_gwas_studies
+from component_services.gwas_services import get_gwas_studies, fetch_gwas_studies_including_related_measurements
 from component_services.locus_zoom_services import load_data
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import FileResponse
