@@ -84,11 +84,18 @@ const Header = ({ app_state }) => {
       label: "Evidence",
       children: [
         { key: "literature-evidence", label: "Literature" },
-       
-        { key: "model-studies", label: "Target perturbation phenotypes" },
+   
       ],
     },
-
+    {
+      key: "model-studies",
+      label: "Models",
+      children: [
+      
+            
+        { key: "model-studies-target", label: "Target perturbation phenotypes" },
+      ],
+    },
     {
       key: "target-assessment",
       label: "Target Assessment",
@@ -184,6 +191,10 @@ const Header = ({ app_state }) => {
               key: "pgsCatalog",
               label: "Polygenic risk scores",
             },
+            {
+              key:"PPM",
+              label:"Performance metrics"
+            }
           ],
         },
       ],
@@ -209,7 +220,7 @@ const Header = ({ app_state }) => {
       children: [
         {
           key: "model-studies",
-          label: "Animal models ",
+          label: "Perturbed Animal Models",
         },
       ],
     },
@@ -311,6 +322,10 @@ const Header = ({ app_state }) => {
               key: "pgsCatalog",
               label: "Polygenic risk scores",
             },
+            {
+              key:"PPM",
+              label:"Performance metrics"
+            }
           ],
         },
       ],
@@ -339,8 +354,9 @@ const Header = ({ app_state }) => {
       children: [
         {
           key: "model-studies",
-          label: "Animal models ",
+          label: "Perturbed Animal Models ",
         },
+        { key: "model-studies-target", label: "Target perturbation phenotypes" },
       ],
     },
     {
@@ -374,7 +390,7 @@ const Header = ({ app_state }) => {
   (app_state.indications && app_state.indications.length > 0) || 
   (app_state.diseaseArea && app_state.diseaseArea.length > 0);
   const hasDiseaseArea= app_state.diseaseArea && app_state.diseaseArea.length > 0;
-console.log("Disease Area in Header:", app_state.diseaseArea,hasDiseaseArea);
+
   if (hasTarget && (hasIndications || hasDiseaseArea)) {
     menuItems = [...bothMenuItems];
   } else if (hasTarget) {
