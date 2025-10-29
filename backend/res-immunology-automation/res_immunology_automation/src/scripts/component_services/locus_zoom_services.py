@@ -6,6 +6,8 @@ from decimal import getcontext
 import math
 from decimal import Decimal, InvalidOperation
 
+from .vep_annotation_service import annotate_variants
+
 # from populate_gwas_asso_data import filter_asso_by_efo_id, prepare_variants_data, fetch_ld_data
 
 gwas_data_path = '/app/res-immunology-automation/res_immunology_automation/src/gwas_data'
@@ -135,7 +137,31 @@ def prepare_variants_data(df):
         if k in df.columns:
             new_df[v] = df[k]
 
-    return new_df.sort_values("Chromosome")
+    # VEP annotation
+    variant_list = (
+    new_df["Variant and Risk Allele"]
+    .dropna()             # remove missing values
+    .astype(str)          # ensure all are strings
+    .unique()             # get unique entries
+    .tolist()             # convert to Python list
+    )
+
+    varinat_VEP_scores = annotate_variants(variant_list)
+
+    # Merge based on equivalent columns
+    merged_df = pd.merge(
+        new_df,
+        varinat_VEP_scores,
+        left_on="Variant and Risk Allele",
+        right_on="Input",
+        how="left"     # change to 'left' if you want to keep all GWAS rows
+    )
+
+    # Drop the redundant "Input" column
+    merged_df.drop(columns=["Input"], inplace=True)
+    return merged_df.sort_values("Chromosome")
+
+    # return new_df.sort_values("Chromosome")
 
 def load_data(studies: List[str], requested_efo:str) -> str:
 
