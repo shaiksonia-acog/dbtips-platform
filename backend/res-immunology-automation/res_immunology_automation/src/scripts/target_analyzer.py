@@ -521,7 +521,12 @@ class TargetAnalyzer:
             "Guinea Pig": "10141",
             "Rabbit": "9986",
             "Rat": "10114",
-            "Macaque": "9539"
+            "Macaque": "9539",
+            "Mosquito": "7165",
+            "Yeast": "4932",
+            "Fission Yeast": "4896",
+            "Thale cress": "3702",
+            "E. coli": "562"
         }
         session = requests.Session()
 
