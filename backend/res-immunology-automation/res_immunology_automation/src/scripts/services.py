@@ -277,6 +277,16 @@ def parse_mouse_phenotypes(response):
     if not data:
         return {}
 
+    def load_rpt_to_dict(file_path):
+        mapping = {}
+        with open(file_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                parts = line.strip().split('\t')
+                if len(parts) >= 2:
+                    mapping[parts[1].strip()] = parts[0].strip()
+        return mapping
+
+    mapping = load_rpt_to_dict("/app/res-immunology-automation/res_immunology_automation/src/phenotype_file/MGI_PhenotypicAllele.rpt")
     records = {}
     for phenotype in data:
         gene_link = f"https://www.informatics.jax.org/marker/{phenotype['targetInModelMgiId']}"
@@ -284,9 +294,13 @@ def parse_mouse_phenotypes(response):
 
         category_links = [f"https://www.ebi.ac.uk/ols4/ontologies/mp/classes?obo_id={cls['id']}" for cls in
                           phenotype.get('modelPhenotypeClasses', [])]
-        allelic_composition_links = [f"https://www.informatics.jax.org/allele/genoview/{model['id']}" for model in
-                                     phenotype.get('biologicalModels', [])]
-
+        # allelic_composition_links = [f"https://www.informatics.jax.org/allele/genoview/{model['id']}" for model in
+        #                              phenotype.get('biologicalModels', [])]
+        allelic_composition_links = [
+                                f'https://www.informatics.jax.org/allele/{mapping[model["id"]]}'
+                                for model in phenotype.get('biologicalModels', [])
+                                if model and model.get("id") in mapping
+                                ]
         records[phenotype["modelPhenotypeLabel"]] = {
             'Gene': {
                 'Name': phenotype['targetInModel'],
@@ -1890,7 +1904,11 @@ def enrich_target_trials(target_input: str):
                         disease_tree_numbers[disease] = mesh_uid_to_tree_numbers(mesh_uid)
                     entry['efo_id'] = efo_id if efo_id else ""
                     if efo_id:
-                        entry['mesh_id'] =  efoid_to_meshid_mapper(entry["efo_id"])[0]
+                        mesh_ids =  efoid_to_meshid_mapper(entry["efo_id"])
+                        if len(mesh_ids):
+                            entry['mesh_id'] = mesh_ids[0]
+                        else:
+                            entry['mesh_id'] = ""
 
                 if entry["mesh_id"] != "":
                     disease_tree_numbers[disease] = [tn.split('/')[-1] for tn in get_mesh_tree_numbers_of_disease(disease, entry["mesh_id"])]
