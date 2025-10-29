@@ -301,48 +301,56 @@ const AssociatePlot = ({ indications, diseaseAreaFilter,target }) => {
         field: "Mapped gene(s)",
       },
       {
-        field:"Consequence",
-        headerName:"Consequence",
-        cellRenderer:(params)=>
-          params.value.replaceAll("_"," ")
-      },
-      {
-        headerName:"Alpha missense score",
-        field:"AlphaMissense",
-        cellRenderer:(params)=>
-           !params.value.includes("None") ? params.value.replace("_"," ") : ""
-      },
-      {
-        headerName:"SIFT",
-        field:"SIFT",
-        cellRenderer:(params)=>
-           !params.value.includes("None") ? params.value.replace("_"," ") : ""
-      },
-      {
-        headerName:"PolyPhen",
-        field:"PolyPhen",
-        cellRenderer:(params)=>
-           !params.value.includes("None") ? params.value.replace("_"," ") : ""
-      },
-      {
-        headerName:"CADD score",
-        field:"CADD"
-      },
+        headerName: "Variant annotation",
+        headerClass: "ag-header-cell-center",
+        children: [
+          {
+            field:"Consequence",
+            headerName:"Functionl consequence",
+            cellRenderer:(params)=>
+              params.value.replaceAll("_"," ")
+          },
+          {
+            headerName:"Alpha missense score",
+            field:"AlphaMissense",
+            cellRenderer:(params)=>
+               !params.value.includes("None") ? params.value.replace("_"," ") : ""
+          },
+          {
+            headerName:"SIFT",
+            field:"SIFT",
+            cellRenderer:(params)=>
+               !params.value.includes("None") ? params.value.replace("_"," ") : ""
+          },
+          {
+            headerName:"PolyPhen",
+            field:"PolyPhen",
+            cellRenderer:(params)=>
+               !params.value.includes("None") ? params.value.replace("_"," ") : ""
+          },
+          {
+            headerName:"CADD score",
+            field:"CADD"
+          },
+    
+    
+          {
+            headerName:"Protien family",
+            field:"Pfam",
+            cellRenderer:(params)=>
+           { if(params.value) 
+            return (
+           
+              <a href={params.data.Pfam_url } target="_blank" rel="noopener noreferrer">
+                {params.value}
+              </a>
+            )}
+    
+          },
+        ],
 
-
-      {
-        headerName:"Protien family",
-        field:"Pfam",
-        cellRenderer:(params)=>
-       { if(params.value) 
-        return (
-       
-          <a href={params.data.Pfam_url } target="_blank" rel="noopener noreferrer">
-            {params.value}
-          </a>
-        )}
-
       },
+      
       
 
 
