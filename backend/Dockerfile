@@ -14,6 +14,9 @@ WORKDIR /app/res-immunology-automation/res_immunology_automation/src/gwas_data
 RUN wget -O associations.tsv https://www.ebi.ac.uk/gwas/api/search/downloads/alternative || \
     (echo "Download failed, extracting existing tar file..." && tar -xvzf *.tar.gz)
 
+WORKDIR /app/res-immunology-automation/res_immunology_automation/src/phenotype_file
+RUN wget -O MGI_PhenotypicAllele.rpt https://www.informatics.jax.org/downloads/reports/MGI_PhenotypicAllele.rpt
+
 WORKDIR /app/geneSearch
 RUN tar -xvzf duckdb.db.tar.gz
 
