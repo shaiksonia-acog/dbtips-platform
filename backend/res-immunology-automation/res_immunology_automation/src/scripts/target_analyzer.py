@@ -558,7 +558,7 @@ class TargetAnalyzer:
 
         results = {}
         for species_name, species_code in species_codes.items():
-            #print(f"Fetching data for {species_name} ({species_code}) with gene {gene_name}")
+            print(f"Fetching data for {species_name} ({species_code}) with gene {gene_name}")
             # headers = {"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"}
             data = {
                 "species": species_code,

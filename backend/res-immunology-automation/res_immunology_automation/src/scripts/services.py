@@ -296,11 +296,26 @@ def parse_mouse_phenotypes(response):
                           phenotype.get('modelPhenotypeClasses', [])]
         # allelic_composition_links = [f"https://www.informatics.jax.org/allele/genoview/{model['id']}" for model in
         #                              phenotype.get('biologicalModels', [])]
-        allelic_composition_links = [
-                                f'https://www.informatics.jax.org/allele/{mapping[model["id"]]}'
-                                for model in phenotype.get('biologicalModels', [])
-                                if model and model.get("id") in mapping
-                                ]
+        allelic_composition_links = [] 
+        import re
+
+        for model in phenotype.get('biologicalModels', []):
+            raw_name = model.get("allelicComposition", "")
+            print("raw allele_name:", raw_name)
+
+            # Extract all alleles like Gene<tm...>
+            matches = re.findall(r"[A-Za-z0-9]+<[^>]+>", raw_name)
+            print("parsed allele matches:", matches)
+
+            for allele in matches:
+                if allele in mapping:
+                    mgi_id = mapping[allele]
+                    url = f"https://www.informatics.jax.org/allele/{mgi_id}"
+                    allelic_composition_links.append(url)
+                else:
+                    print(f"⚠️ No match in mapping for allele: {allele}")
+
+        print("allelic_composition_links: ", allelic_composition_links)
         records[phenotype["modelPhenotypeLabel"]] = {
             'Gene': {
                 'Name': phenotype['targetInModel'],
@@ -322,14 +337,34 @@ def parse_mouse_phenotypes(response):
 def parse_paralogs(results):
     species_codes = {
         "human": "9606",
-        "mouse": "10090",
-        "worm": "6239",
-        "zebrafish": "7955"
+            "mouse": "10090",
+            "worm": "6239",
+            "zebrafish": "7955",
+            "Chimpanzee": "9598",
+            "Fruitfly": "7227",
+            "Tropical clawed frog": "8364",
+            "Domestic Pig": "9825",
+            "Pig": "9823", 
+            "Dog": "9615",
+            "Guinea Pig": "10141",
+            "Rabbit": "9986",
+            "Rat": "10114",
+            "Macaque": "9539",
+            "Mosquito": "7165",
+            "Yeast": "4932",
+            "Fission Yeast": "4896",
+            "Thale cress": "3702",
+            "E. coli": "562"
     }
 
     json_output = {}
     for species, content in results.items():
         species_data = []
+        if not isinstance(content, dict) or "data" not in content:
+            json_output[species] = {
+                "error": content.get("error", "No 'data' field in response")
+            }
+            continue
         for item in content['data']:
             paralog_pair_url = f"https://www.flyrnai.org/tools/paralogs/web/expression/{item['Paralog_PairID']}"
             paralog_data = {
