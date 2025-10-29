@@ -251,63 +251,6 @@ def load_response_from_file(file_path: str) -> Dict:
     with open(file_path, 'r') as file:
         return json.load(file)
 
-def add_years(date_str: str, years: int) -> str:
-    """
-    Add or subtract years from a given date in the format 'yyyy-mm-dd'.
-
-    Args:
-    date_str (str): The input date as a string in the format 'yyyy-mm-dd'.
-    years (int): The number of years to add (positive) or subtract (negative).
-
-    Returns:
-    str: The modified date as a string in the format 'yyyy-mm-dd'.
-    """
-    if not date_str:
-        return ""
-
-    # Parse the input date string to a datetime object
-    date: datetime = datetime.strptime(date_str, "%Y-%m-%d")
-
-    # Modify the date by adding/subtracting the given number of years
-    new_date: datetime = date + relativedelta(years=years)
-
-    # Return the new date formatted back into 'dd-mm-yyyy' string
-    return new_date.strftime("%Y-%m-%d")
-
-
-def calculate_expiry_date(filing_date: str, invention_type: str, publication_date: str) -> str:
-    """
-    Calculate the expiry date of the patent based on its type (UTILITY, DESIGN, PLANT).
-
-    Args:
-    filing_date (str): Filing date of the patent in 'dd-mm-yyyy' format.
-    invention_type (str): Type of patent - UTILITY, DESIGN, or PLANT.
-    publication_date (str): Publication date (for design patents) in 'dd-mm-yyyy' format, if applicable.
-
-    Returns:
-    str: The calculated expiry date in 'dd-mm-yyyy' format.
-    """
-    # Convert the invention type to lowercase for case-insensitive comparison
-    invention_type = invention_type.lower()
-
-    if invention_type == "utility" or invention_type == "plant":
-        # Utility and Plant patents expire 20 years from the filing date
-        return add_years(filing_date, 20)
-    elif invention_type == "design":
-        # Parse the filing date to check if it is before or after May 13, 2015
-        date_filed: datetime = datetime.strptime(filing_date, "%m-%d-%Y")
-        cutoff_date: datetime = datetime(2015, 5, 13)
-
-        # Design patents filed after May 13, 2015 expire 15 years from publication date
-        # Design patents filed on or before May 13, 2015 expire 14 years from publication date
-        years_to_add: int = 15 if date_filed > cutoff_date else 14
-
-        # If the publication date is not provided, use the filing date instead
-        return add_years(publication_date, years_to_add)
-    else:
-        # For unknown invention types, return 20 years from the filing date
-        return add_years(filing_date, 20)
-    
 
 def get_associated_targets(disease_name: str,sort_by: str) -> List[str]:
     """
