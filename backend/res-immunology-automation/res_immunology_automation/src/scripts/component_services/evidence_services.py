@@ -32,6 +32,7 @@ from urllib.error import URLError
 from .disease_area_mapping_utils import get_mesh_tree_numbers_of_disease, pmid_to_meshid_mapper
 from .ollama_llm_client import LLMClient
 from dateutil.relativedelta import relativedelta
+import math
 
 
 MAX_RESULTS=500
@@ -196,125 +197,150 @@ def build_query_target(target: str, target_terms_file: str) -> str:
         # If no terms are found, use the target directly
         target_query = f'TI="{target.strip()}" OR AB="{target}"'
 
-    # Define the additional terms for the second part of the query
-    additional_terms: List[str] = [
-        "Antigen binding", "Antibody", "Antibodies", "Compound", "Formula", "Compounds", "Analogue"
-    ]
+    # # Define the additional terms for the second part of the query
+    # additional_terms: List[str] = [
+    #     "Antigen binding", "Antibody", "Antibodies", "Compound", "Formula", "Compounds", "Analogue"
+    # ]
 
-    # Build the second part of the query
-    additional_query = " OR ".join([f'AB="{term.strip()}"' for term in additional_terms])
-    additional_query = f'({additional_query})'  # Wrap in parentheses
+    # # Build the second part of the query
+    # additional_query = " OR ".join([f'AB="{term.strip()}"' for term in additional_terms])
+    # additional_query = f'({additional_query})'  # Wrap in parentheses
 
-    # Build the final query
-    query: str = f'{target_query} AND {additional_query}'
-    print(query)
+    # # Build the final query
+    # query: str = f'{target_query} AND {additional_query}'
+    print(target_query)
 
-    return query
+    return target_query
 
-def fetch_patents_from_serpapi(query: str)->List[Dict[str, Any]]:
-    #with paginations
+def fetch_patents_from_serpapi(query: str) -> List[Dict[str, Any]]:
     filtered_results = []
-    page_num = 1
-    num = 100  # SerpApi maximum results per page
-    total_pages = 0
+    num = 100  # Max results per page
+    fetched_count = 0
 
-    while True:
-        logging.info(f"Fetching patents from page {page_num}")
-        params = {
-            "engine": "google_patents",
-            "q": query,
-            "dups": "language",   # Deduplicate by Publication, default:Family
-            "api_key": SERP_API_KEY,
-            "language": "ENGLISH",
-            "num": num,
-            "page": page_num
-        }
-        try:
-            response = requests.get(SERP_API_URL, params=params)
-            response.raise_for_status()
-            data = response.json()
-            if total_pages == 0:
-                info = data.get("search_information", {})
-                if info:
-                    total_pages = info.get("total_pages", 1)
-            keys_to_extract = ["patent_id", "pdf", "title", "assignee", "filing_date", "grant_date"]
-            results = data.get("organic_results", [])
-            if not results:
-                print("No more results found.")
-                break
+    # --- 1️⃣ Get total results (unwindowed query) ---
+    logging.info("Fetching total results for base query...")
+    params = {
+        "engine": "google_patents",
+        "q": query,
+        "dups": "language",
+        "language": "ENGLISH",
+        "num": 10 , # minimal request for total count
+        "api_key": SERP_API_KEY
+    }
 
-            for entry in results:
-                filtered_data = {key: entry.get(key, "") for key in keys_to_extract}
-                country_status = entry.get("country_status", {})
-                filtered_data["country_status"] = country_status
-                filtered_data["expiry_date"] = add_years(filtered_data["filing_date"], 20) if filtered_data["filing_date"] else ""
-                filtered_results.append(filtered_data)
-            
-            
+    try:
+        response = requests.get(SERP_API_URL, params=params)
+        response.raise_for_status()
+        data = response.json()
+        total_results = data.get("search_information", {}).get("total_results", 0)
+        logging.info(f"Estimated total results (unwindowed): {total_results}")
+    except requests.RequestException as exc:
+        raise HTTPException(
+            status_code=exc.response.status_code if exc.response else 500,
+            detail=f"Failed to fetch total results: {str(exc)}"
+        )
 
-            # Increment for next page
-            if page_num < total_pages:
-                page_num += 1
-            else:
-                break
-            time.sleep(1)
+    # --- 2️⃣ Setup date windows (5-year) ---
+    current_date = datetime.now()
+    end_date = current_date
+    start_date = datetime(end_date.year - 5, 1, 1)  # Jan 1 of 5th year ago
+    continue_window = True
+    while fetched_count < total_results:
+        if start_date.year < 1900:
+            break  # Safety stop for very old patents
 
-        # except requests.RequestException as exc:
-        #     raise HTTPException(status_code=exc.response.status_code, detail=f"Error: {exc.response.text}")
-        except requests.RequestException as exc:
-            # raise HTTPException(status_code=exc.response.status_code, detail=f"Error: {exc.response.text}")
-            if exc.response is not None:
-                # Response exists → HTTP error (e.g., 404, 500)
-                raise HTTPException(
-                    status_code=exc.response.status_code,
-                    detail=f"Error: {exc.response.text}"
-                )
-            else:
-                # No response → Connection, timeout, DNS, etc.
-                raise HTTPException(
-                    status_code=500,
-                    detail=f"Request failed: {str(exc)}"
-                )
+        after_str = start_date.strftime("%Y%m%d")
+        before_str = end_date.strftime("%Y%m%d")
+        logging.info(f"🔍 Querying window {after_str} → {before_str}")
+
+        page_num = 1
+        total_pages = 0
+
+        while True:
+            logging.info(f"Fetching page {page_num} for {after_str} → {before_str}")
+            params = {
+                "engine": "google_patents",
+                "q": query,
+                "before": f"filing:{before_str}",
+                "after": f"filing:{after_str}",
+                "dups": "language",
+                "api_key": SERP_API_KEY,
+                "language": "ENGLISH",
+                "num": num,
+                "page": page_num
+            }
+            print("params", params)
+            try:
+                response = requests.get(SERP_API_URL, params=params)
+                response.raise_for_status()
+                data = response.json()
+
+                if total_pages == 0:
+                    info = data.get("search_information", {})
+                    if info:
+                        window_results = info.get("total_results", 0)
+                        total_pages = math.ceil(window_results / 100)
+                        logging.info(
+                            f"Total pages in {after_str} → {before_str}: {total_pages}, results: {window_results}"
+                        )
+
+                results = data.get("organic_results", [])
+                if not results:
+                    logging.info(f"No more results found for {after_str} → {before_str}")
+                    break
+
+                keys_to_extract = [
+                    "patent_id", "pdf", "title",
+                    "assignee", "filing_date", "grant_date"
+                ]
+                for entry in results:
+                    filtered_data = {key: entry.get(key, "") for key in keys_to_extract}
+                    country_status = entry.get("country_status", {})
+                    filtered_data["country_status"] = country_status
+                    filtered_data["expiry_date"] = (
+                        add_years(filtered_data["filing_date"], 20)
+                        if filtered_data["filing_date"] else ""
+                    )
+                    filtered_results.append(filtered_data)
+
+                fetched_count += len(results)
+                logging.info(f"Fetched {fetched_count}/{total_results} so far")
+
+                if fetched_count >= total_results:
+                    logging.info("Reached total results limit; stopping early.")
+                    continue_window = False
+                    break
+
+                if page_num < total_pages:
+                    page_num += 1
+                else:
+                    break
+
+                time.sleep(1)
+
+            except requests.RequestException as exc:
+                if exc.response is not None:
+                    raise HTTPException(
+                        status_code=exc.response.status_code,
+                        detail=f"Error: {exc.response.text}"
+                    )
+                else:
+                    raise HTTPException(
+                        status_code=500,
+                        detail=f"Request failed: {str(exc)}"
+                    )
+
+        # if continue_window is False:
+        #     break
+        # Move the window 5 years backward
+        end_date = datetime(start_date.year-1, 12, 31)
+        start_date = datetime(end_date.year - 4, 1, 1)
+        print(f"end_date: {end_date}, start_date:{start_date}")
+        logging.info(f"Sliding to next window: {start_date.strftime('%Y-%m-%d')} → {end_date.strftime('%Y-%m-%d')}")
+        time.sleep(2)
+
+    logging.info(f"✅ Completed. Total fetched: {len(filtered_results)} patents")
     return filtered_results
-    # Without pagination
-    # params = {
-    #     "engine": "google_patents",
-    #     "q": query,
-    #     "api_key": SERP_API_KEY,
-    #     "language": "ENGLISH",
-    #     "num": 100
-    # }
-
-    # try:
-    #     response = requests.get(SERP_API_URL, params=params)
-    #     response.raise_for_status()
-    #     data = response.json()
-    #     keys_to_extract = ["patent_id", "pdf", "title", "assignee", "filing_date", "grant_date"]
-    #     filtered_results = []
-    #     for entry in data.get("organic_results", []):
-    #         filtered_data = {key: entry.get(key, "") for key in keys_to_extract}
-    #         country_status = entry.get("country_status", {})
-    #         filtered_data["country_status"] = country_status
-    #         filtered_data["expiry_date"] = add_years(filtered_data["filing_date"], 20) if filtered_data["filing_date"] else ""
-    #         filtered_results.append(filtered_data)
-    #     cached_data[disease.replace("_", " ")] = {"results": filtered_results}
-    #     cached_responses[f"{endpoint}"] = {"results": filtered_results}
-    # except requests.RequestException as exc:
-    #     raise HTTPException(status_code=exc.response.status_code, detail=f"Error: {exc.response.text}")
-    # except requests.RequestException as exc:
-    #     # raise HTTPException(status_code=exc.response.status_code, detail=f"Error: {exc.response.text}")
-    #     if exc.response is not None:
-    #         # Response exists → HTTP error (e.g., 404, 500)
-    #         raise HTTPException(
-    #             status_code=exc.response.status_code,
-    #             detail=f"Error: {exc.response.text}"
-    #         )
-    #     else:
-    #         # No response → Connection, timeout, DNS, etc.
-    #         raise HTTPException(
-    #             status_code=500,
-    #             detail=f"Request failed: {str(exc)}"
-    #         )
 
 def pubmed_to_pmc(pmid: str, tool: str = "my_tool", email: str = EMAIL) -> Optional[str]:
     """
