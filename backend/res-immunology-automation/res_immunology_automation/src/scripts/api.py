@@ -3774,7 +3774,7 @@ async def gwas_studies_data(request: DiseasesRequest, redis: Redis = Depends(get
             print("efo_id: ", efo_id)
             if efo_id:
                 diseases_and_efo[disease_name] = efo_id.replace(':', '_')
-                genomics_data = get_gwas_studies(efo_id, disease_name)
+                genomics_data = fetch_gwas_studies_including_related_measurements(efo_id, disease_name)
             else:
                 genomics_data = [f"EFO ID not found for {disease_name.replace('_', ' ')}"]
 
