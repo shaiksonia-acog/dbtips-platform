@@ -181,23 +181,26 @@ const ApprovedDrug = ({
     setSelectedColumns(columns);
   };
   const areaFilteredData = useMemo(() => {
-    if (!approvedDrugData ) return [];
-    if (selectedDiseaseArea.length === 0&& selectedDisease.length==0) return [];
+    if (!approvedDrugData) return [];
     
+    // If no disease area filter is selected, return all data
+    if (selectedDiseaseArea.length === 0) return approvedDrugData;
+    
+    // Filter by selected disease areas
     return approvedDrugData.filter((data) =>
       selectedDiseaseArea.some(
         (disease) =>
           disease.toLowerCase() === data.diseaseArea?.toLowerCase()
       )
     );
-  }, [approvedDrugData, selectedDiseaseArea,selectedDisease]);
+  }, [approvedDrugData, selectedDiseaseArea]);
   const filteredData = useMemo(() => {
+    console.log("Filtering approved drug data",approvedDrugData);
     if (!approvedDrugData) return [];
     // const data = areaFilteredData
     // const diseaseAreaFiltered =
     //  filterByDiseases(approvedDrugData, selectedDisease, indications,"diseaseArea");
     // console.log("diseaseAreaFiltered", diseaseAreaFiltered);
-
     const filtered =
       selectedDisease.length === 0
         ? areaFilteredData?.filter(

@@ -39,7 +39,7 @@ const ModelStudies = ({ target }) => {
     return item.Categories.some((el) => el.Label.includes(selectedCategory));
   });
   return (
-    <section id="model-studies" className="mt-12  bg-gray-50 px-[5vw] py-10">
+    <section id="model-studies-target" className="mt-8  px-[5vw] mb-12">
       <div className="flex items-center gap-x-2">
         <h1 className="text-3xl font-semibold">
           Target perturbation phenotypes
