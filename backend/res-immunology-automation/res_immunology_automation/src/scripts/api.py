@@ -3752,7 +3752,9 @@ async def gwas_studies_data(request: DiseasesRequest, redis: Redis = Depends(get
         
         diseases_and_efo: Dict[str, str] = {}  # Dictionary to store disease names and their corresponding EFO IDs
         converter = MeSHToEFOConverter()
+        
         for disease in filtered_diseases:
+
             disease_name: str = disease.strip().lower().replace(" ", "_")
             disease_record = db.query(Disease).filter_by(id=f"{disease_name}").first()
             file_path: str = os.path.join(cache_dir, f"{disease_name}.json")
@@ -3765,14 +3767,14 @@ async def gwas_studies_data(request: DiseasesRequest, redis: Redis = Depends(get
                 cached_responses = {}
             
             # efo_id: str = get_efo_id(disease_name.replace('_', ' ').lower())
-            efo_ids = None
+            
             efo_details = converter.convert(disease_name.replace('_', ' ').lower())
             if efo_details and efo_details.get('success'):
                 efo_id = efo_details.get('efo_id').replace(":", "_")
             print("efo_id: ", efo_id)
             if efo_id:
                 diseases_and_efo[disease_name] = efo_id.replace(':', '_')
-                genomics_data = get_gwas_studies(efo_id)
+                genomics_data = get_gwas_studies(efo_id, disease_name)
             else:
                 genomics_data = [f"EFO ID not found for {disease_name.replace('_', ' ')}"]
 
