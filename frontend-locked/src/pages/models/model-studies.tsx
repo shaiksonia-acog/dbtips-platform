@@ -28,12 +28,39 @@ const ModelStudies: React.FC<ModelStudiesProps> = ({ indications,diseaseAreaFilt
     "Model",
     "Gene",
     "Species",
-    "Association",
     "Disease",
     "References",
   ];
   const columnDefs = useMemo(
     () => [
+      {
+        field: "Disease",
+        headerName: "Disease",
+        valueGetter: (params) => {
+          return params.data.Disease;
+        },
+      },
+      {
+        field: "Species",
+        headerName: "Species",
+        valueGetter: (params) => {
+          return params.data.Species;
+        },
+        flex: 1,
+        cellRenderer: (params) => {
+          return <i>{params.value}</i>;
+        },
+      },
+      {
+        field: "Gene",
+        flex: 3,
+        headerName: "Gene perturbed",
+        
+
+        valueGetter: (params) => {
+          return params.data.Gene;
+        },
+      },
       {
         field: "Model",
         flex: 3,
@@ -51,28 +78,9 @@ const ModelStudies: React.FC<ModelStudiesProps> = ({ indications,diseaseAreaFilt
           </Tooltip>
         ),
       },
-      {
-        field: "Gene",
-        flex: 3,
-        headerName: "Gene perturbed",
-        
+      
 
-        valueGetter: (params) => {
-          return params.data.Gene;
-        },
-      },
-
-      {
-        field: "Species",
-        headerName: "Species",
-        valueGetter: (params) => {
-          return params.data.Species;
-        },
-        flex: 1,
-        cellRenderer: (params) => {
-          return <i>{params.value}</i>;
-        },
-      },
+    
 
       {
         field: "Association",
@@ -114,13 +122,7 @@ const ModelStudies: React.FC<ModelStudiesProps> = ({ indications,diseaseAreaFilt
           return result;
         },
             },
-            {
-        field: "Disease",
-        headerName: "Disease",
-        valueGetter: (params) => {
-          return params.data.Disease;
-        },
-      },
+           
       {
         field: "References",
         flex: 1.3,
@@ -204,7 +206,7 @@ const ModelStudies: React.FC<ModelStudiesProps> = ({ indications,diseaseAreaFilt
   return (
     <section id="model-studies" className="mt-8 px-[5vw]">
       <div className="flex items-center gap-x-2">
-        <h1 className="text-3xl font-semibold">Animal models</h1>
+        <h1 className="text-3xl font-semibold">Perturbed Animal Models</h1>
       </div>
 
       <p className="mt-2  font-medium">
