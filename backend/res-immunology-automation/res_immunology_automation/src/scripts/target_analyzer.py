@@ -511,7 +511,17 @@ class TargetAnalyzer:
             "human": "9606",
             "mouse": "10090",
             "worm": "6239",
-            "zebrafish": "7955"
+            "zebrafish": "7955",
+            "Chimpanzee": "9598",
+            "Fruitfly": "7227",
+            "Tropical clawed frog": "8364"
+            "Domestic Pig": "9825",
+            "Pig": "9823", 
+            "Dog": "9615",
+            "Guinea Pig": "10141",
+            "Rabbit": "9986",
+            "Rat": "10114",
+            "Macaque": "9539"
         }
         session = requests.Session()
 
