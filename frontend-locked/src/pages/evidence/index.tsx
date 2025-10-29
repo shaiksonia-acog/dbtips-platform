@@ -4,7 +4,7 @@ import { parseQueryParams } from "../../utils/parseUrlParams";
 import DiseasePathways from "./diseasePathways";
 import Literature from "./literature";
 import TargetLiterature from "./targetLiterature";
-import TargetPerturbation from "./targetPertubation";
+
 
 const Evidence = () => {
   const location = useLocation();
@@ -35,7 +35,7 @@ const Evidence = () => {
        {hasIndications && <DiseasePathways indications={indications.length > 0 ? indications : diseaseArea} 
          target={target} />}
       
-      {showTargetLiterature && <TargetPerturbation target={target} />}
+      
     </div>
   );
 };

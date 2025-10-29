@@ -6,6 +6,7 @@ import ColumnSelector from "../../components/columnFilter";
 import Table from "../../components/table";
 import { filterByDiseases } from "../../utils/filterDisease";
 import DiseaseFilter from "../../components/diseaseFilter";
+import { capitalizeFirstLetter } from "../../utils/helper";
 function renderPgsEffectSizes(pgs_effect_sizes) {
   if (!Array.isArray(pgs_effect_sizes) || pgs_effect_sizes.length === 0) {
     return "";
@@ -32,14 +33,17 @@ function renderPgsEffectSizes(pgs_effect_sizes) {
 
 const PPM = ({ data, diseaseAreaFilter, indications }) => {
   const [selectedDiseaseAreas, setSelectedDiseaseAreas] = useState(indications);
-  // const [selectedDisease, setSelectedDisease] = useState([]);
+  const [selectedDisease, setSelectedDisease] = useState([]);
+  const [diseaseFilterOptions, setDiseaseFilterOptions] = useState<string[]>(
+    []
+  );
   const [selectedColumns, setSelectedColumns] = useState([
     "DiseaseArea",
     "ppm_id", 
     "associated_pgs_id",
     "sampleset_id",
     "performance_source",
-    "phenotyping_reported", 
+    "mapped_trait", 
     "pgs_effect_sizes",
     "classification_metric",
     "other_metrics",
@@ -48,9 +52,8 @@ const PPM = ({ data, diseaseAreaFilter, indications }) => {
   ]);
   
   useEffect(() => {
-    // if (!diseaseAreaFilter) setSelectedDisease(indications);
-    // else 
-    setSelectedDiseaseAreas(indications);
+    if (!diseaseAreaFilter) setSelectedDisease(indications);
+    else setSelectedDiseaseAreas(indications);
   }, [diseaseAreaFilter, indications]);
 
   const columnDefs = useMemo(
@@ -112,7 +115,7 @@ const PPM = ({ data, diseaseAreaFilter, indications }) => {
         minWidth: 300,
       },
       {
-        field: "phenotyping_reported",
+        field: "mapped_trait",
         headerName: "Trait",
       },
       {
@@ -162,10 +165,52 @@ const PPM = ({ data, diseaseAreaFilter, indications }) => {
     }
     return data;
   }, [data, selectedDiseaseAreas, indications, diseaseAreaFilter]);
+   useEffect(() => {
+   
+      const diseases = Array.from(
+        new Set(
+          dataFilteredByArea.map((item) => capitalizeFirstLetter(item.Disease))
+        )
+      ).sort() as string[];
+      setDiseaseFilterOptions(diseases);
+    }, [dataFilteredByArea]);
   const handleColumnChange = (columns) => {
     setSelectedColumns(columns);
   };
-
+  useEffect(() => {
+    if (dataFilteredByArea.length > 0) {
+      const diseases = [
+        ...new Set(
+          dataFilteredByArea.flatMap((item) => item.mapped_trait || [])
+        ),
+      ] as string[];
+      if (diseaseAreaFilter) {
+        setDiseaseFilterOptions([...diseases.sort()]);
+      } else {
+        const combinedDiseases = [
+          ...new Set([
+            ...diseases,
+            ...indications.map((indication) => indication.toLowerCase()),
+          ]),
+        ];
+        setDiseaseFilterOptions([...combinedDiseases.sort()]);
+      }
+    }
+  }, [dataFilteredByArea, diseaseAreaFilter, indications]);
+  const filteredData = useMemo(() => {
+    if (!(selectedDisease.length > 0)) {
+      return dataFilteredByArea;
+    }
+    return dataFilteredByArea.filter(
+      (row) =>
+        row.mapped_trait &&
+        row.mapped_trait.some((d) =>
+          selectedDisease.some(
+            (selected) => selected.toLowerCase() === d.toLowerCase()
+          )
+        )
+    );
+  }, [dataFilteredByArea, selectedDisease]);
   const visibleColumns = useMemo(
     () => columnDefs.filter((col) => selectedColumns.includes(col.field)),
     [columnDefs, selectedColumns]
@@ -187,14 +232,14 @@ const PPM = ({ data, diseaseAreaFilter, indications }) => {
               labelText="Disease Area:"
             />
           )}
-          {/* <DiseaseFilter
+          <DiseaseFilter
                 allDiseases={diseaseFilterOptions}
                 selectedDiseases={selectedDisease}
                 onChange={setSelectedDisease}
                 // disabled={showLoading}
                 width={300}
                 labelText="Disease:"
-              /> */}
+              />
         </div>
 
         <ColumnSelector
@@ -204,7 +249,7 @@ const PPM = ({ data, diseaseAreaFilter, indications }) => {
             /> 
       </div>
 
-      <Table rowData={dataFilteredByArea} columnDefs={visibleColumns} />
+      <Table rowData={filteredData} columnDefs={visibleColumns} />
     </div>
   );
 };
