@@ -99,7 +99,7 @@ const Patent = ({ target, indications, diseaseAreaFilter }) => {
       filter: "agDateColumnFilter",
       filterParams,
       valueFormatter,
-      sort: "desc",
+      sort: "desc" as const,
     },
     {
       headerName: "Grant date",
@@ -107,7 +107,7 @@ const Patent = ({ target, indications, diseaseAreaFilter }) => {
       width: 200,
       filterParams,
       valueFormatter,
-    }
+    },
     
   ], []);
 
