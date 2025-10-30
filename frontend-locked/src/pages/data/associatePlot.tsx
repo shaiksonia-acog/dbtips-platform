@@ -102,6 +102,7 @@ const AssociatePlot = ({ indications, diseaseAreaFilter,target }) => {
     "Discovery sample ancestry",
     "Replication sample ancestry",
     "Summary statistics",
+    "Variant annotation"
   ]);
   useEffect(() => {
     if (!diseaseAreaFilter) {
