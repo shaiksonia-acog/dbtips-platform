@@ -99,6 +99,7 @@ const Patent = ({ target, indications, diseaseAreaFilter }) => {
       filter: "agDateColumnFilter",
       filterParams,
       valueFormatter,
+      sort: "desc",
     },
     {
       headerName: "Grant date",
@@ -106,15 +107,8 @@ const Patent = ({ target, indications, diseaseAreaFilter }) => {
       width: 200,
       filterParams,
       valueFormatter,
-    },
-    {
-      headerName: "Expected expiry date",
-      field: "expiry_date",
-      flex: 1.1,
-      filter: "agDateColumnFilter",
-      filterParams,
-      valueFormatter,
-    },
+    }
+    
   ], []);
 
   const availableColumns = useMemo(() => {
@@ -324,7 +318,6 @@ useEffect(() => {
                 rowData={filteredData}
                 pagination
                 paginationPageSize={20}
-                enableRangeSelection={true}
                 enableCellTextSelection={true}
               />
             </div>
