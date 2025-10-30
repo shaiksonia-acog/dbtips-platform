@@ -14,7 +14,8 @@ from api import get_evidence_literature_semaphore, get_mouse_studies, \
                 search_patents, get_complete_indication_pipeline, get_disease_gtr_data_semaphore, \
                 pgs_catalog_data, get_literature_images_evidence, get_target_literature_images_evidence, \
                 get_literature_table_analysis, get_literature_supplementary_materials_analysis, \
-                get_indication_pipeline_new_semaphore, get_target_pipeline_new_semaphore
+                get_indication_pipeline_new_semaphore, get_target_pipeline_new_semaphore, gwas_studies_data, \
+                get_gwas_associations, get_gwas_associations_vep
 
 from literature_enhancement.enhancement_runner import run_enhancement_pipeline
                 
@@ -220,7 +221,7 @@ async def clear_processing_dossiers(db):
             # for job in processing_records:
             
             local_time = datetime.now(tzlocal.get_localzone()) 
-            values = {'status': 'error', 'creation_time': local_time, 'processed_time': local_time}
+            values = {'status': 'submitted', 'creation_time': local_time, 'processed_time': local_time}
             if target is None:
                 job_type = DiseaseDossierStatus
                 values['disease'] = disease
@@ -321,10 +322,10 @@ async def run_endpoints(db_session, job_data):
 
         # Define endpoint categories 
         diseases_only_endpoints = [
-            get_diseases_profiles,
+            # get_diseases_profiles,
             get_diseases_profiles_llm,
             get_disease_gtr_data_semaphore,
-            # get_indication_pipeline_semaphore, 
+            get_indication_pipeline_semaphore, 
             get_indication_pipeline_new_semaphore,
             get_evidence_literature_semaphore, 
             get_top_10_literature, 
@@ -334,6 +335,9 @@ async def run_endpoints(db_session, job_data):
             pgs_catalog_data,
             get_kol, 
             get_key_influencers, 
+            gwas_studies_data,
+            get_gwas_associations, 
+            get_gwas_associations_vep
             # get_complete_indication_pipeline,
         ]
 
@@ -361,7 +365,7 @@ async def run_endpoints(db_session, job_data):
         ]
 
         target_disease_endpoints = [
-            # get_target_pipeline_semaphore,
+            get_target_pipeline_semaphore,
             get_evidence_target_literature,
             search_patents,
             run_enhancement_pipeline,
@@ -385,15 +389,11 @@ async def run_endpoints(db_session, job_data):
                     # updating endpoint status to processing
                     await update_endpoint_status(db_session, disease_key=disease, endpoint=endpoint.__name__, status='processing', start_at=datetime.now(tzlocal.get_localzone()))
                     
-                    if endpoint.__name__ in ['get_disease_pathway_semaphore', 'get_indication_pipeline_new_semaphore']:
+                    if endpoint.__name__ in ['get_disease_pathway_semaphore', 'get_indication_pipeline_new_semaphore', 'get_literature_images_evidence']:
                         response = await endpoint(request_data, db=db, build_cache=True)
                     elif endpoint.__name__ in ["get_top_10_literature", 'get_key_influencers']:
                         response = await endpoint(request_data)
-                    elif endpoint.__name__ in ['get_evidence_literature_semaphore', 'get_diseases_profiles_llm', 'get_disease_gtr_data_semaphore', 'pgs_catalog_data']:
-                        response = await endpoint(request_data, redis=redis, db=db, build_cache=True)
-                    elif endpoint.__name__ in ['get_literature_images_evidence']:
-                        response = await endpoint(request_data, db=db, build_cache=True)
-                    elif endpoint.__name__ in ['get_rna_sequence_semaphore']:
+                    elif endpoint.__name__ in ['get_evidence_literature_semaphore', 'get_diseases_profiles_llm', 'get_disease_gtr_data_semaphore', 'pgs_catalog_data', 'plot_locus_zoom', 'get_rna_sequence_semaphore']:
                         response = await endpoint(request_data, redis=redis, db=db, build_cache=True)
                     else:
                         response = await endpoint(request_data, redis=redis, db=db)
