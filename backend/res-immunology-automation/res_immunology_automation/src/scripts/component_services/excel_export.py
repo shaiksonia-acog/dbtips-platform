@@ -1103,7 +1103,7 @@ def process_literature_excel(data,selectedLiteratureData):
             pubmedLink = study["PubMedLink"]
             tableAnalysis = ", ".join(study["tables_analysis"])
             supplementary_analysis = study["supplementary_analysis"]
-            childDisease=", ".join(study["mapped_diseases"]) 
+            childDisease=", ".join(study.get("mapped_diseases", [])) 
             row_data = [
                 diseaseArea,childDisease, year,category,title,author,citedBy,tableAnalysis,supplementary_analysis
             ]
