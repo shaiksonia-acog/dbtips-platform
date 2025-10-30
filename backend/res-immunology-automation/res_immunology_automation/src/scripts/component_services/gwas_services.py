@@ -58,11 +58,13 @@ def fetch_gwas_studies_including_related_measurements(efo_id, disease):
             },
             "obesity": {
                 "with_child": [],
-                "without_child": ['EFO_0004302', 'EFO_0001074', 'EFO_0022016', 'EFO_0007830', 'EFO_0004529', 'EFO_0006842'] 
+                "without_child": ['EFO_0005106','EFO_0004340', 'EFO_0004338', 'EFO_0007861', 'EFO_0001074', 'EFO_0022016', 'EFO_0007830', 'EFO_0004529', 'EFO_0006842'] 
             },
             "urologic diseases":{
                 "with_child": [],
-                "without_child": ['OBA_0004158', 'EFO_0005116', 'OBA_VT0005265']
+                "without_child": ['OBA_0004158', 'EFO_0005116', 'OBA_VT0005265', 'OBA_0003747', 'OBA_2050096', 'OBA_2050065', 'EFO_0004458', 
+                'EFO_0004533', 'EFO_0004532', 'EFO_0004617', 'OBA_2052375', 'EFO_0004761', 'OBA_2050015', 'EFO_0004541', 
+                'EFO_0005128', 'OBA_2045206']
             }
         }
     genomics_data = []
