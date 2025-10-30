@@ -102,7 +102,6 @@ const AssociatePlot = ({ indications, diseaseAreaFilter,target }) => {
     "Discovery sample ancestry",
     "Replication sample ancestry",
     "Summary statistics",
-    "Variant annotation"
   ]);
   useEffect(() => {
     if (!diseaseAreaFilter) {
@@ -122,6 +121,8 @@ const AssociatePlot = ({ indications, diseaseAreaFilter,target }) => {
     "OR or BETA",
     "CI",
     "Mapped gene(s)",
+    "Variant annotation"
+
   ]);
   const gwasColumnDefs = useMemo(
     () => [

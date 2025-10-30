@@ -255,6 +255,7 @@ const Paralogs = ({ target }) => {
 									label={{
 										value: 'Species',
 										position: 'insideBottom',
+										offset: -12,
 										style: { fontSize: 14, fontWeight: 600 },
 									}}
 								/>
@@ -271,7 +272,7 @@ const Paralogs = ({ target }) => {
 									}}
 								/>
 								<Tooltip content={<CustomTooltip active={undefined} payload={undefined} />} />
-								<Legend iconType="circle" />
+								<Legend iconType="circle" verticalAlign="bottom" wrapperStyle={{ paddingTop: '20px', marginLeft:"30px" }} />
 
 								{Object.keys(speciesConfig).map((species) => {
 									const speciesData = processedData.filter(
