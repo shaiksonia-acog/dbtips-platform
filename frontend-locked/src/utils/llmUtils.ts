@@ -141,7 +141,8 @@ export const preprocessAnimalmodelData = (data) => {
 };
 
 export const preprocessRnaseqData = (data) => {
-	// console.log('rnaseq llm data', dummydata);
+
+	console.log('rnaseq llm data', data);
 	const columns = [
 		'GseID',
 		'Disease',
@@ -154,6 +155,8 @@ export const preprocessRnaseqData = (data) => {
 		'SampleID',
 		'TissueType',
 		'Characteristics',
+		"PMID_Title",
+		"Abstract",
 	];
 
 	const jsonToCsv = (jsonData, columns, delimiter = ',') => {
@@ -183,7 +186,17 @@ export const preprocessRnaseqData = (data) => {
 				Organism,
 				StudyType,
 				Samples,
+				pubmed_data
 			} = entry;
+			let PMID_Title = '';
+			let Abstract = '';
+			let PMID=';'
+			if (Array.isArray(pubmed_data) && pubmed_data.length > 0) {
+				PMID = pubmed_data.map(p => p.PMID).join(' | ');
+				PMID_Title = pubmed_data.map(p => p.Title).join(' | ');
+				Abstract = pubmed_data.map(p => p.Abstract).join(' | ');
+				
+			}
 
 			return Samples.map((sample) => {
 				const { SampleID, TissueType, Characteristics } = sample;
@@ -204,6 +217,9 @@ export const preprocessRnaseqData = (data) => {
 					SampleID || '',
 					escapeCsvField(TissueType || ''),
 					escapeCsvField(Characteristics?.join(' | ') || ''),
+					escapeCsvField(PMID || ''),
+					escapeCsvField(PMID_Title || ''), 
+					escapeCsvField(Abstract || ''), 
 				].join(delimiter); // Use the specified delimiter
 			});
 		});
