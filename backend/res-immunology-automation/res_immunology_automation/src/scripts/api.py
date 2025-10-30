@@ -3941,8 +3941,9 @@ async def get_gwas_associations_vep(request: DiseasesRequest, redis: Redis = Dep
                     gwas_associations_file = os.path.join(CACHE_DIR_PATH, gwas_associations_file.split('/')[-1])
                     
                     print("gwas_associations_file: ", gwas_associations_file)
-                    if gwas_associations_file:
-                        gwas_disease_file_path = generate_vep(studies, requested_efo, gwas_associations_file)
+                    if os.path.exists(gwas_associations_file):
+                        print("Generating VEP data")
+                        gwas_disease_file_path = generate_vep(gwas_associations_file, gwas_disease_file_path)
                         
                         if gwas_disease_file_path and os.path.isfile(gwas_disease_file_path):
                             response[disease] = gwas_disease_file_path        

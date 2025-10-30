@@ -90,52 +90,52 @@ def prepare_variants_data(df):
         new_df[v] = df[k]
     return new_df.sort_values("Chromosome")
 
-def prepare_vep_data(df):
-    """
-    Drop unnecessary columns from variants data 
-    """
-    print("Adjusting and Sorting by Chromosome")
-    new_df = pd.DataFrame() 
-    df.columns = [col.strip() for col in df.columns]  # Clean up column names
+def prepare_vep_data(new_df):
+    # """
+    # Drop unnecessary columns from variants data 
+    # """
+    # print("Adjusting and Sorting by Chromosome")
+    # new_df = pd.DataFrame() 
+    # df.columns = [col.strip() for col in df.columns]  # Clean up column names
     
-    required_columns = {"CHR_ID", "CHR_POS", "P-VALUE", "SNPS"}
-    other_cols = {
-        "PUBMEDID":"PubMed ID",
-        "STRONGEST SNP-RISK ALLELE": "Variant and Risk Allele",
-        "SNPS": "rsID", 
-        "FIRST AUTHOR": "Author",
-        "MAPPED_GENE": "Mapped gene(s)",
-        "DISEASE/TRAIT":"Reported trait", 
-        "MAPPED_TRAIT": "Mapped Trait",
-        "STUDY ACCESSION": "Study Accession",
-        "RISK ALLELE FREQUENCY": "RAF",
-        "OR or BETA": "OR or BETA",
-        "95% CI (TEXT)": "CI"
-    }
+    # required_columns = {"CHR_ID", "CHR_POS", "P-VALUE", "SNPS"}
+    # other_cols = {
+    #     "PUBMEDID":"PubMed ID",
+    #     "STRONGEST SNP-RISK ALLELE": "Variant and Risk Allele",
+    #     "SNPS": "rsID", 
+    #     "FIRST AUTHOR": "Author",
+    #     "MAPPED_GENE": "Mapped gene(s)",
+    #     "DISEASE/TRAIT":"Reported trait", 
+    #     "MAPPED_TRAIT": "Mapped Trait",
+    #     "STUDY ACCESSION": "Study Accession",
+    #     "RISK ALLELE FREQUENCY": "RAF",
+    #     "OR or BETA": "OR or BETA",
+    #     "95% CI (TEXT)": "CI"
+    # }
 
-    if not required_columns.issubset(df.columns):
-        raise ValueError(f"TSV file must contain these columns: {required_columns}")
+    # if not required_columns.issubset(df.columns):
+    #     raise ValueError(f"TSV file must contain these columns: {required_columns}")
     
-    # --- ✅ Proper Decimal-safe handling of P-VALUE ---
-    if "Neglog10(pvalue)" not in df.columns:
-        df["P-VALUE_decimal"] = df["P-VALUE"].apply(safe_to_decimal)
-        new_df['pvalue'] = df["P-VALUE_decimal"]
-        # new_df['pvalue'] = df['P-VALUE'].apply(lambda x: float(x) if not x.is_nan() else np.nan)
-        new_df["Neglog10(pvalue)"] = df["P-VALUE_decimal"].apply(neglog10_decimal)
-    else:
-        new_df['pvalue'] = pd.to_numeric(df["P-VALUE"], errors="coerce")
-        new_df["Neglog10(pvalue)"] = pd.to_numeric(df["Neglog10(pvalue)"], errors="coerce")
+    # # --- ✅ Proper Decimal-safe handling of P-VALUE ---
+    # if "Neglog10(pvalue)" not in df.columns:
+    #     df["P-VALUE_decimal"] = df["P-VALUE"].apply(safe_to_decimal)
+    #     new_df['pvalue'] = df["P-VALUE_decimal"]
+    #     # new_df['pvalue'] = df['P-VALUE'].apply(lambda x: float(x) if not x.is_nan() else np.nan)
+    #     new_df["Neglog10(pvalue)"] = df["P-VALUE_decimal"].apply(neglog10_decimal)
+    # else:
+    #     new_df['pvalue'] = pd.to_numeric(df["P-VALUE"], errors="coerce")
+    #     new_df["Neglog10(pvalue)"] = pd.to_numeric(df["Neglog10(pvalue)"], errors="coerce")
 
-    # --- Chromosome handling ---
-    df["Chromosome"] = pd.Categorical(df["CHR_ID"], categories=[str(i) for i in range(1, 23)] + ["X", "Y"], ordered=True)
-    new_df["Chromosome"] = df["Chromosome"].cat.remove_unused_categories()
-    new_df["Position"] = pd.to_numeric(df["CHR_POS"], errors="coerce")
-    new_df['rsID'] = df['SNPS']
+    # # --- Chromosome handling ---
+    # df["Chromosome"] = pd.Categorical(df["CHR_ID"], categories=[str(i) for i in range(1, 23)] + ["X", "Y"], ordered=True)
+    # new_df["Chromosome"] = df["Chromosome"].cat.remove_unused_categories()
+    # new_df["Position"] = pd.to_numeric(df["CHR_POS"], errors="coerce")
+    # new_df['rsID'] = df['SNPS']
 
-    # --- Copy other columns ---
-    for k, v in other_cols.items():
-        if k in df.columns:
-            new_df[v] = df[k]
+    # # --- Copy other columns ---
+    # for k, v in other_cols.items():
+    #     if k in df.columns:
+    #         new_df[v] = df[k]
 
     # VEP annotation
     print("VEP Annotation")
@@ -189,14 +189,15 @@ def generate_vep(variants_associate_path: str, vep_associate_path: str):
     df = None
     try:
         # variants_associate_path = os.path.join(gwas_data_path, f'{requested_efo}.tsv')
-        if os.path.exists(variants_associate_path):
-            df = df.read_csv(variants_associate_path)
-            df = prepare_vep_data(df)
-            df.to_csv(vep_associate_path, sep='\t', index=False)
-            return vep_associate_path
-    
-        else:
-            return None
+        print("Reading:", variants_associate_path)
+        df = pd.read_csv(variants_associate_path, sep='\t')
+        print("DataFrame head:\n", df.head())
+
+        df = prepare_vep_data(df)
+
+        df.to_csv(vep_associate_path, sep='\t', index=False)
+        print("Saved VEP data to:", vep_associate_path)
+        
     except ValueError as e:
         return None
 
