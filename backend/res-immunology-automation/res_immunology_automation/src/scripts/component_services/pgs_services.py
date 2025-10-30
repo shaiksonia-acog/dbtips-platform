@@ -273,8 +273,6 @@ def annotate_pgs_varinats(pgs_file_url):
     # rsid_to_score = dict(list(rsid_to_score.items())[:10])
     print(f"Total variants: {len(rsid_to_score)}")
 
-    print("rsid_to_score")
-    print(rsid_to_score)
 
     # Positive and negative lists
     positive_values = [v for v in rsid_to_score.values() if v > 0]
@@ -312,9 +310,9 @@ def annotate_pgs_varinats(pgs_file_url):
     else:
         raise ValueError("Mixed or unrecognized variant ID format in input list.")
 
-    # Print first few annotations
-    for rsid, genes in list(rsid_to_genes.items())[:5]:
-        print(f"{rsid}: {genes}")
+    # # Print first few annotations
+    # for rsid, genes in list(rsid_to_genes.items())[:5]:
+    #     print(f"{rsid}: {genes}")
 
     rows = []
     for rsid, genes in rsid_to_genes.items():
@@ -324,7 +322,7 @@ def annotate_pgs_varinats(pgs_file_url):
 
     df = pd.DataFrame(rows, columns=["rsid", "gene", "score"])
     print("Variant-to-Gene Annotation")
-    print(df)
+    print(df.shape)
 
     # # ✅ 1️⃣ Compute cumulative score per gene
     # gene_scores = df.groupby("gene", as_index=False)["score"].sum()
@@ -353,7 +351,7 @@ def annotate_pgs_varinats(pgs_file_url):
     gene_scores = gene_scores[["gene", "Percent risk score for gene", "Percent protective score for gene", "Overall effect of gene (in per cent) in disease risk prediction"]]
 
     gene_dict = gene_scores.set_index("gene").to_dict(orient="index")
-    print(gene_dict)
+    print(f"Dictionary has been created for {pgs_file_url}")
 
     return gene_dict
 

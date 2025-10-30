@@ -5,6 +5,8 @@ import time
 import json 
 from typing import List, Dict, Any
 
+from .pgs_services import annotate_pgs_varinats
+
 max_retries = 3
 
 PGS_BASE = "https://www.pgscatalog.org/rest"
@@ -243,6 +245,7 @@ def fetch_pgs_data(disease_name, trait_id, include_child_traits=True):
         # Add rist and protection score for all the genes for each study
         for pgs_study in pgs_study_lst:
             scoring_url = pgs_study.get("PGS Scoring File")
+            print("scoring_url", scoring_url)
             if scoring_url:
                 targets_score_dict = annotate_pgs_varinats(scoring_url)
                 pgs_study["targets_score"] = targets_score_dict
