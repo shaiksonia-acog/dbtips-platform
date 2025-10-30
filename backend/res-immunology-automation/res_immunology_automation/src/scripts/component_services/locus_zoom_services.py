@@ -53,44 +53,44 @@ def filter_asso_by_efo_id(studies: List[str], efo_id: str) -> pd.DataFrame:
         raise FileNotFoundError("The GWAS Acssociations data file does not exist.")
 
 # Filter columns in variants file
-# def prepare_variants_data(df):
-#     """
-#     Drop unnecessary columns from variants data 
-#     """
-#     print("Adjusting and Sorting by Chromosome")
-#     new_df = pd.DataFrame() 
-#     df.columns = [col.strip() for col in df.columns]  # Clean up column names
-    
-#     # Detect necessary columns for plotting
-#     required_columns = {"CHR_ID", "CHR_POS", "P-VALUE", "SNPS"}
-#     other_cols = {
-#                 "PUBMEDID":"PubMed ID", "STRONGEST SNP-RISK ALLELE": "Variant and Risk Allele","SNPS": "rsID", 
-#                 "FIRST AUTHOR": "Author", "MAPPED_GENE": "Mapped gene(s)", "DISEASE/TRAIT":"Reported trait", 
-#                 "MAPPED_TRAIT": "Mapped Trait",
-#                 "STUDY ACCESSION": "Study Accession", "RISK ALLELE FREQUENCY": "RAF", "OR or BETA": "OR or BETA",
-#                 "95% CI (TEXT)": "CI"
-#                 }
-#     if not required_columns.issubset(df.columns):
-#         raise ValueError(f"TSV file must contain these columns: {required_columns}")
-    
-#     # Add derived columns if necessary
-#     if "Neglog10(pvalue)" not in df.columns:
-#         df["P-VALUE"] = df["P-VALUE"].apply(safe_to_decimal)
-#         df["P-VALUE"] = pd.to_numeric(df["P-VALUE"], errors="coerce")
-#         new_df['pvalue'] = df['P-VALUE']
-#         # new_df["Neglog10(pvalue)"] = -np.log10(df["P-VALUE"].replace(0, np.nan))  # Avoid log(0) error
-#         df["Neglog10(pvalue)"] = df["P-VALUE"].apply(neglog10_decimal)
-
-#     # Convert types
-#     df["Chromosome"] = pd.Categorical(df["CHR_ID"], categories=[str(i) for i in range(1, 23)] + ["X", "Y"], ordered=True)
-#     new_df["Chromosome"] = df["Chromosome"].cat.remove_unused_categories()
-#     new_df["Position"] = pd.to_numeric(df["CHR_POS"], errors="coerce")
-#     new_df['rsID'] = df['SNPS']
-#     for k,v in other_cols.items():
-#         new_df[v] = df[k]
-#     return new_df.sort_values("Chromosome")
-
 def prepare_variants_data(df):
+    """
+    Drop unnecessary columns from variants data 
+    """
+    print("Adjusting and Sorting by Chromosome")
+    new_df = pd.DataFrame() 
+    df.columns = [col.strip() for col in df.columns]  # Clean up column names
+    
+    # Detect necessary columns for plotting
+    required_columns = {"CHR_ID", "CHR_POS", "P-VALUE", "SNPS"}
+    other_cols = {
+                "PUBMEDID":"PubMed ID", "STRONGEST SNP-RISK ALLELE": "Variant and Risk Allele","SNPS": "rsID", 
+                "FIRST AUTHOR": "Author", "MAPPED_GENE": "Mapped gene(s)", "DISEASE/TRAIT":"Reported trait", 
+                "MAPPED_TRAIT": "Mapped Trait",
+                "STUDY ACCESSION": "Study Accession", "RISK ALLELE FREQUENCY": "RAF", "OR or BETA": "OR or BETA",
+                "95% CI (TEXT)": "CI"
+                }
+    if not required_columns.issubset(df.columns):
+        raise ValueError(f"TSV file must contain these columns: {required_columns}")
+    
+    # Add derived columns if necessary
+    if "Neglog10(pvalue)" not in df.columns:
+        df["P-VALUE"] = df["P-VALUE"].apply(safe_to_decimal)
+        df["P-VALUE"] = pd.to_numeric(df["P-VALUE"], errors="coerce")
+        new_df['pvalue'] = df['P-VALUE']
+        # new_df["Neglog10(pvalue)"] = -np.log10(df["P-VALUE"].replace(0, np.nan))  # Avoid log(0) error
+        df["Neglog10(pvalue)"] = df["P-VALUE"].apply(neglog10_decimal)
+
+    # Convert types
+    df["Chromosome"] = pd.Categorical(df["CHR_ID"], categories=[str(i) for i in range(1, 23)] + ["X", "Y"], ordered=True)
+    new_df["Chromosome"] = df["Chromosome"].cat.remove_unused_categories()
+    new_df["Position"] = pd.to_numeric(df["CHR_POS"], errors="coerce")
+    new_df['rsID'] = df['SNPS']
+    for k,v in other_cols.items():
+        new_df[v] = df[k]
+    return new_df.sort_values("Chromosome")
+
+def prepare_vep_data(df):
     """
     Drop unnecessary columns from variants data 
     """
@@ -138,6 +138,7 @@ def prepare_variants_data(df):
             new_df[v] = df[k]
 
     # VEP annotation
+    print("VEP Annotation")
     variant_list = (
     new_df["Variant and Risk Allele"]
     .dropna()             # remove missing values
@@ -163,7 +164,7 @@ def prepare_variants_data(df):
 
     # return new_df.sort_values("Chromosome")
 
-def load_data(studies: List[str], requested_efo:str, variants_associate_path: str) -> str:
+def generate_variants(studies: List[str], requested_efo:str, variants_associate_path: str) -> str:
 
     df = None
     try:
@@ -175,6 +176,8 @@ def load_data(studies: List[str], requested_efo:str, variants_associate_path: st
             df.to_csv("filtered.df")
             df = prepare_variants_data(df)
             df.to_csv(variants_associate_path, sep='\t', index=False)
+            print("Generated variants data")
+            
         return variants_associate_path
     except ValueError as e:
         return None
@@ -182,3 +185,31 @@ def load_data(studies: List[str], requested_efo:str, variants_associate_path: st
     except FileNotFoundError as e:
         raise e
     
+def generate_vep(variants_associate_path: str, vep_associate_path: str):
+    df = None
+    try:
+        # variants_associate_path = os.path.join(gwas_data_path, f'{requested_efo}.tsv')
+        if os.path.exists(variants_associate_path):
+            df = df.read_csv(variants_associate_path)
+            df = prepare_vep_data(df)
+            df.to_csv(vep_associate_path, sep='\t', index=False)
+            return vep_associate_path
+    
+        else:
+            return None
+    except ValueError as e:
+        return None
+
+    except FileNotFoundError as e:
+        raise e
+
+if __name__ == "__main__":
+    disease = "cardiovascular diseases"
+    requested_efo = "EFO_0000319"
+    with open(f"/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease/{disease.replace(' ', '_').lower()}", "r") as f:
+        import json
+        data = json.load(f)
+        studies = data["/genomics/gwas-studies/"]
+        studies_ids = list(set([item["Study accession"] for item in gwas_studies if "Study accession" in item]))
+
+        load_data(studies_ids, requested_efo, f"/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease/{requested_efo}.tsv")

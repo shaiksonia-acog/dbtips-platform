@@ -111,7 +111,7 @@ from component_services.entity_search_services import lexical_phenotype_search, 
 import duckdb
 from duckdb import DuckDBPyConnection
 from component_services.gwas_services import get_gwas_studies, fetch_gwas_studies_including_related_measurements
-from component_services.locus_zoom_services import load_data
+from component_services.locus_zoom_services import generate_variants, generate_vep
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import FileResponse
 from fastapi.responses import FileResponse
@@ -3839,8 +3839,8 @@ async def plot_locus_zoom_new(request: DiseaseRequest, redis: Redis = Depends(ge
         traceback.print_exc()
         return None
 
-@app.post("/genomics/locus-zoom", tags=["Genomics"])
-async def plot_locus_zoom(request: DiseasesRequest, redis: Redis = Depends(get_redis),
+@app.post("/genomics/gwas-associations", tags=["Genomics"])
+async def get_gwas_associations(request: DiseasesRequest, redis: Redis = Depends(get_redis),
                             db: Session = Depends(get_db),
                             build_cache: bool=False):
     try:
@@ -3888,7 +3888,7 @@ async def plot_locus_zoom(request: DiseasesRequest, redis: Redis = Depends(get_r
                     # gwas_disease_file_path = load_data(efo_ids, requested_efo)
                     studies = list(set([item["Study accession"] for item in gwas_studies if "Study accession" in item]))
                     print("studies: ", len(studies), studies)
-                    gwas_disease_file_path = load_data(studies, requested_efo, gwas_disease_file_path)
+                    gwas_disease_file_path = generate_variants(studies, requested_efo, gwas_disease_file_path)
                     
                     if gwas_disease_file_path and os.path.isfile(gwas_disease_file_path):
                         response[disease] = gwas_disease_file_path
@@ -3898,6 +3898,50 @@ async def plot_locus_zoom(request: DiseasesRequest, redis: Redis = Depends(get_r
                 else:
                     response[disease] = gwas_disease_file_path
                 print("response: ", response)
+        return response
+
+    except Exception as e:
+        return None
+
+
+@app.post("/genomics/gwas-associations-vep", tags=["Genomics"])
+async def get_gwas_associations_vep(request: DiseasesRequest, redis: Redis = Depends(get_redis),
+                            db: Session = Depends(get_db),
+                            build_cache: bool=False):
+    try:
+        diseases: str = [disease.lower() for disease in request.diseases]
+        response = {}
+        converter = MeSHToEFOConverter()
+        CACHE_DIR_PATH = "cached_data_json/disease"
+        for disease in diseases:
+            efo_ids = []
+            # requested_efo = get_efo_id(disease.lower())
+            efo_details = converter.convert(disease.replace('_', ' ').lower())
+            if efo_details and efo_details.get('success'):
+                requested_efo = efo_details.get('efo_id').replace(":", "_")
+            print("efo_id: ", requested_efo)
+            gwas_disease_file_path = os.path.join(CACHE_DIR_PATH, f'{requested_efo}_vep.tsv')
+            if not os.path.exists(gwas_disease_file_path):
+                response[disease] = None
+                if build_cache == True:
+                    print("requested_efo: ", requested_efo)
+                    request_data = DiseasesRequest(diseases=[disease])
+                    # Make the POST request to the internal API endpoint
+                    response = client.post("/genomics/gwas-associations", json=request_data.dict())
+                    if response.status_code != 200:
+                        raise HTTPException(status_code=response.status_code, detail=response.json())
+                    
+                    gwas_associations = response.json()
+                    gwas_associations_file = gwas_associations[disease.replace(" ", "_")]
+                    if gwas_associations_file:
+                        gwas_disease_file_path = generate_vep(studies, requested_efo, gwas_disease_file_path)
+                        
+                        if gwas_disease_file_path and os.path.isfile(gwas_disease_file_path):
+                            response[disease] = gwas_disease_file_path        
+                       
+            else:
+                response[disease] = gwas_disease_file_path
+            print("response: ", response)
         return response
 
     except Exception as e:
