@@ -185,7 +185,7 @@ const Header = ({ app_state }) => {
             },
             {
               key: "manhattanPlot",
-              label: "Manhattan plot/Locuszoom",
+              label: "Manhattan plot",
             },
             {
               key: "pgsCatalog",
@@ -316,7 +316,7 @@ const Header = ({ app_state }) => {
             },
             {
               key: "manhattanPlot",
-              label: "Manhattan plot/Locuszoom",
+              label: "Manhattan plot",
             },
             {
               key: "pgsCatalog",
@@ -341,10 +341,7 @@ const Header = ({ app_state }) => {
           key: "knowledge-graph-evidence",
           label: "Disease pathways",
         },
-        {
-          key: "model-studies",
-          label: "Target perturbation phenotypes",
-        },
+        
       ],
     },
 
