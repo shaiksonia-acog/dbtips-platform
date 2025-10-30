@@ -322,7 +322,7 @@ async def run_endpoints(db_session, job_data):
 
         # Define endpoint categories 
         diseases_only_endpoints = [
-            # get_diseases_profiles,
+            get_diseases_profiles,
             get_diseases_profiles_llm,
             get_disease_gtr_data_semaphore,
             get_indication_pipeline_semaphore, 
@@ -365,7 +365,6 @@ async def run_endpoints(db_session, job_data):
         ]
 
         target_disease_endpoints = [
-            get_target_pipeline_semaphore,
             get_evidence_target_literature,
             search_patents,
             run_enhancement_pipeline,
@@ -393,7 +392,7 @@ async def run_endpoints(db_session, job_data):
                         response = await endpoint(request_data, db=db, build_cache=True)
                     elif endpoint.__name__ in ["get_top_10_literature", 'get_key_influencers']:
                         response = await endpoint(request_data)
-                    elif endpoint.__name__ in ['get_evidence_literature_semaphore', 'get_diseases_profiles_llm', 'get_disease_gtr_data_semaphore', 'pgs_catalog_data', 'plot_locus_zoom', 'get_rna_sequence_semaphore']:
+                    elif endpoint.__name__ in ['get_evidence_literature_semaphore', 'get_diseases_profiles_llm', 'get_disease_gtr_data_semaphore', 'pgs_catalog_data', 'get_gwas_associations', 'get_gwas_associations_vep', 'get_rna_sequence_semaphore']:
                         response = await endpoint(request_data, redis=redis, db=db, build_cache=True)
                     else:
                         response = await endpoint(request_data, redis=redis, db=db)
