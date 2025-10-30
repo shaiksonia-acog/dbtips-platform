@@ -3849,23 +3849,24 @@ async def get_gwas_associations(request: DiseasesRequest, redis: Redis = Depends
         converter = MeSHToEFOConverter()
         CACHE_DIR_PATH = "cached_data_json/disease"
         for disease in diseases:
-            if build_cache == True:
-                # print('disease: ', disease)
-                # efo_id: str = get_efo_id(disease)
-                # gwas_disease_file_path = os.path.join(GWAS_DATA_DIR, f'{efo_id}.tsv')
-                # print("gwas_disease_file_path: ", gwas_disease_file_path)
-                # if not os.path.exists(gwas_disease_file_path):
-                #     print("path doesn't exists")
-                #     gwas_disease_file_path = load_data(efo_id)
-                # print("gwas_disease_file_path: ", gwas_disease_file_path)
-                efo_ids = []
-                # requested_efo = get_efo_id(disease.lower())
-                efo_details = converter.convert(disease.replace('_', ' ').lower())
-                if efo_details and efo_details.get('success'):
-                    requested_efo = efo_details.get('efo_id').replace(":", "_")
-                print("efo_id: ", requested_efo)
-                gwas_disease_file_path = os.path.join(CACHE_DIR_PATH, f'{requested_efo}.tsv')
-                if not os.path.exists(gwas_disease_file_path):
+            
+            # print('disease: ', disease)
+            # efo_id: str = get_efo_id(disease)
+            # gwas_disease_file_path = os.path.join(GWAS_DATA_DIR, f'{efo_id}.tsv')
+            # print("gwas_disease_file_path: ", gwas_disease_file_path)
+            # if not os.path.exists(gwas_disease_file_path):
+            #     print("path doesn't exists")
+            #     gwas_disease_file_path = load_data(efo_id)
+            # print("gwas_disease_file_path: ", gwas_disease_file_path)
+            efo_ids = []
+            # requested_efo = get_efo_id(disease.lower())
+            efo_details = converter.convert(disease.replace('_', ' ').lower())
+            if efo_details and efo_details.get('success'):
+                requested_efo = efo_details.get('efo_id').replace(":", "_")
+            print("efo_id: ", requested_efo)
+            gwas_disease_file_path = os.path.join(CACHE_DIR_PATH, f'{requested_efo}.tsv')
+            if not os.path.exists(gwas_disease_file_path):
+                if build_cache == True:
                     print("requested_efo: ", requested_efo)
                     request_data = DiseasesRequest(diseases=[disease])
                     # Make the POST request to the internal API endpoint
@@ -3896,7 +3897,9 @@ async def get_gwas_associations(request: DiseasesRequest, redis: Redis = Depends
                     else:
                         response[disease] = None
                 else:
-                    response[disease] = gwas_disease_file_path
+                    response[disease] = None
+            else:
+                response[disease] = gwas_disease_file_path
                 print("response: ", response)
         return response
 
@@ -3912,7 +3915,7 @@ async def get_gwas_associations_vep(request: DiseasesRequest, redis: Redis = Dep
         diseases: str = [disease.lower() for disease in request.diseases]
         response = {}
         converter = MeSHToEFOConverter()
-        CACHE_DIR_PATH = "cached_data_json/disease"
+        CACHE_DIR_PATH = "/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease"
         for disease in diseases:
             efo_ids = []
             # requested_efo = get_efo_id(disease.lower())
@@ -3921,6 +3924,8 @@ async def get_gwas_associations_vep(request: DiseasesRequest, redis: Redis = Dep
                 requested_efo = efo_details.get('efo_id').replace(":", "_")
             print("efo_id: ", requested_efo)
             gwas_disease_file_path = os.path.join(CACHE_DIR_PATH, f'{requested_efo}_vep.tsv')
+            print("gwas_disease_file_path: ", gwas_disease_file_path)
+            
             if not os.path.exists(gwas_disease_file_path):
                 response[disease] = None
                 if build_cache == True:
@@ -3932,9 +3937,12 @@ async def get_gwas_associations_vep(request: DiseasesRequest, redis: Redis = Dep
                         raise HTTPException(status_code=response.status_code, detail=response.json())
                     
                     gwas_associations = response.json()
-                    gwas_associations_file = gwas_associations[disease.replace(" ", "_")]
+                    gwas_associations_file = gwas_associations[disease.lower()]
+                    gwas_associations_file = os.path.join(CACHE_DIR_PATH, gwas_associations_file.split('/')[-1])
+                    
+                    print("gwas_associations_file: ", gwas_associations_file)
                     if gwas_associations_file:
-                        gwas_disease_file_path = generate_vep(studies, requested_efo, gwas_disease_file_path)
+                        gwas_disease_file_path = generate_vep(studies, requested_efo, gwas_associations_file)
                         
                         if gwas_disease_file_path and os.path.isfile(gwas_disease_file_path):
                             response[disease] = gwas_disease_file_path        
