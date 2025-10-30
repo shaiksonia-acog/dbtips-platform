@@ -86,7 +86,7 @@ const Paralogs = ({ target }) => {
 			return (
 				<div className="bg-white p-3 border border-gray-300 rounded shadow-lg">
 					<p className="font-semibold text-gray-800 capitalize">{data.Species}</p>
-					<p className="text-sm text-blue-600 font-medium">Gene: {data["Gene1 Symbol"].toUpperCase()}</p>
+					<p className="text-sm text-blue-600 font-medium">Gene: {data["Gene2 Symbol"].toUpperCase()}</p>
 					<p className="text-sm text-gray-600">
 						Identity Score: {data.identityScore.toFixed(3)}
 					</p>

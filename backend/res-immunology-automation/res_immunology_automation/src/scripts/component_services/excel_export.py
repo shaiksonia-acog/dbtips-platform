@@ -27,32 +27,38 @@ def process_approved_drug_data(target_data):
     """
     Process the drug data and dynamically extract parent disease areas from disease_tree_numbers.
     
-    :param target_data: Dictionary containing 'target_pipeline' (drug data) and 'disease_tree_numbers' (mapping)
-    :return: List of processed drug data with dynamically added parent disease areas
+    If disease_tree_numbers mapping is empty, include all records without filtering.
     """
-    # Extract disease area mapping from target data
     mapping = target_data.get('disease_tree_numbers', {})
-    
-    # List to hold the final approved drug data
+
     approved_drug_data = []
-    
-    # Iterate through each drug in the 'target_pipeline'
+
+    # If mapping is empty, skip parent indication extraction
+    if not mapping:
+        for row in target_data['target_pipeline']:
+            # Directly append all rows with a default disease area label
+            approved_drug_data.append({**row, 'diseaseArea': row.get("Disease Area", "")})
+        return approved_drug_data
+
+    # Otherwise, process normally
     for row in target_data['target_pipeline']:
-        # Extract disease tree numbers from the drug's data
         disease_tree_numbers = row.get('disease_tree_numbers', [])
-        
-        # Find the matching parent disease area for each disease_tree_number
-        all_matching_indications = set()  # Use a set to avoid duplicate disease areas
+
+        all_matching_indications = set()
         for disease_tree_number in disease_tree_numbers:
             parent_area = extract_parent_indication_from_tree_number(disease_tree_number, mapping)
             if parent_area:
                 all_matching_indications.add(parent_area)
-        
-        # For each matching parent disease area, add it to the row
-        for indication in all_matching_indications:
-            approved_drug_data.append({**row, 'diseaseArea': indication})
-    
+
+        # If no matching indication found, still include the record
+        if not all_matching_indications:
+            approved_drug_data.append({**row, 'diseaseArea': "Not Known"})
+        else:
+            for indication in all_matching_indications:
+                approved_drug_data.append({**row, 'diseaseArea': indication})
+
     return approved_drug_data
+
 
 def separate(value):
     if not value:
@@ -564,6 +570,9 @@ def process_target_pipeline(data: Dict[str, Any]) -> None:
 
     # Clear existing rows in "Pipeline_Data" sheet
     for row in ws.iter_rows(min_row=2):
+        for cell in row:
+            cell.value = None
+    for row in approved_drugs_sheet.iter_rows(min_row=2):
         for cell in row:
             cell.value = None
     approved_drug_data = process_approved_drug_data(data)
@@ -1094,7 +1103,7 @@ def process_literature_excel(data,selectedLiteratureData):
             pubmedLink = study["PubMedLink"]
             tableAnalysis = ", ".join(study["tables_analysis"])
             supplementary_analysis = study["supplementary_analysis"]
-            childDisease=", ".join(study["mapped_diseases"]) 
+            childDisease=", ".join(study.get("mapped_diseases", [])) 
             row_data = [
                 diseaseArea,childDisease, year,category,title,author,citedBy,tableAnalysis,supplementary_analysis
             ]
