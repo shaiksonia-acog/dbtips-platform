@@ -90,7 +90,35 @@ def get_mesh_term_for_disease(disease_name):
         print(f"Error parsing XML: {e}")
         return None
 
+def build_species_source_url(species_name: str, species_id: str) -> str:
+    """
+    Return the full source URL for a given species and disease ID from the Alliance Genome API.
 
+    Args:
+        species_name (str): The species name (e.g., "Mus musculus").
+        species_id (str): The Disease Ontology ID (e.g., "DOID:1287").
+
+    Returns:
+        str: The constructed source URL.
+    """
+    if(species_name=="Caenorhabditis elegans"):
+        species_id=species_id.replace("WB:","")
+    # Map of species to their full API URL patterns
+    species_url_map = {
+        "Mus musculus": f"http://www.informatics.jax.org/allele/genoview/{species_id}",
+        "Danio rerio": f"https://zfin.org/{species_id}",
+        "Rattus norvegicus": f"https://rgd.mcw.edu/rgdweb/elasticResults.html?term={species_id}",
+        "Caenorhabditis elegans": f"https://www.wormbase.org/db/get?name={species_id}",
+    }
+
+    # Clean up the species name input
+    species_name = species_name.strip()
+
+    # Return the corresponding URL
+    if species_name not in species_url_map:
+        raise ValueError(f"Unsupported species name: '{species_name}'. Available options: {', '.join(species_url_map.keys())}")
+
+    return species_url_map[species_name]
 
 def build_query(target: str, disease: str, target_terms_file: str, disease_synonyms_file: str) -> str:
     """
@@ -2069,6 +2097,7 @@ def fetch_mouse_model_data_alliancegenome(disease_name: str, efo_id:str) -> List
             row = {
                 "Model": association.get("subject", {}).get("agmFullName", {}).get("displayText", ""),  # Model name
                 "Species": association.get("subject", {}).get("taxon", {}).get("name", ""),  # Species
+                "Species Id":association.get("subject", {}).get("primaryExternalId", ""),
                 "ExperimentalCondition": association.get("experimentalConditionList", []),  # Experimental conditions
                 "Association": association.get("generatedRelationString", ""),  # Association type
                 "DiseaseQualifiers": association.get("diseaseQualifiers"),  # Disease qualifiers
@@ -2090,9 +2119,10 @@ def fetch_mouse_model_data_alliancegenome(disease_name: str, efo_id:str) -> List
                 else ""
                     )
             }
+            row["SourceURL"] = build_species_source_url(row["Species"], row["Species Id"])
         
             extracted_data.append(row)
-        extracted_data=add_source_urls_to_records(extracted_data,disease_id)
+        # extracted_data=add_source_urls_to_records(extracted_data,disease_id)
         # Return the processed data as JSON
         return extracted_data
 
