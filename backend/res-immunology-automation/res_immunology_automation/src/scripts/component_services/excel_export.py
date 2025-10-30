@@ -429,7 +429,7 @@ def process_patent_data(data: List[Dict[str, Any]]) -> str:
     :return: The output file path.
     """
     # Define template path and output path inside the function
-    template_path = "../excel_export_templates/patent.xltx"
+    template_path = "../excel_export_templates/Patents_template.xltx"
     output_path = "patent_excel.xlsx"
 
     # Initialize Workbook
