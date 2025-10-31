@@ -164,14 +164,17 @@ const ApprovedDrug = ({
         field: "Disease",
         cellRenderer: (params) => capitalizeFirstLetter(params.value),
       },
-      { field: "Drug" },
+      { 
+        field: "Drug",
+        cellRenderer: (params) => params.value.toUpperCase()
+      },
       {
         headerName: "Blackbox warning",
         field: "blackbox",
         cellRenderer: renderBlackboxCell,
       },
     ],
-    [renderBlackboxCell]
+    [renderBlackboxCell, diseaseAreaFilter]
   );
   const visibleColumns = useMemo(
     () => columnDefs.filter((col) => selectedColumns.includes(col.field)),

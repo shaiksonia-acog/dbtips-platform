@@ -109,6 +109,7 @@ const CompetitiveLandscape = ({ target, indications, diseaseAreaFilter }) => {
        {
         field: "Drug",
         flex: 2,
+        cellRenderer: (params) => params.value.toUpperCase(),
       },
       {
         field: "Source URLs",
