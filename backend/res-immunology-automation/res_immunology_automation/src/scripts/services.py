@@ -19,7 +19,7 @@ from component_services.drug_extraction import chembl_sessions_request
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from component_services.disease_area_mapping_utils import efoid_to_meshid_mapper, map_mesh_to_disease_area, get_mesh_tree_numbers_of_disease, disease_to_mesh_uid, mesh_uid_to_tree_numbers
-                                                        
+import json                                                 
 from utils import get_efo_id
 
 # Set up logger
@@ -1701,7 +1701,7 @@ def split_OT_results_by_trial(all_trials):
             splitted_trials.append(trial_copy)
     return splitted_trials
 
-def enrich_target_trials(target_input: str):
+def target_pipeline_from_source(target_input: str):
     """
     Generate target pipeline results given target
     """
@@ -1862,24 +1862,10 @@ def enrich_target_trials(target_input: str):
 
     db_client.close() 
 
+    
+    diseases = list(set([r["Disease"].strip().lower().replace(" ", "_") for r in results if r.get("Disease") and r["Disease"] != "NA"]))
+    
     if len(results):
-        diseases = list(set([r["Disease"].strip().lower().replace(" ", "_") for r in results if r.get("Disease") and r["Disease"] != "NA"]))
-        logger.info("Fetching entries from Strapi")
-        strapi_entries = get_target_pipeline_strapi_all([], target_input)
-        serialized_strapi_entries = []
-        for entry in strapi_entries:
-            if "Source URLs" in entry:
-                if len(entry["Source URLs"]) == 1:
-                    entry['nct_id'] = entry["Source URLs"][0].split("/")[-1]
-                    serialized_strapi_entries.append(entry)
-                elif len(entry["Source URLs"]) > 1:
-                    for url in entry["Source URLs"]:
-                        splitted_results = {k:v for k,v in entry.items() if k!='Source URLs'}
-                        splitted_results['Source URLs'] = [url]
-                        splitted_results['nct_id'] = splitted_results["Source URLs"][0].split("/")[-1]
-                        serialized_strapi_entries.append(splitted_results)
-        results.extend(serialized_strapi_entries)
-
         logger.info("Fetching NCT Titles if doesn't exist")
         no_title_nct_ids = [t["nct_id"].strip(',').strip() for t in results if t.get("nct_id", "")!="" if t.get("OfficialTitle", "")==""]
         if len(no_title_nct_ids):
@@ -1925,9 +1911,10 @@ def enrich_target_trials(target_input: str):
         disease_tree_numbers = {} 
         # disease_areas_list = []
         for entry in all_entries:
-            disease = entry['Disease']
-            if disease not in disease_tree_numbers and disease!="NA":
-                logger.info("Fetching Disease Tree Numbers")
+            disease = entry.get('Disease', "")
+
+            if disease not in disease_tree_numbers and (disease!="NA" or disease!="") :
+                logger.info(f"Fetching Disease Tree Numbers for {disease}")
                 # if 'efo_id' not in entry or 'mesh_id' not in entry or entry.get('efo_id', "").startswith("HP"):
                 if ('efo_id' not in entry
                     or 'mesh_id' not in entry
@@ -1938,13 +1925,13 @@ def enrich_target_trials(target_input: str):
                     if mesh_uid:
                         disease_tree_numbers[disease] = mesh_uid_to_tree_numbers(mesh_uid)
                     entry['efo_id'] = efo_id if efo_id else ""
+                    entry['mesh_id'] = ""
                     if efo_id:
                         mesh_ids =  efoid_to_meshid_mapper(entry["efo_id"])
                         if len(mesh_ids):
                             entry['mesh_id'] = mesh_ids[0]
-                        else:
-                            entry['mesh_id'] = ""
-
+                            
+                logger.info(f'Fetching tree numbers using mesh_id: {entry["mesh_id"]} and efo_id: {entry["efo_id"]}')
                 if entry["mesh_id"] != "":
                     disease_tree_numbers[disease] = [tn.split('/')[-1] for tn in get_mesh_tree_numbers_of_disease(disease, entry["mesh_id"])]
 
@@ -1960,113 +1947,135 @@ def enrich_target_trials(target_input: str):
         return all_entries, available
     return [], []
 
-def populate_strapi_for_target(target_input):
-    cache_dir_path = "/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/target"
-    cache_file_path = os.path.join(cache_dir_path, f"{target_input}.json")
-    endpoint= "/market-intelligence/target-pipeline/"
-    with open(cache_file_path, 'r') as f:
-        data = json.load(f)
-        results = data[endpoint]['target_pipeline']
-        diseases = list(set([r["Disease"].strip().lower().replace(" ", "_") for r in results if r.get("Disease") and r["Disease"] != "NA"]))
-        strapi_entries = get_target_pipeline_strapi_all([], target_input)
-        serialized_strapi_entries = []
-        for entry in strapi_entries:
-            if "Source URLs" in entry:
-                if len(entry["Source URLs"]) == 1:
-                    entry['nct_id'] = entry["Source URLs"][0].split("/")[-1]
-                    serialized_strapi_entries.append(entry)
-                elif len(entry["Source URLs"]) > 1:
-                    for url in entry["Source URLs"]:
-                        splitted_results = {k:v for k,v in entry.items() if k!='Source URLs'}
-                        splitted_results['Source URLs'] = [url]
-                        splitted_results['nct_id'] = splitted_results["Source URLs"][0].split("/")[-1]
-                        serialized_strapi_entries.append(splitted_results)
-        results.extend(serialized_strapi_entries)
+def populate_target_pipeline_from_strapi(target_input):
+    strapi_entries = get_target_pipeline_strapi_all([], target_input)
+    serialized_strapi_entries = []
+    for entry in strapi_entries:
+        if "Source URLs" in entry:
+            if len(entry["Source URLs"]) == 1:
+                entry['nct_id'] = entry["Source URLs"][0].split("/")[-1]
+                serialized_strapi_entries.append(entry)
+            elif len(entry["Source URLs"]) > 1:
+                for url in entry["Source URLs"]:
+                    splitted_results = {k:v for k,v in entry.items() if k!='Source URLs'}
+                    splitted_results['Source URLs'] = [url]
+                    splitted_results['nct_id'] = splitted_results["Source URLs"][0].split("/")[-1]
+                    serialized_strapi_entries.append(splitted_results)
+    results = serialized_strapi_entries
 
-        logger.info("Fetching NCT Titles if doesn't exist")
-        no_title_nct_ids = [t["nct_id"].strip(',').strip() for t in results if t.get("nct_id", "")!="" if t.get("OfficialTitle", "")==""]
-        if len(no_title_nct_ids):
-            title_map = fetch_nct_titles(no_title_nct_ids)
-            
-            logger.info("Mapping titles...")
-            for trial in results:
-                if trial.get('nct_id', "") in no_title_nct_ids:
-                    trial["OfficialTitle"] = title_map.get(trial["nct_id"], "")
+    logger.info("Fetching NCT Titles if doesn't exist")
+    no_title_nct_ids = [t["nct_id"].strip(',').strip() for t in results if t.get("nct_id", "")!="" if t.get("OfficialTitle", "")==""]
+    if len(no_title_nct_ids):
+        title_map = fetch_nct_titles(no_title_nct_ids)
         
-        # pmid_map = get_disease_pmid_nct_mapping(list(set([d['Disease'].replace("_", " ") for d in results if d['Disease'] != "NA"])))
-        logger.info("Mapping PMID with NCT ID")
-        # all_entries = get_pmids_for_nct_ids_target_pipeline(results, pmid_map)
-        for entry in results:
-            if not entry.get('PMIDs', []):
-                if entry.get('nct_id', "") != "":           
-                    entry['PMIDs'] = get_pmids_from_nctid(entry['nct_id'])
-                    
-                    if "WhyStopped" not in entry:
-                        time.sleep(0.1)
-                        print(f"adding why stopped for nctid: {entry.get('nct_id', '')}")          
-                        entry["WhyStopped"]= get_why_stopped(nct_id=entry.get("nct_id", ""))
-
-                    time.sleep(0.2)
-        
-        logger.info("Generating outcome status")
-        all_entries = add_outcome_status_target_pipeline(results)
-        
-        logger.info("Removing Duplicates")
-        all_entries = remove_duplicates(all_entries)
-        # print("len after: ", len(all_entries))
-        available = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries if r.get("Disease") and r["Disease"] != "NA"])))
-        
-        # with open("gucy1a1.json", "w") as f:
-        #     import json
-        #     json.dump(all_entries, f, indent=2)
+        logger.info("Mapping titles...")
+        for trial in results:
+            if trial.get('nct_id', "") in no_title_nct_ids:
+                trial["OfficialTitle"] = title_map.get(trial["nct_id"], "")
     
+    # pmid_map = get_disease_pmid_nct_mapping(list(set([d['Disease'].replace("_", " ") for d in results if d['Disease'] != "NA"])))
+    logger.info("Mapping PMID with NCT ID")
+    # all_entries = get_pmids_for_nct_ids_target_pipeline(results, pmid_map)
+    for entry in results:
+        if not entry.get('PMIDs', []):
+            if entry.get('nct_id', "") != "":           
+                entry['PMIDs'] = get_pmids_from_nctid(entry['nct_id'])
+                
+                if "WhyStopped" not in entry:
+                    time.sleep(0.1)
+                    print(f"adding why stopped for nctid: {entry.get('nct_id', '')}")          
+                    entry["WhyStopped"]= get_why_stopped(nct_id=entry.get("nct_id", ""))
+
+                time.sleep(0.2)
+    
+    logger.info("Generating outcome status")
+    all_entries = add_outcome_status_target_pipeline(results)
+    
+    logger.info("Removing Duplicates")
+    all_entries = remove_duplicates(all_entries)
+    # print("len after: ", len(all_entries))
+    available = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries if r.get("Disease") and r["Disease"] != "NA"])))
+    
+    # with open("gucy1a1.json", "w") as f:
+    #     import json
+    #     json.dump(all_entries, f, indent=2)
+
     # with open("gipr.json", "r") as f:
     #     import json
     #     all_entries = json.load(f)
     #     available = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries if r.get("Disease") and r["Disease"] != "NA"])))
 
-        # Generate Disease Areas
-        disease_tree_numbers = {} 
-        # disease_areas_list = []
-        for entry in all_entries:
-            disease = entry['Disease']
-            if not entry.get('disease_tree_numbers', []):
-                if disease not in disease_tree_numbers and disease!="NA":
-                    logger.info("Fetching Disease Tree Numbers")
-                    # if 'efo_id' not in entry or 'mesh_id' not in entry or entry.get('efo_id', "").startswith("HP"):
-                    if ('efo_id' not in entry
-                        or 'mesh_id' not in entry
-                        or str(entry.get('efo_id', '') or '').startswith('HP')):
-                        logger.debug("Fetch efo and mesh uid if not available")
-                        efo_id = get_efo_id(disease)
-                        mesh_uid = disease_to_mesh_uid(disease)
-                        if mesh_uid:
-                            disease_tree_numbers[disease] = mesh_uid_to_tree_numbers(mesh_uid)
-                        entry['efo_id'] = efo_id if efo_id else ""
-                        entry['mesh_id'] =  ""
+    # Generate Disease Areas
+    disease_tree_numbers = {} 
+    # disease_areas_list = []
+    for entry in all_entries:
+        disease = entry.get('Disease', "")
 
-                    if entry["mesh_id"] != "":
-                        disease_tree_numbers[disease] = [tn.split('/')[-1] for tn in get_mesh_tree_numbers_of_disease(disease, entry["mesh_id"])]
+        if disease not in disease_tree_numbers and (disease!="NA" or disease!="") :
+            logger.info(f"Fetching Disease Tree Numbers for {disease}")
+            # if 'efo_id' not in entry or 'mesh_id' not in entry or entry.get('efo_id', "").startswith("HP"):
+            if ('efo_id' not in entry
+                or 'mesh_id' not in entry
+                or str(entry.get('efo_id', '') or '').startswith('HP')):
+                logger.debug("Fetch efo and mesh uid if not available")
+                efo_id = get_efo_id(disease)
+                mesh_uid = disease_to_mesh_uid(disease)
+                if mesh_uid:
+                    disease_tree_numbers[disease] = mesh_uid_to_tree_numbers(mesh_uid)
+                entry['efo_id'] = efo_id if efo_id else ""
+                entry['mesh_id'] = ""
+                if efo_id:
+                    mesh_ids =  efoid_to_meshid_mapper(entry["efo_id"])
+                    if len(mesh_ids):
+                        entry['mesh_id'] = mesh_ids[0]
+                        
+            logger.info(f'Fetching tree numbers using mesh_id: {entry["mesh_id"]} and efo_id: {entry["efo_id"]}')
+            if entry["mesh_id"] != "":
+                disease_tree_numbers[disease] = [tn.split('/')[-1] for tn in get_mesh_tree_numbers_of_disease(disease, entry["mesh_id"])]
 
-                    elif entry["efo_id"] != "" or disease_tree_numbers[disease] == []:
-                        mesh_ids = efoid_to_meshid_mapper(entry["efo_id"])
-                        if len(mesh_ids) > 0:
-                            disease_tree_numbers[disease] = [tn.split('/')[-1] for tn in get_mesh_tree_numbers_of_disease(disease, mesh_ids[0])]
-                        else:
-                            disease_tree_numbers[disease] = []
-                    time.sleep(0.1)
-                entry['disease_tree_numbers'] = disease_tree_numbers[disease]
-            # disease_areas_list.extend(disease_areas[disease])
-        return all_entries, available
+            elif entry["efo_id"] != "" or disease_tree_numbers[disease] == []:
+                mesh_ids = efoid_to_meshid_mapper(entry["efo_id"])
+                if len(mesh_ids) > 0:
+                    disease_tree_numbers[disease] = [tn.split('/')[-1] for tn in get_mesh_tree_numbers_of_disease(disease, mesh_ids[0])]
+                else:
+                    disease_tree_numbers[disease] = []
+            time.sleep(0.1)
+        entry['disease_tree_numbers'] = disease_tree_numbers[disease]
+        # disease_areas_list.extend(disease_areas[disease])
+        
+    return all_entries, available
 
-if __name__ == "__main__":
-    # with open("gipr_op.json", "w") as f:
-    #     import json
-    #     results = enrich_target_trials("gipr", DBClient())
-    #     json.dump(results, f, indent=2)
-    target = "aplnr"
+def enrich_target_trials(target):
     
-    with open(f"{target}_op.json", "w") as f:
-        import json
-        all_entries, available = populate_strapi_for_target(target)
+    all_entries, available = target_pipeline_from_source(target)
+    with open(f"{target}_source.json", "w") as f:
         json.dump(all_entries, f, indent=2)
+    all_entries_strapi, available_strapi = populate_target_pipeline_from_strapi(target)
+    with open(f"{target}strapi.json", "w") as f:
+        json.dump(all_entries_strapi, f, indent=2)
+
+    all_entries.extend(all_entries_strapi)
+    available.extend(available_strapi)
+    return all_entries, list(set(available))
+
+def test(target):
+    with open(f"{target}_source.json", "r") as f:
+        all_entries = json.load(f)
+        available = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries if r.get("Disease") and r["Disease"] != "NA"])))
+
+    with open(f"{target}strapi.json", "r") as f:
+        all_entries_strapi = json.load(f)
+        available_strapi = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries_strapi if r.get("Disease") and r["Disease"] != "NA"])))
+
+    all_entries.extend(all_entries_strapi)
+    available.extend(available_strapi)
+    print("available: ", available)
+    return all_entries, list(set(available))
+if __name__ == "__main__":
+    target = "gucy1b1"
+    all_results, available_dis = enrich_target_trials(target)
+    with open(f"{target}.json", "w") as f:
+        json.dump(all_entries_strapi, f, indent=2)
+
+    # test(target)
+    
