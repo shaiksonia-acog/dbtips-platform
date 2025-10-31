@@ -139,7 +139,7 @@ app = FastAPI()
 client = TestClient(app)
 
 
-GWAS_DATA_DIR = "/app/res-immunology-automation/res_immunology_automation/src/gwas_data"
+GWAS_DATA_DIR = "/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease"
 
 
 logger = logging.getLogger(__name__)
@@ -5063,15 +5063,24 @@ async def get_excel_export(request: ExcelExportRequest):
             json_data1=response.json()
             # Fetch GWAS Associations Data
             association_path_list = []
-            for disease in filtered_diseases:
-                request_data = DiseaseRequest(disease=disease)
-                print("request_data: ", request_data.dict())
-                # Make the POST request to the internal API endpoint
-                response = client.post("/genomics/locus-zoom-new", json=request_data.dict())
-                if response.status_code != 200:
-                    raise HTTPException(status_code=response.status_code, detail=response.json())
+            # for disease in filtered_diseases:
+            #     request_data = DiseaseRequest(disease=disease)
+            #     print("request_data: ", request_data.dict())
+            #     # Make the POST request to the internal API endpoint
+            #     response = client.post("/genomics/locus-zoom-new", json=request_data.dict())
+            #     if response.status_code != 200:
+            #         raise HTTPException(status_code=response.status_code, detail=response.json())
 
-                association_path_list.append(response.json())
+            #     association_path_list.append(response.json())
+            request_data = DiseasesRequest(diseases=filtered_diseases)
+            print("request_data: ", request_data.dict())
+            # Make the POST request to the internal API endpoint
+            response = client.post("/genomics/gwas-associations", json=request_data.dict())
+            if response.status_code != 200:
+                raise HTTPException(status_code=response.status_code, detail=response.json())
+            asso_resp = response.json()
+            association_path_list = [v for k,v in asso_resp.items()]
+
             print("association_path_list: ", association_path_list)
             json_data2= tsv_to_json(association_path_list, filtered_diseases)
             print("exporting")

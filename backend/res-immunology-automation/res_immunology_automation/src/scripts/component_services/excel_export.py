@@ -895,7 +895,7 @@ def process_gwas_excel( data, association_data):
     associationRow = 2
     for diseaseArea, associations in association_data.items():
         for association in associations["gwas_associations"]:
-            disease=association["Mapped gene(s)"]
+            disease=association["Mapped Trait"]
             row_data = [
                 diseaseArea,disease, association["Study Accession"], association["Variant and Risk Allele"],
                 association["pvalue"], association["RAF"], association["OR or BETA"],
