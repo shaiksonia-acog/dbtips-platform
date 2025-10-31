@@ -1876,9 +1876,7 @@ def target_pipeline_from_source(target_input: str):
                 if trial.get('nct_id', "") in no_title_nct_ids:
                     trial["OfficialTitle"] = title_map.get(trial["nct_id"], "")
         
-        # pmid_map = get_disease_pmid_nct_mapping(list(set([d['Disease'].replace("_", " ") for d in results if d['Disease'] != "NA"])))
         logger.info("Mapping PMID with NCT ID")
-        # all_entries = get_pmids_for_nct_ids_target_pipeline(results, pmid_map)
         for entry in results:
             if entry.get('nct_id', "") != "":           
                 entry['PMIDs'] = get_pmids_from_nctid(entry['nct_id'])
@@ -1911,39 +1909,71 @@ def target_pipeline_from_source(target_input: str):
         disease_tree_numbers = {} 
         # disease_areas_list = []
         for entry in all_entries:
-            disease = entry.get('Disease', "")
+            disease = entry.get('Disease', "").strip()
 
-            if disease not in disease_tree_numbers and (disease!="NA" or disease!="") :
+            # Skip invalid or empty disease names
+            if disease in ("", "NA"):
+                logger.debug(f"Skipping invalid disease entry: '{disease}'")
+                entry['disease_tree_numbers'] = []
+                continue
+
+            # Fetch only if not already processed
+            if disease not in disease_tree_numbers:
                 logger.info(f"Fetching Disease Tree Numbers for {disease}")
-                # if 'efo_id' not in entry or 'mesh_id' not in entry or entry.get('efo_id', "").startswith("HP"):
+
+                # Step 1: Ensure we have valid efo_id and mesh_id
                 if ('efo_id' not in entry
                     or 'mesh_id' not in entry
-                    or str(entry.get('efo_id', '') or '').startswith('HP')):
-                    logger.debug("Fetch efo and mesh uid if not available")
+                    or str(entry.get('efo_id', '')).startswith('HP')):
+                    
+                    logger.debug(f"Fetching efo_id and mesh_uid for {disease}")
                     efo_id = get_efo_id(disease)
                     mesh_uid = disease_to_mesh_uid(disease)
+
                     if mesh_uid:
                         disease_tree_numbers[disease] = mesh_uid_to_tree_numbers(mesh_uid)
-                    entry['efo_id'] = efo_id if efo_id else ""
-                    entry['mesh_id'] = ""
-                    if efo_id:
-                        mesh_ids =  efoid_to_meshid_mapper(entry["efo_id"])
-                        if len(mesh_ids):
-                            entry['mesh_id'] = mesh_ids[0]
-                            
-                logger.info(f'Fetching tree numbers using mesh_id: {entry["mesh_id"]} and efo_id: {entry["efo_id"]}')
-                if entry["mesh_id"] != "":
-                    disease_tree_numbers[disease] = [tn.split('/')[-1] for tn in get_mesh_tree_numbers_of_disease(disease, entry["mesh_id"])]
 
-                elif entry["efo_id"] != "" or disease_tree_numbers[disease] == []:
-                    mesh_ids = efoid_to_meshid_mapper(entry["efo_id"])
-                    if len(mesh_ids) > 0:
-                        disease_tree_numbers[disease] = [tn.split('/')[-1] for tn in get_mesh_tree_numbers_of_disease(disease, mesh_ids[0])]
-                    else:
-                        disease_tree_numbers[disease] = []
+                    entry['efo_id'] = efo_id or ""
+                    entry['mesh_id'] = ""
+
+                    if efo_id:
+                        mesh_ids = efoid_to_meshid_mapper(efo_id)
+                        if mesh_ids:
+                            entry['mesh_id'] = mesh_ids[0]
+
+                logger.info(f'Fetching tree numbers using mesh_id: {entry["mesh_id"]} and efo_id: {entry["efo_id"]}')
+
+                # Step 2: Try fetching tree numbers by mesh_id
+                tree_numbers = []
+                if entry['mesh_id']:
+                    mesh_tree_nums = get_mesh_tree_numbers_of_disease(entry['mesh_id'])
+                    print("mesh_tree_nums from mesh: ", mesh_tree_nums)
+                    if mesh_tree_nums:
+                        tree_numbers = [tn.split('/')[-1] for tn in mesh_tree_nums]
+                
+                # Step 3: If still empty, try fetching via efo_id
+                if not tree_numbers and entry['efo_id']:
+                    mesh_ids = efoid_to_meshid_mapper(entry['efo_id'])
+                    print("mesh_ids using efo:", mesh_ids)
+                    # if mesh_ids:
+                    #     mesh_tree_nums = get_mesh_tree_numbers_of_disease(mesh_ids[0])
+                    #     print("mesh_tree_nums from efo: ", mesh_tree_nums)
+                    #     if mesh_tree_nums:
+                    #         tree_numbers = [tn.split('/')[-1] for tn in mesh_tree_nums]
+                    mesh_tree_nums = get_mesh_tree_numbers_of_disease(disease)
+                    print("mesh_tree_nums from mesh: ", mesh_tree_nums)
+                    if mesh_tree_nums:
+                        tree_numbers = [tn.split('/')[-1] for tn in mesh_tree_nums]
+
+                # Step 4: Assign collected or empty list
+                disease_tree_numbers[disease] = tree_numbers or []
+                print("disease_tree_numbers[disease]: ", disease_tree_numbers[disease])
+                # Avoid hammering APIs
                 time.sleep(0.1)
-            entry['disease_tree_numbers'] = disease_tree_numbers[disease]
-            # disease_areas_list.extend(disease_areas[disease])
+
+            # Always ensure this field is set
+            entry['disease_tree_numbers'] = disease_tree_numbers.get(disease, [])
+
         return all_entries, available
     return [], []
 
@@ -1973,9 +2003,7 @@ def populate_target_pipeline_from_strapi(target_input):
             if trial.get('nct_id', "") in no_title_nct_ids:
                 trial["OfficialTitle"] = title_map.get(trial["nct_id"], "")
     
-    # pmid_map = get_disease_pmid_nct_mapping(list(set([d['Disease'].replace("_", " ") for d in results if d['Disease'] != "NA"])))
     logger.info("Mapping PMID with NCT ID")
-    # all_entries = get_pmids_for_nct_ids_target_pipeline(results, pmid_map)
     for entry in results:
         if not entry.get('PMIDs', []):
             if entry.get('nct_id', "") != "":           
@@ -1987,12 +2015,12 @@ def populate_target_pipeline_from_strapi(target_input):
                     entry["WhyStopped"]= get_why_stopped(nct_id=entry.get("nct_id", ""))
 
                 time.sleep(0.2)
-    
+    all_entries = results
     logger.info("Generating outcome status")
-    all_entries = add_outcome_status_target_pipeline(results)
+    # all_entries = add_outcome_status_target_pipeline(results)
     
     logger.info("Removing Duplicates")
-    all_entries = remove_duplicates(all_entries)
+    
     # print("len after: ", len(all_entries))
     available = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries if r.get("Disease") and r["Disease"] != "NA"])))
     
@@ -2008,57 +2036,132 @@ def populate_target_pipeline_from_strapi(target_input):
     # Generate Disease Areas
     disease_tree_numbers = {} 
     # disease_areas_list = []
-    for entry in all_entries:
-        disease = entry.get('Disease', "")
+    # for entry in all_entries:
+    #     disease = entry.get('Disease', "")
 
-        if disease not in disease_tree_numbers and (disease!="NA" or disease!="") :
+    #     if disease not in disease_tree_numbers and disease not in ("", "NA"):
+    #         logger.info(f"Fetching Disease Tree Numbers for {disease}")
+    #         # if 'efo_id' not in entry or 'mesh_id' not in entry or entry.get('efo_id', "").startswith("HP"):
+    #         if ('efo_id' not in entry
+    #             or 'mesh_id' not in entry
+    #             or str(entry.get('efo_id', '') or '').startswith('HP')):
+    #             logger.debug("Fetch efo and mesh uid if not available")
+    #             efo_id = get_efo_id(disease)
+    #             mesh_uid = disease_to_mesh_uid(disease)
+    #             if mesh_uid:
+    #                 disease_tree_numbers[disease] = mesh_uid_to_tree_numbers(mesh_uid)
+    #             entry['efo_id'] = efo_id if efo_id else ""
+    #             entry['mesh_id'] = ""
+    #             if efo_id:
+    #                 mesh_ids =  efoid_to_meshid_mapper(entry["efo_id"])
+    #                 if len(mesh_ids):
+    #                     entry['mesh_id'] = mesh_ids[0]
+                        
+    #         logger.info(f'Fetching tree numbers using mesh_id: {entry["mesh_id"]} and efo_id: {entry["efo_id"]}')
+    #         if entry["mesh_id"] != "":
+    #             disease_tree_numbers[disease] = [tn.split('/')[-1] for tn in get_mesh_tree_numbers_of_disease(disease, entry["mesh_id"])]
+
+    #         elif entry["efo_id"] != "" or disease_tree_numbers.get(disease, []) == []:
+    #             mesh_ids = efoid_to_meshid_mapper(entry["efo_id"])
+    #             if len(mesh_ids) > 0:
+    #                 disease_tree_numbers[disease] = [tn.split('/')[-1] for tn in get_mesh_tree_numbers_of_disease(disease, mesh_ids[0])]
+    #             else:
+    #                 disease_tree_numbers[disease] = []
+    #         time.sleep(0.1)
+    #     entry['disease_tree_numbers'] = disease_tree_numbers[disease]
+    #     # disease_areas_list.extend(disease_areas[disease])
+        
+    for entry in all_entries:
+        disease = entry.get('Disease', "").strip()
+
+        # Skip invalid or empty disease names
+        if disease in ("", "NA"):
+            logger.debug(f"Skipping invalid disease entry: '{disease}'")
+            entry['disease_tree_numbers'] = []
+            continue
+
+        # Fetch only if not already processed
+        if disease not in disease_tree_numbers:
             logger.info(f"Fetching Disease Tree Numbers for {disease}")
-            # if 'efo_id' not in entry or 'mesh_id' not in entry or entry.get('efo_id', "").startswith("HP"):
+
+            # Step 1: Ensure we have valid efo_id and mesh_id
             if ('efo_id' not in entry
                 or 'mesh_id' not in entry
-                or str(entry.get('efo_id', '') or '').startswith('HP')):
-                logger.debug("Fetch efo and mesh uid if not available")
+                or str(entry.get('efo_id', '')).startswith('HP')):
+                
+                logger.debug(f"Fetching efo_id and mesh_uid for {disease}")
                 efo_id = get_efo_id(disease)
                 mesh_uid = disease_to_mesh_uid(disease)
+
                 if mesh_uid:
                     disease_tree_numbers[disease] = mesh_uid_to_tree_numbers(mesh_uid)
-                entry['efo_id'] = efo_id if efo_id else ""
-                entry['mesh_id'] = ""
-                if efo_id:
-                    mesh_ids =  efoid_to_meshid_mapper(entry["efo_id"])
-                    if len(mesh_ids):
-                        entry['mesh_id'] = mesh_ids[0]
-                        
-            logger.info(f'Fetching tree numbers using mesh_id: {entry["mesh_id"]} and efo_id: {entry["efo_id"]}')
-            if entry["mesh_id"] != "":
-                disease_tree_numbers[disease] = [tn.split('/')[-1] for tn in get_mesh_tree_numbers_of_disease(disease, entry["mesh_id"])]
 
-            elif entry["efo_id"] != "" or disease_tree_numbers[disease] == []:
-                mesh_ids = efoid_to_meshid_mapper(entry["efo_id"])
-                if len(mesh_ids) > 0:
-                    disease_tree_numbers[disease] = [tn.split('/')[-1] for tn in get_mesh_tree_numbers_of_disease(disease, mesh_ids[0])]
-                else:
-                    disease_tree_numbers[disease] = []
+                entry['efo_id'] = efo_id or ""
+                entry['mesh_id'] = ""
+
+                if efo_id:
+                    mesh_ids = efoid_to_meshid_mapper(efo_id)
+                    if mesh_ids:
+                        entry['mesh_id'] = mesh_ids[0]
+
+            logger.info(f'Fetching tree numbers using mesh_id: {entry["mesh_id"]} and efo_id: {entry["efo_id"]}')
+
+            # Step 2: Try fetching tree numbers by mesh_id
+            tree_numbers = []
+            if entry['mesh_id']:
+                mesh_tree_nums = get_mesh_tree_numbers_of_disease(entry['mesh_id'])
+                print("mesh_tree_nums from mesh: ", mesh_tree_nums)
+                if mesh_tree_nums:
+                    tree_numbers = [tn.split('/')[-1] for tn in mesh_tree_nums]
+            
+            # Step 3: If still empty, try fetching via efo_id
+            if not tree_numbers and entry['efo_id']:
+                mesh_ids = efoid_to_meshid_mapper(entry['efo_id'])
+                print("mesh_ids using efo:", mesh_ids)
+                # if mesh_ids:
+                #     mesh_tree_nums = get_mesh_tree_numbers_of_disease(mesh_ids[0])
+                #     print("mesh_tree_nums from efo: ", mesh_tree_nums)
+                #     if mesh_tree_nums:
+                #         tree_numbers = [tn.split('/')[-1] for tn in mesh_tree_nums]
+                mesh_tree_nums = get_mesh_tree_numbers_of_disease(disease)
+                print("mesh_tree_nums from mesh: ", mesh_tree_nums)
+                if mesh_tree_nums:
+                    tree_numbers = [tn.split('/')[-1] for tn in mesh_tree_nums]
+
+            # Step 4: Assign collected or empty list
+            disease_tree_numbers[disease] = tree_numbers or []
+            print("disease_tree_numbers[disease]: ", disease_tree_numbers[disease])
+            # Avoid hammering APIs
             time.sleep(0.1)
-        entry['disease_tree_numbers'] = disease_tree_numbers[disease]
-        # disease_areas_list.extend(disease_areas[disease])
-        
+
+        # Always ensure this field is set
+        entry['disease_tree_numbers'] = disease_tree_numbers.get(disease, [])
+
     return all_entries, available
 
 def enrich_target_trials(target):
-    
-    all_entries, available = target_pipeline_from_source(target)
-    with open(f"{target}_source.json", "w") as f:
-        json.dump(all_entries, f, indent=2)
+    if not os.path.exists(f"{target}_source.json"):
+        all_entries, available = target_pipeline_from_source(target)
+        with open(f"{target}_source.json", "w") as f:
+            json.dump(all_entries, f, indent=2)
+    else:
+        with open(f"{target}_source.json", "r") as f:
+            all_entries = json.load(f)
+        available = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries if r.get("Disease") and r["Disease"] != "NA"])))
+    all_entries = []
+    available = []
     all_entries_strapi, available_strapi = populate_target_pipeline_from_strapi(target)
     with open(f"{target}strapi.json", "w") as f:
         json.dump(all_entries_strapi, f, indent=2)
 
     all_entries.extend(all_entries_strapi)
     available.extend(available_strapi)
+
     return all_entries, list(set(available))
 
 def test(target):
+    all_entries = []
+    available = []
     with open(f"{target}_source.json", "r") as f:
         all_entries = json.load(f)
         available = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries if r.get("Disease") and r["Disease"] != "NA"])))
@@ -2069,13 +2172,15 @@ def test(target):
 
     all_entries.extend(all_entries_strapi)
     available.extend(available_strapi)
+    all_entries = remove_duplicates(all_entries)
     print("available: ", available)
     return all_entries, list(set(available))
+
 if __name__ == "__main__":
-    target = "gucy1b1"
+    target = "acvr2a"
     all_results, available_dis = enrich_target_trials(target)
     with open(f"{target}.json", "w") as f:
-        json.dump(all_entries_strapi, f, indent=2)
+        json.dump(all_results, f, indent=2)
 
     # test(target)
     
