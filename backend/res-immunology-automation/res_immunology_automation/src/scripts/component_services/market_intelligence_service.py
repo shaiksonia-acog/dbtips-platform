@@ -1620,7 +1620,7 @@ def remove_duplicates(pipeline):
         list: List of dictionaries with duplicates removed.
     """
     # Define the fields used to identify unique entries
-    unique_fields = ["Drug", "Disease", "Source URLs"]
+    unique_fields = ["Drug", "Disease", "Source URLs", "Sponsor"]
 
     seen = {}
     if len(pipeline)>0:
