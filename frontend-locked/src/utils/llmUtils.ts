@@ -405,7 +405,6 @@ export const preprocessGWASStudiesData = (data) => {
 		const rows = jsonData.map((entry) => {
 			const { disease,pubDate } =
 				entry;
-
 			return [
 				escapeCsvField(disease || ''),
 				escapeCsvField(entry["First author"] || ''),
@@ -415,9 +414,11 @@ export const preprocessGWASStudiesData = (data) => {
 				escapeCsvField(entry["Title"] || ''),
 				escapeCsvField(entry["Reported traits"] || ''),
 				escapeCsvField(entry["Trait(s)"] || ''),
-				escapeCsvField(entry["Discovery sample ancestry"]?.join(" | ") || ''),
-				escapeCsvField(entry["Summary statistics"] || ''),
+				
+				escapeCsvField(Array.isArray(entry?.["Discovery sample ancestry"]) ? entry["Discovery sample ancestry"].join(" | ") : entry?.["Discovery sample ancestry"] || ''),
+				escapeCsvField(Array.isArray(entry["Replication sample ancestry"]) ? entry["Replication sample ancestry"].join(" | ") : entry["Replication sample ancestry"] || ''),
 				entry["Association count"] || '',
+				escapeCsvField(entry["Summary statistics"] || ''),
 				
 				
 			].join(delimiter);

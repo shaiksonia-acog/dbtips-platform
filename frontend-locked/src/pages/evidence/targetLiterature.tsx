@@ -368,15 +368,14 @@ setUrl(url);
         </div>
         {indications.length > 0 ? (
           <p className="my-2  font-medium ">
-            This section offers a curated collection of research articles published within the past 10 years
-            highlighting role of {target} in {indications.join(", ")}.
+         This section provides a quick curated overview of upto 500 research articles published in the past 10 years that study the role of  {target} in {indications.join(", ")}.
           </p>
         ) : (
           <p className="my-2  font-medium ">
-            This section offers a curated collection of recent research articles
-            highlighting role of {target} in various diseases.
+           This section provides a quick curated overview of upto 500 research articles published in the past 10 years that study the role of  {target} in various diseases.
           </p>
         )}
+        <p className="mb-2">Upto 10 articles of interest can be selected for quick summary with "Ask LLM"</p>
 
         {showLoading && <LoadingButton />}
 

@@ -45,7 +45,7 @@ const Tractability = ({ target }) => {
 	return (
 		<section id='tractability' className='px-[5vw] py-20 bg-gray-50 mt-12'>
 			<h1 className='text-3xl font-semibold'>Tractability</h1>
-			<p className='italic font-medium mt-2'>
+			<p className=' font-medium mt-2'>
 				The likelihood of identifying a modulator that interacts effectively
 				with the target/domain (or pathway). This aids in understanding the
 				ability of a protein to bind a drug-like modulator.

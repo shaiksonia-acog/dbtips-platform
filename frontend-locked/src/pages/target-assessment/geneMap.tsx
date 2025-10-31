@@ -407,7 +407,7 @@ const handleLegendClick = (datasetIndex: number) => {
   return (
     <div className="py-10" id="geneEssentialityMap">
       <h1 className="text-3xl font-semibold mb-3">Gene essentiality map</h1>
-      <p>
+      <p className="mb-4 font-medium">
        Shows how essential  {target} is across multiple cell lines, helping identify genes that are critical for cell survival or specific to certain cancer types.
       </p>
       <div className="flex gap-2">

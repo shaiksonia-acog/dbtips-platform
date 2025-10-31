@@ -112,7 +112,7 @@ const metrics = useMemo(() => {
 	return (
 		<section id='targetability' className='mt-12 px-[5vw]'>
 			<h1 className='text-3xl font-semibold'>Targetability</h1>
-			<p className='italic font-medium mt-2'>
+			<p className=' font-medium mt-2'>
 		 The section presents target-specific properties in a disease-agnostic manner. Using a color scale, it helps users quickly assess targets for prioritization or deprioritization.
 			</p>
 

@@ -220,6 +220,9 @@ const PPM = ({ data, diseaseAreaFilter, indications }) => {
       <h2 className="text-xl subHeading font-semibold mb-3">
         Performance metrics{" "}
       </h2>
+      <p className="my-2 font-medium ">
+      The table describes performance matrix of the catalogued evaluations of the associated PGS, displayed as reported by the source studies.
+      </p>
       <div className="flex justify-between mb-3">
         <div className="flex gap-4">
           {diseaseAreaFilter && (

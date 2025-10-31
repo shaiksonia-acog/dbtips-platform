@@ -45,7 +45,7 @@ function convertTODiseaseArray(data) {
   for (const [disease, path] of Object.entries(data)) {
     if (
       typeof path === "string" &&
-      path.includes("/app/res-immunology-automation/")
+      path.includes("cached_data_json/disease")
     ) {
       const mondoId =
         typeof path === "string"
@@ -121,7 +121,7 @@ const AssociatePlot = ({ indications, diseaseAreaFilter,target }) => {
     "OR or BETA",
     "CI",
     "Mapped gene(s)",
-    "Variant annotation"
+    // "Variant annotation"
 
   ]);
   const gwasColumnDefs = useMemo(
@@ -302,56 +302,56 @@ const AssociatePlot = ({ indications, diseaseAreaFilter,target }) => {
         headerName: "Mapped Gene",
         field: "Mapped gene(s)",
       },
-      {
-        headerName: "Variant annotation",
-        headerClass: "ag-header-cell-center",
-        children: [
-          {
-            field:"Consequence",
-            headerName:"Functionl consequence",
-            cellRenderer:(params)=>
-              params.value.replaceAll("_"," ")
-          },
-          {
-            headerName:"Alpha missense score",
-            field:"AlphaMissense",
-            cellRenderer:(params)=>
-               !params.value.includes("None") ? params.value.replace("_"," ") : ""
-          },
-          {
-            headerName:"SIFT",
-            field:"SIFT",
-            cellRenderer:(params)=>
-               !params.value.includes("None") ? params.value.replace("_"," ") : ""
-          },
-          {
-            headerName:"PolyPhen",
-            field:"PolyPhen",
-            cellRenderer:(params)=>
-               !params.value.includes("None") ? params.value.replace("_"," ") : ""
-          },
-          {
-            headerName:"CADD score",
-            field:"CADD"
-          },
+      // {
+      //   headerName: "Variant annotation",
+      //   headerClass: "ag-header-cell-center",
+      //   children: [
+      //     {
+      //       field:"Consequence",
+      //       headerName:"Functionl consequence",
+      //       cellRenderer:(params)=>
+      //         params.value.replaceAll("_"," ")
+      //     },
+      //     {
+      //       headerName:"Alpha missense score",
+      //       field:"AlphaMissense",
+      //       cellRenderer:(params)=>
+      //          !params.value.includes("None") ? params.value.replace("_"," ") : ""
+      //     },
+      //     {
+      //       headerName:"SIFT",
+      //       field:"SIFT",
+      //       cellRenderer:(params)=>
+      //          !params.value.includes("None") ? params.value.replace("_"," ") : ""
+      //     },
+      //     {
+      //       headerName:"PolyPhen",
+      //       field:"PolyPhen",
+      //       cellRenderer:(params)=>
+      //          !params.value.includes("None") ? params.value.replace("_"," ") : ""
+      //     },
+      //     {
+      //       headerName:"CADD score",
+      //       field:"CADD"
+      //     },
     
     
-          {
-            headerName:"Protien family",
-            field:"Pfam",
-            cellRenderer:(params)=>
-           { if(params.value) 
-            return (
+      //     {
+      //       headerName:"Protien family",
+      //       field:"Pfam",
+      //       cellRenderer:(params)=>
+      //      { if(params.value) 
+      //       return (
            
-              <a href={params.data.Pfam_url } target="_blank" rel="noopener noreferrer">
-                {params.value}
-              </a>
-            )}
+      //         <a href={params.data.Pfam_url } target="_blank" rel="noopener noreferrer">
+      //           {params.value}
+      //         </a>
+      //       )}
     
-          },
-        ],
+      //     },
+      //   ],
 
-      },
+      // },
       
       
 
@@ -413,7 +413,7 @@ const AssociatePlot = ({ indications, diseaseAreaFilter,target }) => {
     isLoading: locusZoomDataLoading,
   } = useQuery(
     ["mondo-data", payload],
-    () => fetchData(payload, "/genomics/locus-zoom"),
+    () => fetchData(payload, "/genomics/gwas-associations"),
     {
       enabled: !!indications.length,
       refetchOnWindowFocus: false,
@@ -522,7 +522,9 @@ const AssociatePlot = ({ indications, diseaseAreaFilter,target }) => {
     console.log("Filtering associations data",associationsRowData,selectedDisease,selectedGene);
    
     let filteredData = associationsRowData;
-    if (selectedDisease.length !== 0) {
+    if (selectedDisease.length !== 0 && diseaseAreaFilter) {
+
+
       filteredData = filteredData?.filter((row) =>
         row.mapped_diseases?.some((d: string) =>
           selectedDisease.some(
@@ -533,6 +535,7 @@ const AssociatePlot = ({ indications, diseaseAreaFilter,target }) => {
     }
 
     if (selectedGene) {
+      
       filteredData = filteredData.filter((row) => {
         // Split the "Mapped gene(s)" by commas or semicolons and trim whitespace
         const genes = row["Mapped gene(s)"]
@@ -546,8 +549,9 @@ const AssociatePlot = ({ indications, diseaseAreaFilter,target }) => {
       });
       
     }
+    console.log("Filtered associations data",filteredData);
     return filteredData;
-  }, [associationsRowData, selectedDisease, selectedGene]);
+  }, [associationsRowData, selectedDisease, selectedGene,diseaseAreaFilter]);
   useEffect(() => {
     // 1. First, calculate what the *new* accessions list should be.
     let newAccessions = []; // <-- Starts empty every time

@@ -210,9 +210,7 @@ const ModelStudies: React.FC<ModelStudiesProps> = ({ indications,diseaseAreaFilt
       </div>
 
       <p className="mt-2  font-medium">
-        This section provides model organisms with phenotypes relevant to the
-        disease, supporting research on target identification, validation, and
-        drug development.
+      This section lists genetically perturbed model organisms with disease-relevant phenotypes, helping researchers identify suitable animal models to study target perturbations and their impact on disease mechanisms, target validation, and drug development.
         <br />
       </p>
       {!showLoading && (

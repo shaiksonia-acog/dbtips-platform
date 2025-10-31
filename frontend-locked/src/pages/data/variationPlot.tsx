@@ -61,7 +61,7 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
 
   const { data: locuszoomData, error: locuszoomError, isLoading: locuszoomLoading } = useQuery(
     ["locuszoom", payload],
-    () => fetchData(payload, "/genomics/locus-zoom"),
+    () => fetchData(payload, "/genomics/gwas-associations"),
     {
       enabled: selectedDisease !== "",
       refetchOnWindowFocus: false,

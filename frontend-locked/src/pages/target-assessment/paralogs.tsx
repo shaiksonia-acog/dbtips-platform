@@ -180,8 +180,8 @@ const Paralogs = ({ target }) => {
 	return (
 		<section id='paralogs' className='mt-12 px-[5vw]'>
 			<h1 className='text-3xl font-semibold'>Paralogs</h1>
-			<p className='mt-2 italic font-medium'>
-				Analysis of homologs and paralogs across selected species helps identify potential off-target effects and improve drug specificity.
+			<p className='mt-2 font-medium'>
+			The sections provides homologs and paralogs for {target} across selected species (Human, mouse, fly, zebrafish & worm) which helps anticipate potential off-target interactions and improve drug specificity. Higher the identity score, greater are the chances for off-target effects.
 			</p>
 			<div className='flex justify-end mb-4'>
 				<div className="flex border border-gray-200 rounded-lg bg-white">

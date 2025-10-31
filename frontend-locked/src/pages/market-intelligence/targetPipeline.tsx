@@ -364,11 +364,7 @@ const CompetitiveLandscape = ({ target, indications, diseaseAreaFilter }) => {
           </Button>
         </div>
         <p className="mt-2 font-medium">
-          The table offers a comprehensive overview of drug candidates,
-          categorized by indication, development status, and mechanism of
-          action, based on data from ongoing and completed clinical trials. It
-          supports scientists in validating drug targets across modalities and
-          indications.
+        The table provides a comprehensive overview of drug candidates across research, pre-clinical, and clinical phases, categorized by indication, development status, and mechanism of action. It enables scientists to explore and validate drug targets across modalities and disease areas, based on data across stages from discovery to preclinical studies to ongoing and completed clinical trials.
         </p>
         {targetError && (
           // Error div with same height as AgGrid
