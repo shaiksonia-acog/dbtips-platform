@@ -278,12 +278,17 @@ def parse_mouse_phenotypes(response):
         return {}
 
     def load_rpt_to_dict(file_path):
+        """Load allele → (MGI ID, PMID list) mapping from MGI_PhenotypicAllele.rpt"""
         mapping = {}
         with open(file_path, 'r', encoding='utf-8') as f:
             for line in f:
                 parts = line.strip().split('\t')
-                if len(parts) >= 2:
-                    mapping[parts[1].strip()] = parts[0].strip()
+                if len(parts) >= 6:  # at least MGI ID (0), allele name (1), PMID (5)
+                    allele_name = parts[1].strip()
+                    mgi_id = parts[0].strip()
+                    pmid_raw = parts[5].strip()
+                    pmids = [pmid.strip() for pmid in pmid_raw.split(',') if pmid.strip()]
+                    mapping[allele_name] = {"mgi_id": mgi_id, "pmids": pmids}
         return mapping
 
     mapping = load_rpt_to_dict("/app/res-immunology-automation/res_immunology_automation/src/phenotype_file/MGI_PhenotypicAllele.rpt")
@@ -297,6 +302,7 @@ def parse_mouse_phenotypes(response):
         # allelic_composition_links = [f"https://www.informatics.jax.org/allele/genoview/{model['id']}" for model in
         #                              phenotype.get('biologicalModels', [])]
         allelic_composition_links = [] 
+        all_pubmed_links = []
         import re
 
         for model in phenotype.get('biologicalModels', []):
@@ -307,13 +313,24 @@ def parse_mouse_phenotypes(response):
             matches = re.findall(r"[A-Za-z0-9]+<[^>]+>", raw_name)
             print("parsed allele matches:", matches)
 
+            model_pubmed_links = []
+            model_links = []
+
             for allele in matches:
                 if allele in mapping:
-                    mgi_id = mapping[allele]
+                    info = mapping[allele]
+                    mgi_id = info["mgi_id"]
+
                     url = f"https://www.informatics.jax.org/allele/{mgi_id}"
                     allelic_composition_links.append(url)
+                    all_pubmed_links.append(
+                        [f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/" for pmid in info["pmids"]]
+                    )
                 else:
                     print(f"⚠️ No match in mapping for allele: {allele}")
+            
+            # allelic_composition_links.append(list(set(model_links)))
+            # all_pubmed_links.append(list(set(model_pubmed_links)))
 
         print("allelic_composition_links: ", allelic_composition_links)
         records[phenotype["modelPhenotypeLabel"]] = {
@@ -327,8 +344,8 @@ def parse_mouse_phenotypes(response):
             },
             'Categories': [{'Label': cls['label'], 'Link': link} for cls, link in
                            zip(phenotype.get('modelPhenotypeClasses', []), category_links)],
-            'Allelic Compositions': [{'Composition': model['allelicComposition'], 'Link': link} for model, link in
-                                     zip(phenotype.get('biologicalModels', []), allelic_composition_links)]
+            'Allelic Compositions': [{'Composition': model['allelicComposition'], 'Link': link, 'PubMed Links': pubmed_link} for model, link, pubmed_link in
+                                     zip(phenotype.get('biologicalModels', []), allelic_composition_links, all_pubmed_links)]
         }
 
     return records
@@ -1920,7 +1937,8 @@ def target_pipeline_from_source(target_input: str):
             # Fetch only if not already processed
             if disease not in disease_tree_numbers:
                 logger.info(f"Fetching Disease Tree Numbers for {disease}")
-
+                
+                tree_numbers = []
                 # Step 1: Ensure we have valid efo_id and mesh_id
                 if ('efo_id' not in entry
                     or 'mesh_id' not in entry
@@ -1931,7 +1949,7 @@ def target_pipeline_from_source(target_input: str):
                     mesh_uid = disease_to_mesh_uid(disease)
 
                     if mesh_uid:
-                        disease_tree_numbers[disease] = mesh_uid_to_tree_numbers(mesh_uid)
+                        disease_tree_numbers[disease] = tree_numbers = mesh_uid_to_tree_numbers(mesh_uid)
 
                     entry['efo_id'] = efo_id or ""
                     entry['mesh_id'] = ""
@@ -1941,10 +1959,9 @@ def target_pipeline_from_source(target_input: str):
                         if mesh_ids:
                             entry['mesh_id'] = mesh_ids[0]
 
-                logger.info(f'Fetching tree numbers using mesh_id: {entry["mesh_id"]} and efo_id: {entry["efo_id"]}')
+                logger.info(f'Fetching tree numbers using mesh_id: {entry["mesh_id"]} or efo_id: {entry["efo_id"]}')
 
                 # Step 2: Try fetching tree numbers by mesh_id
-                tree_numbers = []
                 if entry['mesh_id']:
                     mesh_tree_nums = get_mesh_tree_numbers_of_disease(entry['mesh_id'])
                     print("mesh_tree_nums from mesh: ", mesh_tree_nums)
@@ -2082,6 +2099,7 @@ def populate_target_pipeline_from_strapi(target_input):
 
         # Fetch only if not already processed
         if disease not in disease_tree_numbers:
+            tree_numbers = []
             logger.info(f"Fetching Disease Tree Numbers for {disease}")
 
             # Step 1: Ensure we have valid efo_id and mesh_id
@@ -2094,7 +2112,7 @@ def populate_target_pipeline_from_strapi(target_input):
                 mesh_uid = disease_to_mesh_uid(disease)
 
                 if mesh_uid:
-                    disease_tree_numbers[disease] = mesh_uid_to_tree_numbers(mesh_uid)
+                    disease_tree_numbers[disease] = tree_numbers =  mesh_uid_to_tree_numbers(mesh_uid)
 
                 entry['efo_id'] = efo_id or ""
                 entry['mesh_id'] = ""
@@ -2104,11 +2122,11 @@ def populate_target_pipeline_from_strapi(target_input):
                     if mesh_ids:
                         entry['mesh_id'] = mesh_ids[0]
 
-            logger.info(f'Fetching tree numbers using mesh_id: {entry["mesh_id"]} and efo_id: {entry["efo_id"]}')
-
+            
             # Step 2: Try fetching tree numbers by mesh_id
-            tree_numbers = []
+            logger.info(f'Fetching tree numbers using mesh_id: {entry["mesh_id"]} and efo_id: {entry["efo_id"]}')
             if entry['mesh_id']:
+
                 mesh_tree_nums = get_mesh_tree_numbers_of_disease(entry['mesh_id'])
                 print("mesh_tree_nums from mesh: ", mesh_tree_nums)
                 if mesh_tree_nums:
@@ -2139,17 +2157,22 @@ def populate_target_pipeline_from_strapi(target_input):
 
     return all_entries, available
 
-def enrich_target_trials(target):
-    if not os.path.exists(f"{target}_source.json"):
-        all_entries, available = target_pipeline_from_source(target)
-        with open(f"{target}_source.json", "w") as f:
-            json.dump(all_entries, f, indent=2)
-    else:
-        with open(f"{target}_source.json", "r") as f:
-            all_entries = json.load(f)
-        available = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries if r.get("Disease") and r["Disease"] != "NA"])))
+def enrich_target_trials(target, only_strapi: bool=False):
     all_entries = []
     available = []
+    if only_strapi is False:
+        if not os.path.exists(f"{target}_source.json"):
+            print("fetching from source")
+            all_entries, available = target_pipeline_from_source(target)
+            with open(f"{target}_source.json", "w") as f:
+                json.dump(all_entries, f, indent=2)
+        else:
+            print("fetching from source cache")
+            with open(f"{target}_source.json", "r") as f:
+                all_entries = json.load(f)
+            available = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries if r.get("Disease") and r["Disease"] != "NA"])))
+    
+    print("fetching from strapi")
     all_entries_strapi, available_strapi = populate_target_pipeline_from_strapi(target)
     with open(f"{target}strapi.json", "w") as f:
         json.dump(all_entries_strapi, f, indent=2)
@@ -2162,16 +2185,20 @@ def enrich_target_trials(target):
 def test(target):
     all_entries = []
     available = []
-    with open(f"{target}_source.json", "r") as f:
-        all_entries = json.load(f)
-        available = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries if r.get("Disease") and r["Disease"] != "NA"])))
+    if os.path.exists(f"{target}_source.json") and os.path.exists(f"{target}strapi.json"):
+        with open(f"{target}_source.json", "r") as f:
+            all_entries = json.load(f)
+            available = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries if r.get("Disease") and r["Disease"] != "NA"])))
+    
 
-    with open(f"{target}strapi.json", "r") as f:
-        all_entries_strapi = json.load(f)
-        available_strapi = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries_strapi if r.get("Disease") and r["Disease"] != "NA"])))
-
-    all_entries.extend(all_entries_strapi)
-    available.extend(available_strapi)
+        with open(f"{target}strapi.json", "r") as f:
+            all_entries_strapi = json.load(f)
+            available_strapi = sorted(list(set([r["Disease"].strip().lower().replace(" ", "_") for r in all_entries_strapi if r.get("Disease") and r["Disease"] != "NA"])))
+            all_entries.extend(all_entries_strapi)
+            available.extend(available_strapi)
+    else:
+        all_entries, available = enrich_target_trials(target, True)
+    
     all_entries = remove_duplicates(all_entries)
     print("available: ", available)
     return all_entries, list(set(available))
