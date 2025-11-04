@@ -79,12 +79,6 @@ const Ortholog = ({target}) => {
         return { leftChartData: left, rightChartData: right };
       }, [orthologData, speciesIndexMap]);
     
-      const colorMap = {
-        "other_paralog": "#6B9BD1",
-        "within_species_paralog": "#4A7BA7",
-        "ortholog_one2one": "#6B9BD1"
-      };
-    
       const CustomTooltip = ({ active, payload }) => {
         if (active && payload && payload.length) {
           const data = payload[0].payload;
@@ -257,7 +251,7 @@ const Ortholog = ({target}) => {
                                   cx={cx}
                                   cy={cy}
                                   r={radius}
-                                  fill={colorMap[payload.homologyType]}
+                                  fill={"#4A7BA7"}
                                   fillOpacity={isHovered ? 1 : 0.7}
                                   onMouseEnter={() => handleMouseEnter(payload)}
                                   onMouseLeave={handleMouseLeave}
@@ -337,7 +331,7 @@ const Ortholog = ({target}) => {
                                   cx={cx}
                                   cy={cy}
                                   r={radius}
-                                  fill={colorMap[payload.homologyType]}
+                                  fill={"#4A7BA7"}
                                   fillOpacity={isHovered ? 1 : 0.7}
                                   onMouseEnter={() => handleMouseEnter(payload)}
                                   onMouseLeave={handleMouseLeave}
