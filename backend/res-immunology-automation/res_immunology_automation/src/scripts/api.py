@@ -4321,6 +4321,64 @@ async def get_paralogs(request: TargetOnlyRequest, redis: Redis = Depends(get_re
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.post("/target-assessment/orthologs/", tags=["Target Assessment"])
+async def get_orthologs(request: TargetOnlyRequest, redis: Redis = Depends(get_redis), db: Session = Depends(get_db)):
+    target: str = request.target.strip().lower()
+    key: str = f"/target-assessment/orthologs/:{target}"
+    endpoint: str = "/target-assessment/orthologs/"
+
+    # Directory to store the cached JSON file
+    cache_dir: str = "cached_data_json/target"
+    os.makedirs(cache_dir, exist_ok=True)  # Ensure the directory exists
+
+    # File path for the JSON response
+    file_path: str = os.path.join(cache_dir, f"{target}.json")
+
+    target_record = db.query(Target).filter_by(id=target).first()
+    # 1. Check if the cached JSON file exists
+    if target_record is not None:
+        cached_file_path: str = target_record.file_path
+        print(f"Loading cached response from file: {cached_file_path}")
+        cached_responses: Dict = load_response_from_file(cached_file_path)
+
+        # Check if the endpoint response exists in the cached data
+        if f"{endpoint}" in cached_responses:
+            print(f"Returning cached response from file: {cached_file_path}")
+            return cached_responses[f"{endpoint}"]
+
+    cached_response_redis = await get_cached_response(redis, key)
+    if cached_response_redis:
+        print("Returning redis cached response")
+        return cached_response_redis
+
+    analyzer = TargetAnalyzer(target)
+    try:
+        orthologs_data = analyzer.get_orthologs(target)
+        response = {"orthologs": orthologs_data}
+        await set_cached_response(redis, key, response)
+
+        if target_record is not None:
+            cached_responses = load_response_from_file(cached_file_path)
+        else:
+            cached_responses = {}
+
+        cached_responses[f"{endpoint}"] = response
+
+        if target_record is None:
+            save_response_to_file(file_path, cached_responses)
+            new_record = Target(id=target, file_path=file_path)  # Create a new instance of the identified model
+            db.add(new_record)  # Add the new record to the session
+            db.commit()  # Commit the transaction to save the record to the database
+            db.refresh(new_record)  # Refresh the instance to reflect any changes from the DB (like auto-generated
+            # fields)
+            print(f"Record with ID {target} added to the target table.")
+        else:
+            save_response_to_file(cached_file_path, cached_responses)
+
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/fetch-graph/")
 async def fetch_graph(request: GraphRequest, driver=Depends(get_neo4j_driver)
                       , db: Session = Depends(get_db)

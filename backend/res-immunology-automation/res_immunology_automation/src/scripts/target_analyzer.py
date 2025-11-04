@@ -315,6 +315,52 @@ class TargetAnalyzer:
 
         return api_response
 
+    def get_orthologs(self, target):
+
+        gene_ensemblId = self.get_ensembl_id(target)
+        OT_BASE_URL = "https://api.platform.opentargets.org/api/v4/graphql"
+        query = """
+            query CompGenomics($ensemblId: String!) {
+                target(ensemblId: $ensemblId) {
+                    id
+                    homologues {
+                        speciesId
+                        speciesName
+                        homologyType
+                        isHighConfidence
+                        targetGeneId
+                        targetGeneSymbol
+                        queryPercentageIdentity
+                        targetPercentageIdentity
+                    }
+                }
+            }
+        """
+        # Send the request
+        response = requests.post(
+            OT_BASE_URL,
+            json={"query": query, "variables": {"ensemblId": gene_ensemblId}},
+        )
+
+        # Parse the response
+        data = response.json()
+
+        # Build a JSON response to return
+        records = data["data"]["target"]["homologues"]
+        homologues = []
+        for rec in records:
+            homologues.append({
+                "speciesId": rec["speciesId"],
+                "homologyType": rec["homologyType"],
+                "speciesName": rec["speciesName"],
+                "homologue": rec["targetGeneSymbol"],
+                "query_percentage": rec["queryPercentageIdentity"],
+                "target_percentage": rec["targetPercentageIdentity"]
+            })
+
+        return homologues
+
+
     def get_gwas_indications(self, parent_disease: str, target: str = None):
         """
         Get gwas reported traits for a given disease
