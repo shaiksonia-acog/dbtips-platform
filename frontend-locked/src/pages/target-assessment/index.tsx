@@ -5,6 +5,7 @@ import Paralogs from './paralogs';
 import { useLocation } from 'react-router-dom';
 import { parseQueryParams } from '../../utils/parseUrlParams';
 import GeneEssentialityMap from './geneMap';
+import Orthologs from './orthologs';
 const TargetAssessment = () => {
 	const location = useLocation();
 	const [target, setTarget] = useState('');
@@ -20,11 +21,13 @@ const TargetAssessment = () => {
 			<Targetability target={target}  />
 			<Tractability target={target}  />
 			<Paralogs target={target}  />
+			<Orthologs target={target}  />
 			<div className='px-[5vw]'>
 
 			<GeneEssentialityMap  
 			target={target}
 		/>
+
 			</div>
 		</section>
 	);
