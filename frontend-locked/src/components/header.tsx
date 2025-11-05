@@ -105,7 +105,7 @@ const Header = ({ app_state }) => {
         { key: "paralogs", label: "Paralogs" },
         {
           key: "orthologs",
-          label: "Comparative genomics/Orthologs",
+          label: "Comparative genomics",
         },
         { key: "geneEssentialityMap", label: "Gene essentiality map" },
       ],
@@ -378,7 +378,7 @@ const Header = ({ app_state }) => {
         },
         {
           key: "orthologs",
-          label: "Comparative genomics/Orthologs",
+          label: "Comparative genomics",
         },
         {
           key: "geneEssentialityMap",
