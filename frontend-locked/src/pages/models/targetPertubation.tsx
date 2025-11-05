@@ -175,6 +175,47 @@ const ModelStudies = ({ target }) => {
                     );
                   },
                 },
+                {
+                  field: "Allelic Compositions",
+                  flex: 3,
+                  headerName: "References",
+                  // headerComponentParams: {
+                  // 	displayName: 'Allelic Compositions',
+                  // },
+                  // headerComponent: CustomHeader,
+                  valueGetter: (params) => {
+                    return (
+                      params.data &&
+                      params.data["Allelic Compositions"]?.map(
+                        (el) => el["PubMed Links"]
+                      )
+                    );
+                  },
+                  cellRenderer: (params) => {
+                    return (
+                      params.data &&
+                      params.data["Allelic Compositions"]?.map(
+                        (value, index) => {
+                          return value["PubMed Links"]?.map(
+                            (link, idx) => (
+                                <a
+                                key={idx}
+                                className="mr-2"
+                                href={link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                >
+                                PMID:
+                                {link.split("/").slice(-2, -1)[0]}
+                                {params.value.length - 1 !== index ? "," : ""}
+                                </a>
+                            )
+                          );
+                        }
+                      )
+                    );
+                  }
+                },
               ]}
               rowData={filteredData}
             />
@@ -204,5 +245,6 @@ interface MousePhenotypeEntry {
   "Allelic Compositions": {
     Composition: string;
     Link: string;
+    "PubMed Links": string[]
   }[];
 }
