@@ -2,6 +2,7 @@ import pandas as pd
 from target_analyzer import TargetAnalyzer
 from helper import get_disease_descendants
 import requests
+import re
 from typing import *
 from utils import fetch_all_publications, fetch_nct_titles, get_pmids_for_nct_ids, get_chembl_id_exact, get_moa_short, fetch_approval_status, fetch_moa_targets_for_ids, format_multi_drug_output, fetch_molecule_type,get_target_type
 from component_services.market_intelligence_service import add_outcome_status_ollama, get_why_stopped, classify_why_stopped_with_llm , get_indication_pipeline_strapi, get_target_pipeline_strapi_all, add_outcome_status_target_pipeline, remove_duplicates
@@ -301,38 +302,82 @@ def parse_mouse_phenotypes(response):
                           phenotype.get('modelPhenotypeClasses', [])]
         # allelic_composition_links = [f"https://www.informatics.jax.org/allele/genoview/{model['id']}" for model in
         #                              phenotype.get('biologicalModels', [])]
-        allelic_composition_links = [] 
-        all_pubmed_links = []
-        import re
+        # allelic_composition_links = [] 
+        # all_pubmed_links = []
+        # import re
+
+        # for model in phenotype.get('biologicalModels', []):
+        #     raw_name = model.get("allelicComposition", "")
+        #     print("raw allele_name:", raw_name)
+
+        #     # Extract all alleles like Gene<tm...>
+        #     matches = re.findall(r"[A-Za-z0-9]+<[^>]+>", raw_name)
+        #     print("parsed allele matches:", matches)
+
+        #     model_pubmed_links = []
+        #     model_links = []
+
+        #     for allele in matches:
+        #         if allele in mapping:
+        #             info = mapping[allele]
+        #             mgi_id = info["mgi_id"]
+
+        #             url = f"https://www.informatics.jax.org/allele/{mgi_id}"
+        #             allelic_composition_links.append(url)
+        #             all_pubmed_links.append(
+        #                 [f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/" for pmid in info["pmids"]]
+        #             )
+        #         else:
+        #             print(f"⚠️ No match in mapping for allele: {allele}")
+            
+        #     # allelic_composition_links.append(list(set(model_links)))
+        #     # all_pubmed_links.append(list(set(model_pubmed_links)))
+
+        # print("allelic_composition_links: ", allelic_composition_links)
+        # records[phenotype["modelPhenotypeLabel"]] = {
+        #     'Gene': {
+        #         'Name': phenotype['targetInModel'],
+        #         'Link': gene_link
+        #     },
+        #     'Phenotype': {
+        #         'Label': phenotype['modelPhenotypeLabel'],
+        #         'Link': phenotype_link
+        #     },
+        #     'Categories': [{'Label': cls['label'], 'Link': link} for cls, link in
+        #                    zip(phenotype.get('modelPhenotypeClasses', []), category_links)],
+        #     'Allelic Compositions': [{'Composition': model['allelicComposition'], 'Link': link, 'PubMed Links': pubmed_link} for model, link, pubmed_link in
+        #                              zip(phenotype.get('biologicalModels', []), allelic_composition_links, all_pubmed_links)]
+        # }
+        allelic_compositions = []
 
         for model in phenotype.get('biologicalModels', []):
             raw_name = model.get("allelicComposition", "")
             print("raw allele_name:", raw_name)
 
-            # Extract all alleles like Gene<tm...>
             matches = re.findall(r"[A-Za-z0-9]+<[^>]+>", raw_name)
             print("parsed allele matches:", matches)
 
-            model_pubmed_links = []
             model_links = []
+            model_pubmed_links = []
 
             for allele in matches:
                 if allele in mapping:
                     info = mapping[allele]
                     mgi_id = info["mgi_id"]
-
                     url = f"https://www.informatics.jax.org/allele/{mgi_id}"
-                    allelic_composition_links.append(url)
-                    all_pubmed_links.append(
+                    model_links.append(url)
+                    model_pubmed_links.extend(
                         [f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/" for pmid in info["pmids"]]
                     )
                 else:
                     print(f"⚠️ No match in mapping for allele: {allele}")
-            
-            # allelic_composition_links.append(list(set(model_links)))
-            # all_pubmed_links.append(list(set(model_pubmed_links)))
 
-        print("allelic_composition_links: ", allelic_composition_links)
+            allelic_compositions.append({
+                'Composition': raw_name,
+                'Link': list(set(model_links))[0] if model_links else None,
+                'PubMed Links': list(set(model_pubmed_links))
+            })
+
         records[phenotype["modelPhenotypeLabel"]] = {
             'Gene': {
                 'Name': phenotype['targetInModel'],
@@ -342,11 +387,13 @@ def parse_mouse_phenotypes(response):
                 'Label': phenotype['modelPhenotypeLabel'],
                 'Link': phenotype_link
             },
-            'Categories': [{'Label': cls['label'], 'Link': link} for cls, link in
-                           zip(phenotype.get('modelPhenotypeClasses', []), category_links)],
-            'Allelic Compositions': [{'Composition': model['allelicComposition'], 'Link': link, 'PubMed Links': pubmed_link} for model, link, pubmed_link in
-                                     zip(phenotype.get('biologicalModels', []), allelic_composition_links, all_pubmed_links)]
+            'Categories': [
+                {'Label': cls['label'], 'Link': link}
+                for cls, link in zip(phenotype.get('modelPhenotypeClasses', []), category_links)
+            ],
+            'Allelic Compositions': allelic_compositions
         }
+
 
     return records
 
