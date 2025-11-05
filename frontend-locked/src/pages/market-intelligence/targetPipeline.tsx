@@ -68,30 +68,14 @@ const CompetitiveLandscape = ({ target, indications, diseaseAreaFilter }) => {
 
   const columnDefs = useMemo(
     () => [
-      // {
-      //   field: "NctIdTitleMapping",
-      //   headerName: "Trial summary",
-      //   flex: 8,
-      //   minWidth: 300,
-      //   valueGetter: (params) => {
-      //     if (params.data.NctIdTitleMapping) {
-      //       return Object.entries(params.data.NctIdTitleMapping)
-      //         .map(
-      //           ([key, value]) =>
-      //             `<div><span className="font-semibold">${key}:</span> ${
-      //               value ? value : "No official title available"
-      //             }</div>`
-      //         )
-      //         .join("\n\n");
-      //     }
-      //     return "";
-      //   },
-      //   cellStyle: { whiteSpace: "pre-wrap" },
-      //   filter: true,
-      //   cellRenderer: (params) => {
-      //     return parse(params.value);
-      //   },
-      // },
+      {
+        field: "OfficialTitle",
+        headerName: "Trial summary",
+        flex: 8,
+        minWidth: 300,
+       
+        
+      },
       ...(diseaseAreaFilter
         ? [
           {

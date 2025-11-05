@@ -5,7 +5,21 @@ import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Responsive
 import { ConfigProvider, Empty, Segmented } from 'antd';
 import { List, ChartLine } from 'lucide-react';
 import Table from '../../components/table';
-
+const labels = {
+    6239: "Caenorhabditis elegans (Nematode, N2)",
+    7227: "Drosophila melanogaster (Fruit fly)",
+    7955: "Zebrafish",
+    8364: "Tropical clawed frog",
+    9823: "Pig",
+    9615: "Dog",
+    10141: "Guinea Pig",
+    9986: "Rabbit",
+    10116: "Rat",
+    10090: "Mouse",
+    9544: "Macaque",
+    9598: "Chimpanzee",
+    9606: "Human",
+  };
 
 
 const Ortholog = ({target}) => {
@@ -30,33 +44,41 @@ const Ortholog = ({target}) => {
 		}
 	);
     // const chartData = [];
+    
     const speciesOrder = useMemo(() => {
         if (!orthologData?.orthologs) return [];
-        const uniqueSpecies = [...new Set(orthologData?.orthologs.map(item => item.speciesName))];
-        return uniqueSpecies;
+        const uniqueSpeciesIds = [...new Set(orthologData?.orthologs.map(item => item.speciesId))];
+        return uniqueSpeciesIds;
       }, [orthologData]);
+
+    const speciesIdOrder = useMemo(() => {
+        if (!orthologData?.orthologs) return [];
+        const uniqueSpeciesIds = [...new Set(orthologData?.orthologs.map(item => item.speciesId))];
+        return uniqueSpeciesIds;
+    }, [orthologData]);
       const speciesIndexMap = useMemo(() => {
         const map: { [key: string]: number } = {};
-        speciesOrder.forEach((name: string, idx) => {
-          map[name] = speciesOrder.length - 1 - idx;
+        speciesIdOrder.forEach((id: string, idx) => {
+          map[id] = speciesIdOrder.length - 1 - idx; // Map speciesId to index
         });
         return map;
-      }, [speciesOrder]);
+      }, [speciesIdOrder]);
       const { leftChartData, rightChartData } = useMemo(() => {
         const left = [];
         const right = [];
         
         orthologData?.orthologs.forEach(item => {
-          const species = item.speciesName;
-          const yPos = speciesIndexMap[species];
-          const geneKey = `${species}-${item.homologue}`;
+          const speciesId = item.speciesId;
+          const speciesName = item.speciesName;
+          const yPos = speciesIndexMap[speciesId];
+          const geneKey = `${speciesId}-${item.homologue}`;
           
           // Left side - Query percentage
           left.push({
             x: item.query_percentage,
             y: yPos,
             homologue: item.homologue,
-            species: species,
+            species: speciesName,
             homologyType: item.homologyType,
             queryPct: item.query_percentage,
             targetPct: item.target_percentage,
@@ -68,7 +90,7 @@ const Ortholog = ({target}) => {
             x: item.target_percentage,
             y: yPos,
             homologue: item.homologue,
-            species: species,
+            species: speciesName,
             homologyType: item.homologyType,
             queryPct: item.query_percentage,
             targetPct: item.target_percentage,
@@ -167,7 +189,7 @@ const Ortholog = ({target}) => {
       return (
         <div className="px-[5vw] py-20 bg-gray-50 " id="orthologs">
           <div className="mb-4 ">
-          <h1 className='text-3xl font-semibold'>Comparative genomics/Orthologs</h1>
+          <h1 className='text-3xl font-semibold'>Comparative genomics</h1>
                       <div className='flex justify-end mb-4'>
 				<div className="flex border border-gray-200 rounded-lg bg-white">
 					<ConfigProvider
@@ -266,7 +288,7 @@ const Ortholog = ({target}) => {
 
                     {/* CENTER SPECIES LABELS */}
                     <div style={{ 
-                      width: "10%", 
+                      width: "25%", 
                       height: "100%",
                       display: "flex",
                       flexDirection: "column",
@@ -280,16 +302,12 @@ const Ortholog = ({target}) => {
                         justifyContent: "space-around",
                         height: "100%"
                       }}>
-                        {speciesOrder.map((sp) => (
-                          <div key={sp as string} className="text-gray-800 font-semibold text-center" style={{ 
-                            flex: 1,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center"
-                          }}>
-                            {sp as string}
-                          </div>
-                        ))}
+                       {speciesOrder.map((spId) => (
+  <div key={String(spId)} className="text-gray-800 font-semibold text-center"
+       style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+    {labels[spId as keyof typeof labels] || String(spId)}
+  </div>
+))}
                       </div>
                     </div>
 
