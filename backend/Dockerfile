@@ -11,8 +11,21 @@ COPY llmfactory-0.1.0-py3-none-any.whl .
 
 #Download GWAS associations data
 WORKDIR /app/res-immunology-automation/res_immunology_automation/src/gwas_data
-RUN wget -O associations.tsv https://www.ebi.ac.uk/gwas/api/search/downloads/alternative || \
-    (echo "Download failed, extracting existing tar file..." && tar -xvzf *.tar.gz)
+# RUN wget -O associations.tsv https://www.ebi.ac.uk/gwas/api/search/downloads/alternative || \
+#     (echo "Download failed, extracting existing tar file..." && tar -xvzf *.tar.gz)
+
+# RUN wget -O associations.zip https://www.ebi.ac.uk/gwas/api/search/downloads/associations/v1.0.2?split=false || \
+#     (echo "Download failed, extracting existing tar file..." && unzip associations.zip && mv gwas-catalog-download-associations-alt-full.tsv associations.tsv)
+
+RUN set -e; \
+    echo "Downloading GWAS associations..."; \
+    if wget -O associations.zip "https://www.ebi.ac.uk/gwas/api/search/downloads/associations/v1.0.2?split=false"; then \
+        echo "Download successful."; \
+        unzip associations.zip && mv gwas-catalog-download-associations-alt-full.tsv associations.tsv; \
+    else \
+        echo "Download failed — using existing associations.zip if present..."; \
+        unzip associations.zip && mv gwas-catalog-download-associations-alt-full.tsv associations.tsv; \
+    fi
 
 WORKDIR /app/res-immunology-automation/res_immunology_automation/src/phenotype_file
 RUN wget -O MGI_PhenotypicAllele.rpt https://www.informatics.jax.org/downloads/reports/MGI_PhenotypicAllele.rpt
