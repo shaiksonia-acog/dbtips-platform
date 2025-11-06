@@ -466,6 +466,7 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
                  allowClear
                  style={{ width: 300 }}
                  placeholder="Select a gene"
+                 showSearch
                  value={selectedGene}
                  onChange={setSelectedGene}
                  options={geneFilterOptions.map(gene => ({ label: gene, value: gene }))}

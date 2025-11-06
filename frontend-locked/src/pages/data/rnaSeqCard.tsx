@@ -21,6 +21,7 @@ const RnaSeqCard = () => {
 	const [uniquePlatformNames, setUniquePlatformNames] = useState([]);
 	const location = useLocation();
 	const [indications, setIndications] = useState([]);
+	const [target, setTarget] = useState('');
 	const [dataArray, setDataArray] = useState([]);
 	const [filters, setFilters] = useState({
 		disease: indications,
@@ -42,7 +43,8 @@ const RnaSeqCard = () => {
 
 	useEffect(() => {
 		const queryParams = new URLSearchParams(location.search);
-		const { indications: newIndications, diseaseArea } = parseQueryParams(queryParams);
+		const { indications: newIndications, diseaseArea,target } = parseQueryParams(queryParams);
+		setTarget(target);
 		
 		setIndications(newIndications.length > 0 ? newIndications : diseaseArea);
 	
@@ -70,9 +72,12 @@ const RnaSeqCard = () => {
 	}, [indications]);
 	useEffect(() => {
 		if (!rnaSeqData) return;
-		const updatedData = convertToArray(rnaSeqData);
+		const updatedData = convertToArray(rnaSeqData).map(item => ({
+			...item,
+			target: target
+		}));
 		setDataArray(updatedData);
-	}, [rnaSeqData]);
+	}, [rnaSeqData, target]);
 
 	useEffect(() => {
 		if (dataArray.length === 0) return;
