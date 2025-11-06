@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Targetability from './targetability';
 import Tractability from './tractability';
-import Paralogs from './paralogs';
+// import Paralogs from './paralogs';
 import { useLocation } from 'react-router-dom';
 import { parseQueryParams } from '../../utils/parseUrlParams';
 import GeneEssentialityMap from './geneMap';
@@ -20,7 +20,7 @@ const TargetAssessment = () => {
 		<section>
 			<Targetability target={target}  />
 			<Tractability target={target}  />
-			<Paralogs target={target}  />
+			{/* <Paralogs target={target}  /> */}
 			<Orthologs target={target}  />
 			<div className='px-[5vw]'>
 
