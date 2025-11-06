@@ -459,6 +459,7 @@ const Ortholog = ({target}) => {
           <div className="mb-4">
             <div className='mb-8'>
               <h1 className='text-3xl font-semibold'>Comparative genomics</h1>
+              <p className='mb-2'>Comparative genomics  - examines orthologous and paralogous relationships across species to assess sequence conservation, divergence, and potential functional overlap.</p>
             </div>
 
             {orthologLoading ? (
