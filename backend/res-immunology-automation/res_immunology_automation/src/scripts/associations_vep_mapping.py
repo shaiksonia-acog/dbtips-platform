@@ -46,44 +46,81 @@ def parse_vep_header(line):
 
     return cleaned
 
-def append_vep_fields(asso_file_path, output_file, vep_lookup, fields_to_keep):
-    """
-    Append VEP annotation fields to association file using pandas.
-    """
+# def append_vep_fields(asso_file_path, output_file, vep_lookup, fields_to_keep):
+#     """
+#     Append VEP annotation fields to association file using pandas.
+#     """
 
-    # Load associations TSV safely
+#     # Load associations TSV safely
+#     df = pd.read_csv(asso_file_path, sep="\t", dtype=str).fillna("NA")
+
+#     # Make sure RSID column exists
+#     rsid_col = "rsID" if "rsID" in df.columns else df.columns[3]  # fallback if unnamed
+#     print(f"Using RSID column: {rsid_col}")
+
+#     # Convert vep_lookup (dict) to DataFrame
+#     # Example: vep_lookup = { "rs123": ["HIGH", "missense_variant", ...], ... }
+
+#     vep_df = pd.DataFrame.from_dict(vep_lookup, orient="index", columns=fields_to_keep)
+#     vep_df.index.name = rsid_col
+#     print("VEP DF columns:", list(vep_df.columns))
+#     print("Expected order:", fields_to_keep)
+#     vep_df.reset_index(inplace=True)
+
+#     # Merge association data with VEP annotations
+#     merged = df.merge(vep_df, on=rsid_col, how="left")
+
+#     # Replace missing merged values with "NA"
+#     merged.fillna("NA", inplace=True)
+
+#     # Write the combined data back to TSV
+#     merged.to_csv(output_file, sep="\t", index=False)
+
+#     print(f"✅ Merged file written to {output_file}")
+
+#     print(f"✅ Annotated file written to: {output_file}")
+
+
+def append_vep_fields_dict_mode(asso_file_path, output_file, vep_lookup, fields_to_keep):
+    """
+    Append VEP annotation fields to association file manually using dict lookups.
+    """
     df = pd.read_csv(asso_file_path, sep="\t", dtype=str).fillna("NA")
 
-    # Make sure RSID column exists
-    rsid_col = "rsid" if "rsid" in df.columns else df.columns[3]  # fallback if unnamed
-    print(f"Using RSID column: {rsid_col}")
+    # Detect rsID column more safely
+    possible_rsid_cols = ["rsid", "rsID", "RSID", "Variant ID", "Uploaded_variation"]
+    rsid_col = next((c for c in df.columns if c in possible_rsid_cols), None)
+    if not rsid_col:
+        raise ValueError(f"❌ Could not find rsID column in association file: {df.columns.tolist()}")
 
-    # Convert vep_lookup (dict) to DataFrame
-    # Example: vep_lookup = { "rs123": ["HIGH", "missense_variant", ...], ... }
-    vep_df = pd.DataFrame.from_dict(vep_lookup, orient="index", columns=fields_to_keep)
-    vep_df.index.name = rsid_col
-    vep_df.reset_index(inplace=True)
+    print(f"✅ Using RSID column: {rsid_col}")
 
-    # Merge association data with VEP annotations
-    merged = df.merge(vep_df, on=rsid_col, how="left")
+    # Convert to list of dicts for easier manipulation
+    rows = df.to_dict(orient="records")
 
-    # Replace missing merged values with "NA"
-    merged.fillna("NA", inplace=True)
+    annotated_rows = []
+    for row in rows:
+        rsid = row.get(rsid_col)
+        vep_values = vep_lookup.get(rsid, ["NA"] * len(fields_to_keep))
 
-    # Write the combined data back to TSV
-    merged.to_csv(output_file, sep="\t", index=False)
+        # Add each VEP field to the row dict
+        for field, val in zip(fields_to_keep, vep_values):
+            row[field] = val
 
-    print(f"✅ Merged file written to {output_file}")
+        annotated_rows.append(row)
+
+    # Create DataFrame back and write
+    annotated_df = pd.DataFrame(annotated_rows)
+    annotated_df.to_csv(output_file, sep="\t", index=False)
 
     print(f"✅ Annotated file written to: {output_file}")
-
 
 def annotate_vep_data(disease, asso_file_path): 
     # Fields you want to extract from VEP files
     fields_to_keep = [
         "IMPACT", 
         "am_class", "am_pathogenicity", "CADD_phred",
-        "Polyphen2_HDIV_rankscore", "SIFT4G_converted_rankscore"
+        "Polyphen2_HDIV_rankscore", "SIFT4G_converted_rankscore", "Consequence"
     ]
     VEP_DIR = f"/shared/VEP/GWAS/diseases/{disease}/chrs"
     # Output file name
@@ -139,8 +176,9 @@ def annotate_vep_data(disease, asso_file_path):
                     if rsid:
                         if rsid not in vep_lookup:
                             vep_lookup[rsid] = [parts[i] if i < len(parts) else "" for i in header_indices]
-                        # print("vep_lookup:", rsid, vep_lookup[rsid])
+                        if rsid == "rs2275426":
+                            print("vep_lookup:", rsid, vep_lookup[rsid])
 
-    append_vep_fields(asso_file_path, output_file, vep_lookup, fields_to_keep)
+    append_vep_fields_dict_mode(asso_file_path, output_file, vep_lookup, fields_to_keep)
 
 annotate_vep_data("urologic_diseases","/home/amani/dbtips-mrl-test/dbtips-platform-copy/backend/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease/EFO_0009690.tsv")
