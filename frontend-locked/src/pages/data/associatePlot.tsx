@@ -225,6 +225,7 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
        : []),
      {
        headerName: "Disease",
+       minWidth:300,
 
 
        field: "mapped_diseases",
@@ -362,6 +363,7 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
        field: "pvalue",
        agGridColumnType: "numericColumn",
        sort: "asc",
+       maxWidth: 100,
        filter: "agNumberColumnFilter",
        comparator: (valueA, valueB) => {
          // Handle null/undefined/empty
@@ -406,13 +408,19 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
      {
        headerName: "RAF",
        field: "RAF",
+       maxWidth: 100,
+
      },
      {
        headerName: "OR",
        field: "OR" ,
+       maxWidth: 100,
+
      },
      {
         field: "BETA",
+        maxWidth: 100,
+
      },
 
 

@@ -177,7 +177,6 @@ export const preprocessRnaseqData = (data) => {
 
 		const rows = jsonData.flatMap((entry) => {
 			const {
-			  GseID,
 			  Disease,
 			  Title,
 			  Summary,
@@ -186,7 +185,8 @@ export const preprocessRnaseqData = (data) => {
 			  Organism,
 			  StudyType,
 			  Samples,
-			  pubmed_data
+			  pubmed_data,
+			  GseID
 			} = entry;
 		  
 			let PMID = '';
