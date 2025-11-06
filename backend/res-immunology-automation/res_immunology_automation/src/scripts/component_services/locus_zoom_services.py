@@ -43,7 +43,41 @@ def filter_asso_by_efo_id(studies: List[str], efo_id: str) -> pd.DataFrame:
         with open(associations_file_path, 'r') as file:
             reader = csv.DictReader(file, delimiter='\t')
             filtered_rows = [row for row in reader if efo_id in row.get('MAPPED_TRAIT_URI', '') or row.get("STUDY ACCESSION", "") in studies]
-
+            non_numeric_ci_terms = [
+                    # general unit descriptors
+                    'unit', 'units', 'per', 'sd', 'standard', 'z', 'z-score',
+                    # measurement units
+                    'kg/m2', 'kg/m²', 'kg', 'cm', 'mmhg', 'bpm', 'mg', 'ml', 'l', 'g/l', 'mm',
+                    # percentage or ratio expressions
+                    '%', 'percent', 'per', 'ratio', 'fold', 'times',
+                    # direction/modifier terms
+                    'increase', 'decrease', 'higher', 'lower', 'greater', 'smaller',
+                    # normalized or transformed expressions
+                    'log', 'log10', 'log2', 'ln', 'transformed', 'scaled', 'normalized',
+                    # statistical or index terms
+                    'score', 'index', 'rank', 'zscore', 't-score', 'p-value', 'beta', 'effect',
+                ]
+            for row in filtered_rows:
+                ci = row.get("95% CI (TEXT)")
+                row["OR"] = "-"
+                row["BETA"] = "-"
+                if "increase" in ci.lower() or "decrease" in ci.lower():
+                    if ']' in ci:
+                        ci = ci.split("]")
+                        row["CI"] = ci[0] + "]"
+                        row["BETA"] = (row.get("OR or BETA", " ") + " " + ci[-1]).strip()
+                    else:
+                        parts = ci.split()
+                        # Handle cases like "unit increase", "% increase", "z decrease", etc.
+                        if parts and any(x in parts[0].lower() for x in ['unit', '%', 'z', 'kg/m2']):
+                            row["CI"] = "-"
+                            row["BETA"] = (row.get("OR or BETA", " ") + " " + ' '.join(parts)).strip()
+                        else:
+                            row["CI"] = parts[0] if parts else "-"
+                            row["BETA"] = (row.get("OR or BETA", " ") + " " + ' '.join(parts[1:])).strip()                    # print(f'BETA: {row["CI"]}, {row["BETA"]}, {row.get("STUDY ACCESSION")}')
+                else:
+                    row["OR"] = row.get("OR or BETA")
+                    # print("OR: ", row["OR"], {row.get("STUDY ACCESSION")})
         if len(filtered_rows) > 0:
             filtered_df = pd.DataFrame(filtered_rows)
             return filtered_df
@@ -68,7 +102,7 @@ def prepare_variants_data(df):
                 "FIRST AUTHOR": "Author", "MAPPED_GENE": "Mapped gene(s)", "DISEASE/TRAIT":"Reported trait", 
                 "MAPPED_TRAIT": "Mapped Trait",
                 "STUDY ACCESSION": "Study Accession", "RISK ALLELE FREQUENCY": "RAF", "OR or BETA": "OR or BETA",
-                "95% CI (TEXT)": "CI"
+                "95% CI (TEXT)": "95% CI (TEXT)", "OR": "OR", "BETA": "BETA", "CI": "CI"
                 }
     if not required_columns.issubset(df.columns):
         raise ValueError(f"TSV file must contain these columns: {required_columns}")
@@ -207,10 +241,11 @@ def generate_vep(variants_associate_path: str, vep_associate_path: str):
 if __name__ == "__main__":
     disease = "cardiovascular diseases"
     requested_efo = "EFO_0000319"
-    with open(f"/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease/{disease.replace(' ', '_').lower()}", "r") as f:
+    with open(f"/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease/{disease.replace(' ', '_').lower()}.json", "r") as f:
         import json
         data = json.load(f)
         studies = data["/genomics/gwas-studies/"]
-        studies_ids = list(set([item["Study accession"] for item in gwas_studies if "Study accession" in item]))
-
-        load_data(studies_ids, requested_efo, f"/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease/{requested_efo}.tsv")
+        # studies_ids = list(set([item["Study accession"] for item in studies if "Study accession" in item]))
+        # print("studies: ", len(studies))
+        studies_ids =[]
+        generate_variants(studies_ids, requested_efo, f"/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease/{requested_efo}_test.tsv")
