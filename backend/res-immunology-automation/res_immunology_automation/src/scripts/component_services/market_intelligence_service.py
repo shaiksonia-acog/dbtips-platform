@@ -1788,12 +1788,18 @@ def get_target_pipeline_strapi_all(diseases: List[str], target: str) -> List[Dic
                 elif not isinstance(trial_id, list):
                     trial_id = []
 
+                phase_value = "N/A"
+                if phase:
+                    if 'preclinical' in phase.lower():
+                        phase_value = phase
+                    else:
+                        phase_value = f"Phase {phase}"
                 filtered_data.append({
                     "Disease": (item.get("disease") or "").lower(),
                     "Drug": item.get("drug", ""),
                     "Modality": item.get("type", ""),
                     "Mechanism of Action": item.get("MoA", ""),
-                    "Phase": f"Phase {phase}" if phase else "N/A",
+                    "Phase": phase_value,
                     "Status": trial_status,
                     "Target": item.get("target", ""),
                     "Source URLs": source_url,
