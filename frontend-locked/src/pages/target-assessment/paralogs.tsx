@@ -178,7 +178,7 @@ const Paralogs = ({ target }) => {
 	const xDomain = [0.5, speciesList.length + 0.5];
 
 	return (
-		<section id='paralogs' className='mt-12 px-[5vw]'>
+		<section id='paralogs' className='mt-12'>
 			<h1 className='text-3xl font-semibold'>Paralogs</h1>
 			<p className='mt-2 font-medium'>
 			The sections provides homologs and paralogs for {target} across selected species (Human, mouse, fly, zebrafish & worm) which helps anticipate potential off-target interactions and improve drug specificity. Higher the identity score, greater are the chances for off-target effects.

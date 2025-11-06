@@ -102,10 +102,13 @@ const Header = ({ app_state }) => {
       children: [
         { key: "targetability", label: "Targetability" },
         { key: "tractability", label: "Tractability" },
-        { key: "paralogs", label: "Paralogs" },
         {
-          key: "orthologs",
+          key: "Comparative genomics",
           label: "Comparative genomics",
+          children: [
+            { key: "orthologs", label: "Orthologs" },
+            { key: "paralogs", label: "Paralogs" },
+          ],
         },
         { key: "geneEssentialityMap", label: "Gene essentiality map" },
       ],
@@ -372,13 +375,14 @@ const Header = ({ app_state }) => {
           key: "tractability",
           label: "Tractability",
         },
+       
         {
-          key: "paralogs",
-          label: "Paralogs",
-        },
-        {
-          key: "orthologs",
+          key: "Comparative genomics",
           label: "Comparative genomics",
+          children: [
+            { key: "orthologs", label: "Orthologs" },
+            { key: "paralogs", label: "Paralogs" },
+          ],
         },
         {
           key: "geneEssentialityMap",

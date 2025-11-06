@@ -25,6 +25,8 @@ import ExportButton from "../../components/exportButton";
 import ColumnSelector from "../../components/columnFilter";
 import { filterByDiseases } from "../../utils/filterDisease";
 import DiseaseFilter from "../../components/diseaseFilter";
+import CustomHeader from "../../components/customHeader";
+
 const parseTsvData = (tsvText) => {
  const lines = tsvText.trim().split("\n");
  const headers = lines[0].split("\t");
@@ -88,7 +90,7 @@ function convertToArray(data) {
  return { result, diseaseWithoutEFOID };
 }
 const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
- const [selectedDisease, setSelectedDisease] = useState([]);
+//  const [selectedDisease, setSelectedDisease] = useState([]);
  const [activeTab, setActiveTab] = useState("association");
  // const [diseaseFilterOptions, setDiseaseFilterOptions] = useState<string[]>([]);
  const [selectedDiseaseAreas, setSelectedDiseaseAreas] = useState(indications);
@@ -112,9 +114,9 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
    "Summary statistics",
  ]);
  useEffect(() => {
-   if (!diseaseAreaFilter) {
-     setSelectedDisease(indications);
-   }
+  //  if (!diseaseAreaFilter) {
+  //    setSelectedDisease(indications);
+  //  }
    setSelectedDiseaseAreas(indications);
    if (target) setSelectedGene(target);
  }, [indications, diseaseAreaFilter, target]);
@@ -125,10 +127,10 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
    "Variant and Risk Allele",
    "pvalue",
    "RAF",
-   "OR or BETA",
+   "OR",
+   "BETA",
    "CI",
    "Mapped gene(s)",
-   "Variant annotation",
  ]);
  const gwasColumnDefs = useMemo(
    () => [
@@ -257,18 +259,29 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
       headerClass: "ag-header-cell-center",
       field:"Variant annotation",
       children: [
-       //  {
-       //    field: "Consequence",
-       //    headerName: "Functionl consequence",
-       //    cellRenderer: (params) => params.value?.replaceAll("_", " "),
-       //  },
+        {
+          field: "Consequence",
+          headerName: "Functional consequence",
+          cellRenderer: (params) => params.value?.replaceAll("_", " "),
+        },
        {
            headerName: "VEP Impact",
            field: "IMPACT",
+           headerComponent: CustomHeader,
+           headerComponentParams: {
+              title: "VEP predicted severity of the variant consequence",
+              displayName: "VEP Impact",
+            },
+           maxWidth: 120,
        },
         {
           headerName: "Alphamissense (pathogenicity & score)",
           field: "am_pathogenicity",
+          headerComponent: CustomHeader,
+          headerComponentParams: {
+            title: "Predicted pathogenicity of missense variants ( pathogenic (0.565–1), ambiguous (0.34–0.564), and benign (0–0.33). Pathogenic is predicted to be disease causing",
+            displayName: "Alphamissense (pathogenicity & score)",
+          },
           valueGetter: (params) => `
           ${params.data["am_pathogenicity"]}, ${params.data["am_class"]}`,
           cellRenderer: (params) =>
@@ -278,11 +291,24 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
         },
         {
          headerName: "CADD",
+         headerComponent: CustomHeader,
+          headerComponentParams: {
+            title: "relative deleteriousness of a variant, higher values denote greater functional impact (≥20 = top 1% most deleterious variants)",
+            displayName: "CADD",
+          },
          field: "CADD_phred",
+         maxWidth: 90,
        },
        {
          headerName: "Polyphen-2",
          field: "Polyphen2_HDIV_rankscore",
+         headerComponent: CustomHeader,
+          headerComponentParams: {
+            title: " ranked deleteriousness of the variant between 0–1 score (higher = more damaging) ",
+            displayName: "Polyphen-2",
+          },
+         maxWidth: 120,
+
          cellRenderer: (params) =>
            !params.value?.includes("None")
              ? params.value?.replace("_", " ")
@@ -290,6 +316,18 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
        },
         {
           headerName: "SIFT",
+          maxWidth: 90,
+          headerComponent: CustomHeader,
+          headerComponentParams: {
+            title: (<ul>
+              <li>≥ 0.9 – Among most damaging variants (deleterious)</li>
+              <li>0.7–0.9 – Possibly damaging</li>
+              <li>0.5–0.7 – Uncertain inference</li>
+              <li>&lt; 0.5 – Likely tolerated</li>
+            </ul>),
+            displayName: "SIFT",
+          },
+   
           field: "SIFT4G_converted_rankscore",
           filter: "agNumberColumnFilter",
           cellRenderer: (params) =>
@@ -370,8 +408,11 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
        field: "RAF",
      },
      {
-       headerName: "OR or BETA",
-       field: "OR or BETA",
+       headerName: "OR",
+       field: "OR" ,
+     },
+     {
+        field: "BETA",
      },
 
 
@@ -623,21 +664,22 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
    return combinedData;
  }, [combinedData, selectedDiseaseAreas, indications, diseaseAreaFilter]);
  const filterAssociationData = useMemo(() => {
-   if (!(selectedDisease.length > 0) && !selectedGene) {
-     return associationsRowData;
-   }
+  console.log("assoc",associationsRowData,selectedGene) ;
+  //  if (!(selectedDisease.length > 0) && !selectedGene) {
+  //    return associationsRowData;
+  //  }
 
 
    let filteredData = associationsRowData;
-   if (selectedDisease.length !== 0) {
-     filteredData = filteredData?.filter((row) =>
-       row.mapped_diseases?.some((d: string) =>
-         selectedDisease.some(
-           (sel) => d.toLowerCase().trim() === sel.toLowerCase().trim()
-         )
-       )
-     );
-   }
+  //  if (selectedDisease.length !== 0) {
+  //    filteredData = filteredData?.filter((row) =>
+  //      row.mapped_diseases?.some((d: string) =>
+  //        selectedDisease.some(
+  //          (sel) => d.toLowerCase().trim() === sel.toLowerCase().trim()
+  //        )
+  //      )
+  //    );
+  //  }
 
 
    if (selectedGene) {
@@ -656,7 +698,7 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
      });
    }
    return filteredData;
- }, [associationsRowData, selectedDisease, selectedGene]);
+ }, [associationsRowData, selectedGene]);
  useEffect(() => {
    // 1. First, calculate what the *new* accessions list should be.
    let newAccessions = []; // <-- Starts empty every time
@@ -713,11 +755,11 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
    let filtered = rowData;
 
 
-   if (selectedDisease.length > 0) {
-     filtered = filtered.filter((item) =>
-       selectedDisease.includes(capitalizeFirstLetter(item["Trait(s)"]))
-     );
-   }
+  //  if (selectedDisease.length > 0) {
+  //    filtered = filtered.filter((item) =>
+  //      selectedDisease.includes(capitalizeFirstLetter(item["Trait(s)"]))
+  //    );
+  //  }
 
 
    if (selectedAccession.length > 0) {
@@ -730,20 +772,20 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
 
 
    return filtered;
- }, [rowData, selectedDisease, selectedAccession, selectedGene]);
+ }, [rowData, selectedAccession, selectedGene]);
 
 
  useEffect(() => {
    const llmData = preprocessGWASStudiesData(rowData);
    const associationData = preprocessAssociationData(associationsRowData);
    register("gwas", {
-     disease: selectedDisease.includes("All")
+     disease: selectedDiseaseAreas.includes("All")
        ? indications.map((indication) => indication.toLowerCase())
-       : selectedDisease,
+       : selectedDiseaseAreas,
      data: llmData,
      data1: associationData,
    });
- }, [rowData, selectedDisease, indications, register]);
+ }, [rowData, selectedDiseaseAreas, indications, register]);
 
 
  const handleLLMCall = () => {

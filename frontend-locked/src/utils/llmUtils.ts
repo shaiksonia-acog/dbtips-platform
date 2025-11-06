@@ -177,54 +177,56 @@ export const preprocessRnaseqData = (data) => {
 
 		const rows = jsonData.flatMap((entry) => {
 			const {
-				GseID,
-				Disease,
-				Title,
-				Summary,
-				Platform,
-				Design,
-				Organism,
-				StudyType,
-				Samples,
-				pubmed_data
+			  GseID,
+			  Disease,
+			  Title,
+			  Summary,
+			  Platform,
+			  Design,
+			  Organism,
+			  StudyType,
+			  Samples,
+			  pubmed_data
 			} = entry;
+		  
+			let PMID = '';
 			let PMID_Title = '';
 			let Abstract = '';
-			let PMID=';'
+		  
 			if (Array.isArray(pubmed_data) && pubmed_data.length > 0) {
-				PMID = pubmed_data.map(p => p.PMID).join(' | ');
-				PMID_Title = pubmed_data.map(p => p.Title).join(' | ');
-				Abstract = pubmed_data.map(p => p.Abstract).join(' | ');
-				
+			  PMID = pubmed_data.map(p => p.PMID).join(' | ');
+			  PMID_Title = pubmed_data.map(p => p.Title).join(' | ');
+			  Abstract = pubmed_data.map(p => p.Abstract).join(' | ');
 			}
-
-			return Samples.map((sample) => {
-				const { SampleID, TissueType, Characteristics } = sample;
-
-				return [
-					GseID || '',
-					Disease || '',
-					escapeCsvField(Title?.join(' | ') || ''),
-					escapeCsvField(Summary || ''),
-					escapeCsvField(
-						Object.entries(Platform || {})
-							.map(([key, value]) => `${key}: ${value}`)
-							.join(' | ') || ''
-					),
-					escapeCsvField(Design?.join(' | ') || ''),
-					escapeCsvField(Organism?.join(', ') || ''),
-					StudyType || '',
-					SampleID || '',
-					escapeCsvField(TissueType || ''),
-					escapeCsvField(Characteristics?.join(' | ') || ''),
-					escapeCsvField(PMID || ''),
-					escapeCsvField(PMID_Title || ''), 
-					escapeCsvField(Abstract || ''), 
-				].join(delimiter); // Use the specified delimiter
+		  
+			return Samples.map((sample, index) => {
+			  const { SampleID, TissueType, Characteristics } = sample;
+		  
+			  // For first sample row, include full info; for others, leave blanks (except GseID)
+			  return [
+				GseID || '',
+				index === 0 ? (Disease || '') : '',
+				index === 0 ? escapeCsvField(Title?.join(' | ') || '') : '',
+				index === 0 ? escapeCsvField(Summary || '') : '',
+				index === 0 ? escapeCsvField(
+				  Object.entries(Platform || {})
+					.map(([key, value]) => `${key}: ${value}`)
+					.join(' | ') || ''
+				) : '',
+				index === 0 ? escapeCsvField(Design?.join(' | ') || '') : '',
+				index === 0 ? escapeCsvField(Organism?.join(', ') || '') : '',
+				index === 0 ? (StudyType || '') : '',
+				SampleID || '',
+				escapeCsvField(TissueType || ''),
+				escapeCsvField(Characteristics?.join(' | ') || ''),
+				 escapeCsvField(PMID || '') ,
+				 escapeCsvField(PMID_Title || '') ,
+				 escapeCsvField(Abstract || '') ,
+			  ].join(delimiter);
 			});
-		});
-
-		return [columns.join(delimiter), ...rows].join('\n');
+		  });
+		  
+		  return [columns.join(delimiter), ...rows].join('\n');
 	};
 
 	let answer = jsonToCsv(data, columns, ',');

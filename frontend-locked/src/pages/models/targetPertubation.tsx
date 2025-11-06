@@ -216,6 +216,46 @@ const ModelStudies = ({ target }) => {
                     );
                   }
                 },
+                {
+                  field: "Allelic Compositions",
+                  flex: 3,
+                  headerName: "Linked literature",
+                  // headerComponentParams: {
+                  // 	displayName: 'Allelic Compositions',
+                  // },
+                  // headerComponent: CustomHeader,
+                  valueGetter: (params) => {
+                    return (
+                      params.data &&
+                      params.data["Allelic Compositions"]?.map(
+                        (el) => el.Link
+                      )
+                    );
+                  },
+                  cellRenderer: (params) => {
+                    return (
+                      params.data &&
+                      params.data["Allelic Compositions"]?.map(
+                        (value, index) => {
+                          // Replace terms enclosed in < > with their superscript equivalent
+                        const link=value.Link?.split("/")?.pop()
+                          return (
+                            <a
+                              key={index}
+                              className="mr-2"
+                              href={`https://www.informatics.jax.org/reference/allele/${link}?typeFilter=Literature`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {link}
+                              {params.data["Allelic Compositions"].length - 1 !== index ? "," : ""}
+                            </a>
+                          );
+                        }
+                      )
+                    );
+                  },
+                },
               ]}
               rowData={filteredData}
             />

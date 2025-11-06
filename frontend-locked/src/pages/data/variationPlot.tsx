@@ -61,7 +61,7 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
 
   const { data: locuszoomData, error: locuszoomError, isLoading: locuszoomLoading } = useQuery(
     ["locuszoom", payload],
-    () => fetchData(payload, "/genomics/gwas-associations"),
+    () => fetchData(payload, "/genomics/gwas-associations-vep"),
     {
       enabled: selectedDisease !== "",
       refetchOnWindowFocus: false,
@@ -95,9 +95,10 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
     const mappedgeneIndex = headers.indexOf("Mapped gene(s)");
     const reportedtraitIndex = headers.indexOf("Reported trait");
     const mapped_traitIndex = headers.indexOf("Mapped Trait");
+    const studyAccesionIndex = headers.indexOf("Study Accession");
     console.log("maaped_traitIndex",mapped_traitIndex);
     if (
-      [chrIndex, posIndex, pvalIndex, rsidIndex, refAlleleIndex, authorIndex, pubmedidIndex, mappedgeneIndex,mapped_traitIndex].includes(
+      [chrIndex, posIndex, pvalIndex, rsidIndex, refAlleleIndex, authorIndex, pubmedidIndex, mappedgeneIndex,mapped_traitIndex,studyAccesionIndex].includes(
         -1
       )
     ) {
@@ -111,7 +112,7 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
       .map(row => ({
         chr: row[chrIndex],
         pos: parseInt(row[posIndex]),
-        pval: parseFloat(row[pvalIndex]),
+        pval: row[pvalIndex],
         rsID: row[rsidIndex],
         variant: row[refAlleleIndex],
         author: row[authorIndex],
@@ -193,6 +194,7 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
         });
       }
     }
+    console.log("Filtered Data: variant", filteredData);
 
       renderManhattanPlot(filteredData);
   };
@@ -209,7 +211,7 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
     const dataMap = {};
     
     data.forEach((row) => {
-      const { chr, pos, logPval, rsID, variant, gene, author, pubmedid, reportedtrait } = row;
+      const { chr, pos, logPval, rsID, variant, gene, author, pubmedid, reportedtrait,pval } = row;
       
       if (!dataMap[chr]) {
         dataMap[chr] = { x: [], y: [], text: [], positions: [], locusX: [] };
@@ -225,7 +227,7 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
       dataMap[chr].y.push(logPval);
       dataMap[chr].locusX.push(chr);
       dataMap[chr].text.push(
-        `rsID: ${rsID}<br>Chromosome: ${chr}<br>P-value: ${Math.pow(10, -logPval).toExponential(2)}<br>` +
+        `rsID: ${rsID}<br>Chromosome: ${chr}<br>P-value: ${pval}<br>` +
         `Variant and Risk Allele: ${variant}<br>Mapped Gene(s): ${gene}<br>` +
         `Reported Trait: ${reportedtrait}<br>Author: ${author}<br>PubMed ID: ${pubmedid}`
       );
