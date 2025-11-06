@@ -409,17 +409,29 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
        headerName: "RAF",
        field: "RAF",
        maxWidth: 100,
+       valueGetter: (params) => {
+        if (params.data["RAF"] === "-" || params.data["RAF"]==="NR") return "";
+        else return params.data["RAF"];
+      },
 
      },
      {
        headerName: "OR",
        field: "OR" ,
        maxWidth: 100,
+       valueGetter: (params) => {
+          if (params.data["OR"] === "-" || params.data["OR"]==="NA") return "";
+          else return params.data["OR"];
+        },
 
      },
      {
         field: "BETA",
         maxWidth: 100,
+        valueGetter: (params) => {
+          if (params.data["BETA"] === "-" || params.data["BETA"]==="NA") return "";
+          else return params.data["BETA"];
+        },
 
      },
 
@@ -427,6 +439,10 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
      {
        headerName: "CI",
        field: "CI",
+       valueGetter: (params) => {
+        if (params.data["CI"] === "-" || params.data["CI"]==="NA") return "";
+        else return params.data["CI"];
+      },
      },
      {
        headerName: "Mapped Gene",
@@ -570,10 +586,8 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
 
  useEffect(() => {
    if (locusZoomData) {
-     console.log("Locus Zoom Data Changed:", locusZoomData);
      const convertedData = convertTODiseaseArray(locusZoomData);
      setDiseaseData(convertedData);
-     console.log("Converted Disease Data:", convertedData);
    }
  }, [locusZoomData]);
  const queryResults = useQueries(
@@ -694,7 +708,7 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
      filteredData = filteredData.filter((row) => {
        // Split the "Mapped gene(s)" by commas or semicolons and trim whitespace
        const genes = row["Mapped gene(s)"]
-         ? row["Mapped gene(s)"].split(/[;,]+/).map((g) => g.trim())
+         ? row["Mapped gene(s)"].split(/[;,-]+/).map((g) => g.trim())
          : [];
 
 

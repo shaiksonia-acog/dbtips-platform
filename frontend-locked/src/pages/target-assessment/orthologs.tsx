@@ -4,7 +4,6 @@ import { fetchData } from '../../utils/fetchData';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { ConfigProvider, Empty, Segmented } from 'antd';
 import { List, ChartLine } from 'lucide-react';
-import Paralogs from './paralogs';
 import Table from '../../components/table';
 
 const labels = {
@@ -494,7 +493,7 @@ const Ortholog = ({target}) => {
                 </div>
 
                 {/* Paralogs Section */}
-                <div className="mb-12">
+                <div className="mb-12" id='paralogs'>
                     <h2 className="text-xl subHeading font-semibold">Paralogs</h2>
                     <p>Paralog assessment identifies structurally similar proteins within the same species that may share binding sites with the target, helping predict off-target interactions and possible side effects.</p>
                   <div className='flex justify-between items-center mb-3'>
@@ -516,7 +515,7 @@ const Ortholog = ({target}) => {
               </>
             )}
           </div>
-          <Paralogs target={target} />
+          {/* <Paralogs target={target} /> */}
         </div>
     );
 }
