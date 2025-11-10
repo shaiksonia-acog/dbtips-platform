@@ -68,13 +68,19 @@ class MeSHToEFOConverter:
         """Find EFO terms mapped to the MeSH term"""
         results = []
         
-        # Search by label in EFO
-        url = f"{self.ols_base}/search"
-        params = {
-            "q": mesh_label,
-            "ontology": self.efo_ontology,
-            "rows": 10
-        }
+        if mesh_id.startswith('D'):
+            url = f"https://www.ebi.ac.uk/ols4/api/search"
+            params = {"q": f"MESH:{mesh_id}", "ontology": self.efo_ontology}
+
+        else:
+            # Search by label in EFO
+            url = f"{self.ols_base}/search"
+            params = {
+                "q": mesh_label,
+                "ontology": self.efo_ontology,
+                "rows": 10,
+                "exact": "true"
+            }
         
         try:
             response = requests.get(url, params=params)
