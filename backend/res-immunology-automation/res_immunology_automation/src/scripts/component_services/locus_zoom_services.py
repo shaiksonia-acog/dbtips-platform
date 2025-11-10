@@ -69,7 +69,7 @@ def filter_asso_by_efo_id(studies: List[str], efo_id: str) -> pd.DataFrame:
                     else:
                         parts = ci.split()
                         # Handle cases like "unit increase", "% increase", "z decrease", etc.
-                        if parts and any(x in parts[0].lower() for x in ['unit', '%', 'z', 'kg/m2']):
+                        if parts and any(x in parts[0].lower() for x in non_numeric_ci_terms):
                             row["CI"] = "-"
                             row["BETA"] = (row.get("OR or BETA", " ") + " " + ' '.join(parts)).strip()
                         else:
