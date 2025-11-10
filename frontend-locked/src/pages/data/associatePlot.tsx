@@ -2,24 +2,24 @@ import { useEffect, useState, useMemo } from "react";
 import { useQuery, useQueries } from "react-query";
 import {
  Empty,
- Button,
+//  Button,
  Segmented,
  ConfigProvider,
- message,
+//  message,
  Select,
 } from "antd";
 
 import { fetchData } from "../../utils/fetchData";
 import { capitalizeFirstLetter } from "../../utils/helper";
 import LoadingButton from "../../components/loading";
-import { useChatStore } from "chatbot-component";
-import BotIcon from "../../assets/bot.svg?react";
+// import { useChatStore } from "chatbot-component";
+// import BotIcon from "../../assets/bot.svg?react";
 import axios from "axios";
 import Table from "../../components/table";
-import {
- preprocessGWASStudiesData,
- preprocessAssociationData,
-} from "../../utils/llmUtils";
+// import {
+//  preprocessGWASStudiesData,
+//  preprocessAssociationData,
+// } from "../../utils/llmUtils";
 const { Option } = Select;
 import ExportButton from "../../components/exportButton";
 import ColumnSelector from "../../components/columnFilter";
@@ -478,7 +478,7 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
      setSelectedAssociationColumns(columns);
    }
  };
- const { register, invoke } = useChatStore();
+//  const { register, invoke } = useChatStore();
  const payload = {
    diseases: indications,
  };
@@ -502,7 +502,6 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
    selectedAssociationColumns,
    selectedColumnsGWASStudies,
  ]);
-
 
  const {
    data: vepAssociationsData,
@@ -797,28 +796,28 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
  }, [rowData, selectedAccession, selectedGene]);
 
 
- useEffect(() => {
-   const llmData = preprocessGWASStudiesData(rowData);
-   const associationData = preprocessAssociationData(associationsRowData);
-   register("gwas", {
-     disease: selectedDiseaseAreas.includes("All")
-       ? indications.map((indication) => indication.toLowerCase())
-       : selectedDiseaseAreas,
-     data: llmData,
-     data1: associationData,
-   });
- }, [rowData, selectedDiseaseAreas, indications, register]);
+//  useEffect(() => {
+//    const llmData = preprocessGWASStudiesData(rowData);
+//    const associationData = preprocessAssociationData(associationsRowData);
+//    register("gwas", {
+//      disease: selectedDiseaseAreas.includes("All")
+//        ? indications.map((indication) => indication.toLowerCase())
+//        : selectedDiseaseAreas,
+//      data: llmData,
+//      data1: associationData,
+//    });
+//  }, [rowData, selectedDiseaseAreas, indications, register]);
 
 
- const handleLLMCall = () => {
-   if (processedData.length === 0) {
-     message.warning(
-       "This feature requires context to be passed to LLM. As there is no data available, this feature cannot be used"
-     );
-     return;
-   }
-   invoke("gwas", { send: false });
- };
+//  const handleLLMCall = () => {
+//    if (processedData.length === 0) {
+//      message.warning(
+//        "This feature requires context to be passed to LLM. As there is no data available, this feature cannot be used"
+//      );
+//      return;
+//    }
+//    invoke("gwas", { send: false });
+//  };
 
 
  return (
@@ -827,14 +826,16 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
        <h2 className="text-xl subHeading font-semibold mb-3 " id="gwasStudies">
          GWAS studies
        </h2>
-       <Button
-         type="default"
-         onClick={handleLLMCall}
-         className="w-18 h-8 text-blue-800 text-sm flex items-center"
-       >
-         <BotIcon width={16} height={16} fill="#d50f67" />
-         <span>Ask LLM</span>
-       </Button>
+
+ {/* <Button
+   type="default"
+   onClick={handleLLMCall}
+   className="w-18 h-8 text-blue-800 text-sm flex items-center"
+ >
+   <BotIcon width={16} height={16} fill="#d50f67" />
+   <span>Ask LLM</span>
+ </Button> */}
+
      </div>
 
 
