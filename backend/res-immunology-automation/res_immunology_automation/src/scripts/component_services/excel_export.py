@@ -116,7 +116,10 @@ def create_excel_from_json(json_data: Dict, template_path: str, output_path: str
                 
                     # Write GseID and metadata only for the first sample
                 ws.cell(row=row, column=1, value=disease)
+                # ws.cell(row=row, column=2, value=gseid)
+                ws.cell(row=row, column=2).hyperlink = f"https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc={gseid}"
                 ws.cell(row=row, column=2, value=gseid)
+                ws.cell(row=row, column=2).style = "Hyperlink"
                 ws.cell(row=row, column=3, value=title)
                 ws.cell(row=row, column=4, value=platform)
                 ws.cell(row=row, column=5, value=design)
@@ -504,7 +507,7 @@ def process_model_studies(data: Dict[str, Any]) -> str:
     :return: The path to the saved Excel file.
     """
     # Define the template and output paths inside the function
-    template_path = "../excel_export_templates/Model-studies-template.xltx"
+    template_path = "../excel_export_templates/Target-perturbation-phenotypes-template.xltx"
     output_path = "model_studies_excel.xlsx"
 
     try:
@@ -531,6 +534,15 @@ def process_model_studies(data: Dict[str, Any]) -> str:
             ws.cell(row=row, column=3, value=composition["Composition"])
             ws.cell(row=row, column=3).hyperlink = composition["Link"]
             ws.cell(row=row, column=3).style = "Hyperlink"
+            pubmed_id = composition["PubMed Links"][0].rstrip("/").split("/")[-1]
+            mgiID = composition["Link"].rstrip("/").split("/")[-1] if composition.get("Link") else None
+
+            ws.cell(row=row, column=4, value=f"PMID: {pubmed_id}")
+            ws.cell(row=row, column=4).hyperlink = composition["PubMed Links"][0]
+            ws.cell(row=row, column=4).style = "Hyperlink"
+            ws.cell(row=row, column=5, value=mgiID)
+            ws.cell(row=row, column=5).hyperlink = f"https://www.informatics.jax.org/reference/allele/{mgiID}?typeFilter=Literature"
+            ws.cell(row=row, column=5).style = "Hyperlink"
 
             # Move to the next row
             row += 1
@@ -851,7 +863,7 @@ def process_kol_videos(data):
 
 def process_gwas_excel( data, association_data):
     # Load workbook and disable template mode
-    template_path = "../excel_export_templates/GWAS-Studies.xltx"
+    template_path = "../excel_export_templates/GWAS-Studies-template.xltx"
     output_path = "GWASLatest.xlsx"
     workbook = load_workbook(template_path)
     workbook.template = False
@@ -888,17 +900,18 @@ def process_gwas_excel( data, association_data):
     
     # Update Associations sheet
     associationWorkbook = workbook["Associations"]
-    for row in associationWorkbook.iter_rows(min_row=2):
+    for row in associationWorkbook.iter_rows(min_row=3):
         for cell in row:
             cell.value = None
     
-    associationRow = 2
+    associationRow = 3
     for diseaseArea, associations in association_data.items():
         for association in associations["gwas_associations"]:
             disease=association["Mapped Trait"]
+            am_pathogenicity=f"{association["am_pathogenicity"]},{association["am_class"]}"
             row_data = [
-                diseaseArea,disease, association["Study Accession"], association["Variant and Risk Allele"],
-                association["pvalue"], association["RAF"], association["OR or BETA"],
+                diseaseArea,disease, association["Study Accession"], association["Variant and Risk Allele"],association["Consequence"],association["IMPACT"],am_pathogenicity,association["CADD_phred"],association["Polyphen2_HDIV_rankscore"],association["SIFT4G_converted_rankscore"], 
+                association["pvalue"], association["RAF"], association["OR"],association["Beta"],
                 association["CI"], association["Mapped gene(s)"]
             ]
             
