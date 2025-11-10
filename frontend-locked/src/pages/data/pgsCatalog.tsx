@@ -424,7 +424,7 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
 
      <p className="my-1">
        Quantifies an individual's genetic susceptibility to{" "}
-       {indications.join(", ")} based on multiple risk variants.
+       {indications.join(", ")} based on multiple risk variants. Select a gene to view gene-based risk scores
      </p>
 
 
