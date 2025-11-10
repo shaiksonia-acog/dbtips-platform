@@ -65,24 +65,36 @@ const HomeLocked = ({ setAppState }) => {
     let vd = new Set(diseaseAreaOptions);
     let vi = new Set(indicationOptions);
 
-    if (targetValue) {
-      // If target is selected, filter disease areas and indications
-      vd = new Set(targetToDiseaseAreaMap[targetValue] || []);
-      vi = new Set(targetToIndicationMap[targetValue] || []);
-    } else if (diseaseAreaValue?.length > 0) {
-      // If disease area is selected, filter targets
+    const targetFromDisease = diseaseAreaValue?.length > 0;
+    const targetFromIndication = indicationsValue?.length > 0;
+
+    if (targetFromDisease) {
       const relatedTargets = new Set<string>();
       diseaseAreaValue.forEach(da => {
         (diseaseToTargetMap[da] || []).forEach(t => relatedTargets.add(t));
       });
       vt = relatedTargets;
-    } else if (indicationsValue?.length > 0) {
-      // If indications are selected, filter targets
+    } else if (targetFromIndication) {
       const relatedTargets = new Set<string>();
       indicationsValue.forEach(i => {
         (indicationToTargetMap[i] || []).forEach(t => relatedTargets.add(t));
       });
       vt = relatedTargets;
+    }
+
+    if (targetValue) {
+      const relatedDiseaseAreas = new Set(targetToDiseaseAreaMap[targetValue] || []);
+      const relatedIndications = new Set(targetToIndicationMap[targetValue] || []);
+      if (targetFromDisease) {
+        vd = new Set([...vd].filter(x => relatedDiseaseAreas.has(x)));
+      } else {
+        vd = relatedDiseaseAreas;
+      }
+      if (targetFromIndication) {
+        vi = new Set([...vi].filter(x => relatedIndications.has(x)));
+      } else {
+        vi = relatedIndications;
+      }
     }
 
     return { validTargets: vt, validDiseaseAreas: vd, validIndications: vi };
