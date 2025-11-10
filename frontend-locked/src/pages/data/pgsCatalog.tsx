@@ -227,7 +227,7 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
        },
        valueGetter: (params) => `
        <div>
-         <span>${params.data["PGS ID"]}</span>
+         <a href ="https://www.pgscatalog.org/score/${params.data["PGS ID"]}" target="_blank">${params.data["PGS ID"]}</a>
          <p class="text-xs">(${params.data["PGS Name"]})</p>
        </div>
      `,
@@ -244,7 +244,7 @@ const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
        },
        valueGetter: (params) => `
        <div>
-         <span>${params.data["PGS Publication ID"]}</span>
+         <a href="https://www.pgscatalog.org/publication/${params.data["PGS Publication ID"]}" target="_blank">${params.data["PGS Publication ID"]}</a>
          <p class="text-xs">${params.data["PGS Publication First Author"]} et al. ${params.data["PGS Publication Journal"]} (${params.data["PGS Publication Year"]})</p>
        </div>
      `,
