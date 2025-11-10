@@ -226,7 +226,9 @@ h1{
     text-align: center;
   }
   
-  
+  .protvista-uniprot-structure__structure{
+    display: block !important;
+  }
   
   /* Ensure image fits properly */
   .custom-card img {
@@ -280,3 +282,7 @@ h1{
 .ag-header-cell-comp-wrapper {
   justify-content: center;
 }
+.protvista-uniprot-structure__table thead{
+  position: relative !important;
+  z-index: 0;
+} 
