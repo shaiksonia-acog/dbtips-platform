@@ -534,12 +534,15 @@ def process_model_studies(data: Dict[str, Any]) -> str:
             ws.cell(row=row, column=3, value=composition["Composition"])
             ws.cell(row=row, column=3).hyperlink = composition["Link"]
             ws.cell(row=row, column=3).style = "Hyperlink"
-            pubmed_id = composition["PubMed Links"][0].rstrip("/").split("/")[-1]
+            pubmed_id = None
+            if composition.get("PubMed Links") and composition["PubMed Links"]:
+             pubmed_id = composition["PubMed Links"][0].rstrip("/").split("/")[-1]
+            print(pubmed_id)
             mgiID = composition["Link"].rstrip("/").split("/")[-1] if composition.get("Link") else None
-
-            ws.cell(row=row, column=4, value=f"PMID: {pubmed_id}")
-            ws.cell(row=row, column=4).hyperlink = composition["PubMed Links"][0]
-            ws.cell(row=row, column=4).style = "Hyperlink"
+            if pubmed_id:
+                ws.cell(row=row, column=4, value=f"PMID: {pubmed_id}")
+                ws.cell(row=row, column=4).hyperlink = composition["PubMed Links"][0]
+                ws.cell(row=row, column=4).style = "Hyperlink"
             ws.cell(row=row, column=5, value=mgiID)
             ws.cell(row=row, column=5).hyperlink = f"https://www.informatics.jax.org/reference/allele/{mgiID}?typeFilter=Literature"
             ws.cell(row=row, column=5).style = "Hyperlink"
