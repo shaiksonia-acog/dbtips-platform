@@ -145,7 +145,6 @@ export const preprocessRnaseqData = (data) => {
 	console.log('rnaseq llm data', data);
 	const columns = [
 		'GseID',
-		'Target',
 		'Disease',
 		'Title',
 		'Summary',
@@ -157,8 +156,7 @@ export const preprocessRnaseqData = (data) => {
 		'TissueType',
 		'Characteristics',
 		"PMID_Title",
-		"Abstract",
-		
+		"Abstract",		
 	];
 
 	const jsonToCsv = (jsonData, columns, delimiter = ',') => {
@@ -189,7 +187,6 @@ export const preprocessRnaseqData = (data) => {
 			  Samples,
 			  pubmed_data,
 			  GseID,
-			  target
 			} = entry;
 		  
 			let PMID = '';
@@ -208,7 +205,6 @@ export const preprocessRnaseqData = (data) => {
 			  // For first sample row, include full info; for others, leave blanks (except GseID)
 			  return [
 				GseID || '',
-				target || '',
 				index === 0 ? (Disease || '') : '',
 				index === 0 ? escapeCsvField(Title?.join(' | ') || '') : '',
 				index === 0 ? escapeCsvField(Summary || '') : '',

@@ -30,11 +30,11 @@ export const config = {
 			label: 'Therapeutic pipeline',
 			description_prompt: '{$data}',
 		},
-		{
-			id:"gwas",
-			label:"GWAS Studies",
-			description_prompt: '{$data}',
-		},
+		// {
+		// 	id:"gwas",
+		// 	label:"GWAS Studies",
+		// 	description_prompt: '{$data}',
+		// },
 		{
 			id:"patient_stories",
 			label:"Patient Stories",
