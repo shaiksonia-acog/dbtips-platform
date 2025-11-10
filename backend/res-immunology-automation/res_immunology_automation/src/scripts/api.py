@@ -3914,7 +3914,7 @@ async def get_gwas_associations_vep(request: DiseasesRequest, redis: Redis = Dep
     try:
         diseases: str = [disease.lower() for disease in request.diseases]
         response = {}
-        converter = MeSHToEFOConverter()
+        converter =  MeSHToEFOConverter()
         CACHE_DIR_PATH = "/app/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease"
         for disease in diseases:
             efo_ids = []
@@ -5133,10 +5133,11 @@ async def get_excel_export(request: ExcelExportRequest):
             request_data = DiseasesRequest(diseases=filtered_diseases)
             print("request_data: ", request_data.dict())
             # Make the POST request to the internal API endpoint
-            response = client.post("/genomics/gwas-associations", json=request_data.dict())
+            response = client.post("/genomics/gwas-associations-vep", json=request_data.dict())
             if response.status_code != 200:
                 raise HTTPException(status_code=response.status_code, detail=response.json())
             asso_resp = response.json()
+            print("asso resp:", asso_resp)
             association_path_list = [v for k,v in asso_resp.items()]
 
             print("association_path_list: ", association_path_list)
