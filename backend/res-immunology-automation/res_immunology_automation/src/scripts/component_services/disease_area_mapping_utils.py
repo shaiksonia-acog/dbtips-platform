@@ -63,12 +63,12 @@ class MeSHToEFOConverter:
         except Exception as e:
             print(f"Error searching MeSH term: {e}")
             return None
-    
-    def find_efo_mapping(self, mesh_id: str, mesh_label: str) -> List[Dict]:
+
+    def find_efo_mapping(self, mesh_id: str|None, mesh_label: str) -> List[Dict]:
         """Find EFO terms mapped to the MeSH term"""
         results = []
         
-        if mesh_id.startswith('D'):
+        if mesh_id and mesh_id.startswith('D'):
             url = f"https://www.ebi.ac.uk/ols4/api/search"
             params = {"q": f"MESH:{mesh_id}", "ontology": self.efo_ontology}
 
@@ -103,20 +103,26 @@ class MeSHToEFOConverter:
         """Convert MeSH term to EFO term(s)"""
         print(f"Converting MeSH term: {mesh_term}")
         
-        # Search for MeSH term
-        mesh_data = self.search_mesh_term(mesh_term)
+        try:
+            # Search for MeSH term
+            mesh_data = self.search_mesh_term(mesh_term)
+            print("mesh: ", mesh_data)
+            if not mesh_data:
+                return {
+                    "success": False,
+                    "mesh_term": mesh_term,
+                    "message": "MeSH term not found"
+                }
+            
+            mesh_id = mesh_data.get("obo_id", mesh_data.get("short_form"))
+            mesh_label = mesh_data.get("label")
+            
+            print(f"Found MeSH: {mesh_id} - {mesh_label}")
         
-        if not mesh_data:
-            return {
-                "success": False,
-                "mesh_term": mesh_term,
-                "message": "MeSH term not found"
-            }
-        
-        mesh_id = mesh_data.get("obo_id", mesh_data.get("short_form"))
-        mesh_label = mesh_data.get("label")
-        
-        print(f"Found MeSH: {mesh_id} - {mesh_label}")
+        except Exception as e:
+            print("no mesh id found")
+            mesh_id = None
+            mesh_label = mesh_term
         
         # Find EFO mappings
         efo_mappings = self.find_efo_mapping(mesh_id, mesh_label)[0]
@@ -377,12 +383,14 @@ def get_mesh_tree_numbers_of_disease(disease_term, mesh_id = None):
 
 if __name__ == "__main__":
     # In market intelligence section, for each trial record, do the following. 
-    efoid = "MONDO_0005149"
-    mesh_ids = efoid_to_meshid_mapper(efoid)
-    disease_areas = map_mesh_to_disease_area(mesh_ids)
-    print (efoid, disease_areas)
-    print ()
-
+    # efoid = "MONDO_0005149"
+    # mesh_ids = efoid_to_meshid_mapper(efoid)
+    # disease_areas = map_mesh_to_disease_area(mesh_ids)
+    # print (efoid, disease_areas)
+    # print ()
+    converter = MeSHToEFOConverter()
+    efo_details = converter.convert("Obesity")
+    print("efo details:", efo_details)
 #     # In literature section, for each PMID, do the following. 
 
 #     pmid_list = [
