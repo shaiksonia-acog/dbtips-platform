@@ -441,13 +441,14 @@ async def update_context(data: UpdateContextRequest):
             else:
                 chat_history.append(AIMessage(content=item.message["output"]))
         app_state["chat_history"] = chat_history
-
+        # print("Updated chat history: ", app_state["chat_history"])
         dataframes = {}
 
         for key, value in data.context_variables.items():
             if 'patient_stories' == key:  
                 app_state['patient_stories_disease'] = value['disease'][0]
-            df = pd.read_csv(StringIO(value["data"].strip()), sep="," if "," in value["data"] else "\t")
+            csv_data = value["data"].replace('\\"', '"')
+            df = pd.read_csv(StringIO(csv_data.strip()), sep="," if "," in csv_data else "\t", index_col=False)
             
             dataframe_name = f"{key}_df"
             dataframes[dataframe_name] = df
@@ -457,7 +458,7 @@ async def update_context(data: UpdateContextRequest):
         
         app_state['data'] = dataframes
 
-        print(app_state['data'])
+        print("df to agent: ", app_state['data'])
             
 
         return {"message": "llm context updated successfully!!!"}
