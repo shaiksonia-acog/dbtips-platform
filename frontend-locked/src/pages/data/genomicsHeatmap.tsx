@@ -265,7 +265,7 @@ const HeatmapComponent = ({ target }) => {
   if (isError || error || fetchError) {
     return (
       <div className="h-[40vh] w-full flex justify-center items-center p-10">
-        <Empty description={error || fetchError?.message || 'Failed to load data'} />
+        <Empty description={error || (fetchError instanceof Error ? fetchError.message : 'Failed to load data') || 'Failed to load data'} />
       </div>
     );
   }
