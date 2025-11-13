@@ -3800,7 +3800,44 @@ async def gwas_studies_data(request: DiseasesRequest, redis: Redis = Depends(get
     except Exception as e:
         # Raise a 500 HTTPException if an error occurs during the request
         raise HTTPException(status_code=500, detail=str(e))
+    
+@app.post("/genomics/evidence-heatmap/", tags=["Genomics"])
+async def get_genomicsHeatmap(request: TargetOnlyRequest, redis: Redis = Depends(get_redis),
+                            db: Session = Depends(get_db)):
+    target: str = request.target.strip().lower()
+    key: str = f"/genomics/evidence-heatmap/:{target}"
+    endpoint: str = "/genomics/evidence-heatmap/"
 
+    # Directory to store the cached JSON file
+    cache_dir: str = "cached_data_json/target"
+    os.makedirs(cache_dir, exist_ok=True)  # Ensure the directory exists
+
+    # File path for the JSON response
+    file_path: str = os.path.join(cache_dir, f"{target}.json")
+
+    target_record = db.query(Target).filter_by(id=target).first()
+    # 1. Check if the cached JSON file exists
+    if target_record is not None:
+        cached_file_path: str = target_record.file_path
+        print(f"Loading cached response from file: {cached_file_path}")
+        cached_responses: Dict = load_response_from_file(cached_file_path)
+
+        # Check if the endpoint response exists in the cached data
+        if f"{endpoint}" in cached_responses:
+            print(f"Returning cached response from file: {cached_file_path}")
+            return cached_responses[f"{endpoint}"]
+
+    cached_response_redis = await get_cached_response(redis, key)
+    if cached_response_redis:
+        print("Returning redis cached response")
+        return cached_response_redis
+
+    try:
+
+
+        return {target: []}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 @app.post("/genomics/locus-zoom-new", tags=["Genomics"])
 async def plot_locus_zoom_new(request: DiseaseRequest, redis: Redis = Depends(get_redis),
                             db: Session = Depends(get_db)):
