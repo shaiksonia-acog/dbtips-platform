@@ -121,7 +121,7 @@ const HeatmapComponent = ({ target }) => {
           y: reversedEvidenceTypes,
           type: 'heatmap',
           colorscale: [
-            [0, '#FFFFFF'],
+            [0, '#FFF4F4'],
             [0.07, '#FFF5F5'],
             [0.14, '#FFE0E0'],
             [0.21, '#FFCCCC'],

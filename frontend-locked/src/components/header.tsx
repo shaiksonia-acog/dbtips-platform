@@ -82,10 +82,7 @@ const Header = ({ app_state }) => {
       key: "data",
       label: "Data",
       children: [
-        {
-          key: "rnaSeq",
-          label: "RNA-seq datasets",
-        },
+      
         {
           key: "GenomicsStudies",
           label: "Genomics studies",
