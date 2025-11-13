@@ -56,8 +56,8 @@ from services import (
     enrich_target_trials
 )
 from api_models import TargetRequest, GraphRequest, DiseaseRequest, SearchQueryModel, DiseasesRequest, \
-    SearchRequest, TargetOnlyRequest,ExcelExportRequest, DiseaseDrugsMapping, DiseaseRequestOnto, DiseaseRequest, DossierRequest, \
-    LoginRequest, EmailRequest, VerifyRequest
+    SearchRequest, TargetOnlyRequest,ExcelExportRequest, DiseaseDrugsMapping, DiseaseRequestOnto, DiseaseRequest, \
+    DossierRequest, LoginRequest, EmailRequest, VerifyRequest
 from utils import format_for_cytoscape, get_efo_id, find_disease_id_by_name, send_graphql_request, \
     save_response_to_file, load_response_from_file, \
     save_big_response_to_file, \
@@ -2565,82 +2565,6 @@ async def get_disease_pathway(request: DiseasesRequest,
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/evidence/pathway-by-target-semaphore/", tags=["Evidence"])
-async def get_pathway_by_target_semaphore(request: TargetOnlyRequest,
-                            db: Session = Depends(get_db), build_cache: bool=False):
-    try:
-        async with semaphore:  # This will block concurrent requests
-            print(f"lock applied and processing {request.target}")
-            response =  await get_pathway_by_target(request, db, build_cache)
-            print("lock removed")
-    except Exception as e:
-        raise e
-    return response
-
-
-@app.post("/evidence/pathway-by-target/", tags=["Evidence"])
-async def get_pathway_by_target(request: TargetOnlyRequest,
-                            db: Session = Depends(get_db),
-                            build_cache: bool=False):
-    target: str = request.target.lower()
-    
-    key: str = f"/evidence/disease-pathway-by-target/:{target}"
-    endpoint: str = "/evidence/disease-pathway-by-target/"
-
-    # Directory to store the cached JSON file
-    cache_dir: str = "cached_data_json/target"
-    os.makedirs(cache_dir, exist_ok=True)  # Ensure the directory exists
-    
-    cached_data: Dict[str,Any] = {}
-    target_record = db.query(Target).filter_by(id=f"{target}").first()
-    # 1. Check if the cached JSON file exists
-    if target_record is not None:
-        cached_file_path: str = target_record.file_path
-        print(f"Loading cached response from file: {cached_file_path}")
-        cached_responses: Dict = load_response_from_file(cached_file_path)
-        # Check if the endpoint response exists in the cached data
-        if f"{endpoint}" in cached_responses:  
-            print(f"Returning cached response from file: {cached_file_path}")
-            cached_data[target.replace("_"," ")]=cached_responses[f"{endpoint}"]
-
-        print("Fetching data from strapi")
-        # cached_data=enrich_disease_pathway_results(cached_data)
-        return cached_data
-
-    print("filtered diseases: ", filtered_diseases)
-
-    try:
-        if build_cache == True:
-            
-                target_record = db.query(Target).filter_by(id=f"{target}").first()
-                file_path: str = os.path.join(cache_dir, f"{target}.json")
-
-                data=fetch_and_filter_figures_by_target(target)
-                cached_data[target] = {"results": data}
-
-                if target_record is not None:
-                    cached_file_path: str = target_record.file_path
-                    cached_responses = load_response_from_file(cached_file_path)
-                else:
-                    cached_responses = {}
-
-                cached_responses[f"{endpoint}"] = {"results": data}
-
-                if target_record is None:
-                    save_response_to_file(file_path, cached_responses)
-                    new_record = Target(id=target, file_path=file_path)  # Create a new instance of the identified model
-                    db.add(new_record)  # Add the new record to the session
-                    db.commit()  # Commit the transaction to save the record to the database
-                    db.refresh(new_record)  # Refresh the instance to reflect any changes from the DB (like auto-generated
-                    # fields)
-                    print(f"Record with ID {target} added to the disease table.")
-                else:
-                    save_response_to_file(cached_file_path, cached_responses)
-            # cached_data=enrich_disease_pathway_results(cached_data)    
-        return cached_data
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
 @app.post("/evidence/literature-images/", tags=["Evidence"])
 async def get_literature_images_evidence(request: DiseasesRequest,
                                         db: Session = Depends(get_db),
@@ -3696,6 +3620,88 @@ async def pgs_catalog_data(request: DiseasesRequest, redis: Redis = Depends(get_
         # Raise a 500 HTTPException if an error occurs during the request
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/genomics/pgscatalog-unique-genes", tags=["Genomics"])
+async def get_unique_genes_pgs_catalog_data(request: DiseasesRequest, redis: Redis = Depends(get_redis),
+                            db: Session = Depends(get_db)):
+    
+    """
+    Fetches Genomics Data for given diseases using PGSCatalog API.
+    """
+    diseases: List[str] = request.diseases
+    diseases = [s.strip().lower().replace(" ", "_") for s in diseases]
+    diseases_str = "-".join(diseases)
+
+    # Generate a cache key for the request using target and disease list
+    key: str = f"/genomics/pgscatalog_unique_genes:{diseases_str}"
+    endpoint: str = "/genomics/pgscatalog_unique_genes/"
+
+    # Directory to store the cached JSON file
+    cache_dir: str = "cached_data_json/disease"
+    os.makedirs(cache_dir, exist_ok=True)  # Ensure the directory exists
+
+    cached_diseases: Set[str] = set()
+    response = {"unique_genes": {}}
+    try:
+        for disease in diseases:
+            disease_record = db.query(Disease).filter_by(id=f"{disease}").first()
+            # 1. Check if the cached JSON file exists
+            if disease_record is not None:
+                cached_file_path: str = disease_record.file_path
+                print(f"Loading cached response from file: {cached_file_path}")
+                cached_responses: Dict = load_response_from_file(cached_file_path)
+
+                response["unique_genes"][disease.replace('_', ' ')] = []
+                # Check if the endpoint response exists in the cached data
+                if endpoint in cached_responses:
+                    cached_diseases.add(disease)
+                    print(f"Returning cached response from file: {cached_file_path}")
+                    response["unique_genes"][disease.replace('_', ' ')] = cached_responses[endpoint]
+
+        # # filtering diseases whose response is not present in the json file
+        filtered_diseases = [disease for disease in diseases if disease not in cached_diseases]
+
+        if len(filtered_diseases) == 0:  # all disease already present in the json file
+            print("All diseases already present in cached json files,returning cached response")
+        else:
+            print(f"Genes not availble for {filtered_diseases}. Fetching from Redis") 
+            # Check if cached response exists in Redis
+            cached_response_redis: dict = await get_cached_response(redis, key)
+            if cached_response_redis:
+                print("Returning chached response")
+                return cached_response_redis
+    
+        await set_cached_response(redis, key, response)
+        return response
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/genomics/pgscatalog-gene-data", tags=["Genomics"])
+async def get_gene_data(request: TargetOnlyRequest):
+    
+    """
+    Fetches Genomics Data for given diseases using PGSCatalog API.
+    """
+    gene: str = request.target
+    gene_str = gene.strip().replace(" ", "_")
+
+    # Directory to store the cached JSON file
+    cache_dir: str = "cached_data_json/gene_data_files"
+    os.makedirs(cache_dir, exist_ok=True)  # Ensure the directory exists
+    gene_path = os.path.join(cache_dir, f"{gene_str}_data.json")
+    response = {"gene_data": {}}
+    if os.path.exists(gene_path):
+        try:
+            print(f"Loading cached response from file: {gene_path}")
+            cached_responses: Dict = load_response_from_file(gene_path)
+            response["gene_data"] = cached_responses
+            return response
+        except Exception as e:
+            print(f"Error loading cached response: {e}")
+            return HTTPException(status_code=500, detail=str(e))
+    return response
+
+
 @app.post("/genomics/gwas-studies", tags=["Genomics"])
 async def gwas_studies_data(request: DiseasesRequest, redis: Redis = Depends(get_redis),
                             db: Session = Depends(get_db)):
@@ -3838,6 +3844,7 @@ async def get_genomicsHeatmap(request: TargetOnlyRequest, redis: Redis = Depends
         return {target: []}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
 @app.post("/genomics/locus-zoom-new", tags=["Genomics"])
 async def plot_locus_zoom_new(request: DiseaseRequest, redis: Redis = Depends(get_redis),
                             db: Session = Depends(get_db)):
@@ -3863,7 +3870,7 @@ async def plot_locus_zoom_new(request: DiseaseRequest, redis: Redis = Depends(ge
             gwas_studies = gwas_studies[disease.replace(" ", "_")]
             studies = list(set([item["Study accession"] for item in gwas_studies if "Study accession" in item]))
             print("studies: ", len(studies), studies)
-            gwas_disease_file_path = load_data(studies, requested_efo)
+            gwas_disease_file_path = generate_variants(studies, requested_efo)
         return gwas_disease_file_path
 
     except FileNotFoundError as e:
