@@ -78,7 +78,27 @@ const Header = ({ app_state }) => {
         { key: "patent", label: "Patents" },
       ],
     },
-
+    {
+      key: "data",
+      label: "Data",
+      children: [
+        {
+          key: "rnaSeq",
+          label: "RNA-seq datasets",
+        },
+        {
+          key: "GenomicsStudies",
+          label: "Genomics studies",
+          children: [
+            
+            {
+              key: "genomics-heatmap",
+              label: "Genomic evidence heatmap",
+            }
+          ],
+        },
+      ],
+    },
     {
       key: "literature",
       label: "Evidence",
@@ -332,6 +352,10 @@ const Header = ({ app_state }) => {
             {
               key:"PPM",
               label:"Performance metrics"
+            },
+            {
+              key: "genomics-heatmap",
+              label: "Genomic evidence heatmap",
             }
           ],
         },

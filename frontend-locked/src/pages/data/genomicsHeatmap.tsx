@@ -1,0 +1,306 @@
+import { useEffect, useRef, useState } from 'react';
+import Plotly from 'plotly.js-dist-min';
+import { useQuery } from 'react-query';
+import { fetchData } from '../../utils/fetchData';
+import { Empty } from 'antd';
+import LoadingButton from '../../components/loading';
+
+const categoryColors = {
+  'ECG Traits': '#E63946',          // bold red
+  'CARDIOVASCULAR': '#1D3557',      // navy blue
+  'HEMATOLOGICAL': '#457B9D',       // steel blue
+  'Anthropometric': '#2A9D8F',      // teal green
+  'Sleep And Circadian': '#F4A261', // warm orange
+  'HEPATIC': '#E9C46A',             // gold yellow
+  'LIPIDS': '#264653',              // dark cyan
+  'GLYCEMIC': '#8A2BE2',            // vivid violet
+  'RENAL': '#00B4D8',               // bright sky blue
+  'METABOLITE': '#FF006E',          // magenta pink
+  'ATRIAL FIBRILLATION': '#8338EC', // deep purple
+};
+
+
+const HeatmapComponent = ({ target }) => {
+  const heatmapRef = useRef(null);
+  const [error, setError] = useState(null);
+
+  const payload = { target };
+
+  const {
+    data: heatmapData,
+    isLoading,
+    isError,
+    error: fetchError,
+  } = useQuery(
+    ['evidence-heatmap', payload],
+    () => fetchData(payload, '/genomics/evidence-heatmap/'),
+    {
+      enabled: !!target,
+      staleTime: 5 * 60 * 1000,
+      cacheTime: 30 * 60 * 1000,
+    }
+  );
+
+  useEffect(() => {
+    if (!heatmapData || !heatmapRef.current) return;
+
+    const renderHeatmap = () => {
+      try {
+        const dataJson = heatmapData;
+        const unsortedTraitData = dataJson[Object.keys(dataJson)[0]];
+     
+        if (!unsortedTraitData || unsortedTraitData.length === 0) {
+          setError('No data available');
+          return;
+        }
+
+        // Sort by category
+        const traitData = [...unsortedTraitData].sort((a, b) =>
+          a.category.localeCompare(b.category)
+        );
+
+        const traits = traitData.map((item) => item?.trait?.trim());
+        const categories = traitData.map((item) => item.category);
+        const evidenceTypes = Object.keys(traitData[0].evidenceCounts);
+
+        // FIXED: Create data array properly - each row is an evidence type
+        const data = evidenceTypes.map((evidenceType) =>
+          traitData.map((item) => item.evidenceCounts[evidenceType]['score'])
+        );
+
+        // Reverse to show evidence types in correct order
+        const reversedData = data.reverse();
+        const reversedEvidenceTypes = [...evidenceTypes].reverse();
+
+        // Wrap long labels
+        const wrappedTraits = traits.map((trait) => {
+          const words = trait?.split(' ');
+          const lines = [];
+          let currentLine = '';
+
+          words?.forEach((word) => {
+            if ((currentLine + word).length > 45) {
+              lines.push(currentLine?.trim());
+              currentLine = word + ' ';
+            } else {
+              currentLine += word + ' ';
+            }
+          });
+          if (currentLine?.trim()) lines.push(currentLine?.trim());
+          return lines.join('<br>');
+        });
+
+        // FIXED: Build hover text matching the data structure
+        const hoverText = reversedEvidenceTypes.map((evidenceType) =>
+          traitData.map((item) => {
+            const evidence = item.evidenceCounts[evidenceType];
+            let hoverInfo = `<b>${item.trait}</b><br>Evidence: ${evidenceType}<br>Score: ${evidence.score}`;
+
+            if (evidenceType === 'Fine mapping') {
+              if (evidence['Mean PP'] !== null && evidence['Mean PP'] !== undefined) {
+                hoverInfo += `<br>Mean PP: ${evidence['Mean PP'].toFixed(4)}`;
+              }
+            } else if (evidenceType === 'COLOC') {
+              if (evidence.pp_h4_abf !== null && evidence.pp_h4_abf !== undefined) {
+                hoverInfo += `<br>pp_h4_abf: ${evidence.pp_h4_abf.toFixed(4)}`;
+              }
+            } else if (evidenceType !== 'Total') {
+              if (evidence.pval !== null && evidence.pval !== undefined) {
+                hoverInfo += `<br>p-value: ${evidence.pval.toExponential(2)}`;
+              }
+            }
+
+            return hoverInfo;
+          })
+        );
+
+        // Main heatmap trace
+        const heatmapTrace = {
+          z: reversedData,
+          x: wrappedTraits,
+          y: reversedEvidenceTypes,
+          type: 'heatmap',
+          colorscale: [
+            [0, '#FFFFFF'],
+            [0.07, '#FFF5F5'],
+            [0.14, '#FFE0E0'],
+            [0.21, '#FFCCCC'],
+            [0.29, '#FFB3B3'],
+            [0.36, '#FF9999'],
+            [0.43, '#FF8080'],
+            [0.5, '#FF6666'],
+            [0.57, '#FF4D4D'],
+            [0.64, '#FF3333'],
+            [0.71, '#FF1A1A'],
+            [0.79, '#E60000'],
+            [0.86, '#CC0000'],
+            [0.93, '#B30000'],
+            [1, '#800000']
+          ],
+          showscale: true,
+          hoverongaps: false,
+          text: hoverText,
+          hovertemplate: '%{text}<extra></extra>',
+          colorbar: {
+            thickness: 15,
+            len: 0.7,
+            x: 1.02,
+            tickfont: { size: 10 },
+          },
+          xaxis: 'x',
+          yaxis: 'y'
+        };
+
+        // FIXED: Category color strip - build proper discrete colorscale
+        const categoryColorScale = [];
+        wrappedTraits?.forEach((_trait, i) => {
+          const start = i / wrappedTraits.length;
+          const end = (i + 1) / wrappedTraits.length;
+          
+          // Get color with case-insensitive fallback
+          const categoryKey = Object.keys(categoryColors).find(
+            key => key.toLowerCase() === categories[i].toLowerCase()
+          );
+          const color = categoryColors[categories[i]] || categoryColors[categoryKey] || '#95A5A6';
+          
+          categoryColorScale.push([start, color]);
+          if (i < wrappedTraits.length - 1) {
+            categoryColorScale.push([end - 0.0001, color]);
+          } else {
+            categoryColorScale.push([1, color]);
+          }
+        });
+
+        const categoryTrace = {
+          z: [wrappedTraits.map((_, i) => i)],
+          x: wrappedTraits,
+          y: ['Categories'],
+          type: 'heatmap',
+          colorscale: categoryColorScale,
+          showscale: false,
+          customdata: [categories],
+          hovertemplate: '<b>%{x}</b><br>Category: %{customdata}<extra></extra>',
+          xaxis: 'x2',
+          yaxis: 'y2',
+          xgap: 1,
+          ygap: 0
+        };
+
+        // Layout
+        const layout = {
+          grid: {
+            rows: 2,
+            columns: 1,
+            pattern: 'independent',
+            roworder: 'top to bottom',
+            subplots: [['xy'], ['x2y2']]
+          },
+          xaxis: { 
+            showticklabels: false,
+          },
+          yaxis: {
+            title: { text: 'Evidence types', font: { size: 11 }, standoff: 10 },
+            tickfont: { size: 9 },
+            automargin: true,
+            domain: [0.00, 1],
+          },
+          xaxis2: {
+            tickangle: -45,
+            title: { text: 'Traits', font: { size: 11 }, standoff: 10 },
+            side: 'bottom',
+            tickfont: { size: 9 },
+            showticklabels: true,
+            domain: [0, 1],
+            automargin: true
+          },
+          yaxis2: {
+            tickfont: { size: 9 },
+            automargin: true,
+            domain: [0, 0.01],
+          },
+          margin: { l: 100, r: 120, t: 20, b: 150 },
+          paper_bgcolor: 'white',
+          plot_bgcolor: 'white',
+        };
+
+        const config = {
+          responsive: true,
+          displayModeBar: true,
+          modeBarButtonsToRemove: ['lasso2d', 'select2d'],
+        };
+
+        Plotly.newPlot(heatmapRef.current, [heatmapTrace, categoryTrace], layout, config);
+      } catch (err) {
+        console.error('Heatmap render error:', err);
+        setError(err.message);
+      }
+    };
+
+    renderHeatmap();
+
+    return () => {
+      if (heatmapRef.current) {
+        Plotly.purge(heatmapRef.current);
+      }
+    };
+  }, [heatmapData]);
+
+  // Category legend
+  const [uniqueCategories, setUniqueCategories] = useState([]);
+
+  useEffect(() => {
+    if (heatmapData) {
+      const dataKey = Object.keys(heatmapData)[0];
+      const categories = heatmapData[dataKey]
+        ? [...new Set(heatmapData[dataKey].map((item) => item.category))]
+        : [];
+      setUniqueCategories(categories);
+    }
+  }, [heatmapData]);
+
+  if (isLoading) {
+    return <LoadingButton />;
+  }
+
+  if (isError || error || fetchError) {
+    return (
+      <div className="h-[40vh] w-full flex justify-center items-center p-10">
+        <Empty description={error || fetchError?.message || 'Failed to load data'} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-start gap-4">
+      {uniqueCategories.length > 0 && (
+        <div className="w-full mt-4">
+          <div className="bg-white px-4 py-3 rounded border border-gray-200">
+            <div className="font-bold text-center mb-3 text-xs">Categories</div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+              {uniqueCategories.map((category) => {
+                const categoryKey = Object.keys(categoryColors).find(
+                  key => key.toLowerCase() === category.toLowerCase()
+                );
+                const color = categoryColors[category] || categoryColors[categoryKey] || '#95A5A6';
+                
+                return (
+                  <div key={category} className="flex items-center text-xs">
+                    <div
+                      className="w-4 h-4 mr-2 flex-shrink-0 border border-gray-300"
+                      style={{ backgroundColor: color }}
+                    />
+                    <span className="truncate">{category}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div ref={heatmapRef} className="w-[90em]" style={{ height: '500px' }} />
+    </div>
+  );
+};
+
+export default HeatmapComponent;

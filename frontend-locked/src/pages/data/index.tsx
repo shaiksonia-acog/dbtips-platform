@@ -5,6 +5,7 @@ import RnaSeqCard from "./rnaSeqCard";
 import AssociatePlot from "./associatePlot";
 import PgsCatalog from "./pgsCatalog";
 import Variantplot from "./variationPlot"
+import GenomicsHeatmap from "./genomicsHeatmap";
 const Data = () => {
     const location = useLocation();
     const [indications, setIndications] = useState([]);
@@ -18,23 +19,32 @@ const Data = () => {
         setTarget(target);
       }, [location]);
     
-
+const hasIndications = indications.length > 0 || diseaseArea.length > 0;
   return (
-    <div className=" mt-8">
-      <div className="px-[5vw]">
+    <div >
+     { hasIndications && <div className="px-[5vw] mt-8" >
       <RnaSeqCard />
 
-      </div>
+      </div>}
     
-      <div id="GenomicsStudies" className="py-10 px-[5vw] bg-gray-50  ">
+      <div id="GenomicsStudies" className={`py-10 px-[5vw] ${hasIndications? "bg-gray-50":""}` }>
         <h1 className="text-3xl font-semibold">Genomics studies</h1>
 
-      <AssociatePlot indications={indications.length > 0 ? indications : diseaseArea} 
+      { hasIndications && <><AssociatePlot indications={indications.length > 0 ? indications : diseaseArea} 
         diseaseAreaFilter={diseaseArea.length > 0} target={target} />
       <Variantplot diseases={indications.length > 0 ? indications : diseaseArea} 
         diseaseAreaFilter={diseaseArea.length > 0}/>
       <PgsCatalog indications={indications.length > 0 ? indications : diseaseArea} 
-        diseaseAreaFilter={diseaseArea.length > 0}/>
+        diseaseAreaFilter={diseaseArea.length > 0}/></>}
+        <div className="mt-5" id="genomics-heatmap">
+        <h2 className="text-xl subHeading font-semibold mb-3">
+        Genomic evidence heatmap{" "}
+      </h2>
+      <p>
+      Summary of evidence from GWAS downstream analyses for gene prioritisation. Counts within the heatmap represent the total of individual contributing results for these methods, combining evidence from across different methods.
+      </p>
+        <GenomicsHeatmap target={target}/>
+        </div>
       </div>
       </div>
       
