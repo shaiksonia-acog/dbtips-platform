@@ -18,7 +18,18 @@ const categoryColors = {
   'METABOLITE': '#FF006E',          // magenta pink
   'ATRIAL FIBRILLATION': '#8338EC', // deep purple
 };
-
+const generateColorscale = () => {
+  const colors = [
+    '#FFF8F8', '#FFE5E5', '#FFCCCC', '#FFB3B3', '#FF9999',
+    '#FF8080', '#FF6666', '#FF4D4D', '#FF3333', '#FF1A1A',
+    '#E60000', '#CC0000', '#B30000', '#990000', '#800000'
+  ];
+  
+  return colors.map((color, index) => {
+    const position = index / (colors.length - 1);
+    return [position, color];
+  });
+};
 
 const HeatmapComponent = ({ target }) => {
   const heatmapRef = useRef(null);
@@ -76,6 +87,7 @@ const HeatmapComponent = ({ target }) => {
           if (type.toUpperCase() === 'COLOC') return 'Colocalisation';
           return type;
         });
+      
      
         const hoverText = reversedEvidenceTypes.map((evidenceType, rowIndex) =>
           traitData.map((item) => {
@@ -93,7 +105,7 @@ const HeatmapComponent = ({ target }) => {
             } 
             else if (evidenceType.toLowerCase() === 'phewas') {
               if (evidence.huge_score !== null && evidence.huge_score !== undefined) {
-                hoverInfo += `<br>Huge score: ${evidence.huge_score}`;
+                hoverInfo += `<br>HuGE score: ${evidence.huge_score}`;
               }}
             else if (evidenceType.toLowerCase() !== 'total') {
               if (evidence.pval !== null && evidence.pval !== undefined) {
@@ -112,32 +124,17 @@ const HeatmapComponent = ({ target }) => {
           y: displayEvidenceTypes,  // Use display names here
           type: 'heatmap',
 
-          colorscale: [
-            [0, '#FFF8F8'],   // very pale pink (lighter than #FFF6F6)
-            [0.07, '#FFE5E5'], 
-            [0.14, '#FFE0E0'],
-            [0.21, '#FFCCCC'],
-            [0.29, '#FFB3B3'],
-            [0.36, '#FF9999'],
-            [0.43, '#FF8080'],
-            [0.5, '#FF6666'],
-            [0.57, '#FF4D4D'],
-            [0.64, '#FF3333'],
-            [0.71, '#FF1A1A'],
-            [0.79, '#E60000'],
-            [0.86, '#CC0000'],
-            [0.93, '#B30000'],
-            [1, '#800000']
-          ],
+          colorscale:generateColorscale(),
           showscale: true,
           hoverongaps: false,
           text: hoverText,
           hovertemplate: '%{text}<extra></extra>',
           colorbar: {
             thickness: 15,
-            len: 0.7,
-            x: 1.02,
+            // len: 0.7,
+            x: 1,
             tickfont: { size: 10 },
+
           },
           xaxis: 'x',
           yaxis: 'y'
@@ -190,35 +187,35 @@ const HeatmapComponent = ({ target }) => {
           xaxis: { 
             showticklabels: false,
             domain: [0, 1],      // ADD THIS
-    anchor: 'y'  
+    anchor: 'y'  ,
           },
           yaxis: {
-            title: { text: 'Evidence types', font: { size: 11 }, standoff: 10 },
-            tickfont: { size: 9 },
-            automargin: true,
-            domain: [0.00, 1],
-            anchor: 'x'          // ADD THIS
+          title: { text: 'Evidence types', font: { size: 12,weight: 'bold' }, standoff: 10 },
+          tickfont: { size: 11,weight: 'bold' },
+          automargin: true,
+          domain: [0.00, 1],
+          anchor: 'x'          
 
           },
           xaxis2: {
-            tickangle: -45,
-            title: { text: 'Traits', font: { size: 11 }, standoff: 10 },
-            side: 'bottom',
-            tickfont: { size: 9 },
-            showticklabels: true,
-            domain: [0, 1],
-            automargin: true,
-            anchor: 'y2',        // ADD THIS
-    matches: 'x'  ,
-    tickvals: traits.map((_, i) => i),    // ADD THIS
-  ticktext: traits,
-   
+          tickangle: -45,
+          title: { text: 'Traits', font: { size: 12,weight: 'bold'}, standoff: 10 },
+          side: 'bottom',
+          tickfont: { size: 9,weight: 'bold' },
+          showticklabels: true,
+          domain: [0, 1],
+          automargin: true,
+          anchor: 'y2',        
+      matches: 'x'  ,
+      tickvals: traits.map((_, i) => i),    
+      ticktext: traits,
+       
           },
           yaxis2: {
-            tickfont: { size: 9 },
-            automargin: true,
-            domain: [0, 0.04],
-            anchor: 'x2'         // ADD THIS
+          tickfont: { size: 11, weight: 'bold' },
+          automargin: true,
+          domain: [0, 0.04],
+          anchor: 'x2'         // ADD THIS
 
           },
           margin: { l: 100, r: 120, t: 20, b: 200 },
@@ -229,7 +226,12 @@ const HeatmapComponent = ({ target }) => {
         const config = {
           responsive: true,
           displayModeBar: true,
-          modeBarButtonsToRemove: ['lasso2d', 'select2d'],
+          // modeBarButtonsToRemove: ['lasso2d', 'select2d'],
+          displaylogo: false,
+          modeBarStyle: {
+            top: "5px",
+            right: "2px"  
+          }
         };
 
         Plotly.newPlot(heatmapRef.current, [heatmapTrace, categoryTrace], layout, config);
