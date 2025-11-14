@@ -78,7 +78,6 @@ const HeatmapComponent = ({ target }) => {
           traitData.map((item) => item.evidenceCounts[evidenceType]['score'])
         );
        
-        // Reverse to show evidence types in correct order
         const reversedData = data.reverse();
         const reversedEvidenceTypes = [...evidenceTypes].reverse();
         const displayEvidenceTypes = reversedEvidenceTypes.map(type => {
