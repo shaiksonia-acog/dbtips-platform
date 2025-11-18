@@ -75,7 +75,6 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
     if (locuszoomData) {
       if(locuszoomData?.[selectedDisease.toLowerCase()] !== "EFO ID not found for immune-mediated necrotizing myopathy") 
       {
-        console.log("LocusZoom Data: frffr pgs catalog", locuszoomData);
 
         const id = locuszoomData?.[selectedDisease.toLowerCase()]?.split("/").pop();
         setMondoId(id);
@@ -96,7 +95,6 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
     const reportedtraitIndex = headers.indexOf("Reported trait");
     const mapped_traitIndex = headers.indexOf("Mapped Trait");
     const studyAccesionIndex = headers.indexOf("Study Accession");
-    console.log("maaped_traitIndex",mapped_traitIndex);
     if (
       [chrIndex, posIndex, pvalIndex, rsidIndex, refAlleleIndex, authorIndex, pubmedidIndex, mappedgeneIndex,mapped_traitIndex,studyAccesionIndex].includes(
         -1
@@ -122,7 +120,6 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
         logPval: -Math.log10(parseFloat(row[pvalIndex])),
         mapped_trait: row[mapped_traitIndex]
       }));
-      console.log("Processed Rows:", processedRows);
     setRawData(processedRows);
 
     // Extract unique variants and genes for filters
@@ -194,7 +191,6 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
         });
       }
     }
-    console.log("Filtered Data: variant", filteredData);
 
       renderManhattanPlot(filteredData);
   };
