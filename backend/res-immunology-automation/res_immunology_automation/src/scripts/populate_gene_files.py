@@ -1,6 +1,6 @@
 import json
 import os
-gene_data_dir = "/home/amani/dbtips-mrl-test/my-test/backend/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/gene_data_files"
+gene_data_dir = "/home/amani/dbtips-mrl-test/dbtips-platform-copy/backend/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/gene_data_files"
 def populate(pgs_with_genes_file, cache_file):
     with open(pgs_with_genes_file, 'r') as f:
         cache = json.load(f)
@@ -25,7 +25,7 @@ def populate(pgs_with_genes_file, cache_file):
             for k, v  in score.items():
                 renamed_key = rename_scores.get(k, k)
                 gene_files[gene_symbol][pgs_id] = gene_files[gene_symbol].get(pgs_id, {})
-                gene_files[gene_symbol][pgs_id][renamed_key] = f"{v:.4e}" 
+                gene_files[gene_symbol][pgs_id][renamed_key] = round(v, 5)
             # gene_files[gene_symbol][pgs_id] = score
         
     
@@ -71,7 +71,7 @@ def populate_heatmaps_data(target):
 
 if __name__ == "__main__":
     disease = "CVD"
-    populate(f"/shared/VEP/PGS/diseases/{disease}/{disease}_with_all_pgs_studies.json", f"/home/amani/dbtips-mrl-test/my-test/backend/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease/cardiovascular_diseases.json")
+    populate(f"/shared/VEP/PGS/diseases/{disease}/{disease}_with_all_pgs_studies.json", f"/home/amani/dbtips-mrl-test/dbtips-platform-copy/backend/res-immunology-automation/res_immunology_automation/src/scripts/cached_data_json/disease/cardiovascular_diseases.json")
 
     # # Populate HeatMap Data in GWAS
     # targets = os.listdir("/shared/VEP/heatmap/output_heatmap")
