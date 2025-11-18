@@ -9,16 +9,27 @@ const categoryColors = {
   'ECG Traits': '#E63946',          // bold red
   'CARDIOVASCULAR': '#1D3557',      // navy blue
   'HEMATOLOGICAL': '#457B9D',       // steel blue
-  'Anthropometric': '#2A9D8F',      // teal green
+  'Anthropometric': 'brown',      // teal green
   'Sleep And Circadian': '#F4A261', // warm orange
   'HEPATIC': '#E9C46A',             // gold yellow
-  'LIPIDS': '#264653',              // dark cyan
-  'GLYCEMIC': '#8A2BE2',            // vivid violet
+  'LIPIDS': 'blue',              // dark cyan
+  'GLYCEMIC': 'green',            // vivid violet
   'RENAL': '#00B4D8',               // bright sky blue
   'METABOLITE': '#FF006E',          // magenta pink
   'ATRIAL FIBRILLATION': '#8338EC', // deep purple
 };
-
+const generateColorscale = () => {
+  const colors = [
+    '#FFF8F8', '#FFE5E5', '#FFCCCC', '#FFB3B3', '#FF9999',
+    '#FF8080', '#FF6666', '#FF4D4D', '#FF3333', '#FF1A1A',
+    '#E60000', '#CC0000', '#B30000', '#990000', '#800000'
+  ];
+  
+  return colors.map((color, index) => {
+    const position = index / (colors.length - 1);
+    return [position, color];
+  });
+};
 
 const HeatmapComponent = ({ target }) => {
   const heatmapRef = useRef(null);
@@ -63,53 +74,44 @@ const HeatmapComponent = ({ target }) => {
         const categories = traitData.map((item) => item.category);
         const evidenceTypes = Object.keys(traitData[0].evidenceCounts);
 
-        // FIXED: Create data array properly - each row is an evidence type
         const data = evidenceTypes.map((evidenceType) =>
           traitData.map((item) => item.evidenceCounts[evidenceType]['score'])
         );
-
-        // Reverse to show evidence types in correct order
+       
         const reversedData = data.reverse();
         const reversedEvidenceTypes = [...evidenceTypes].reverse();
-
-        // Wrap long labels
-        const wrappedTraits = traits.map((trait) => {
-          const words = trait?.split(' ');
-          const lines = [];
-          let currentLine = '';
-
-          words?.forEach((word) => {
-            if ((currentLine + word).length > 45) {
-              lines.push(currentLine?.trim());
-              currentLine = word + ' ';
-            } else {
-              currentLine += word + ' ';
-            }
-          });
-          if (currentLine?.trim()) lines.push(currentLine?.trim());
-          return lines.join('<br>');
+        const displayEvidenceTypes = reversedEvidenceTypes.map(type => {
+          if (type.toLowerCase() === 'phewas') return 'PheWAS';
+        
+          if (type.toUpperCase() === 'COLOC') return 'Colocalisation';
+          return type;
         });
-
-        // FIXED: Build hover text matching the data structure
-        const hoverText = reversedEvidenceTypes.map((evidenceType) =>
+      
+     
+        const hoverText = reversedEvidenceTypes.map((evidenceType, rowIndex) =>
           traitData.map((item) => {
-            const evidence = item.evidenceCounts[evidenceType];
-            let hoverInfo = `<b>${item.trait}</b><br>Evidence: ${evidenceType}<br>Score: ${evidence.score}`;
-
-            if (evidenceType === 'Fine mapping') {
+            const evidence = item.evidenceCounts[evidenceType]; 
+            let hoverInfo = `<b>${item.trait}</b><br>Evidence: ${displayEvidenceTypes[rowIndex]}<br>Score: ${evidence.score}`;  
+        
+            if (evidenceType.toLowerCase() === 'fine mapping') {
               if (evidence['Mean PP'] !== null && evidence['Mean PP'] !== undefined) {
                 hoverInfo += `<br>Mean PP: ${evidence['Mean PP'].toFixed(4)}`;
               }
-            } else if (evidenceType === 'COLOC') {
+            } else if (evidenceType.toUpperCase() === 'COLOC') {
               if (evidence.pp_h4_abf !== null && evidence.pp_h4_abf !== undefined) {
                 hoverInfo += `<br>pp_h4_abf: ${evidence.pp_h4_abf.toFixed(4)}`;
               }
-            } else if (evidenceType !== 'Total') {
+            } 
+            else if (evidenceType.toLowerCase() === 'phewas') {
+              if (evidence.huge_score !== null && evidence.huge_score !== undefined) {
+                hoverInfo += `<br>HuGE score: ${evidence.huge_score}`;
+              }}
+            else if (evidenceType.toLowerCase() !== 'total') {
               if (evidence.pval !== null && evidence.pval !== undefined) {
                 hoverInfo += `<br>p-value: ${evidence.pval.toExponential(2)}`;
               }
             }
-
+        
             return hoverInfo;
           })
         );
@@ -117,35 +119,21 @@ const HeatmapComponent = ({ target }) => {
         // Main heatmap trace
         const heatmapTrace = {
           z: reversedData,
-          x: wrappedTraits,
-          y: reversedEvidenceTypes,
+          x: traits,
+          y: displayEvidenceTypes,  // Use display names here
           type: 'heatmap',
-          colorscale: [
-            [0, '#FFF4F4'],
-            [0.07, '#FFF5F5'],
-            [0.14, '#FFE0E0'],
-            [0.21, '#FFCCCC'],
-            [0.29, '#FFB3B3'],
-            [0.36, '#FF9999'],
-            [0.43, '#FF8080'],
-            [0.5, '#FF6666'],
-            [0.57, '#FF4D4D'],
-            [0.64, '#FF3333'],
-            [0.71, '#FF1A1A'],
-            [0.79, '#E60000'],
-            [0.86, '#CC0000'],
-            [0.93, '#B30000'],
-            [1, '#800000']
-          ],
+
+          colorscale:generateColorscale(),
           showscale: true,
           hoverongaps: false,
           text: hoverText,
           hovertemplate: '%{text}<extra></extra>',
           colorbar: {
             thickness: 15,
-            len: 0.7,
-            x: 1.02,
+            // len: 0.7,
+            x: 1,
             tickfont: { size: 10 },
+
           },
           xaxis: 'x',
           yaxis: 'y'
@@ -153,9 +141,9 @@ const HeatmapComponent = ({ target }) => {
 
         // FIXED: Category color strip - build proper discrete colorscale
         const categoryColorScale = [];
-        wrappedTraits?.forEach((_trait, i) => {
-          const start = i / wrappedTraits.length;
-          const end = (i + 1) / wrappedTraits.length;
+        traits?.forEach((_trait, i) => {
+          const start = i / traits.length;
+          const end = (i + 1) / traits.length;
           
           // Get color with case-insensitive fallback
           const categoryKey = Object.keys(categoryColors).find(
@@ -164,7 +152,7 @@ const HeatmapComponent = ({ target }) => {
           const color = categoryColors[categories[i]] || categoryColors[categoryKey] || '#95A5A6';
           
           categoryColorScale.push([start, color]);
-          if (i < wrappedTraits.length - 1) {
+          if (i < traits.length - 1) {
             categoryColorScale.push([end - 0.0001, color]);
           } else {
             categoryColorScale.push([1, color]);
@@ -172,8 +160,8 @@ const HeatmapComponent = ({ target }) => {
         });
 
         const categoryTrace = {
-          z: [wrappedTraits.map((_, i) => i)],
-          x: wrappedTraits,
+          z: [traits.map((_, i) => i)],
+          x: traits,
           y: ['Categories'],
           type: 'heatmap',
           colorscale: categoryColorScale,
@@ -197,28 +185,39 @@ const HeatmapComponent = ({ target }) => {
           },
           xaxis: { 
             showticklabels: false,
+            domain: [0, 1],      // ADD THIS
+    anchor: 'y'  ,
           },
           yaxis: {
-            title: { text: 'Evidence types', font: { size: 11 }, standoff: 10 },
-            tickfont: { size: 9 },
-            automargin: true,
-            domain: [0.00, 1],
+          title: { text: 'Evidence types', font: { size: 12,weight: 'bold' }, standoff: 10 },
+          tickfont: { size: 11,weight: 'bold' },
+          automargin: true,
+          domain: [0.00, 1],
+          anchor: 'x'          
+
           },
           xaxis2: {
-            tickangle: -45,
-            title: { text: 'Traits', font: { size: 11 }, standoff: 10 },
-            side: 'bottom',
-            tickfont: { size: 9 },
-            showticklabels: true,
-            domain: [0, 1],
-            automargin: true
+          tickangle: -45,
+          title: { text: 'Traits', font: { size: 12,weight: 'bold'}, standoff: 10 },
+          side: 'bottom',
+          tickfont: { size: 9,weight: 'bold' },
+          showticklabels: true,
+          domain: [0, 1],
+          automargin: true,
+          anchor: 'y2',        
+      matches: 'x'  ,
+      tickvals: traits.map((_, i) => i),    
+      ticktext: traits,
+       
           },
           yaxis2: {
-            tickfont: { size: 9 },
-            automargin: true,
-            domain: [0, 0.01],
+          tickfont: { size: 11, weight: 'bold' },
+          automargin: true,
+          domain: [0, 0.04],
+          anchor: 'x2'         // ADD THIS
+
           },
-          margin: { l: 100, r: 120, t: 20, b: 150 },
+          margin: { l: 100, r: 120, t: 20, b: 200 },
           paper_bgcolor: 'white',
           plot_bgcolor: 'white',
         };
@@ -226,7 +225,12 @@ const HeatmapComponent = ({ target }) => {
         const config = {
           responsive: true,
           displayModeBar: true,
-          modeBarButtonsToRemove: ['lasso2d', 'select2d'],
+          // modeBarButtonsToRemove: ['lasso2d', 'select2d'],
+          displaylogo: false,
+          modeBarStyle: {
+            top: "5px",
+            right: "2px"  
+          }
         };
 
         Plotly.newPlot(heatmapRef.current, [heatmapTrace, categoryTrace], layout, config);
@@ -282,7 +286,6 @@ const HeatmapComponent = ({ target }) => {
                   key => key.toLowerCase() === category.toLowerCase()
                 );
                 const color = categoryColors[category] || categoryColors[categoryKey] || '#95A5A6';
-                
                 return (
                   <div key={category} className="flex items-center text-xs">
                     <div
@@ -298,8 +301,8 @@ const HeatmapComponent = ({ target }) => {
         </div>
       )}
 
-      <div ref={heatmapRef} className="w-[90em]" style={{ height: '500px' }} />
-    </div>
+<div ref={heatmapRef} className="w-full" style={{ height: '500px' }} />
+</div>
   );
 };
 

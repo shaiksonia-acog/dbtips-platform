@@ -569,7 +569,6 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
 
 
    setFallbackDiseases(newFallbackDiseases);
-   console.log("New Fallback Diseases:", newFallbackDiseases);
 
 
    if (fallbackData) {
@@ -578,7 +577,6 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
 
 
    setLocusZoomData(tempLocusZoomData);
-   console.log("Locus Zoom Data:", tempLocusZoomData);
    setLocusZoomDataLoading(false);
  }, [vepAssociationsData, fallbackData, indications, vepAssociationsLoading, fallbackDataLoading]);
 
@@ -600,7 +598,6 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
          }
        );
        const parsedData = parseTsvData(response.data);
-       console.log("Parsed Data for", item.mondoId, parsedData);
        // Add disease name to each record for better context
        return parsedData.map((record) => ({
          ...record,
@@ -685,7 +682,6 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
    return combinedData;
  }, [combinedData, selectedDiseaseAreas, indications, diseaseAreaFilter]);
  const filterAssociationData = useMemo(() => {
-  console.log("assoc",associationsRowData,selectedGene) ;
   //  if (!(selectedDisease.length > 0) && !selectedGene) {
   //    return associationsRowData;
   //  }
