@@ -365,28 +365,20 @@ const {data:uniqueGeneData,isLoading:uniqueGeneLoading}=useQuery(
              headerName: `Gene-based Risk Score`,
              headerComponent: CustomHeader,
              headerComponentParams: {
-               title: `Percent risk score for gene`,
+               title: `Risk score for searched gene (e.g. 0.00004 score is 0.004%)`,
                displayName: `Gene-based Risk Score`,
              },
-             cellRenderer:(params)=>(
-              isExponentNumber(params.value)
-              ? "0"
-              : params.value 
-             )
+            
            },
            {
              headerName: `Gene-based Protection Score `,
              field: "protective",
              headerComponent: CustomHeader,
              headerComponentParams: {
-               title: `Percent protective score for gene`,
+               title: `Protective score for searched gene (e.g. 0.00004 score is 0.004%)`,
                displayName: `Gene-based Protective Score`,
              },
-             cellRenderer:(params)=>(
-              isExponentNumber(params.value)
-              ? "0"
-              : params.value 
-             )
+            
             
             //  cellRenderer: ({ value }) => (value != null ? value?.toFixed(2) : "-"),
            },
@@ -394,15 +386,11 @@ const {data:uniqueGeneData,isLoading:uniqueGeneLoading}=useQuery(
              headerName: `Gene-based Overall Effect`,
              headerComponent: CustomHeader,
              headerComponentParams: {
-               title: `Overall effect of gene (in per cent) in disease risk prediction`,
+               title: `Overall effect of gene in disease risk prediction (e.g. 0.00004 score is 0.004%)`,
                displayName: `Gene-based Overall Effect`,
              },
              field: "overall",
-             cellRenderer:(params)=>(
-              isExponentNumber(params.value)
-              ? "0"
-              : params.value 
-             )
+            
             //  cellRenderer: ({ value }) => (value != null ? value?.toFixed(2) : "-"),
            },
          ]
