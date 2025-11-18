@@ -23,9 +23,7 @@ const PieChartRenderer = ({ chartData, symbol, heading }) => (
    <PieChart chartData={chartData} symbol={symbol} heading={heading} />
  </div>
 );
-function isExponentNumber(num) {
-  return  num?.toString().includes("e");
-}
+
 
 const GwasRenderer = ({ value }) => (
  <PieChartRenderer
