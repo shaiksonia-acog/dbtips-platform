@@ -1,63 +1,49 @@
-import { useState, useEffect ,useRef} from "react";
+import { useState, useEffect, useRef, memo, useMemo, useCallback } from "react";
 import Plotly from "plotly.js-dist-min";
-// import LocusZoom from "locuszoom";
-import { Select, message, Empty,  Space, Tooltip } from "antd";
+import { Select, message, Empty, Space, Tooltip } from "antd";
 import { useQuery } from "react-query";
 import { fetchData } from "../../utils/fetchData";
 import LoadingButton from "../../components/loading";
 import CHROMOSOMES from "./chromosomes.json";
-import { InfoCircleOutlined } from "@ant-design/icons"
-
+import { InfoCircleOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
-function DiseasePlot({ diseases,diseaseAreaFilter }) {
+function DiseasePlot({ diseases, diseaseAreaFilter }) {
   const plotRef = useRef(null);
-
+  const isPlottingRef = useRef(false);
+  
   const [selectedDisease, setSelectedDisease] = useState("");
-  // const [allPoints, setAllPoints] = useState([]);
   const [mondoId, setMondoId] = useState(null);
   const [rawData, setRawData] = useState([]);
   const [variantOptions, setVariantOptions] = useState([]);
   const [geneOptions, setGeneOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
-  // const [diseaseOptions, setDiseaseOptions] = useState([]);
-  // const [selectedMappedTrait, setSelectedMappedTrait] = useState("");
-  const [filterType, setFilterType] = useState("gene"); // Default filter type
+  const [filterType, setFilterType] = useState("gene");
 
   // Reset data on disease change
   useEffect(() => {
-    // setAllPoints([]);
     setMondoId(null);
     setRawData([]);
     setVariantOptions([]);
     setGeneOptions([]);
     setSelectedOption(null);
-    // setDiseaseOptions([]);
   }, [selectedDisease]);
 
-  const handleDiseaseChange = (value) => {
+  const handleDiseaseChange = useCallback((value) => {
     setSelectedDisease(value);
-  };
-  // const handleMappedTraitChange = (value) => {
-  //   console.log("selected mapped trait",value);
-  //   setSelectedMappedTrait(value);
-   
-  //   updatePlot(value,true);
-  // };
+  }, []);
 
-  const handleFilterTypeChange = (value) => {
+  const handleFilterTypeChange = useCallback((value) => {
     setFilterType(value);
-    setSelectedOption(null); // Reset selected option when changing filter type
-  };
+    setSelectedOption(null);
+  }, []);
 
-  const handleOptionChange = (value) => {
+  const handleOptionChange = useCallback((value) => {
     setSelectedOption(value);
-    updatePlot(value);
-  };
+  }, []);
 
-  // Payload for LocusZoom query based on selected disease
-  const payload = { diseases: [selectedDisease] };
+  const payload = useMemo(() => ({ diseases: [selectedDisease] }), [selectedDisease]);
 
   const { data: locuszoomData, error: locuszoomError, isLoading: locuszoomLoading } = useQuery(
     ["locuszoom", payload],
@@ -67,21 +53,19 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
       refetchOnWindowFocus: false,
       staleTime: 5 * 60 * 1000,
       refetchOnMount: false,
-      
     }
   );
 
   useEffect(() => {
     if (locuszoomData) {
-      if(locuszoomData?.[selectedDisease.toLowerCase()] !== "EFO ID not found for immune-mediated necrotizing myopathy") 
-      {
-
+      if (locuszoomData?.[selectedDisease.toLowerCase()] !== "EFO ID not found for immune-mediated necrotizing myopathy") {
         const id = locuszoomData?.[selectedDisease.toLowerCase()]?.split("/").pop();
         setMondoId(id);
       }
     }
   }, [locuszoomData, selectedDisease]);
-  const processFileData = (data) => {
+
+  const processFileData = useCallback((data) => {
     const rows = data.split("\n").map((row) => row.split("\t"));
     const headers = rows.shift();
     const chrIndex = headers.indexOf("Chromosome");
@@ -95,16 +79,12 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
     const reportedtraitIndex = headers.indexOf("Reported trait");
     const mapped_traitIndex = headers.indexOf("Mapped Trait");
     const studyAccesionIndex = headers.indexOf("Study Accession");
-    if (
-      [chrIndex, posIndex, pvalIndex, rsidIndex, refAlleleIndex, authorIndex, pubmedidIndex, mappedgeneIndex,mapped_traitIndex,studyAccesionIndex].includes(
-        -1
-      )
-    ) {
+
+    if ([chrIndex, posIndex, pvalIndex, rsidIndex, refAlleleIndex, authorIndex, pubmedidIndex, mappedgeneIndex, mapped_traitIndex, studyAccesionIndex].includes(-1)) {
       message.error("Required columns not found in TSV file.");
       return;
     }
 
-    // Process raw data and store it
     const processedRows = rows
       .filter(row => row.length >= headers.length)
       .map(row => ({
@@ -120,31 +100,20 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
         logPval: -Math.log10(parseFloat(row[pvalIndex])),
         mapped_trait: row[mapped_traitIndex]
       }));
+
     setRawData(processedRows);
 
-    // Extract unique variants and genes for filters
-    const uniqueVariants = [...new Set(processedRows.map(row => row.variant))].filter(Boolean).sort();;
+    const uniqueVariants = [...new Set(processedRows.map(row => row.variant))].filter(Boolean).sort();
     const uniqueGenes = [
       ...new Set(
-        processedRows.flatMap(row => row.gene ? row.gene.split(/[,;]+/) : [])  // Split by comma or semicolon
+        processedRows.flatMap(row => row.gene ? row.gene.split(/[,;]+/) : [])
       )
     ].filter(gene => typeof gene === 'string' && gene.trim() !== '').sort();
-    // const uniqueDisease = [...new Set(
-    //   processedRows.flatMap(row => 
-    //     row.mapped_trait ? row.mapped_trait.split(', ').map(trait => trait.trim()) : []
-    //   ).filter(Boolean)
-    // )].sort();
 
     setVariantOptions(uniqueVariants.map(variant => ({ label: variant, value: variant })));
     setGeneOptions(uniqueGenes.map(gene => ({ label: gene, value: gene })));
-    // setDiseaseOptions(uniqueDisease.map(gene => ({ label: gene, value: gene })));
+  }, []);
 
-    // Store all points for LocusZoom interaction
-    // setAllPoints(processedRows);
-
-    // Render initial plot with all data
-    renderManhattanPlot(processedRows);
-  };
   useEffect(() => {
     if (!mondoId) return;
 
@@ -159,66 +128,47 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
         message.error("Error fetching data for the disease.");
         console.error("Error fetching TSV:", error);
       });
-  }, [mondoId]);
+  }, [mondoId, processFileData]);
 
- 
+  // Memoized filtered data
+  const filteredData = useMemo(() => {
+    if (!rawData.length) return [];
 
-  const updatePlot = (value, mappedTraitFilter = false) => {
-    // const mappedTraitValue = mappedTraitFilter ? value : selectedMappedTrait;
-    const optionValue = !mappedTraitFilter ? value : selectedOption;
+    let filtered = [...rawData];
 
-    let filteredData = [...rawData];
-
-    // if (mappedTraitValue) {
-    //   filteredData = filteredData.filter(
-    //     (row) => row.mapped_trait && row.mapped_trait.includes(mappedTraitValue)
-    //   );
-    // }
-
-    if (optionValue) {
+    if (selectedOption) {
       if (filterType === "variant") {
-        filteredData = filteredData.filter(
-          (row) => row.variant === optionValue
-        );
+        filtered = filtered.filter(row => row.variant === selectedOption);
       } else if (filterType === "gene") {
-        filteredData = filteredData.filter((row) => {
-          const genes = row.gene
-            ? row.gene.split(/[;,]+/).map((g) => g.trim())  // Split by both commas and semicolons
-            : [];
-          
-          // Check if any gene exactly matches `optionValue`
-          return genes.some((gene) => gene === optionValue.trim());
+        filtered = filtered.filter((row) => {
+          const genes = row.gene ? row.gene.split(/[;,]+/).map((g) => g.trim()) : [];
+          return genes.some((gene) => gene === selectedOption.trim());
         });
       }
     }
 
-      renderManhattanPlot(filteredData);
-  };
-  
+    return filtered;
+  }, [rawData, selectedOption, filterType]);
 
-  useEffect(() => {
-    if (diseases && diseases.length > 0) {
-      setSelectedDisease(diseases[0]);
-    }
-  }, [diseases]);
-
-  const renderManhattanPlot = (data) => {
-    // Convert filtered data to format needed for plotting
-    const dataMap = {};
+  const renderManhattanPlot = useCallback((data) => {
+    const plotDiv = plotRef.current;
+    if (!plotDiv || isPlottingRef.current) return;
     
+    isPlottingRef.current = true;
+
+    const dataMap = {};
+
     data.forEach((row) => {
-      const { chr, pos, logPval, rsID, variant, gene, author, pubmedid, reportedtrait,pval } = row;
-      
+      const { chr, pos, logPval, rsID, variant, gene, author, pubmedid, reportedtrait, pval } = row;
+
       if (!dataMap[chr]) {
         dataMap[chr] = { x: [], y: [], text: [], positions: [], locusX: [] };
       }
-      
+
       const chromosome = CHROMOSOMES.chromosomes.find((c) => c.name === chr);
       const location = chromosome ? parseFloat(chromosome?.location.toString()) : 0;
-      
-      // Calculate x as location + position
       const xValue = location + pos;
-      
+
       dataMap[chr].x.push(xValue);
       dataMap[chr].y.push(logPval);
       dataMap[chr].locusX.push(chr);
@@ -229,12 +179,10 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
       );
       dataMap[chr].positions.push(pos);
     });
-    
-    const plotDiv = plotRef.current;
-    if (!plotDiv) return;
-    
+
+    // Clean up previous plot completely
     Plotly.purge(plotDiv);
-    
+
     const traces = Object.keys(dataMap).map((chr) => ({
       x: dataMap[chr].x,
       y: dataMap[chr].y,
@@ -243,13 +191,12 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
       name: `Chr ${chr}`,
       text: dataMap[chr].text,
       hoverinfo: "text",
-      marker: { size: 8 },
+      marker: { size: 6 },
       customdata: dataMap[chr].positions,
       locusX: dataMap[chr].locusX,
     }));
 
     const layout = {
-     
       title: {
         text: "Manhattan Plot with Variant Details",
       },
@@ -271,7 +218,6 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
             color: 'grey',
             dash: 'dash',
             width: 2,
-            length: 1
           },
         },
       ],
@@ -284,78 +230,57 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
       showlegend: false,
     };
 
-    Plotly.newPlot(plotDiv, traces, layout).then((plot) => {
-    console.log("Plotly plot created:", plot);
+    const config = {
+      responsive: true,
+      displayModeBar: true,
+      displaylogo: false,
+      // Disable scroll zoom to prevent interference with page scrolling
+      scrollZoom: false,
+    };
+
+    Plotly.newPlot(plotDiv, traces, layout, config).then(() => {
+      isPlottingRef.current = false;
     });
-  };
+  }, []);
 
-  // const renderLocusZoom = (chr, pos, rsID) => {
-  //   const apiBase = "https://portaldev.sph.umich.edu/api/v1/";
-  //   const data_sources = new LocusZoom.DataSources()
-  //     .add("assoc", [
-  //       "AssociationLZ",
-  //       {
-  //         url: apiBase + "statistic/single/",
-  //         source: 45,
-  //         id_field: "variant",
-  //       },
-  //     ])
-  //     .add("ld", ["LDServer", { url: "https://portaldev.sph.umich.edu/ld/" }])
-  //     .add("recomb", [
-  //       "RecombLZ",
-  //       { url: apiBase + "annotation/recomb/results/", build: "GRCh37" },
-  //     ])
-  //     .add("gene", [
-  //       "GeneLZ",
-  //       { url: apiBase + "annotation/genes/", build: "GRCh37" },
-  //     ])
-  //     .add("constraint", [
-  //       "GeneConstraintLZ",
-  //       { url: "https://gnomad.broadinstitute.org/api/", build: "GRCh37" },
-  //     ]);
+  useEffect(() => {
+    if (filteredData.length > 0) {
+      // Use requestAnimationFrame to defer plotting
+      requestAnimationFrame(() => {
+        renderManhattanPlot(filteredData);
+      });
+    }
+  }, [filteredData, renderManhattanPlot]);
 
-  //   const layout = LocusZoom.Layouts.get("plot", "standard_association", {
-  //     state: {
-  //       genome_build: "GRCh38",
-  //       chr,
-  //       start: pos - 50000,
-  //       end: pos + 50000,
-  //       highlight: rsID,
-  //     },
-  //     axes: {
-  //       x: {
-  //         label: "Genomic Position",
-  //       },
-  //       y1: {
-  //         label: "-log10(p-value)",
-  //       },
-  //     },
-  //   });
-    
-  //   const lzPlot = document.getElementById("lz-plot");
-  //   if (lzPlot) {
-  //     LocusZoom.populate("#lz-plot", data_sources, layout);
-  //   }
-  // };
+  useEffect(() => {
+    if (diseases && diseases.length > 0) {
+      setSelectedDisease(diseases[0]);
+    }
+  }, [diseases]);
 
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (plotRef.current) {
+        Plotly.purge(plotRef.current);
+      }
+    };
+  }, []);
 
-
-  // Get the current options based on filter type
-  const getCurrentOptions = () => {
+  const getCurrentOptions = useCallback(() => {
     return filterType === "variant" ? variantOptions : geneOptions;
-  };
+  }, [filterType, variantOptions, geneOptions]);
 
   return (
     <div>
       <h2 className="text-xl subHeading font-semibold mb-3 mt-4" id="manhattanPlot">Manhattan Plot</h2>
       <p className="my-1 font-medium">
-      Displays genome-wide SNP associations, highlighting significant genetic loci linked to {diseases}.
-       {/* Clicking a point (variant) typically opens a LocusZoom plot showing nearby genes and linkage patterns. */}
+        Displays genome-wide SNP associations, highlighting significant genetic loci linked to {diseases}.
       </p>
-      
+
       <div className="flex flex-wrap gap-2 mt-4">
         <div className="flex items-center">
-          <span className="mr-1">{diseaseAreaFilter ?"Disease area":"Disease"}</span>
+          <span className="mr-1">{diseaseAreaFilter ? "Disease area" : "Disease"}</span>
           <Select
             style={{ width: 300 }}
             placeholder="Select a disease"
@@ -370,30 +295,12 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
             ))}
           </Select>
         </div>
-       {/* { diseaseOptions.length>0 && 
-       <div className="flex items-center">
-       <span className="mr-1">Mapped trait:</span>
-       <Select
-         style={{ width: 300 }}
-         placeholder="Select a mapped trait"
-         onChange={handleMappedTraitChange}
-         value={selectedMappedTrait}
-         loading={locuszoomLoading}
-         
-       >
-         {diseaseOptions.map((disease) => (
-           <Option key={disease.value} value={disease.value}>
-             {disease.value}
-           </Option>
-         ))}
-       </Select>
-     </div>} */}
-        
+
         {(variantOptions.length > 0 || geneOptions.length > 0) && (
           <div className="flex items-center ml-4">
             <span className="mr-1">Filter: </span>
-            <Space.Compact >
-              <Select 
+            <Space.Compact>
+              <Select
                 style={{ width: 200 }}
                 value={filterType}
                 onChange={handleFilterTypeChange}
@@ -412,12 +319,9 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
                 filterOption={(input, option) =>
                   option.label.toLowerCase().includes(input.toLowerCase())
                 }
-                
                 options={getCurrentOptions()}
               />
             </Space.Compact>
-            
-            
           </div>
         )}
       </div>
@@ -435,40 +339,46 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
         </div>
       )}
 
-
-      {!locuszoomLoading && !locuszoomError && locuszoomData?.[selectedDisease.toLowerCase()] && locuszoomData?.[selectedDisease.toLowerCase()] !== "EFO ID not found for immune-mediated necrotizing myopathy" && (
-        <div style={{ position: 'relative' }}>
+      {!locuszoomLoading && !locuszoomError && locuszoomData?.[selectedDisease.toLowerCase()] && 
+       locuszoomData?.[selectedDisease.toLowerCase()] !== "EFO ID not found for immune-mediated necrotizing myopathy" && (
+        <div style={{ position: 'relative', willChange: 'transform' }}>
           <div
             id="plot"
-            ref={plotRef} 
-            style={{ width: "100%", height: "400px", marginTop: "20px" }}
+            ref={plotRef}
+            style={{ 
+              width: "100%", 
+              height: "400px", 
+              marginTop: "20px",
+              // Force GPU acceleration
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden'
+            }}
           >
             <Tooltip title="Each number represents a chromosome (1–22, X, Y). Dots along each chromosome mark SNP locations">
-        <InfoCircleOutlined 
-          style={{ 
-            position: 'absolute', 
-            bottom: '25px', 
-            left: '53.3%',
-            fontSize: '16px',
-            color: '#666',
-            cursor: 'pointer'
-          }} 
-        />
-      </Tooltip>
-      <Tooltip title="Indicates the statistical significance of each SNP’s association with the disease. Higher points mean stronger associations.">
-        <InfoCircleOutlined 
-          style={{ 
-        position: 'absolute', 
-        top: '39%', 
-        left: '28px',
-        fontSize: '16px',
-        color: '#666',
-        cursor: 'pointer',
-        transform: 'translateY(-80%) rotate(-90deg)'
-          }} 
-        />
-      </Tooltip>
-
+              <InfoCircleOutlined
+                style={{
+                  position: 'absolute',
+                  bottom: '25px',
+                  left: '53.3%',
+                  fontSize: '16px',
+                  color: '#666',
+                  cursor: 'pointer'
+                }}
+              />
+            </Tooltip>
+            <Tooltip title="Indicates the statistical significance of each SNP's association with the disease. Higher points mean stronger associations.">
+              <InfoCircleOutlined
+                style={{
+                  position: 'absolute',
+                  top: '39%',
+                  left: '28px',
+                  fontSize: '16px',
+                  color: '#666',
+                  cursor: 'pointer',
+                  transform: 'translateY(-80%) rotate(-90deg)'
+                }}
+              />
+            </Tooltip>
           </div>
           <div id="lz-plot" style={{ marginTop: "20px" }}></div>
         </div>
@@ -477,4 +387,4 @@ function DiseasePlot({ diseases,diseaseAreaFilter }) {
   );
 }
 
-export default DiseasePlot;
+export default memo(DiseasePlot);

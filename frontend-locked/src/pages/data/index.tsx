@@ -30,7 +30,8 @@ const hasIndications = indications.length > 0 || diseaseArea.length > 0;
       <div id="GenomicsStudies" className={`py-10 px-[5vw] ${hasIndications? "bg-gray-50":""}` }>
         <h1 className="text-3xl font-semibold">Genomics studies</h1>
 
-      { hasIndications && <><AssociatePlot indications={indications.length > 0 ? indications : diseaseArea} 
+      { hasIndications && <>
+      <AssociatePlot indications={indications.length > 0 ? indications : diseaseArea} 
         diseaseAreaFilter={diseaseArea.length > 0} target={target} />
       <Variantplot diseases={indications.length > 0 ? indications : diseaseArea} 
         diseaseAreaFilter={diseaseArea.length > 0}/>
