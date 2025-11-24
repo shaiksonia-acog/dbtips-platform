@@ -13,7 +13,7 @@ type FieldType = {
   diseaseArea?: string[];
 };
 
-const targetOptions = ["ACVR2A","ACVR2B","APLNR","CAMK2D", "CRHR2","DNM1L", "ENHO","GPR75","INHBE","GIPR", "GUCY1A1","GUCY1B1", "PDE3B","SAV1","SVEP1","USP30"]
+const targetOptions = ["ACVR2A","ACVR2B","ANO4","ANGPTL7","APLNR","BRINP2","CAMK2D", "CRHR2","DNM1L", "ENHO","GPR75","HTRA1","INHBE","GIPR", "GUCY1A1","GUCY1B1", "MIR33A","PDE3B","SAV1","SVEP1","USP19","USP30"]
 const diseaseAreaOptions = [ "Cardiovascular diseases", "Urologic diseases"]
 const indicationOptions = ["Obesity"]
 const { Option } = Select;
