@@ -5,6 +5,7 @@ import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Responsive
 import { ConfigProvider, Empty, Segmented } from 'antd';
 import { List, ChartLine } from 'lucide-react';
 import Table from '../../components/table';
+import LoadingButton from '../../components/loading';
 
 const labels = {
     6239: "Caenorhabditis elegans (Nematode, N2)",
@@ -463,8 +464,8 @@ const Ortholog = ({target}) => {
             </div>
 
             {orthologLoading ? (
-              <div className='ag-theme-quartz mt-4 h-[80vh] max-h-[280px] flex items-center justify-center'>
-                <Empty description="Loading data..." />
+              <div className=' flex items-center justify-center'>
+                <LoadingButton/>
               </div>
             ) : orthologError || !orthologData?.orthologs || orthologData.orthologs.length === 0 ? (
               <div className='ag-theme-quartz mt-4 h-[80vh] max-h-[280px] flex items-center justify-center'>

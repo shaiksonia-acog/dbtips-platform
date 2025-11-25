@@ -123,6 +123,10 @@ const GeneEssentialityMap = ({ target }: GeneEssentialityChartProps) => {
   }
 
   useEffect(() => {
+    if(geneMapData?.geneEssentialityMap?.length == null) {
+      setChartData(null)
+      return
+    }
     if (geneMapData) {
       const essentialityData = geneMapData?.geneEssentialityMap
       const uniqueTissues = Array.from(new Set(essentialityData.map((item: any) => item.tissueName))) as string[]
@@ -464,8 +468,15 @@ const handleLegendClick = (datasetIndex: number) => {
           <Empty description={String(geneMapError)} />
         </div>
       )}
-      <div className="flex-1 h-[70vh]">
+      {
+        !geneMapLoading && !geneMapError && !chartData && (
+          <div className="mt-4 h-[40vh]  flex items-center justify-center">
+            <Empty description="No data available" />
+          </div>
+        )
+      }
         {chartData && (
+      <div className="flex-1 h-[70vh]">
           <div className="h-full w-full p-4">
             <Scatter data={chartData} options={chartOptions as any} ref={chartRef} />
             <div className="mt-2 flex items-center justify-center gap-2" aria-live="polite">
@@ -480,8 +491,8 @@ const handleLegendClick = (datasetIndex: number) => {
               </AntdTooltip>
             </div>
           </div>
-        )}
       </div>
+        )}
     </div>
   )
 }
