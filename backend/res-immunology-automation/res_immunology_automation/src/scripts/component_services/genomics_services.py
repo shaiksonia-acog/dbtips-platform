@@ -240,20 +240,20 @@ def fetch_pgs_data(disease_name, trait_id, include_child_traits=True):
         print("\n" + "-" * 60)
         print(f"Total PGS records fetched: {len(all_output)}")
 
-        pgs_study_lst = list(all_output.values())
+        # pgs_study_lst = list(all_output.values())
 
         # Add rist and protection score for all the genes for each study
-        for pgs_study in pgs_study_lst:
-            scoring_url = pgs_study.get("PGS Scoring File")
-            print("scoring_url", scoring_url)
-            if scoring_url:
-                targets_score_dict = annotate_pgs_varinats(scoring_url)
-                pgs_study["targets_score"] = targets_score_dict
-            else:
-                pgs_study["targets_score"] = []
+        # for pgs_study in pgs_study_lst:
+        #     scoring_url = pgs_study.get("PGS Scoring File")
+        #     print("scoring_url", scoring_url)
+        #     if scoring_url:
+        #         targets_score_dict = annotate_pgs_varinats(scoring_url)
+        #         pgs_study["targets_score"] = targets_score_dict
+        #     else:
+        #         pgs_study["targets_score"] = []
 
-        return pgs_study_lst
-        # return list(all_output.values())
+        # return pgs_study_lst
+        return list(all_output.values())
         
     except Exception as e:
         print(f"Exception occurred: {e}")
