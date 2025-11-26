@@ -47,7 +47,7 @@ function DiseasePlot({ diseases, diseaseAreaFilter }) {
 
   const { data: locuszoomData, error: locuszoomError, isLoading: locuszoomLoading } = useQuery(
     ["locuszoom", payload],
-    () => fetchData(payload, "/genomics/gwas-associations-vep"),
+    () => fetchData(payload, "/genomics/gwas-associations"),
     {
       enabled: selectedDisease !== "",
       refetchOnWindowFocus: false,
@@ -359,7 +359,7 @@ function DiseasePlot({ diseases, diseaseAreaFilter }) {
                 style={{
                   position: 'absolute',
                   bottom: '25px',
-                  left: '53.3%',
+                  left: '53.8%',
                   fontSize: '16px',
                   color: '#666',
                   cursor: 'pointer'
