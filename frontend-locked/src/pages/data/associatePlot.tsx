@@ -506,8 +506,7 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
         const matchingKey = Object.keys(vepAssociationsData).find(
           (key) => key.toLowerCase() === disease.toLowerCase()
         );
-
-        if (matchingKey) {
+        if (matchingKey && vepAssociationsData[matchingKey] != null) {
           tempLocusZoomData[disease] = vepAssociationsData[matchingKey];
         } else {
           newFallbackDiseases.push(disease);
