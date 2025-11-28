@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { Empty } from "antd";
 import LoadingButton from "./loading";
@@ -10,8 +10,12 @@ const AutoSizingAgGrid = ({
   paginationPageSize = 20,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const gridRef = useRef(null);
 
-  // Memoize default column definitions to prevent unnecessary re-renders
+  const memoizedColumnDefs = useMemo(() => columnDefs, [columnDefs]);
+
+  const memoizedRowData = useMemo(() => rowData, [rowData]);
+
   const defaultColDef = useMemo(
     () => ({
       filter: true,
@@ -31,6 +35,24 @@ const AutoSizingAgGrid = ({
     []
   );
 
+  // Memoize grid height calculation
+  const gridHeight = useMemo(
+    () => (memoizedRowData.length > 10 ? "h-[70vh]" : ""),
+    [memoizedRowData.length]
+  );
+
+  // Memoize domLayout calculation
+  const domLayout = useMemo(
+    () => (memoizedRowData.length <= 10 ? "autoHeight" : "normal"),
+    [memoizedRowData.length]
+  );
+
+  // Memoize isEmpty check
+  const isEmpty = useMemo(
+    () => memoizedRowData.length === 0,
+    [memoizedRowData.length]
+  );
+
   // Manage loading state
   useEffect(() => {
     if (rowData.length > 0) {
@@ -42,17 +64,21 @@ const AutoSizingAgGrid = ({
     } else {
       setIsLoading(false);
     }
-  }, [rowData]);
+  }, [rowData.length]); 
+  // Callback for grid ready event
+  const onGridReady = useCallback((params) => {
+    // Store grid API reference if needed for future operations
+    gridRef.current = params.api;
+  }, []);
 
-  // Calculate and set grid height
+  // Callback for first data rendered
 
-  // Render loading state
+
   if (isLoading) {
     return <LoadingButton />;
   }
 
-  // Render empty state
-  if (rowData.length === 0) {
+  if (isEmpty) {
     return (
       <div className="h-[40vh] flex items-center justify-center">
         <Empty description="No data available" />
@@ -61,20 +87,23 @@ const AutoSizingAgGrid = ({
   }
 
   return (
-    <div className={`ag-theme-quartz ${rowData.length > 10 && "h-[70vh]"}`}>
+    <div className={`ag-theme-quartz ${gridHeight}`}>
       <AgGridReact
-        columnDefs={columnDefs}
-        rowData={rowData}
+        ref={gridRef}
+        columnDefs={memoizedColumnDefs}
+        rowData={memoizedRowData}
         defaultColDef={defaultColDef}
         rowHeight={rowHeight}
         pagination={true}
         paginationPageSize={paginationPageSize}
-        // Removed commented-out headerHeight
-        domLayout={rowData && rowData?.length <= 10 ? "autoHeight" : "normal"}
+        domLayout={domLayout}
         enableCellTextSelection={true}
-        // suppressColumnVirtualisation={true}
-        // suppressRowVirtualisation={true}
-        
+        onGridReady={onGridReady}
+      
+        suppressMovableColumns={true} // Disable column moving if not needed
+        suppressDragLeaveHidesColumns={true}
+        rowBuffer={10} // Number of rows to render outside viewport
+        debounceVerticalScrollbar={true}
       />
     </div>
   );

@@ -8,10 +8,13 @@ import { fetchData } from "../../utils/fetchData";
 import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { parseQueryParams } from "../../utils/parseUrlParams";
+import { matchesPattern } from "../../utils/helper";
+import SequenceStructure from "./sequenceStructure"
 // import TargetHeader from "../../components/targetIndication"
 const TargetBiology = () => {
   const location = useLocation();
   const [target, setTarget] = useState("");
+
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -45,7 +48,10 @@ const TargetBiology = () => {
       enabled: !!target,
     }
   );
-  const functionComments = data?.comments
+  const isRNA = matchesPattern(target || "");
+  console.log("is rna in target biology", isRNA);
+  
+  const functionComments = isRNA ? targetDetailsData?.summary_and_characteristics["Target Description"]?.data:data?.comments
     .filter((comment) => comment.type === "FUNCTION") // Filter for type "FUNCTION"
     .map((comment) => comment.text.map((t) => t.value).join(" ")) // Extract and combine values
     .join(" ");
@@ -57,19 +63,25 @@ const TargetBiology = () => {
         targetDetailsError={targetDetailsError}
         targetDetailsLoading={showLoading}
         description={functionComments}
+        isRNA={isRNA}
       />
       <Ontology
         hgnc_id={targetDetailsData?.target_details?.hgnc_id}
         target={target}
       />
-      <ProteinExpressions target={target} />
-      {targetDetailsData?.target_details?.uniprot_id && (
+      <ProteinExpressions target={target} isRna={isRNA} />
+      {targetDetailsData?.target_details?.uniprot_id && !isRNA && (
         <ProteinStructure
           uniprot_id={targetDetailsData.target_details.uniprot_id}
         />
       )}
-
-      <SubCellularLocation target={target} />
+   {isRNA &&<SequenceStructure
+        data={targetDetailsData}
+        targetDetailsError={targetDetailsError}
+        targetDetailsLoading={showLoading}
+        target={target}
+      />}
+    {  !isRNA&&<SubCellularLocation target={target} />}
     </div>
   );
 };

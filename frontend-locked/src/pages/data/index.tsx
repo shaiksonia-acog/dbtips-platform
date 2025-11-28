@@ -6,6 +6,7 @@ import AssociatePlot from "./associatePlot";
 import PgsCatalog from "./pgsCatalog";
 import Variantplot from "./variationPlot"
 import GenomicsHeatmap from "./genomicsHeatmap";
+import PredictedGeneTarget from "./predictedGeneTarget";
 const Data = () => {
     const location = useLocation();
     const [indications, setIndications] = useState([]);
@@ -47,6 +48,7 @@ const hasIndications = indications.length > 0 || diseaseArea.length > 0;
         <GenomicsHeatmap target={target}/>
         </div>
       </div>
+      <PredictedGeneTarget target={target}/>
       </div>
       
   )

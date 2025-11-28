@@ -9,9 +9,15 @@ const AboutTarget = ({
   targetDetailsError,
   targetDetailsLoading,
   description,
+  isRNA
 }) => {
   const taxonomy = convertObjectToArray(data?.taxonomy) || [];
 
+const synonymsData = isRNA ? data?.summary_and_characteristics?.Synonyms?.data
+:data?.summary_and_characteristics?.Synonyms?.[
+    "UniProt Synonyms"
+  ];
+  // Function to format description text
   const formatDescription = (text) => {
     if (!text) return "";
 
@@ -32,7 +38,7 @@ const AboutTarget = ({
 
   return (
     <section id="introduction">
-      <article id="target-description" className="mt-8 px-[5vw] min-h-[80vh] ">
+      <article id="target-description" className={`mt-8 px-[5vw] ${isRNA ? 'min-h-[50vh]' : 'min-h-[80vh]'}`}>
         <h1 className="text-3xl mb-2 font-semibold ">Description</h1>
         <p className="font-medium">
           This section provides a description of the biological function of the
@@ -51,14 +57,14 @@ const AboutTarget = ({
               <span>
                 Uniprot ID:{" "}
                 <span className="text-sky-800">
-                  {data.target_details.uniprot_id}
+                  {data.target_details?.uniprot_id}
                 </span>{" "}
                 |{" "}
               </span>
               <span>
                 ENSGID:{" "}
                 <span className="text-sky-800">
-                  {data.target_details.ensembl_id}
+                  {data.target_details?.ensembl_id}
                 </span>
               </span>
             </div>
@@ -71,12 +77,11 @@ const AboutTarget = ({
                 <p className="text-justify whitespace-pre-line">{formatDescription(description)}</p>
 
                 <h2 className="text-lg font-medium mb-2 mt-10 subHeading">
-                  Synonyms (from UniProt)
+                  {isRNA ? "Synonyms":"Synonyms (from UniProt)"}
                 </h2>
                 <div className="flex flex-wrap gap-2">
-                  {data?.summary_and_characteristics?.Synonyms?.[
-                    "UniProt Synonyms"
-                  ]?.map((synonym, synIndex) => (
+                  {synonymsData?.map((synonym, synIndex) => (
+                    
                     <Tooltip
                       title="Synonym"
                       key={synIndex}
@@ -91,11 +96,14 @@ const AboutTarget = ({
                 </div>
               </div>
 
-              <div className="flex-1 mt-[-32px]">
-                {data && (
-                  <ProteinImage uniprot={data.target_details.uniprot_id} />
-                )}
+             
+                {data && !isRNA &&(
+                   <div className="flex-1 mt-[-32px]">
+                  <ProteinImage uniprot={data?.target_details?.uniprot_id} />
               </div>
+                )}
+               
+
             </div>
           </>
         )}

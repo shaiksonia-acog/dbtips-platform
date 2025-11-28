@@ -13,7 +13,7 @@ type FieldType = {
   diseaseArea?: string[];
 };
 
-const targetOptions = ["ACVR2A","ACVR2B","ANO4","ANGPTL7","APLNR","BRINP2","CAMK2D", "CRHR2","DNM1L", "ENHO","GPR75","HTRA1","INHBE","GIPR", "GUCY1A1","GUCY1B1", "MIR33A","PDE3B","SAV1","SVEP1","USP19","USP30"]
+const targetOptions = ["ACVR2A","ACVR2B","ANO4","ANGPTL7","APLNR","BRINP2","CAMK2D", "CRHR2","DNM1L", "ENHO","GPR75","HTRA1","INHBE","GIPR", "GUCY1A1","GUCY1B1", "MIR33A", "MIR33B","PDE3B","SAV1","SVEP1","USP19","USP30"]
 const diseaseAreaOptions = [ "Cardiovascular diseases", "Urologic diseases"]
 const indicationOptions = ["Age-related macular degeneration","Glaucoma","Obesity"]
 const { Option } = Select;
@@ -24,7 +24,7 @@ const diseaseToTargetMap: Record<string, string[]> = {
 };
 
 const indicationToTargetMap: Record<string, string[]> = {
-  "Obesity": ["ACVR2A","ACVR2B","ANO4","APLNR","BRINP2","CRHR2","GIPR","GPR75","INHBE","MIR33A","PDE3B","USP19"],
+  "Obesity": ["ACVR2A","ACVR2B","ANO4","APLNR","BRINP2","CRHR2","GIPR","GPR75","INHBE","MIR33A", "MIR33A","PDE3B","USP19"],
   "Age-related macular degeneration": ["HTRA1"],
   "Glaucoma": ["ANGPTL7"],
 

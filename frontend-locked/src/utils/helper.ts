@@ -60,3 +60,8 @@ export function convertDiseaseObjectToArray(
 
   return result;
 }
+
+export function matchesPattern(str) {
+  const regex = /\bmir-?\d+\w*\b/i; 
+  return regex.test(str);
+}
