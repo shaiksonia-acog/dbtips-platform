@@ -17,6 +17,7 @@ from component_services.disease_profile_services import (
     find_ancestors, find_descendants, 
     extract_data_by_ids, fetch_gtr_records
 )
+from component_services.mirna_services import fetch_mirna_info, get_target_predictions_for_all_locs
 # from component_services.aact_db_client import DBClient
 from ldap3 import Server, Connection, ALL
 import uvicorn
@@ -63,7 +64,7 @@ from utils import format_for_cytoscape, get_efo_id, find_disease_id_by_name, sen
     save_big_response_to_file, \
     get_associated_targets,get_mouse_phenotypes,fetch_all_publications,get_exact_synonyms, \
     get_conver_later_strapi,get_target_indication_pairs_strapi,enrich_disease_pathway_results, \
-    add_pipeline_indication_records,fetch_nct_titles, fetch_nct_data
+    add_pipeline_indication_records,fetch_nct_titles, fetch_nct_data, is_mirna
 from dependencies import get_neo4j_driver
 from target_analyzer import TargetAnalyzer
 from db.database import get_db, engine, Base, SessionLocal
@@ -88,7 +89,7 @@ from component_services.evidence_services import build_query, get_geo_data_for_d
     fetch_and_filter_figures_by_disease_and_pmids,fetch_mouse_model_data_alliancegenome, fetch_patents_from_serpapi, \
     get_top_10_literature_helper,add_platform_name,add_study_type, add_sample_type, get_mesh_term_for_disease, add_pubmed_info, \
     build_query_target, add_mapped_diseases
-from component_services.disease_profile_llm import disease_interpreter
+from component_services.disease_target_profile_llm import disease_target_descriptor
 from component_services.target_services import find_matching_screens_for_target,fetch_subcellular_locations
 from fastapi.testclient import TestClient
 from fastapi.security import OAuth2PasswordRequestForm
@@ -565,36 +566,68 @@ async def get_target_details(request: TargetOnlyRequest, redis: Redis = Depends(
         print("Returning redis cached response")
         return cached_response_redis
 
-    analyzer = TargetAnalyzer(target)
-
     try:
-        introduction = analyzer.get_target_introduction()
-        description = analyzer.get_target_description()
-        taxonomy = analyzer.get_target_introduction()
+        if is_mirna(target):
+            llm_response = disease_target_descriptor(input_var=target, input_type="target")
+            taxonomy = {
+                "Taxonomic Identifier": 9606,
+                "Organism": "Homo sapiens (Human)",
+                "Taxonomic Lineage": [
+                    "Eukaryota",
+                    "Metazoa",
+                    "Chordata",
+                    "Craniata",
+                    "Vertebrata",
+                    "Euteleostomi",
+                    "Mammalia",
+                    "Eutheria",
+                    "Euarchontoglires",
+                    "Primates",
+                    "Haplorrhini",
+                    "Catarrhini",
+                    "Hominidae",
+                    "Homo"
+                ]
+            }
+            target_input = target
+            if '-' not in target:
+                target_input = target.replace("mir", "mir-")
+            mir_info = fetch_mirna_info(target_input.lower())
+            response = {
+                "summary_and_characteristics": llm_response,
+                "taxonomy": taxonomy,
+                **mir_info
+            }
 
-        parsed_introduction = None
-        if introduction:
-            parsed_introduction = parse_target_introduction(introduction)
-        
-        parsed_description = None
-        if description:
-            parsed_description = parse_target_description(description)
-        
-        parsed_taxonomy = None
-        if taxonomy:
-            parsed_taxonomy = parse_taxonomy(taxonomy)
+        else:
+            analyzer = TargetAnalyzer(target)
+            introduction = analyzer.get_target_introduction()
+            description = analyzer.get_target_description()
+            taxonomy = analyzer.get_target_introduction()
+            parsed_introduction = None
+            if introduction:
+                parsed_introduction = parse_target_introduction(introduction)
+            
+            parsed_description = None
+            if description:
+                parsed_description = parse_target_description(description)
+            
+            parsed_taxonomy = None
+            if taxonomy:
+                parsed_taxonomy = parse_taxonomy(taxonomy)
 
-        target_details = {
-            "ensembl_id": analyzer.ensembl_id,
-            "hgnc_id": analyzer.hgnc_id,
-            "uniprot_id": analyzer.uniprot_id
-        }
-        response = {
-            "target_details": target_details,
-            "introduction": parsed_introduction,
-            "summary_and_characteristics": parsed_description,
-            "taxonomy": parsed_taxonomy,
-        }
+            target_details = {
+                "ensembl_id": analyzer.ensembl_id,
+                "hgnc_id": analyzer.hgnc_id,
+                "uniprot_id": analyzer.uniprot_id
+            }
+            response = {
+                "target_details": target_details,
+                "introduction": parsed_introduction,
+                "summary_and_characteristics": parsed_description,
+                "taxonomy": parsed_taxonomy,
+            }
+            
         await set_cached_response(redis, key, response)
 
         if target_record is not None:
@@ -619,6 +652,70 @@ async def get_target_details(request: TargetOnlyRequest, redis: Redis = Depends(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/target-profile/mir-target-predictions/", tags=["Target Profile"])
+async def get_mir_target_predictions(request: TargetOnlyRequest, redis: Redis = Depends(get_redis),
+                             db: Session = Depends(get_db)):
+    target: str = request.target.strip().lower()
+    
+    key: str = f"/target-profile/mir-target-predictions/:{target}"
+    endpoint: str = "/target-profile/mir-target-predictions/"
+
+    # Directory to store the cached JSON file
+    cache_dir: str = "cached_data_json/target"
+    os.makedirs(cache_dir, exist_ok=True)  # Ensure the directory exists
+
+    # File path for the JSON response
+    file_path: str = os.path.join(cache_dir, f"{target}.json")
+
+    target_record = db.query(Target).filter_by(id=target).first()
+    # 1. Check if the cached JSON file exists
+    if target_record is not None:
+        cached_file_path: str = target_record.file_path
+        print(f"Loading cached response from file: {cached_file_path}")
+        cached_responses: Dict = load_response_from_file(cached_file_path)
+
+        # Check if the endpoint response exists in the cached data
+        if f"{endpoint}" in cached_responses:
+            print(f"Returning cached response from file: {cached_file_path}")
+            return cached_responses[f"{endpoint}"]
+
+    cached_response_redis = await get_cached_response(redis, key)
+    if cached_response_redis:
+        print("Returning redis cached response")
+        return cached_response_redis
+
+    try:
+        target_input = target
+        if '-' not in target:
+            target_input = target.replace("mir", "mir-")
+        predictions = get_target_predictions_for_all_locs(target_input)
+        response = {
+            "mirna_target_predictions": predictions
+        }
+
+        await set_cached_response(redis, key, response)
+
+        if target_record is not None:
+            cached_responses = load_response_from_file(cached_file_path)
+        else:
+            cached_responses = {}
+
+        cached_responses[f"{endpoint}"] = response
+
+        if target_record is None:
+            save_response_to_file(file_path, cached_responses)
+            new_record = Target(id=target, file_path=file_path)  # Create a new instance of the identified model
+            db.add(new_record)  # Add the new record to the session
+            db.commit()  # Commit the transaction to save the record to the database
+            db.refresh(new_record)  # Refresh the instance to reflect any changes from the DB (like auto-generated
+            # fields)
+            print(f"Record with ID {target} added to the target table.")
+        else:
+            save_response_to_file(cached_file_path, cached_responses)
+
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/target-profile/ontology/", tags=["Target Profile"])
 async def get_ontology(request: TargetOnlyRequest, redis: Redis = Depends(get_redis), db: Session = Depends(get_db)):
@@ -4758,7 +4855,7 @@ async def get_diseases_profiles_llm(
                     cached_responses = {}
 
                 # Get LLM interpretation for disease
-                disease_data = disease_interpreter(disease_name=disease.replace("_", " "))
+                disease_data = disease_target_descriptor(input_var=disease.replace("_", " "), input_type="disease")
                 cached_data[disease.replace("_", " ")] = disease_data
                 cached_responses[f"{endpoint}"] = disease_data
 

@@ -7,7 +7,7 @@ import os
 model = os.environ["LLM_MODEL"]
 api_key = os.environ["OPENAI_API_KEY"]
 
-def disease_interpreter(disease_name: str) -> str:
+def disease_interpreter(disease_name: str,) -> str:
     template: str = """
         You are a biomedical data extraction assistant with expertise in sourcing disease-specific information from well-recognized patient advocacy groups, medical organizations or research institutions as sources.
 
