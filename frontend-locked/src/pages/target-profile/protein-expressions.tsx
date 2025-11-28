@@ -7,7 +7,7 @@ import { Empty } from "antd";
 import LoadingButton from "../../components/loading";
 import { capitalizeFirstLetter } from "../../utils/helper";
 
-const ProteinExpressions = ({ target }) => {
+const ProteinExpressions = ({ target ,isRna}) => {
   const [selectedOrgan, setSelectedOrgan] = useState("All");
   const payload = {
     target: target,
@@ -110,7 +110,7 @@ const ProteinExpressions = ({ target }) => {
       className="mt-12 px-[5vw] bg-gray-50 py-20"
     >
       <div className="flex items-center gap-x-2">
-        <h1 className="text-3xl font-semibold">RNA/Protein expressions</h1>
+        <h1 className="text-3xl font-semibold"> {isRna ? "RNA expressions":"RNA/Protein expressions"}</h1>
         <Tooltip title="A target is considered to be tissue specific if the z-score is greater than 0.674 (or the 75th percentile of a perfect normal distribution).">
           <span className="material-symbols-outlined">info</span>
         </Tooltip>
@@ -145,68 +145,68 @@ const ProteinExpressions = ({ target }) => {
           />
 
           {/* RNA Z-Score and Protein Level Plot */}
-          <div className="flex mt-4 h-[100vh] overflow-scroll w-[100vw]">
+            <div className="flex mt-4 h-[100vh] overflow-scroll w-[100vw]">
             <Plot
-              className="w-1/2 overflow-scroll"
+              className={`${isRna ? 'w-full' : 'w-1/2'} overflow-scroll`}
               data={[
-                {
-                  y: rnaData.map((d) => d.tissue),
-                  x: rnaData.map((d) => d.rna_value),
-                  text: rnaData.map((d) => d.text),
-                  type: "bar",
-                  orientation: "h",
-                  name: "RNA expression levels by organ",
-                  marker: { color: "skyblue" },
-                hoverinfo: "none",
+              {
+                y: rnaData.map((d) => d.tissue),
+                x: rnaData.map((d) => d.rna_value),
+                text: rnaData.map((d) => d.text),
+                type: "bar",
+                orientation: "h",
+                name: "RNA expression levels by organ",
+                marker: { color: "skyblue" },
+              hoverinfo: "none",
               
-                },
+              },
               ]}
               
               layout={{
-                title: `RNA expression levels ${
-                  selectedOrgan === "All" ? "by Organ" : `in ${selectedOrgan}`
-                }`,
-                xaxis: {
-                  tickvals: [Math.min(...rnaData.map(d => d.rna_value)), Math.max(...rnaData.map(d => d.rna_value))],       // positions on the x-axis
-                  ticktext: ['Low', 'High'], // corresponding labels
-                },
-                width: 700,
-                height: 800,
-                yaxis: {
-                  automargin: true,
-                },
+              title: `RNA expression levels ${
+                selectedOrgan === "All" ? "by Organ" : `in ${selectedOrgan}`
+              }`,
+              xaxis: {
+                tickvals: [Math.min(...rnaData.map(d => d.rna_value)), Math.max(...rnaData.map(d => d.rna_value))],       // positions on the x-axis
+                ticktext: ['Low', 'High'], // corresponding labels
+              },
+              width: isRna ? 1150 : 700,
+              height: 800,
+              yaxis: {
+                automargin: true,
+              },
               }}
             />
 
-            <Plot
+            {!isRna &&<Plot
               className="w-1/2"
               data={[
-                {
-                  y: proteinData.map((d) => d.tissue),
-                  x: proteinData.map((d) => d.value),
-                  text: proteinData.map((d) => d.text),
-                  type: "bar",
-                  name: "Protein expression levels by organ",
-                  orientation: "h",
-                  marker: { color: "salmon" },
-                },
+              {
+                y: proteinData.map((d) => d.tissue),
+                x: proteinData.map((d) => d.value),
+                text: proteinData.map((d) => d.text),
+                type: "bar",
+                name: "Protein expression levels by organ",
+                orientation: "h",
+                marker: { color: "salmon" },
+              },
               ]}
               layout={{
-                title: `Protein expression levels ${
-                  selectedOrgan === "All" ? "by Organ" : `in ${selectedOrgan}`
-                }`,
-                height: 760,
-                width: 600,
-                xaxis: {
-                  tickvals: [Math.min(...proteinData.map(d => d.value)), Math.max(...proteinData.map(d => d.value))],      
-                  ticktext: ['Low', 'High'], 
-                },
-                yaxis: {
-                  automargin: true,
-                },
+              title: `Protein expression levels ${
+                selectedOrgan === "All" ? "by Organ" : `in ${selectedOrgan}`
+              }`,
+              height: 760,
+              width: 600,
+              xaxis: {
+                tickvals: [Math.min(...proteinData.map(d => d.value)), Math.max(...proteinData.map(d => d.value))],      
+                ticktext: ['Low', 'High'], 
+              },
+              yaxis: {
+                automargin: true,
+              },
               }}
-            />
-          </div>
+            />}
+            </div>
         </>
       )}
     </section>

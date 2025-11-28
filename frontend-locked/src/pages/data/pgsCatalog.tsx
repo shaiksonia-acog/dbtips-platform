@@ -114,7 +114,7 @@ const genePayload = useMemo(() => {
  )
 const {data:uniqueGeneData,isLoading:uniqueGeneLoading}=useQuery(
   ["unique gene data",{target: selectedGene}],
-  ()=>fetchData({target: selectedGene},"/genomics/pgscatalog-gene-data"),
+  ()=>fetchData({target: selectedGene?.toLowerCase()},"/genomics/pgscatalog-gene-data"),
   {
     enabled: !!selectedGene,
     refetchOnWindowFocus: false,

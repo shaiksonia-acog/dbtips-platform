@@ -4,7 +4,7 @@ import { Dropdown } from "antd";
 import AganithaLogo from "../assets/aganitha-logo.png";
 import UserDropdown from "./userDropdown";
 // import NotificationBell from "./notification";
-
+import { matchesPattern } from "../utils/helper";
 const Header = ({ app_state }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -54,6 +54,7 @@ const Header = ({ app_state }) => {
 
     fetchUser();
   }, []);
+  const isRNA = matchesPattern(app_state?.target || "");
 
   // Menu groups
   const targetMenuItems = [
@@ -64,9 +65,17 @@ const Header = ({ app_state }) => {
         { key: "target-description", label: "Target description" },
         { key: "taxonomy", label: "Taxonomy" },
         { key: "ontology", label: "Ontology" },
-        { key: "protein-expression", label: "RNA/Protein expressions" },
-        { key: "protein-structure", label: "Protein structure" },
-        { key: "sub-cellular-location", label: "Subcellular localization" },
+        { key: "protein-expression", label:isRNA ? "RNA expressions":"RNA/Protein expressions" },
+        isRNA &&{
+          key: "sequence",
+          label: "Sequence",
+        },
+        isRNA &&{
+          key: "structure",
+          label: "Structure",
+        },
+        !isRNA &&{ key: "protein-structure", label: "Protein structure" },
+        !isRNA && { key: "sub-cellular-location", label: "Subcellular localization" },
       ],
     },
     {
@@ -94,6 +103,10 @@ const Header = ({ app_state }) => {
             }
           ],
         },
+        {
+          key:"predicted-gene-targets",
+          label:"Predicted gene targets"
+        }
       ],
     },
     {
@@ -267,15 +280,9 @@ const Header = ({ app_state }) => {
           key: "ontology",
           label: "Ontology",
         },
-        {
-          key: "protein-expression",
-          label: "RNA/Protein expressions",
-        },
-        {
-          key: "protein-structure",
-          label: "Protein structure",
-        },
-        {
+        { key: "protein-expression", label:isRNA ? "RNA expressions":"RNA/Protein expressions" },
+        !isRNA &&{ key: "protein-structure", label: "Protein structure" },
+        !isRNA &&{
           key: "sub-cellular-location",
           label: "Subcellular localization",
         },
@@ -356,6 +363,10 @@ const Header = ({ app_state }) => {
             }
           ],
         },
+        {
+          key:"predicted-gene-targets",
+          label:"Predicted gene targets"
+        }
       ],
     },
 

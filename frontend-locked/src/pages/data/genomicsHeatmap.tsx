@@ -6,18 +6,25 @@ import { Empty } from 'antd';
 import LoadingButton from '../../components/loading';
 
 const categoryColors = {
-  'ECG Traits': '#E63946',          // bold red
-  'CARDIOVASCULAR': '#1D3557',      // navy blue
-  'HEMATOLOGICAL': '#457B9D',       // steel blue
-  'Anthropometric': 'brown',      // teal green
-  'Sleep And Circadian': '#F4A261', // warm orange
-  'HEPATIC': '#E9C46A',             // gold yellow
-  'LIPIDS': 'blue',              // dark cyan
-  'GLYCEMIC': 'green',            // vivid violet
-  'RENAL': '#00B4D8',               // bright sky blue
-  'METABOLITE': '#FF006E',          // magenta pink
-  'ATRIAL FIBRILLATION': '#8338EC', // deep purple
+  'ECG Traits': '#E63946',          
+  'CARDIOVASCULAR': '#1D3557',      
+  'HEMATOLOGICAL': '#457B9D',       
+  'Anthropometric': '#9B59B6',      // Changed from brown to purple
+  'Sleep And Circadian': '#F4A261', 
+  'HEPATIC': '#E9C46A',             
+  'LIPIDS': 'blue',                 
+  'GLYCEMIC': 'green',              
+  'RENAL': '#00B4D8',               
+  'METABOLITE': '#FF006E',          
+  'ATRIAL FIBRILLATION': '#8338EC', 
+  'Musculoskeletal': '#16A085',     // Changed from red (#8B0000) to teal
+  'Ocular': '#008080',
+  'Other': '#708090',
+  'Diabetic Complications': '#FF8C00',
+  'Type 1 Diabetes': '#2E8B57',
+  'Aging and Longevity': '#6A5ACD',
 };
+
 const generateColorscale = () => {
   const colors = [
     '#FFF8F8', '#FFE5E5', '#FFCCCC', '#FFB3B3', '#FF9999',
