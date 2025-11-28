@@ -58,13 +58,23 @@ def fetch_gwas_studies_including_related_measurements(efo_id, disease):
             },
             "obesity": {
                 "with_child": [],
-                "without_child": ['EFO_0005106','EFO_0004340', 'EFO_0004338', 'EFO_0007861', 'EFO_0001074', 'EFO_0022016', 'EFO_0007830', 'EFO_0004529', 'EFO_0006842'] 
+                "without_child": ['EFO_0005106','EFO_0004340', 'EFO_0004338', 'EFO_0007861', 'EFO_0001074', 'EFO_0022016', 
+                'EFO_0007830', 'EFO_0004529', 'EFO_0006842'] 
             },
             "urologic diseases":{
                 "with_child": [],
-                "without_child": ['OBA_0004158', 'EFO_0005116', 'OBA_VT0005265', 'OBA_0003747', 'OBA_2050096', 'OBA_2050065', 'EFO_0004458', 
-                'EFO_0004533', 'EFO_0004532', 'EFO_0004617', 'OBA_2052375', 'EFO_0004761', 'OBA_2050015', 'EFO_0004541', 
-                'EFO_0005128', 'OBA_2045206']
+                "without_child": ['OBA_0004158', 'EFO_0005116', 'OBA_VT0005265', 'OBA_0003747', 'OBA_2050096', 'OBA_2050065', 
+                'EFO_0004458', 'EFO_0004533', 'EFO_0004532', 'EFO_0004617', 'OBA_2052375', 'EFO_0004761', 'OBA_2050015', 
+                'EFO_0004541', 'EFO_0005128', 'OBA_2045206']
+            },
+            "age-related macular degeneration": {
+                "with_child": ["EFO_0003839", "EFO_1000880", "MONDO_0004892", "MONDO_0005129", "EFO_0009764", "HP_0000505", 
+                "EFO_0803370", "EFO_0022597", "EFO_0008372", "OBA_2050110"],
+                "without_child": []
+            }, 
+            "glaucoma": {
+                "with_child": ["EFO_0004695"],
+                "without_child": []
             }
         }
     genomics_data = []
