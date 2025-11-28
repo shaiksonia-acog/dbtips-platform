@@ -203,17 +203,89 @@
     "crhr2": [
         "crf2",
         "crfr2",
-        "CRF-RB",	
+        "CRF-RB",
         "HM-CRF"
     ],
     "gpr75": [
         "g protein-coupled receptor 75",
-        "GPRchr2",	
+        "GPRchr2",
         "WI31133"
     ],
     "inhbe": [
         "inhibin beta e",
-        "Activin E",	
+        "Activin E",
         "Activin beta-E"
+    ],
+    "mir33a": [
+        "mir33",
+        "miR-33",
+        "mir-33",
+        "microRNA-33",
+        "Mir33",
+        "hsa-mir-33",
+        "MIR33",
+        "MIRN33",
+        "MIRN33A",
+        "mir-33a",
+        "miRNA33A",
+        "hsa-mir-33a",
+        "hsa-mir-33a-5p",
+        "hsa-mir-33a-3p",
+        "microRNA-33a",
+        "microRNA-33a-5p",
+        "microRNA-33a-3p"
+    ],
+    "ano4": [
+        "TMEM16D",
+        "anoctamin 4"
+    ],
+    "htra1": [
+        "HtrA serine peptidase 1",
+        "L56",
+        "HtrA",
+        "ARMD7",
+        "ORF480",
+        "PRSS11",
+        "CARASIL",
+        "CADASIL2",
+        "CARASIL2"
+    ],
+    "brinp2": [
+        "Retinoic Acid Inducible Neural Specific 2",
+        "AM5B",
+        "DBCCR1L2",
+        "KIAA1747",
+        "BRINP-2"
+    ],
+    "usp19": [
+        "Ubiquitin carboxyl-terminal hydrolase 19",
+        "ZMYND9",
+        "KIAA0891",
+        "Ubiquitin-specific-processing protease 19",
+        "Deubiquitinating enzyme 19",
+        "Ubiquitin thioesterase 19"
+    ],
+    "angptl7": [
+        "Angiopoietin-related protein 7",
+        "Cornea-Derived Transcript 6 Protein",
+        "CDT6",
+        "AngX"
+    ],
+    "mir33b": [
+        "mir33b",
+        "miR-33b",
+        "mir-33b",
+        "microRNA-33b",
+        "Mir33b",
+        "hsa-mir-33b",
+        "MIR33b",
+        "MIRN33B",
+        "mir-33b",
+        "miRNA33b",
+        "hsa-mir-33b-5p",
+        "hsa-mir-33a-3p",
+        "microRNA-33b",
+        "microRNA-33b-5p",
+        "microRNA-33b-3p"
     ]
 }
