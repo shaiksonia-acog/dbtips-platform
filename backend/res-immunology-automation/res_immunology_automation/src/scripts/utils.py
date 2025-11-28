@@ -20,6 +20,7 @@ from component_services.evidence_services import get_network_biology_strapi
 from component_services.market_intelligence_service import get_pmids_for_nct_ids,add_outcome_status,get_indication_pipeline_strapi
 import logging
 from component_services.drug_extraction import chembl_sessions_request
+import re
 
 
 # Set up logger
@@ -72,6 +73,11 @@ def format_for_cytoscape(query_result, node_types, edge_types):
 
     return elements
 
+
+def is_mirna(term: str) -> bool:
+    # Compile the regex (case-insensitive)
+    pattern = re.compile(r"\bmir-?\d+\w*\b", re.IGNORECASE)
+    return bool(pattern.search(term))
 
 def get_type_from_labels(labels) -> str:
     node_types = {
