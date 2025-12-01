@@ -109,7 +109,6 @@
     "il1b": [
         "il-1b",
         "il1b"
-    
     ],
     "btk": [
         "btk"
@@ -178,28 +177,82 @@
     "crhr2": [
         "crf2",
         "crfr2",
-        "CRF-RB",	
+        "CRF-RB",
         "HM-CRF"
     ],
     "gpr75": [
-        "GPRchr2",	
+        "GPRchr2",
         "WI31133"
     ],
-     "mir33a":[
-        "MIRN33A","mir-33a","miRNA33A","hsa-mir-33a","hsa-mir-33a-5p","hsa-mir-33a-3p","microRNA-33a","microRNA-33a-5p","microRNA-33a-3p"
+    "mir33a": [
+        "mir33",
+        "miR-33",
+        "mir-33",
+        "microRNA-33",
+        "Mir33",
+        "hsa-mir-33",
+        "MIR33",
+        "MIRN33",
+        "MIRN33A",
+        "mir-33a",
+        "miRNA33A",
+        "hsa-mir-33a",
+        "hsa-mir-33a-5p",
+        "hsa-mir-33a-3p",
+        "microRNA-33a",
+        "microRNA-33a-5p",
+        "microRNA-33a-3p"
     ],
-    "ano4":[
+    "ano4": [
         "TMEM16D"
     ],
-    "htra1":
-    ["L56","HtrA","ARMD7","ORF480","PRSS11","CARASIL","CADASIL2","CARASIL2"],
-    "brinp2":
-    ["AM5B","DBCCR1L2","KIAA1747","BRINP-2"],
-    "usp19":
-    ["ZMYND9","KIAA0891"],
-    "angptl7":
-    ["CDT6","AngX"], 
-    "mir33b":
-    ["mir33b","miR-33b","mir-33b","microRNA-33b","Mir33b","hsa-mir-33b","MIR33b","MIRN33B","mir-33b","miRNA33b","hsa-mir-33b-5p","hsa-mir-33a-3p","microRNA-33b","microRNA-33b-5p","microRNA-33b-3p"]
-
+    "htra1": [
+        "L56",
+        "HtrA",
+        "ARMD7",
+        "ORF480",
+        "PRSS11",
+        "CARASIL",
+        "CADASIL2",
+        "CARASIL2"
+    ],
+    "brinp2": [
+        "AM5B",
+        "DBCCR1L2",
+        "KIAA1747",
+        "BRINP-2"
+    ],
+    "usp19": [
+        "ZMYND9",
+        "KIAA0891"
+    ],
+    "angptl7": [
+        "CDT6",
+        "AngX"
+    ],
+    "mir33b": [
+        "mir33",
+        "miR-33",
+        "mir-33",
+        "microRNA-33",
+        "Mir33",
+        "hsa-mir-33",
+        "MIR33",
+        "MIRN33",
+        "mir33b",
+        "miR-33b",
+        "mir-33b",
+        "microRNA-33b",
+        "Mir33b",
+        "hsa-mir-33b",
+        "MIR33b",
+        "MIRN33B",
+        "mir-33b",
+        "miRNA33b",
+        "hsa-mir-33b-5p",
+        "hsa-mir-33a-3p",
+        "microRNA-33b",
+        "microRNA-33b-5p",
+        "microRNA-33b-3p"
+    ]
 }
