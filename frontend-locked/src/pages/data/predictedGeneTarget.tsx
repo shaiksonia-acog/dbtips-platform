@@ -27,7 +27,7 @@ const PredictedGeneTarget = ({ target }) => {
     isLoading: predictedGeneTargetLoading,
   } = useQuery(
     ["predictedGeneTargetData", payload],
-    () => fetchData(payload, "/target-profile/mir-target-predictions"),
+    () => fetchData(payload, "/target-profile/mir-target-predictions/"),
     {
       enabled: !!target,
       refetchOnWindowFocus: false,
