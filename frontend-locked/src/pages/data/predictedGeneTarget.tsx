@@ -102,20 +102,26 @@ const PredictedGeneTarget = ({ target }) => {
                  String(params.value)
         
              },
-            {
-              field: "Link to sites in UTR",
-              headerName: "Link to Sites in UTR",
-              cellRenderer: (params: any) => (
-                <a
-                  href={params.value}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 underline"
-                >
-                  View Sites
-                </a>
-              ),
-            },
+             {
+                field: "Link to sites in UTR",
+                headerName: "Link to Sites in UTR",
+                cellRenderer: (params: any) => {
+                  const urlEncoded = encodeURIComponent(params.value);
+                  
+              
+                  return (
+                    <a
+                      href={`/server/ts?url=${urlEncoded}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline"
+                    >
+                      View Sites
+                    </a>
+                  );
+                },
+              }
+              
           ]}
         />
         </div>
