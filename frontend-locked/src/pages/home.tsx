@@ -5,7 +5,7 @@ import type { FormProps } from 'antd';
 import { capitalizeFirstLetter } from '../utils/helper';
 import gifImage from "../assets/Merged-dossier (4).png";
 import { useLocation } from 'react-router-dom';
-import { parseQueryParams } from '../utils/parseUrlParams';
+// import { parseQueryParams } from '../utils/parseUrlParams';
 
 type FieldType = {
   target?: string;
@@ -24,7 +24,7 @@ const diseaseToTargetMap: Record<string, string[]> = {
 };
 
 const indicationToTargetMap: Record<string, string[]> = {
-  "Obesity": ["ACVR2A","ACVR2B","ANO4","APLNR","BRINP2","CRHR2","GIPR","GPR75","INHBE","MIR33A", "MIR33A","PDE3B","USP19"],
+  "Obesity": ["ACVR2A","ACVR2B","ANO4","APLNR","BRINP2","CRHR2","GIPR","GPR75","INHBE","MIR33A", "MIR33B","PDE3B","USP19"],
   "Age-related macular degeneration": ["HTRA1"],
   "Glaucoma": ["ANGPTL7"],
 
@@ -105,16 +105,17 @@ const HomeLocked = ({ setAppState }) => {
 
   // Initialize form from URL params
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const { target, indications, diseaseArea } = parseQueryParams(queryParams);
+    // const queryParams = new URLSearchParams(location.search);
+    // const { target, indications, diseaseArea } = parseQueryParams(queryParams);
 
-    const parsedIndications = indications?.map(i => capitalizeFirstLetter(i)) || [];
-    const parsedDiseaseAreas = diseaseArea?.map(d => capitalizeFirstLetter(d)) || [];
+    // const parsedIndications = indications?.map(i => capitalizeFirstLetter(i)) || [];
+    // const parsedDiseaseAreas = diseaseArea?.map(d => capitalizeFirstLetter(d)) || [];
+    
     
     form.setFieldsValue({ 
-      target, 
-      indications: parsedIndications,
-      diseaseArea: parsedDiseaseAreas 
+      target:null, 
+      indications: [],
+      diseaseArea: []
     });
   }, [location, form]);
 

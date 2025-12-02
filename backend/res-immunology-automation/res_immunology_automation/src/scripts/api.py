@@ -103,7 +103,7 @@ from component_services.excel_export import process_data_and_return_file_rna,pro
     process_mouse_studies,process_patent_data,process_model_studies,process_target_pipeline, \
     process_cover_letter_list_excel, tsv_to_json, process_gwas_excel, process_gtr_excel, \
     process_kol_excel,process_pag_excel, process_site_investigators_excel,process_literature_excel, \
-    process_patientStories_excel,process_target_literature_excel
+    process_patientStories_excel,process_target_literature_excel,process_mirna_prediction_excel
 from fastapi.responses import FileResponse
 from cache_results import cache_all_data
 from component_services.genomics_services import fetch_pgs_data, fetch_ppm_from_pgs_results
@@ -5243,6 +5243,16 @@ async def get_excel_export(request: ExcelExportRequest):
             json_data=response.json()
             file_path = process_target_pipeline(json_data)
             return FileResponse(file_path, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename="target_pipeline_excel.xlsx") 
+        elif endpoint=="/target-profile/mir-target-predictions/":
+            request_data = TargetOnlyRequest(target=target)
+            # Make the POST request to the internal API endpoint
+            response = client.post("/target-profile/mir-target-predictions/", json=request_data.dict())
+            if response.status_code != 200:
+                raise HTTPException(status_code=response.status_code, detail=response.json())
+            json_data=response.json()
+            file_path = process_mirna_prediction_excel(json_data)
+            return FileResponse(file_path, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename="predictedGeneTarget.xlsx") 
+        
         elif endpoint=="/target-indication-pairs":
             request_data = DiseasesRequest(diseases=filtered_diseases)
             # Make the POST request to the internal API endpoint

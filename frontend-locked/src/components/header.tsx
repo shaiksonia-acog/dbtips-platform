@@ -103,7 +103,7 @@ const Header = ({ app_state }) => {
             }
           ],
         },
-        {
+        isRNA &&{
           key:"predicted-gene-targets",
           label:"Predicted gene targets"
         }
@@ -363,7 +363,7 @@ const Header = ({ app_state }) => {
             }
           ],
         },
-        {
+        isRNA &&{
           key:"predicted-gene-targets",
           label:"Predicted gene targets"
         }

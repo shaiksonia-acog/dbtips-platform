@@ -282,6 +282,23 @@ const HeatmapComponent = ({ target }) => {
   }
 
   return (
+    <div>
+  <p>
+    In this section, the query gene, its query traits, and their related 
+    child traits are systematically assessed across multiple evidence sources—
+    including {" "}
+    <a href="http://www.mulinlab.org/causaldb/index.html" target="_blank" className='underline '>Fine mapping</a>, 
+    <a href="https://a2f.hugeamp.org/" target="_blank" className='underline ml-1'>PheWAS</a>, 
+    <a href="https://ngdc.cncb.ac.cn/colocdb/home" target="_blank" className='underline ml-1'>Colocalisation</a>, 
+    <a href="https://yanglab.westlake.edu.cn/smr-portal/" target="_blank" className='underline ml-1'>MR</a>, and 
+    <a href="http://www.webtwas.net/#/browseGenes" target="_blank" className='underline ml-1'>TWAS</a> —
+    to construct an integrated evidence scoring matrix.
+  </p>
+  <p>
+    This approach enables additional gene–trait signals to emerge even when they are not 
+    represented in the GWAS Catalog.
+  </p>
+
     <div className="flex flex-col items-start gap-4">
       {uniqueCategories.length > 0 && (
         <div className="w-full mt-4">
@@ -306,9 +323,11 @@ const HeatmapComponent = ({ target }) => {
             </div>
           </div>
         </div>
+        
       )}
 
 <div ref={heatmapRef} className="w-full" style={{ height: '500px' }} />
+</div>
 </div>
   );
 };

@@ -96,7 +96,7 @@ setUrl(url);
   }, [evidenceLiteratureData]);
   useEffect(() => {
     if (!diseaseAreaFilter) {
-      setSelectedDiseases(indications);
+      // setSelectedDiseases(indications);
     } else setDiseaseAreaOptions(indications);
   }, [indications, diseaseAreaFilter]);
 

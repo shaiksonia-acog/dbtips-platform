@@ -7,6 +7,7 @@ import PgsCatalog from "./pgsCatalog";
 import Variantplot from "./variationPlot"
 import GenomicsHeatmap from "./genomicsHeatmap";
 import PredictedGeneTarget from "./predictedGeneTarget";
+import { matchesPattern } from "../../utils/helper";
 const Data = () => {
     const location = useLocation();
     const [indications, setIndications] = useState([]);
@@ -21,6 +22,7 @@ const Data = () => {
       }, [location]);
     
 const hasIndications = indications.length > 0 || diseaseArea.length > 0;
+const isRNA = matchesPattern(target || "");
   return (
     <div >
      { hasIndications && <div className="px-[5vw] mt-8" >
@@ -33,7 +35,7 @@ const hasIndications = indications.length > 0 || diseaseArea.length > 0;
 
       { hasIndications && <>
       <AssociatePlot indications={indications.length > 0 ? indications : diseaseArea} 
-        diseaseAreaFilter={diseaseArea.length > 0} target={target} />
+        diseaseAreaFilter={diseaseArea.length > 0} target={target} isRNA={isRNA} />
       <Variantplot diseases={indications.length > 0 ? indications : diseaseArea} 
         diseaseAreaFilter={diseaseArea.length > 0}/>
       <PgsCatalog indications={indications.length > 0 ? indications : diseaseArea} 
@@ -42,14 +44,12 @@ const hasIndications = indications.length > 0 || diseaseArea.length > 0;
         <h2 className="text-xl subHeading font-semibold mb-3">
         Genomic evidence heatmap{" "}
       </h2>
-      <p>
-      Summary of evidence from GWAS downstream analyses for gene prioritisation. Counts within the heatmap represent the total of individual contributing results for these methods, combining evidence from across different methods.
-      </p>
+      
         <GenomicsHeatmap target={target}/>
         </div>
       </div>
-      <PredictedGeneTarget target={target}/>
-      </div>
+{ isRNA &&      <PredictedGeneTarget target={target}/>
+}      </div>
       
   )
 }

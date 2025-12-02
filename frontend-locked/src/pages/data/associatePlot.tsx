@@ -76,12 +76,12 @@ function convertToArray(data) {
   return { result, diseaseWithoutEFOID };
 }
 
-const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
+const AssociatePlot = ({ indications, diseaseAreaFilter, target,isRNA }) => {
   const [activeTab, setActiveTab] = useState("association");
   const [selectedDiseaseAreas, setSelectedDiseaseAreas] = useState(indications);
   const [columns, setColumns] = useState([]);
   const [defaultSelectedColumns, setDefaultSelectedColumns] = useState([]);
-  const [selectedGene, setSelectedGene] = useState<string | undefined>();
+  const [selectedGene, setSelectedGene] = useState<string[]>([]);
   const [selectedAccession, setSelectedAccession] = useState([]);
   const [selectedColumnsGWASStudies, setSelectedColumnsGWASStudies] = useState([
     "DiseaseArea",
@@ -101,8 +101,14 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
 
   useEffect(() => {
     setSelectedDiseaseAreas(indications);
-    if (target) setSelectedGene(target);
-  }, [indications, diseaseAreaFilter, target]);
+    if (target) setSelectedGene([target]);
+    if(target ==="MIR33A" ){
+      setSelectedGene(prev => [...prev, "SREBF2"]);
+    }
+    if(target ==="MIR33B" ){
+      setSelectedGene(prev => [...prev, "SREBF1"]);
+    }
+  }, [indications, diseaseAreaFilter, target, isRNA]);
 
   const [selectedAssociationColumns, setSelectedAssociationColumns] = useState([
     "DiseaseArea",
@@ -623,15 +629,23 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
   const filterAssociationData = useMemo(() => {
     let filteredData = associationsRowData;
 
-    if (selectedGene) {
+    if (selectedGene.length > 0) {
       filteredData = filteredData.filter((row) => {
         const genes = row["Mapped gene(s)"]
-          ? row["Mapped gene(s)"].split(/[;,-]+/).map((g) => g.trim())
+          ? row["Mapped gene(s)"].split(/[;,]+/).map((g) => g.trim())
           : [];
 
-        const matchesGene = genes.some((gene) => gene === selectedGene?.trim());
-
-        return matchesGene;
+        return selectedGene.some((selected) => {
+          const trimmedSelected = selected.trim();
+          return genes.some((gene) => {
+            if (trimmedSelected.includes("-")) {
+              return gene === trimmedSelected;
+            }
+            if (gene === trimmedSelected) return true;
+            const parts = gene.split("-").map((p) => p.trim());
+            return parts.includes(trimmedSelected);
+          });
+        });
       });
     }
     return filteredData;
@@ -640,12 +654,12 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
   useEffect(() => {
     let newAccessions = [];
 
-    if (selectedGene) {
+    if (selectedGene.length > 0) {
       const geneFilteredData = associationsRowData.filter((row) => {
         const genes = row["Mapped gene(s)"]
-          ? row["Mapped gene(s)"].split(/[;,]+/).map((g) => g.trim())
+          ? row["Mapped gene(s)"].split(/[;,-]+/).map((g) => g.trim())
           : [];
-        return genes.some((gene) => gene === selectedGene?.trim());
+        return selectedGene.some((gene) => genes.includes(gene.trim()));
       });
 
       const accessions = geneFilteredData.map((row) => row["Study Accession"]);
@@ -675,7 +689,7 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
       filtered = filtered.filter((item) =>
         selectedAccession.includes(item["Study accession"])
       );
-    } else if (selectedGene) {
+    } else if (selectedGene.length > 0) {
       filtered = [];
     }
 
@@ -709,7 +723,9 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
         <h2 className="text-xl subHeading font-semibold mb-3" id="gwasStudies">
           GWAS studies
         </h2>
+        
       </div>
+      <p>The GWAS section summarizes genomic associations extracted from the GWAS Catalog, noting that not all relevant studies are captured within the database.</p>
 
       {locusZoomDataLoading && <LoadingButton />}
       {(gwasStudiesError || error) && (
@@ -743,6 +759,7 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target }) => {
                   showSearch
                   virtual={true}
                   listHeight={400}
+                  mode="multiple"
                   filterOption={(input, option) =>
                     String(option?.children ?? "")
                       .toLowerCase()

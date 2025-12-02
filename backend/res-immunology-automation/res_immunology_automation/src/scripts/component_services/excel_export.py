@@ -1238,18 +1238,65 @@ def process_patientStories_excel(data):
             
 
             row_data=[disease,title,description,publisedDate,name,currentAge,onsetAge,sex,location,symptoms, duration,views,channel_name,medical_history_of_patient,family_medical_history,challenges_faced_during_diagnosis]
-                
-                      
 
-            
-            
-            
             for col, value in enumerate(row_data, start=1):
                 ws.cell(row=row, column=col, value=value)
             ws.cell(row=row, column=2, value=title)
             ws.cell(row=row, column=2).hyperlink = url
             ws.cell(row=row, column=2).style = "Hyperlink"
             row += 1  # Move to the next row after filling
+    try:
+        workbook.save(output_path)
+        return output_path
+    except Exception as e:
+        raise Exception(f"Error: Failed to save the file. {e}")
+
+def process_mirna_prediction_excel(data):
+    template_path = "../excel_export_templates/Predicted-gene-targets.xltx"
+    output_path = "miRNA_Predictions.xlsx"
+
+    workbook = load_workbook(template_path)
+    workbook.template = False
+    ws = workbook["Sheet1"]
+
+    # Clear existing data below header
+    for row in ws.iter_rows(min_row=2):
+        for cell in row:
+            cell.value = None
+
+    row = 2
+
+    predictions = data.get("mirna_target_predictions", {})
+
+    for pos, entries in predictions.items():
+        for entry in entries:
+
+            mirna      = entry.get("Representative miRNA", "")
+            target     = entry.get("Representative Target", "")
+            gene_name  = entry.get("Gene name", "")
+            score      = entry.get("Cumulative weighted context++ score", "")
+            pct        = entry.get("Aggregate PCT", "")
+            utr_link   = entry.get("Link to sites in UTR", "")
+            
+            # Row data (column 7 will be replaced with hyperlink)
+            row_data = [
+                mirna,
+                target,
+                gene_name,
+                score,
+                pct,
+                "UTR Link"   # placeholder text; will be replaced with hyperlink
+            ]
+
+            for col, value in enumerate(row_data, start=1):
+                ws.cell(row=row, column=col, value=value)
+
+            ws.cell(row=row, column=6, value="View sites")
+            ws.cell(row=row, column=6).hyperlink = utr_link
+            ws.cell(row=row, column=6).style = "Hyperlink"
+
+            row += 1
+
     try:
         workbook.save(output_path)
         return output_path
