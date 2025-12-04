@@ -52,7 +52,7 @@ const EvalRenderer = ({ value }) => (
 );
 
 
-const PgsCatalog = ({ indications, diseaseAreaFilter }) => {
+const PgsCatalog = ({ indications, diseaseAreaFilter,target }) => {
  const [selectedDisease, setSelectedDisease] = useState([]);
  const [selectedGene, setSelectedGene] = useState<string | null>(null);
  const [geneFilterOptions, setGeneFilterOptions] = useState<string[]>([]);
@@ -81,9 +81,9 @@ const genePayload = useMemo(() => {
     return { diseases: selectedDiseaseAreas.length > 0 ? selectedDiseaseAreas : [] };
   } else {
     // Use selected diseases (if empty, don't default to indications)
-    return { diseases: selectedDisease.length > 0 ? selectedDisease : [] };
+    return { diseases:  indications };
   }
-}, [diseaseAreaFilter, selectedDiseaseAreas, selectedDisease]);
+}, [diseaseAreaFilter, selectedDiseaseAreas, indications]);
  // API request using react-query
  const {
    data: pgsCatalogData,
@@ -100,21 +100,27 @@ const genePayload = useMemo(() => {
    }
  );
 
+ 
  const {data:pgsCatalogUniqueGenes, isLoading:pgsCatalogGenesLoading} = useQuery(
   ["pgsUniquegenes",genePayload],
   ()=>fetchData(genePayload,"/genomics/pgscatalog-unique-genes"),
   {
     enabled: diseaseAreaFilter
     ? selectedDiseaseAreas.length > 0  
-    : selectedDisease.length > 0,  
+    : indications.length > 0,  
         refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
     refetchOnMount: false,
   }
  )
+ useEffect(() => {
+  if (pgsCatalogUniqueGenes) {
+    setSelectedGene(target); 
+  }
+}, [pgsCatalogUniqueGenes, target]);
 const {data:uniqueGeneData,isLoading:uniqueGeneLoading}=useQuery(
   ["unique gene data",{target: selectedGene}],
-  ()=>fetchData({target: selectedGene?.toLowerCase()},"/genomics/pgscatalog-gene-data"),
+  ()=>fetchData({target: selectedGene},"/genomics/pgscatalog-gene-data"),
   {
     enabled: !!selectedGene,
     refetchOnWindowFocus: false,
@@ -137,9 +143,10 @@ const {data:uniqueGeneData,isLoading:uniqueGeneLoading}=useQuery(
   [pgsCatalogUniqueGenes]
  )
  useEffect(() => {
-   if (!diseaseAreaFilter) setSelectedDisease(indications);
+   if (!diseaseAreaFilter) setSelectedDisease([]);
+ 
    else setSelectedDiseaseAreas(indications);
- }, [diseaseAreaFilter, indications]);
+ }, [diseaseAreaFilter, indications,target]);
  const dataFilteredByArea = useMemo(() => {
    if (diseaseAreaFilter) {
      return filterByDiseases(
@@ -187,15 +194,15 @@ const {data:uniqueGeneData,isLoading:uniqueGeneLoading}=useQuery(
  useEffect(() => {
    
    if(processsedUniqueGenes.length>0){
-    console.log("Unique genes length:", processsedUniqueGenes.length);
     setGeneFilterOptions(
       processsedUniqueGenes
         .filter((gene): gene is string => typeof gene === "string")
-        .map(gene => gene.toUpperCase())
+        .map(gene => gene)
         .sort()
     );
    }
  }, [processedData,processsedUniqueGenes]);
+ console.log("gene filter options",geneFilterOptions);
  useEffect(() => {
   if (
     (!diseaseAreaFilter && selectedDisease.length === 0) ||
@@ -208,9 +215,9 @@ const {data:uniqueGeneData,isLoading:uniqueGeneLoading}=useQuery(
 }, [selectedDisease, selectedDiseaseAreas, diseaseAreaFilter]);
  const filteredData = useMemo(() => {
    let currentFilteredData = dataFilteredByArea;
-  if(!diseaseAreaFilter &&  selectedDisease.length===0){
-    return [];
-  }
+  // if(!diseaseAreaFilter &&  selectedDisease.length===0){
+  //   return [];
+  // }
 
    // Apply disease filter
    if (selectedDisease.length > 0) {
@@ -541,7 +548,7 @@ const showLoading = isLoading || uniqueGeneLoading || pgsCatalogGenesLoading;
                                   showSearch
                  value={selectedGene}
                  onChange={setSelectedGene}
-                 options={geneFilterOptions.map(gene => ({ label: gene, value: gene }))}
+                 options={geneFilterOptions.map(gene => ({ label: gene.toUpperCase(), value: gene }))}
                />
              </div>
            </div>
