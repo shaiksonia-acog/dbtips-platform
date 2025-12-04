@@ -52,7 +52,7 @@ const PPM = ({ data, diseaseAreaFilter, indications }) => {
   ]);
   
   useEffect(() => {
-    if (!diseaseAreaFilter) setSelectedDisease(indications);
+    if (!diseaseAreaFilter) setSelectedDisease([]);
     else setSelectedDiseaseAreas(indications);
   }, [diseaseAreaFilter, indications]);
 

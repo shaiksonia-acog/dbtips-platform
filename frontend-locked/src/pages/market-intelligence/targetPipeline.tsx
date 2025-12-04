@@ -226,9 +226,9 @@ const CompetitiveLandscape = ({ target, indications, diseaseAreaFilter }) => {
 
   // Initialize selected disease areas with all options
   useEffect(() => {
-    if (!diseaseAreaFilter) {
-      setSelectedDisease(indications)
-    }
+    // if (!diseaseAreaFilter) {
+    //   setSelectedDisease(indications)
+    // }
 
     setSelectedDiseaseAreas(diseaseAreaOptions);
   }, [diseaseAreaOptions, diseaseAreaFilter, indications]);
@@ -259,9 +259,12 @@ const CompetitiveLandscape = ({ target, indications, diseaseAreaFilter }) => {
   useEffect(() => {
     const diseases = areaFiltered.map((i) => i.Disease).filter(Boolean);
     const uniqueDiseases = [...new Set(diseases)].sort();
-    if (!diseaseAreaFilter)
-      setDiseaseOptions([...uniqueDiseases, ...indications].sort());
-    else setDiseaseOptions(uniqueDiseases);
+    if (!diseaseAreaFilter) {
+      const combinedSet = new Set([...uniqueDiseases, ...indications.map(indication => indication.toLowerCase())]);
+      setDiseaseOptions([...combinedSet].sort());
+    } else {
+      setDiseaseOptions(uniqueDiseases);
+    }
   }, [areaFiltered, indications, diseaseAreaFilter]);
 
   // Reset selected diseases when disease options change

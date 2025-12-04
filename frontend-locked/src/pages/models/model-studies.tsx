@@ -18,10 +18,10 @@ const ModelStudies: React.FC<ModelStudiesProps> = ({ indications,diseaseAreaFilt
   const [selectedDiseaseAreas, setSelectedDiseaseAreas] = useState(indications);
   const [selectedDiseases, setSelectedDiseases] = useState<string[]>([]);
   
-  useEffect(() => {
-    if(!diseaseAreaFilter)
-    setSelectedDiseases(indications);
-  }, [diseaseAreaFilter, indications]);
+  // useEffect(() => {
+  //   if(!diseaseAreaFilter)
+  //   setSelectedDiseases(indications);
+  // }, [diseaseAreaFilter, indications]);
   // Define table columns and their properties
 
   const selectedColumns = [

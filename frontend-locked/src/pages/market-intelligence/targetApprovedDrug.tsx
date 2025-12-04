@@ -44,10 +44,9 @@ const ApprovedDrug = ({
     "Drug",
     "blackbox",
   ]);
-  console.log("approvedDrugData", approvedDrugData);
   useEffect(() => {
     if(!diseaseAreaFilter)
-    setSelectedDisease(indications);
+    setSelectedDisease([]);
     setSelectedDiseaseArea( indications);
   }, [diseaseAreaFilter,indications]);
 
