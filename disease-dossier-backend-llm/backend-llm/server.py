@@ -356,12 +356,14 @@ def add_additional_topics_if_needed(response_object: dict, selected_ctx: str) ->
 @app.post("/summarise-text")
 async def summarise_text(request: summaryRequest, redis_conn: Redis = Depends(get_redis)):
     cache_key = generate_cache_key_for_summary(request.contextVariables, request.selected_ctx)
+    print("cache key:", cache_key)
     try:
         cached_response = redis_conn.get(cache_key)
         dataframes = {}
 
         for key, value in request.contextVariables.items():
-            df = pd.read_csv(StringIO(value["data"].strip()), sep="," if "," in value["data"] else "\t")
+            # df = pd.read_csv(StringIO(value["data"].strip()), sep="," if "," in value["data"] else "\t")
+            df = pd.read_csv(StringIO(value["data"].strip()), sep=None, engine="python")
             dataframe_name = f"{key}_df"
             dataframes[dataframe_name] = df
 
