@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom';
 import { parseQueryParams } from '../../utils/parseUrlParams';
 import GeneEssentialityMap from './geneMap';
 import Orthologs from './orthologs';
+import { matchesPattern } from '../../utils/helper';
 const TargetAssessment = () => {
 	const location = useLocation();
 	const [target, setTarget] = useState('');
@@ -16,10 +17,11 @@ const TargetAssessment = () => {
 		setTarget(target?.split('(')[0]);
 	}, [location]);
 	
+	const isRNA = matchesPattern(target || "");
 	return (
 		<section>
-			<Targetability target={target}  />
-			<Tractability target={target}  />
+			{!isRNA &&<Targetability target={target}  />}
+			{!isRNA &&<Tractability target={target}  />}
 			{/* <Paralogs target={target}  /> */}
 			<Orthologs target={target}  />
 			<div className='px-[5vw]'>

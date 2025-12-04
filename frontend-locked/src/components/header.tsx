@@ -130,8 +130,8 @@ const Header = ({ app_state }) => {
       key: "target-assessment",
       label: "Target Assessment",
       children: [
-        { key: "targetability", label: "Targetability" },
-        { key: "tractability", label: "Tractability" },
+        { key: "targetability", label: "Targetability",disabled:isRNA },
+        { key: "tractability", label: "Tractability",disabled:isRNA },
         {
           key: "Comparative genomics",
           label: "Comparative genomics",
@@ -402,10 +402,13 @@ const Header = ({ app_state }) => {
         {
           key: "targetability",
           label: "Targetability",
+          disabled:isRNA
         },
         {
           key: "tractability",
           label: "Tractability",
+          disabled:isRNA
+
         },
        
         {
