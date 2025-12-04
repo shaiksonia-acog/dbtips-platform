@@ -37,8 +37,9 @@ const RnaSeqCard = () => {
 	const queryPayload = useMemo(
 		() => ({
 			diseases: indications,
+			target: target,
 		}),
-		[indications]
+		[indications,target]
 	);
 
 	useEffect(() => {
