@@ -726,6 +726,10 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target,isRNA }) => {
         
       </div>
       <p>This section summarizes all human genome-wide association studies (GWAS) retrieved from the NHGRI-EBI GWAS Catalog for the query traits, and their related child traits, by default filtered for the query target gene only.</p>
+      {
+        isRNA && <p className="mt-2 font-medium ">
+Note: The GWAS studies for {target} include both the queried target and its corresponding encoding gene.      </p>
+      }
 
       {locusZoomDataLoading && <LoadingButton />}
       {(gwasStudiesError || error) && (
