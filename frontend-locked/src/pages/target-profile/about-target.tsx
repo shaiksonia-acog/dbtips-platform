@@ -54,13 +54,13 @@ const synonymsData = isRNA ? data?.summary_and_characteristics?.Synonyms?.data
         {data && (
           <>
             <div>
-              <span>
+              {!isRNA &&<span>
                 Uniprot ID:{" "}
                 <span className="text-sky-800">
                   {data.target_details?.uniprot_id}
                 </span>{" "}
                 |{" "}
-              </span>
+              </span>}
               <span>
                 ENSGID:{" "}
                 <span className="text-sky-800">
