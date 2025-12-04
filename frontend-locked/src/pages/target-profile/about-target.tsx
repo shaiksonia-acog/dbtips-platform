@@ -64,7 +64,7 @@ const synonymsData = isRNA ? data?.summary_and_characteristics?.Synonyms?.data
               <span>
                 ENSGID:{" "}
                 <span className="text-sky-800">
-                  {data.target_details?.ensembl_id}
+                  {isRNA ? data?.ensembl_id:data.target_details?.ensembl_id}
                 </span>
               </span>
             </div>
