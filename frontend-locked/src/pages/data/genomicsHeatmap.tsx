@@ -6,7 +6,7 @@ import { Empty } from 'antd';
 import LoadingButton from '../../components/loading';
 
 const categoryColors = {
-  'ECG Traits': '#E63946',              // Red
+  'ECG Traits': '#606C38',              // Red
   'CARDIOVASCULAR': '#1D3557',          // Navy
   'HEMATOLOGICAL': '#F77F00',           // Orange
   'Anthropometric': '#6A4C93',          // Purple
@@ -17,12 +17,12 @@ const categoryColors = {
   'RENAL': '#FF595E',                   // Coral
   'METABOLITE': '#8338EC',              // Violet
   'ATRIAL FIBRILLATION': '#FF006E',     // Pinkish Magenta
-  'Musculoskeletal': '#C1121F',         // Crimson
-  'Ocular': '#6F2DBD',                  // Deep Purple
-  'Other': '#606C38',                   // Olive
+  'Musculoskeletal': '#40E0D0',
+  'Ocular': '#50C878',  // Mint Green
+  'Other': 'grey',                   // Olive
   'Diabetic Complications': '#FB5607',  // Bright Orange
   'Type 1 Diabetes': '#0A9396',         // Cyan/Sea
-  'Aging and Longevity': '#7209B7',     // Royal Purple
+  'Aging and Longevity': 'blue',     // Royal Purple
 };
 
 
