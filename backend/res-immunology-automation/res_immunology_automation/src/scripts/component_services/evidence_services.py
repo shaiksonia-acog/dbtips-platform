@@ -817,7 +817,7 @@ def search_pubmed_target(target_name: str, disease_name: str,target_terms_file: 
     if disease_name != 'no-disease':
 
         # Build the disease query
-        disease_query = f'"{disease_name}"[Title]'
+        disease_query = f'"{disease_name}"[Title/Abstract] OR "{disease_name}"[Other Term]'
 
         # Build the MeSH term query
         mesh_query = f'("{mesh_major_term}"[MeSH Terms] OR {disease_query})'
@@ -853,6 +853,64 @@ def search_pubmed_target(target_name: str, disease_name: str,target_terms_file: 
         raise e
     # Extract and return the list of PMIDs
     return data.get("esearchresult", {}).get("idlist", [])
+
+def get_target_disease_literatures_strapi(disease_name: str, target: str) -> List[Dict[str, Any]]:
+    """
+    Fetches and filters target disease literatures from Strapi for the given disease name and target.
+
+    Args:
+        disease_name (str): The name of the disease to filter key influencers.
+        target (str): The target to filter literatures.
+
+    Returns:
+        List[str]: A list of dictionaries containing filtered data fields.
+    """
+    # Define the API endpoint, dynamically include the disease name as a filter
+    STRAPI_BASE_URL = os.getenv("STRAPI_BASE_URL")
+    base_url = f"{STRAPI_BASE_URL}/api/top-10-literatures"
+    url = f"{base_url}?filters[disease][$eqi]={disease_name}&filters[target][$eqi]={target}&pagination[page]=1&pagination[pageSize]=500"
+
+    # Retrieve the API token
+    api_token = os.getenv('STRAPI_API_TOKEN') 
+
+    # Ensure the token exists
+    if not api_token:
+        print("API token not found. Set the 'STRAPI_API_TOKEN'.")
+        return []
+
+    # Define the headers with the authorization token
+    headers = {
+        "Authorization": f"Bearer {api_token}",
+        "Content-Type": "application/json"
+    }
+
+    try:
+        # Send a GET request to retrieve data
+        response = requests.get(url, headers=headers)
+
+        # Check if the request was successful
+        if response.status_code == 200:
+            # Parse the JSON response
+            data = response.json()
+            filtered_data = []
+
+            # Extract only the relevant fields
+            for item in data.get("data", []):
+                url = item.get("url", "")
+                if url:
+                    pmid = url.split("/")[-2] if "pubmed.ncbi.nlm.nih.gov" in url else None
+                    if pmid:
+                        filtered_data.append(pmid)
+
+            return filtered_data
+        else:
+            # If there's an error, print the status code and error message
+            print(f"Failed to fetch data. Status code: {response.status_code}")
+            # print(response.text)
+            return []
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return []
 
 def extract_article_title(article: ET.Element) -> str:
     """
@@ -2550,12 +2608,12 @@ if __name__ == "__main__":
     # with open("rna_seq_updated.json", 'w') as outfile:
     #     json.dump(rna_seq_updated, outfile, indent=4)
     
-    target_terms_file = "/app/res-immunology-automation/res_immunology_automation/src/target_data/target_terms_patents.json"
-    target_name = "acvr2b"
-    query = query = build_query_target(target_name, target_terms_file)
-    patents = fetch_patents_from_serpapi(query)
-    with open("target_patents.json", "w") as f:
-        json.dump(patents, f, indent=2)
+    # target_terms_file = "/app/res-immunology-automation/res_immunology_automation/src/target_data/target_terms_patents.json"
+    # target_name = "acvr2b"
+    # query = query = build_query_target(target_name, target_terms_file)
+    # patents = fetch_patents_from_serpapi(query)
+    # with open("target_patents.json", "w") as f:
+    #     json.dump(patents, f, indent=2)
     # disease_name = "cardiovascular diseases"
     # mesh_major_term="cardiovascular diseases"  # cardiovascular diseases
     # search_pubmed_target(target_name, disease_name, target_terms_file, mesh_major_term)
@@ -2567,4 +2625,5 @@ if __name__ == "__main__":
     # print("time taken: ", end-start)
     # with open("target_pathways.json", "w") as f:
     #     json.dump(pathways, f, indent=2)
+    get_target_disease_literatures_strapi("Primary progressive multiple sclerosis-test", "HI")
     

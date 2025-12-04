@@ -88,7 +88,7 @@ from component_services.literature_cache_update import update_literature_caches_
 from component_services.evidence_services import build_query, get_geo_data_for_diseases,fetch_mouse_models,\
     fetch_and_filter_figures_by_disease_and_pmids,fetch_mouse_model_data_alliancegenome, fetch_patents_from_serpapi, \
     get_top_10_literature_helper,add_platform_name,add_study_type, add_sample_type, get_mesh_term_for_disease, add_pubmed_info, \
-    build_query_target, add_mapped_diseases
+    build_query_target, add_mapped_diseases, get_target_disease_literatures_strapi
 from component_services.disease_target_profile_llm import disease_target_descriptor
 from component_services.target_services import find_matching_screens_for_target,fetch_subcellular_locations
 from fastapi.testclient import TestClient
@@ -134,6 +134,9 @@ from component_services.ollama_llm_client import LLMClient
 from component_services import drug_extraction
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+from fastapi import Request
+from fastapi.responses import HTMLResponse
+from urllib.parse import unquote
 
 app = FastAPI()
 
@@ -340,6 +343,13 @@ async def download_file(file_path: str):
     else:
         raise HTTPException(status_code=404, detail="File not found")
 
+@app.get("/ts")
+async def redirect_to_targetscan(url: str):
+    from fastapi.responses import HTMLResponse
+    decoded = unquote(url)
+    return HTMLResponse(f"""
+    <script>window.location.href = "{decoded}"</script>
+    """)
 
 #################################### Build Dossier ##############################################
 
@@ -593,9 +603,13 @@ async def get_target_details(request: TargetOnlyRequest, redis: Redis = Depends(
             if '-' not in target:
                 target_input = target.replace("mir", "mir-")
             mir_info = fetch_mirna_info(target_input.lower())
+            analyzer = TargetAnalyzer(target)
+
             response = {
                 "summary_and_characteristics": llm_response,
                 "taxonomy": taxonomy,
+                "hgnc_id": analyzer.hgnc_id,
+                "ensembl_id": analyzer.ensembl_id,
                 **mir_info
             }
 
@@ -2288,7 +2302,12 @@ async def get_evidence_target_literature(request: TargetRequest,
                 pmids: List[str]=[]
                 mesh_term = get_mesh_term_for_disease(disease.replace("_"," "))
                 pmids=search_pubmed_target(target,disease.replace("_"," "),target_terms_file,mesh_term)
-                print("pmids: ",len(pmids))
+                print("pmids from query: ",len(pmids))
+                # Fetch pmids from strapi
+                print("Fetching PMIDs from Strapi")
+                strapi_pmids = get_target_disease_literatures_strapi(disease.replace("_"," "), target)
+                pmids.extend(strapi_pmids)
+                print("Total pmids: ",len(pmids))
                 logger.info("Fecthing literature metadata")
                 all_literature_details: List[Dict[str,Any]] = fetch_literature_details_in_batches(disease.replace("_"," "),pmids)
                 print("all_literature_details: ",len(all_literature_details))

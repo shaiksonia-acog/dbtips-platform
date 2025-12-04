@@ -202,6 +202,7 @@ def download_targetscan_file(target_with_loc: str) -> Dict[str, List[Dict[str, A
     required_columns = {
         "Representative miRNA": "Representative miRNA",
         "Target gene": "Representative Target",
+        "Transcript ID": "Representative transcript",
         "Gene name": "Gene name",
     }
     extra_columns = [
@@ -257,8 +258,9 @@ def download_targetscan_file(target_with_loc: str) -> Dict[str, List[Dict[str, A
         # (e.g., hsa-miR-33-3p) which is needed for the UTR link.
         gene = urllib.parse.quote(str(row["Representative Target"]))
         mir = urllib.parse.quote(str(row[mirna_column])) # Use the specific miRNA name here
-        return f"https://www.targetscan.org/cgi-bin/targetscan/vert_80/targetscan.cgi?utr={gene}&mir={mir}"
-
+        rep_trans = urllib.parse.quote(str(row["Transcript ID"]))
+        # return f"https://www.targetscan.org/cgi-bin/targetscan/vert_80/targetscan.cgi?utr={gene}&mir={mir}"
+        return f"https://www.targetscan.org/cgi-bin/targetscan/vert_80/view_gene.cgi?rs={rep_trans}&taxid=9606&members={mir}&showcnc=1&shownc=1&shownc_nc=1&showncf1=1&showncf2=1&subset=1"
     final_df["Link to sites in UTR"] = final_df.apply(make_utr_link, axis=1)
     
     # Fill NA/NaN values in object (string) columns with empty string
