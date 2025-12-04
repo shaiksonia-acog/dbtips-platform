@@ -725,7 +725,7 @@ const AssociatePlot = ({ indications, diseaseAreaFilter, target,isRNA }) => {
         </h2>
         
       </div>
-      <p>The GWAS section summarizes genomic associations extracted from the GWAS Catalog, noting that not all relevant studies are captured within the database.</p>
+      <p>This section summarizes all human genome-wide association studies (GWAS) retrieved from the NHGRI-EBI GWAS Catalog for the query traits, and their related child traits, by default filtered for the query target gene only.</p>
 
       {locusZoomDataLoading && <LoadingButton />}
       {(gwasStudiesError || error) && (

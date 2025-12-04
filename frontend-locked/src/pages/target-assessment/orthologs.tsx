@@ -476,7 +476,7 @@ const Ortholog = ({target}) => {
                 {/* Orthologs Section */}
                 <div className="mb-12" id="orthologs">
                     <h2 className="text-xl subHeading font-semibold">Orthologs</h2>
-                    <p>Ortholog analysis reveals whether a gene or pathway of interest is conserved between humans and model organisms—critical for ensuring comparable binding sites and catalytic domains in translational studies. </p>
+                    <p>Orthology analysis identifies sequence elements conserved across species through shared ancestry, helping validate therapeutic targets by revealing evolutionary preservation of function. </p>
                   <div className='flex justify-between items-center mb-3'>
                     <div></div>
                     {renderToggle(orthologViewMode, setOrthologViewMode)}

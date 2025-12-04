@@ -6,24 +6,25 @@ import { Empty } from 'antd';
 import LoadingButton from '../../components/loading';
 
 const categoryColors = {
-  'ECG Traits': '#E63946',          
-  'CARDIOVASCULAR': '#1D3557',      
-  'HEMATOLOGICAL': '#457B9D',       
-  'Anthropometric': '#9B59B6',      // Changed from brown to purple
-  'Sleep And Circadian': '#F4A261', 
-  'HEPATIC': '#E9C46A',             
-  'LIPIDS': 'blue',                 
-  'GLYCEMIC': 'green',              
-  'RENAL': '#00B4D8',               
-  'METABOLITE': '#FF006E',          
-  'ATRIAL FIBRILLATION': '#8338EC', 
-  'Musculoskeletal': '#16A085',     // Changed from red (#8B0000) to teal
-  'Ocular': '#008080',
-  'Other': '#708090',
-  'Diabetic Complications': '#FF8C00',
-  'Type 1 Diabetes': '#2E8B57',
-  'Aging and Longevity': '#6A5ACD',
+  'ECG Traits': '#E63946',              // Red
+  'CARDIOVASCULAR': '#1D3557',          // Navy
+  'HEMATOLOGICAL': '#F77F00',           // Orange
+  'Anthropometric': '#6A4C93',          // Purple
+  'Sleep And Circadian': '#2A9D8F',     // Teal
+  'HEPATIC': '#F4D35E',                 // Yellow
+  'LIPIDS': '#3A86FF',                  // Blue
+  'GLYCEMIC': '#8AC926',                // Green
+  'RENAL': '#FF595E',                   // Coral
+  'METABOLITE': '#8338EC',              // Violet
+  'ATRIAL FIBRILLATION': '#FF006E',     // Pinkish Magenta
+  'Musculoskeletal': '#C1121F',         // Crimson
+  'Ocular': '#6F2DBD',                  // Deep Purple
+  'Other': '#606C38',                   // Olive
+  'Diabetic Complications': '#FB5607',  // Bright Orange
+  'Type 1 Diabetes': '#0A9396',         // Cyan/Sea
+  'Aging and Longevity': '#7209B7',     // Royal Purple
 };
+
 
 const generateColorscale = () => {
   const colors = [
@@ -283,17 +284,16 @@ const HeatmapComponent = ({ target }) => {
 
   return (
     <div>
-  <p>
-    In this section, the query gene, its query traits, and their related 
-    child traits are systematically assessed across multiple evidence sources—
-    including {" "}
-    <a href="http://www.mulinlab.org/causaldb/index.html" target="_blank" className='underline '>Fine mapping</a>, 
-    <a href="https://a2f.hugeamp.org/" target="_blank" className='underline ml-1'>PheWAS</a>, 
-    <a href="https://ngdc.cncb.ac.cn/colocdb/home" target="_blank" className='underline ml-1'>Colocalisation</a>, 
-    <a href="https://yanglab.westlake.edu.cn/smr-portal/" target="_blank" className='underline ml-1'>MR</a>, and 
-    <a href="http://www.webtwas.net/#/browseGenes" target="_blank" className='underline ml-1'>TWAS</a> —
-    to construct an integrated evidence scoring matrix.
-  </p>
+<p>
+  Downstream analysis of GWAS signals for the {target}, its query traits and their related traits are systematically assessed across multiple evidence sources — including <a href="http://www.mulinlab.org/causaldb/index.html" target="_blank" className="underline  whitespace-nowrap">Fine&nbsp;mapping</a>, 
+  <a href="https://a2f.hugeamp.org/" target="_blank" className="underline ml-1">PheWAS</a>, 
+  <a href="https://ngdc.cncb.ac.cn/colocdb/home" target="_blank" className="underline ml-1">Colocalisation</a>, 
+  <a href="https://yanglab.westlake.edu.cn/smr-portal/" target="_blank" className="underline ml-1">MR</a> and 
+  <a href="http://www.webtwas.net/#/browseGenes" target="_blank" className="underline ml-1">TWAS</a> — 
+  to construct an integrated evidence scoring matrix.
+</p>
+
+    
   <p>
     This approach enables additional gene–trait signals to emerge even when they are not 
     represented in the GWAS Catalog.

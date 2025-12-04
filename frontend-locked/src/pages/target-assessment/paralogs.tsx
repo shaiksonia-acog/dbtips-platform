@@ -181,7 +181,7 @@ const Paralogs = ({ target }) => {
 		<section id='paralogs' className='mt-12'>
 			<h1 className='text-3xl font-semibold'>Paralogs</h1>
 			<p className='mt-2 font-medium'>
-			The sections provides homologs and paralogs for {target} across selected species (Human, mouse, fly, zebrafish & worm) which helps anticipate potential off-target interactions and improve drug specificity. Higher the identity score, greater are the chances for off-target effects.
+			Paralog analysis identifies sequence elements arising from duplication within a species, informing therapeutic target selection by uncovering functional redundancy, divergence, and gene-family dependencies.
 			</p>
 			<div className='flex justify-end mb-4'>
 				<div className="flex border border-gray-200 rounded-lg bg-white">
