@@ -50,6 +50,11 @@
           "kidney",
           "renal"
       ]
+    },
+    "glaucoma":{
+      "patent_synonyms": [
+        "intraocular pressure"
+      ]
     }
   }
 }
