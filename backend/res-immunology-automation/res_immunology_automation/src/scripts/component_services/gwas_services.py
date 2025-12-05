@@ -68,8 +68,8 @@ def fetch_gwas_studies_including_related_measurements(efo_id, disease):
                 'EFO_0004541', 'EFO_0005128', 'OBA_2045206']
             },
             "age-related macular degeneration": {
-                "with_child": ["EFO_0003839", "EFO_1000880", "MONDO_0004892", "MONDO_0005129", "EFO_0009764", "HP_0000505", 
-                "EFO_0803370", "EFO_0022597", "EFO_0008372", "OBA_2050110"],
+                "with_child": ["EFO_0003839", "MONDO_0004892", "MONDO_0005129", "EFO_0009764", "HP_0000505", 
+                "EFO_0803370", "EFO_0022597", "EFO_0008372", "OBA_2050110", "EFO_0010067"],
                 "without_child": []
             }, 
             "glaucoma": {
