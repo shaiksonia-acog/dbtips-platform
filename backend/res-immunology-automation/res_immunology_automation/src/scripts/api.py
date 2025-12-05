@@ -3469,7 +3469,7 @@ async def get_functional_genomics(request: TargetOnlyRequest, redis: Redis = Dep
 semaphore = asyncio.Semaphore(1)
 @app.post("/evidence/rna-sequence-semaphore/", tags=["Evidence"])
 async def get_rna_sequence_semaphore(
-        request: DiseasesRequest,  # Pydantic model that contains the target and diseases list
+        request: TargetRequest,  # Pydantic model that contains the target and diseases list
         redis: Redis = Depends(get_redis),  # Redis dependency for caching
         db: Session = Depends(get_db),
         build_cache: bool = False
@@ -3485,7 +3485,7 @@ async def get_rna_sequence_semaphore(
 
 @app.post("/evidence/rna-sequence/", tags=["Evidence"])
 async def get_rna_sequence(
-        request: DiseasesRequest,  # Pydantic model that contains the target and diseases list
+        request: TargetRequest,  # Pydantic model that contains the target and diseases list
         redis: Redis = Depends(get_redis),  # Redis dependency for caching
         db: Session = Depends(get_db),
         build_cache: bool = False
@@ -3493,16 +3493,20 @@ async def get_rna_sequence(
     """
     Fetches RNA sequence data for list of diseases.
     """
+    target : str = request.target.strip().lower()
     diseases: List[str] = request.diseases
     diseases = [s.strip().lower().replace(" ", "_") for s in diseases]
     diseases_str = "-".join(diseases)
 
     # Generate a cache key for the request using target and disease list
     key: str = f"/evidence/rna-sequence/:{diseases_str}"
-    endpoint: str = "/evidence/rna-sequence/"
-
-    # Directory to store the cached JSON file
     cache_dir: str = "cached_data_json/disease"
+    endpoint: str = "/evidence/rna-sequence/"
+    if is_mirna(target):
+        key: str = f"/evidence/rna-sequence/mirna:{diseases_str}"
+        endpoint: str = "/evidence/rna-sequence-mirna/"
+   
+    # Directory to store the cached JSON file
     os.makedirs(cache_dir, exist_ok=True)  # Ensure the directory exists
 
     cached_diseases: Set[str] = set()
@@ -3545,7 +3549,7 @@ async def get_rna_sequence(
                 remaining_time = int(rate_limited_until - time.time())
                 raise HTTPException(status_code=429, detail=f"Rate limit in effect. Try again after {remaining_time} seconds.")
         
-            response: dict = get_geo_data_for_diseases(filtered_diseases)
+            response: dict = get_geo_data_for_diseases(filtered_diseases, is_mirna(target))
             response=add_platform_name(response)
             response=add_study_type(response)
             response=add_sample_type(response)
