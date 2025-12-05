@@ -460,7 +460,7 @@ def fetch_gse_summary(gse_id):
         print(f"Error: {str(e)}")
         return ""
 
-def search_geo(disease_name: str) -> List[Tuple[str, str]]:
+def search_geo(disease_name: str, is_mir: bool) -> List[Tuple[str, str]]:
     """
     Search GEO datasets using NCBI's Entrez API and extract GSE IDs along with their corresponding types.
 
@@ -487,10 +487,19 @@ def search_geo(disease_name: str) -> List[Tuple[str, str]]:
         print("MeshTerm in searchGeo",disease_mesh_term)
         disease_syn_query = " OR ".join([f'"{syn}" [Title] OR "{syn}" [Description]' for syn in synonyms])
         disease_only_query = f'"{disease_mesh_term}" [MeSH Terms] '
+        if is_mir:
+            profiling_filter = (
+                ' AND ("Expression profiling by high throughput sequencing"[Filter]'
+                ' OR "Non-coding RNA profiling by array"[Filter]'
+                ' OR "Non-coding RNA profiling by high throughput sequencing"[Filter])'
+            )
+        else:
+            profiling_filter = f' AND "Expression profiling by high throughput sequencing"[Filter]'
+
         query = (
             f'({disease_syn_query}) AND '
-            f'"gse" [Filter] NOT "Hive" [All Fields] NOT "Hives" [All Fields] AND '
-            f'"Expression profiling by high throughput sequencing" [Filter]'
+            f'"gse" [Filter] NOT "Hive" [All Fields] NOT "Hives" [All Fields]'
+            f'{profiling_filter}'
         )
         print("Geo Query: ", query)
         handle = Entrez.esearch(db="gds", term=query, retmax=MAX_RESULTS)
@@ -633,7 +642,7 @@ def get_geo_metadata(gse_id: str,experiment_type: str,gse_summary: str) -> Dict[
         return None  # Return None to indicate failure
 
 
-def get_geo_data_for_diseases(diseases: List[str]) -> Dict[str, List[Dict[str, Any]]]:
+def get_geo_data_for_diseases(diseases: List[str], is_mir: bool) -> Dict[str, List[Dict[str, Any]]]:
     """
     Fetches GSE metadata for a list of diseases.
 
@@ -657,7 +666,7 @@ def get_geo_data_for_diseases(diseases: List[str]) -> Dict[str, List[Dict[str, A
                 input_disease_name = disease
                 disease = exceptional_diseases[disease]
             print(f"Searching GSE IDs for disease: {disease}")
-            gse_type_list = search_geo(disease)
+            gse_type_list = search_geo(disease, is_mir)
 
             if gse_type_list is None:
                 print(f"No results found for disease: {disease}")
@@ -1921,8 +1930,8 @@ def fetch_and_filter_figures_by_disease_and_pmids(disease: str) -> List[Dict[str
             gene_symbols: List[str] = fetch_gene_symbols_from_figid(figid)
             # Add gene symbols to the figure dictionary
             figure["gene_symbols"] = gene_symbols
-        # strapi_result=get_network_biology_strapi(disease_name=disease)
-        # filtered_figures.extend(strapi_result)
+        strapi_result=get_network_biology_strapi(disease_name=disease)
+        filtered_figures.extend(strapi_result)
     except HTTPException as e:
         raise e
     return filtered_figures
@@ -2625,5 +2634,6 @@ if __name__ == "__main__":
     # print("time taken: ", end-start)
     # with open("target_pathways.json", "w") as f:
     #     json.dump(pathways, f, indent=2)
-    get_target_disease_literatures_strapi("Primary progressive multiple sclerosis-test", "HI")
+    # get_target_disease_literatures_strapi("Primary progressive multiple sclerosis-test", "HI")
+    search_geo("obesity", True)
     
