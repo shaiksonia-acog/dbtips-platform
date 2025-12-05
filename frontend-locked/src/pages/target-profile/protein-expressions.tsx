@@ -117,7 +117,7 @@ const ProteinExpressions = ({ target ,isRna}) => {
       </div>
 
       <p className="mt-2 font-medium">
-        This section provides the baseline RNA and protein expression for{" "}
+        This section provides the baseline RNA {!isRna && "and protein"} expression for{" "}
         {target}.
       </p>
 

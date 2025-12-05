@@ -456,7 +456,7 @@ const Ortholog = ({target}) => {
     };
 
     return (
-        <div className="px-[5vw] py-20 bg-gray-50" id="Comparative genomics">
+        <div className="px-[5vw] py-20" id="Comparative genomics">
           <div className="mb-4">
             <div className='mb-8'>
               <h1 className='text-3xl font-semibold'>Comparative genomics</h1>
@@ -497,7 +497,7 @@ const Ortholog = ({target}) => {
                 {/* Paralogs Section */}
                 <div className="mb-12" id='paralogs'>
                     <h2 className="text-xl subHeading font-semibold">Paralogs</h2>
-                    <p>Paralog assessment identifies structurally similar proteins within the same species that may share binding sites with the target, helping predict off-target interactions and possible side effects.</p>
+                    <p>Paralog analysis identifies sequence elements arising from duplication within a species, informing therapeutic target selection by uncovering functional redundancy, divergence, and gene-family dependencies.</p>
                   <div className='flex justify-between items-center mb-3'>
                     <div></div>
                     {renderToggle(paralogViewMode, setParalogViewMode)}

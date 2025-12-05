@@ -108,7 +108,7 @@ const Ontology = ({ hgnc_id, target }) => {
     <section id="ontology" className="mt-12 px-[5vw]">
       <h1 className="text-3xl font-semibold">Ontology</h1>
       <p className="mt-2 font-medium">
-        This section categorizes the target protein's role in cellular and
+        This section categorizes the target's role in cellular and
         biological systems into three aspects:
       </p>
       <ul className="list-disc pl-6  space-y-2">
