@@ -2644,7 +2644,7 @@ async def get_disease_pathway(request: DiseasesRequest,
 
     if len(filtered_diseases) == 0:  # all disease already present in the json file
         print("All diseases already present in cached json files,returning cached response")
-        cached_data=enrich_disease_pathway_results(cached_data)
+        # cached_data=enrich_disease_pathway_results(cached_data)
         return cached_data
 
     print("filtered diseases: ", filtered_diseases)
@@ -2676,7 +2676,7 @@ async def get_disease_pathway(request: DiseasesRequest,
                     print(f"Record with ID {disease} added to the disease table.")
                 else:
                     save_response_to_file(cached_file_path, cached_responses)
-            cached_data=enrich_disease_pathway_results(cached_data)    
+            # cached_data=enrich_disease_pathway_results(cached_data)    
         return cached_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
