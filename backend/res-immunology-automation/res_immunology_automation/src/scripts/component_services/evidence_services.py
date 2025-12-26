@@ -8,7 +8,9 @@ import requests
 from typing import Optional
 import pprint
 import os
+import logging
 import requests
+import re
 from typing import List, Dict,Any
 import json
 from datetime import datetime
@@ -239,20 +241,88 @@ def build_query_target(target: str, target_terms_file: str) -> str:
     print(target_query)
 
     return target_query
+# ----------------------------------------------------------------------------------------
 
-def fetch_patents_from_serpapi(query: str) -> List[Dict[str, Any]]:
+
+
+def fetch_patents_from_serpapi(target: str) -> List[Dict[str, Any]]:
+    """
+    FINAL VERSION (HUMAN ONLY)
+    --------------------------
+    target -> fetch synonyms (HUMAN ONLY, TAXON 9606)
+            -> also fetch GENE NAME
+            -> format TI/AB query
+            -> run SerpAPI sliding window
+    """
+
+    # FETCH SYNONYMS (ONLY HUMAN) USING NCBI DATASETS API + GENE NAME
+    
+    def fetch_ncbi_synonyms(t: str) -> List[str]:
+        synonyms = set()
+        taxon_ids = [9606]   # ❗ ONLY HUMAN NOW
+        t_upper = t.upper()
+
+        for taxid in taxon_ids:
+            url = f"https://api.ncbi.nlm.nih.gov/datasets/v2/gene/symbol/{t_upper}/taxon/{taxid}"
+            try:
+                r = requests.get(url, timeout=20)
+                r.raise_for_status()
+                jd = r.json()
+
+                if "reports" in jd and jd["reports"]:
+                    gene = jd["reports"][0]["gene"]
+
+                    # canonical gene symbol
+                    synonyms.add(gene.get("symbol", t).lower())
+
+                    # NEW: gene name added
+                    gene_name = gene.get("full_name", "")
+                    if gene_name:
+                        synonyms.add(gene_name.lower())
+                        logging.info(f"[TARGET] Gene name for {t}: {gene_name}")
+
+                    # NEW: also add description if present
+                    desc = gene.get("description", "")
+                    if desc:
+                        synonyms.add(desc.lower())
+
+                    # top 10 synonyms (human only)
+                    for syn in gene.get("synonyms", [])[:10]:
+                        synonyms.add(syn.lower())
+
+                else:
+                    synonyms.add(t.lower())
+
+            except:
+                synonyms.add(t.lower())
+
+        return list(synonyms)
+
+    # BUILD TI/AB QUERY
+    synonyms = fetch_ncbi_synonyms(target)
+    logging.info(f"[TARGET] Human-only synonyms for {target}: {synonyms}")
+
+    parts = []
+    for s in synonyms:
+        parts.append(f'TI="{s}"')
+        parts.append(f'AB="{s}"')
+
+    query = "(" + " OR ".join(parts) + ")"
+    logging.info(f"[TARGET] FINAL PATENT QUERY: {query}")
+
+    # FULL SERPAPI SLIDING WINDOW LOGIC (UNCHANGED)
     filtered_results = []
-    num = 100  # Max results per page
+    num = 100
     fetched_count = 0
 
-    # --- 1️⃣ Get total results (unwindowed query) ---
+    # step 1: get total results
     logging.info("Fetching total results for base query...")
     params = {
         "engine": "google_patents",
         "q": query,
         "dups": "language",
         "language": "ENGLISH",
-        "num": 10 , # minimal request for total count
+        "num": 10,
         "api_key": SERP_API_KEY
     }
 
@@ -261,31 +331,30 @@ def fetch_patents_from_serpapi(query: str) -> List[Dict[str, Any]]:
         response.raise_for_status()
         data = response.json()
         total_results = data.get("search_information", {}).get("total_results", 0)
-        logging.info(f"Estimated total results (unwindowed): {total_results}")
     except requests.RequestException as exc:
         raise HTTPException(
-            status_code=exc.response.status_code if exc.response else 500,
+            status_code=500,
             detail=f"Failed to fetch total results: {str(exc)}"
         )
 
-    # --- 2️⃣ Setup date windows (5-year) ---
+    logging.info(f"Estimated total results: {total_results}")
+
+    # step 2: sliding windows
     current_date = datetime.now()
     end_date = current_date
-    start_date = datetime(end_date.year - 5, 1, 1)  # Jan 1 of 5th year ago
-    continue_window = True
+    start_date = datetime(end_date.year - 5, 1, 1)
+
     while fetched_count < total_results:
         if start_date.year < 1900:
-            break  # Safety stop for very old patents
+            break
 
         after_str = start_date.strftime("%Y%m%d")
         before_str = end_date.strftime("%Y%m%d")
-        logging.info(f"🔍 Querying window {after_str} → {before_str}")
 
         page_num = 1
         total_pages = 0
 
         while True:
-            logging.info(f"Fetching page {page_num} for {after_str} → {before_str}")
             params = {
                 "engine": "google_patents",
                 "q": query,
@@ -297,7 +366,7 @@ def fetch_patents_from_serpapi(query: str) -> List[Dict[str, Any]]:
                 "num": num,
                 "page": page_num
             }
-            print("params", params)
+
             try:
                 response = requests.get(SERP_API_URL, params=params)
                 response.raise_for_status()
@@ -308,36 +377,23 @@ def fetch_patents_from_serpapi(query: str) -> List[Dict[str, Any]]:
                     if info:
                         window_results = info.get("total_results", 0)
                         total_pages = math.ceil(window_results / 100)
-                        logging.info(
-                            f"Total pages in {after_str} → {before_str}: {total_pages}, results: {window_results}"
-                        )
 
                 results = data.get("organic_results", [])
                 if not results:
-                    logging.info(f"No more results found for {after_str} → {before_str}")
                     break
 
-                keys_to_extract = [
-                    "patent_id", "pdf", "title",
-                    "assignee", "filing_date", "grant_date"
-                ]
+                keys_to_extract = ["patent_id", "pdf", "title", "assignee", "filing_date", "grant_date"]
+
                 for entry in results:
-                    filtered_data = {key: entry.get(key, "") for key in keys_to_extract}
-                    country_status = entry.get("country_status", {})
-                    filtered_data["country_status"] = country_status
-                    filtered_data["expiry_date"] = (
-                        add_years(filtered_data["filing_date"], 20)
-                        if filtered_data["filing_date"] else ""
-                    )
-                    filtered_results.append(filtered_data)
+                    out = {key: entry.get(key, "") for key in keys_to_extract}
+                    out["country_status"] = entry.get("country_status", {})
+
+                    filing = out["filing_date"]
+                    out["expiry_date"] = add_years(filing, 20) if filing else ""
+
+                    filtered_results.append(out)
 
                 fetched_count += len(results)
-                logging.info(f"Fetched {fetched_count}/{total_results} so far")
-
-                if fetched_count >= total_results:
-                    logging.info("Reached total results limit; stopping early.")
-                    continue_window = False
-                    break
 
                 if page_num < total_pages:
                     page_num += 1
@@ -347,29 +403,20 @@ def fetch_patents_from_serpapi(query: str) -> List[Dict[str, Any]]:
                 time.sleep(1)
 
             except requests.RequestException as exc:
-                if exc.response is not None:
-                    raise HTTPException(
-                        status_code=exc.response.status_code,
-                        detail=f"Error: {exc.response.text}"
-                    )
-                else:
-                    raise HTTPException(
-                        status_code=500,
-                        detail=f"Request failed: {str(exc)}"
-                    )
+                raise HTTPException(
+                    status_code=500,
+                    detail=f"Request failed: {str(exc)}"
+                )
 
-        # if continue_window is False:
-        #     break
-        # Move the window 5 years backward
-        end_date = datetime(start_date.year-1, 12, 31)
+        # slide backwards 5 years
+        end_date = datetime(start_date.year - 1, 12, 31)
         start_date = datetime(end_date.year - 4, 1, 1)
-        print(f"end_date: {end_date}, start_date:{start_date}")
-        logging.info(f"Sliding to next window: {start_date.strftime('%Y-%m-%d')} → {end_date.strftime('%Y-%m-%d')}")
         time.sleep(2)
 
-    logging.info(f"✅ Completed. Total fetched: {len(filtered_results)} patents")
+    logging.info(f"Completed. Total fetched: {len(filtered_results)} patents")
     return filtered_results
 
+# -------------------------------------------------------------------------------------------------
 def pubmed_to_pmc(pmid: str, tool: str = "my_tool", email: str = EMAIL) -> Optional[str]:
     """
     Converts a PubMed ID (PMID) to a PubMed Central ID (PMC ID) using the NCBI ID conversion API.
@@ -460,7 +507,7 @@ def fetch_gse_summary(gse_id):
         print(f"Error: {str(e)}")
         return ""
 
-def search_geo(disease_name: str, is_mir: bool) -> List[Tuple[str, str]]:
+def search_geo(disease_name: str) -> List[Tuple[str, str]]:
     """
     Search GEO datasets using NCBI's Entrez API and extract GSE IDs along with their corresponding types.
 
@@ -487,19 +534,10 @@ def search_geo(disease_name: str, is_mir: bool) -> List[Tuple[str, str]]:
         print("MeshTerm in searchGeo",disease_mesh_term)
         disease_syn_query = " OR ".join([f'"{syn}" [Title] OR "{syn}" [Description]' for syn in synonyms])
         disease_only_query = f'"{disease_mesh_term}" [MeSH Terms] '
-        if is_mir:
-            profiling_filter = (
-                ' AND ("Expression profiling by high throughput sequencing"[Filter]'
-                ' OR "Non-coding RNA profiling by array"[Filter]'
-                ' OR "Non-coding RNA profiling by high throughput sequencing"[Filter])'
-            )
-        else:
-            profiling_filter = f' AND "Expression profiling by high throughput sequencing"[Filter]'
-
         query = (
             f'({disease_syn_query}) AND '
-            f'"gse" [Filter] NOT "Hive" [All Fields] NOT "Hives" [All Fields]'
-            f'{profiling_filter}'
+            f'"gse" [Filter] NOT "Hive" [All Fields] NOT "Hives" [All Fields] AND '
+            f'"Expression profiling by high throughput sequencing" [Filter]'
         )
         print("Geo Query: ", query)
         handle = Entrez.esearch(db="gds", term=query, retmax=MAX_RESULTS)
@@ -642,7 +680,7 @@ def get_geo_metadata(gse_id: str,experiment_type: str,gse_summary: str) -> Dict[
         return None  # Return None to indicate failure
 
 
-def get_geo_data_for_diseases(diseases: List[str], is_mir: bool) -> Dict[str, List[Dict[str, Any]]]:
+def get_geo_data_for_diseases(diseases: List[str]) -> Dict[str, List[Dict[str, Any]]]:
     """
     Fetches GSE metadata for a list of diseases.
 
@@ -666,7 +704,7 @@ def get_geo_data_for_diseases(diseases: List[str], is_mir: bool) -> Dict[str, Li
                 input_disease_name = disease
                 disease = exceptional_diseases[disease]
             print(f"Searching GSE IDs for disease: {disease}")
-            gse_type_list = search_geo(disease, is_mir)
+            gse_type_list = search_geo(disease)
 
             if gse_type_list is None:
                 print(f"No results found for disease: {disease}")
@@ -769,158 +807,372 @@ def search_pubmed(disease_name: str) -> List[str]:
     except HTTPException as e:
         raise e
     return data.get("esearchresult", {}).get("idlist", [])
-
-def search_pubmed_target(target_name: str, disease_name: str,target_terms_file: str,mesh_major_term:str) -> List[str]:
+# -------------------------------------------------TARGET LITERATURE FUCNTIONS ---------------------------
+def get_mesh_term_for_species(gene_symbol: str, species: str) -> str:
     """
-    Searches PubMed for literature on a specific target and disease, 
-    retrieving PMIDs from the last 5 years.
-
-    Args:
-        target_name (str): Name of the target to search for (e.g., "IL-17F").
-        disease_name (str): Name of the disease to search for (e.g., "hidradenitis suppurativa").
-        target_terms_file (str): Path of file containing the other terms for target
-        mesh_major_term (str): Mesh major term for the disease
-
-    Returns:
-        List[str]: A list of PubMed IDs (PMIDs) from the search.
+    Fetches the MeSH term for the given gene symbol and organism label (e.g., 'human' or 'mouse').
+    Returns formatted MeSH heading or a fallback.
     """
-    base_url: str = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
-
-    with open(target_terms_file, 'r') as f:
-        target_data: Dict[str, List[str]] = json.load(f)
-
-    terms: List[str] = target_data.get(target_name.lower(), [])
-    
-    print("terms for target",terms)
-
-    article_types = [
-    "Case Reports",
-    "Clinical Study",
-    "Clinical Trial",
-    "Dataset",
-    "Journal Article",
-    "Preprint",
-    "Research Support, American Recovery and Reinvestment Act",
-    "Research Support, N.I.H., Extramural",
-    "Research Support, N.I.H., Intramural", 
-    "Research Support, Non-U.S. Gov't",
-    "Research Support, U.S. Gov't, Non-P.H.S.",
-    "Research Support, U.S. Gov't, P.H.S.",
-    "Research Support, U.S. Gov't",
-    "Review",
-    "Systematic Review",
-    "Technical Report"
-    ]
-
-    # Build the article types filter part
-    article_types_query = " OR ".join([f'"{atype}"[Publication Type]' for atype in article_types])
-
-    # Build the target query
-    if terms:
-        target_query = " OR ".join([f'"{term}"[Title/Abstract]' for term in terms])
-        print("target query before adding target name",target_query)
-        target_query = f'("{target_name}"[Title/Abstract] OR {target_query})'
-    else:
-        target_query = f'"{target_name}"[Title/Abstract]'
-
-    if disease_name != 'no-disease':
-
-        # Build the disease query
-        disease_query = f'"{disease_name}"[Title/Abstract] OR "{disease_name}"[Other Term]'
-
-        # Build the MeSH term query
-        mesh_query = f'("{mesh_major_term}"[MeSH Terms] OR {disease_query})'
-
-        # Combine everything into the final query
-        query = f'(({target_query}) AND ({mesh_query}) AND ({article_types_query}))'
-
-    else:
-        query = f'{target_query} AND ({article_types_query})'
-
-    print("Target Query for Target:", target_name, query)
-
-    current_year = datetime.now().year
-    start_year = current_year - 10
-    # Set up query parameters
-    params = {
-        "db": "pubmed",
-        "term": query,
-        "retmode": "json",
-        "retmax": MAX_RESULTS,  # Maximum number of records to retrieve
-        "mindate": f"{start_year}/01/01",  # Start date for filtering
-        "maxdate": f"{current_year}/12/31",  # End date for filtering
-        "sort": "relevance",  # Sort by relevance
-        "datetype": "pdat",  # Search by publication date
-        "api_key": NCBI_API_KEY
-    }
+    organism_label = 'human' if species == 'human' else 'mouse'
+    mesh_query = f"{gene_symbol} protein, {organism_label}"
+    url = f"https://www.ncbi.nlm.nih.gov/mesh/?term={requests.utils.quote(mesh_query)}"
     try:
-        url = base_url + "esearch.fcgi"
-        response = get_data_from_pubmed(url, params)
-        data = response.json()
-
-    except HTTPException as e:
-        raise e
-    # Extract and return the list of PMIDs
-    return data.get("esearchresult", {}).get("idlist", [])
-
-def get_target_disease_literatures_strapi(disease_name: str, target: str) -> List[Dict[str, Any]]:
-    """
-    Fetches and filters target disease literatures from Strapi for the given disease name and target.
-
-    Args:
-        disease_name (str): The name of the disease to filter key influencers.
-        target (str): The target to filter literatures.
-
-    Returns:
-        List[str]: A list of dictionaries containing filtered data fields.
-    """
-    # Define the API endpoint, dynamically include the disease name as a filter
-    STRAPI_BASE_URL = os.getenv("STRAPI_BASE_URL")
-    base_url = f"{STRAPI_BASE_URL}/api/top-10-literatures"
-    url = f"{base_url}?filters[disease][$eqi]={disease_name}&filters[target][$eqi]={target}&pagination[page]=1&pagination[pageSize]=500"
-
-    # Retrieve the API token
-    api_token = os.getenv('STRAPI_API_TOKEN') 
-
-    # Ensure the token exists
-    if not api_token:
-        print("API token not found. Set the 'STRAPI_API_TOKEN'.")
-        return []
-
-    # Define the headers with the authorization token
-    headers = {
-        "Authorization": f"Bearer {api_token}",
-        "Content-Type": "application/json"
-    }
-
-    try:
-        # Send a GET request to retrieve data
-        response = requests.get(url, headers=headers)
-
-        # Check if the request was successful
-        if response.status_code == 200:
-            # Parse the JSON response
-            data = response.json()
-            filtered_data = []
-
-            # Extract only the relevant fields
-            for item in data.get("data", []):
-                url = item.get("url", "")
-                if url:
-                    pmid = url.split("/")[-2] if "pubmed.ncbi.nlm.nih.gov" in url else None
-                    if pmid:
-                        filtered_data.append(pmid)
-
-            return filtered_data
-        else:
-            # If there's an error, print the status code and error message
-            print(f"Failed to fetch data. Status code: {response.status_code}")
-            # print(response.text)
-            return []
+        print(f"[LOG] Fetching MeSH term for {gene_symbol} ({organism_label}) from URL: {url}")
+        resp = requests.get(url, timeout=20)
+        resp.raise_for_status()
+        # Basic HTML pattern matching for the first MeSH heading
+        match = re.search(r'<a href="/mesh/\?term=[^"]+">([^<]+)</a>', resp.text)
+        mesh_term = match.group(1).strip() if match else f"{gene_symbol} protein, {organism_label}"
+        print(f"[LOG] Found MeSH term: {mesh_term}")
+        return mesh_term
     except Exception as e:
-        print(f"An error occurred: {e}")
-        return []
+        print(f"[WARN] MeSH term lookup failed for {gene_symbol} {organism_label}: {e}")
+        return f"{gene_symbol} protein, {organism_label}"
+        
+def get_disease_mesh_uid(disease_name: str) -> str:
+    """
+    STRICT validation - ONLY real MeSH UIDs: D/C + letter + 6 DIGITS
+    """
+    # TRY 1: PubMed ESearch → ESummary (numeric → D009765)
+    try:
+        esearch_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
+        params = {
+            "db": "mesh",
+            "term": f'"{disease_name}"[MeSH Terms]',
+            "retmax": 1,
+            "retmode": "json"
+        }
+        resp = requests.get(esearch_url, params=params, timeout=10)
+        if resp.status_code == 200:
+            data = resp.json()
+            idlist = data["esearchresult"]["idlist"]
+            if idlist:
+                numeric_id = idlist[0]
+                esummary_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
+                summary_params = {"db": "mesh", "id": numeric_id, "retmode": "json"}
+                summary_resp = requests.get(esummary_url, params=summary_params, timeout=10)
+                if summary_resp.status_code == 200:
+                    summary_data = summary_resp.json()
+                    result = summary_data["result"]
+                    if numeric_id in result and "mesh_uid" in result[numeric_id]:
+                        mesh_uid = result[numeric_id]["mesh_uid"]
+                        print(f"[LOG] MeSH UID via PubMed ESummary for {disease_name}: {mesh_uid}")
+                        return mesh_uid
+    except Exception as e:
+        print(f"[WARN] PubMed ESearch failed: {e}")
 
+    try:
+        web_url = f"https://www.ncbi.nlm.nih.gov/mesh/?term={requests.utils.quote(disease_name)}"
+        resp = requests.get(web_url, timeout=10)
+        
+        # ✅ STRICT: ONLY D/C + LETTER + 6 DIGITS (D009765)
+        mesh_match = re.search(r'/mesh/([CD][A-Z]\d{6})', resp.text, re.IGNORECASE)
+        if mesh_match:
+            uid = mesh_match.group(1).upper()
+            print(f"[LOG] STRICT MeSH UID via web scrape for {disease_name}: {uid}")
+            return uid
+            
+    except Exception as e:
+        print(f"[WARN] Web scrape failed: {e}")
+
+    print(f"[WARN] No valid MeSH UID found for '{disease_name}'")
+    return None
+
+
+def get_disease_mesh_parents(disease_name: str) -> List[str]:
+    """
+    Finds MeSH UID → gets tree numbers → extracts all parent tree numbers
+    and returns them as a list of strings like 'C18', 'C18.654', etc.
+    """
+    parents: List[str] = []
+    tree_numbers: List[str] = []
+
+    try:
+        mesh_uid = get_disease_mesh_uid(disease_name)
+        if not mesh_uid:
+            return parents
+
+        json_url = f"https://id.nlm.nih.gov/mesh/{mesh_uid}.json"
+        print(f"[LOG] Fetching tree numbers for {disease_name} from: {json_url}")
+        resp = requests.get(json_url, timeout=20)
+        resp.raise_for_status()
+        data = resp.json()
+
+        # Extract ALL tree numbers
+        for key, value in data.items():
+            if "TreeNumber" in key:
+                if isinstance(value, list):
+                    for entry in value:
+                        if isinstance(entry, dict) and "@value" in entry:
+                            tree_numbers.append(entry["@value"])
+                        elif isinstance(entry, str):
+                            tree_numbers.append(entry)
+                elif isinstance(value, dict) and "@value" in value:
+                    tree_numbers.append(value["@value"])
+
+        tree_numbers = list(dict.fromkeys(tree_numbers))  # deduplicate
+        print(f"[LOG] Raw MeSH tree numbers for {disease_name}: {tree_numbers}")
+
+        if not tree_numbers:
+            print(f"[WARN] No tree numbers available for {disease_name}")
+            return parents
+
+        # Extract ALL parent nodes by truncating at dots
+        for tn in tree_numbers:
+            parts = tn.split(".")
+            for i in range(1, len(parts)):
+                parent_tn = ".".join(parts[:i])
+                if parent_tn not in parents:
+                    parents.append(parent_tn)
+
+        print(f"[LOG] Extracted parent tree numbers for {disease_name}: {parents}")
+    except Exception as e:
+        print(f"[WARN] Failed to fetch disease parents for {disease_name}: {e}")
+
+    return parents
+
+
+def search_pubmed_target(
+    target_name: str,
+    disease_name: str,
+    target_terms_file: str,
+    mesh_major_term: str,
+    max_results: int = 500,
+    ncbi_api_key: str = None,
+) -> Tuple[List[str], Dict, List[str], List[str], List[Dict]]:
+    """
+    Searches PubMed separately for human and mouse, using each species'
+    synonyms, full gene name, and MeSH term.
+    Handles:
+      - target only (disease_name=None or 'no-disease') - EXACT TITLE QUERY
+      - target + disease (adds disease parent MeSH hierarchy terms) - UNTOUCHED
+    """
+
+
+    base_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
+    gene_metadata: Dict[str, Dict] = {"human": {}, "mouse": {}}
+    taxon_info = {
+        "human": {"taxon_id": "9606", "taxon_name": "Homo sapiens"},
+        "mouse": {"taxon_id": "10090", "taxon_name": "Mus musculus"},
+    }
+
+
+    print(f"[LOG] Starting process for target: {target_name} | Disease: {disease_name}")
+    target_upper = target_name.upper()
+
+
+    # STEP 1: Fetch synonyms, full gene name, and MeSH terms for both species
+    for species, info in taxon_info.items():
+        print(f"[LOG] Fetching gene data for species: {species} (Taxon ID: {info['taxon_id']})")
+        try:
+            tax_id = info["taxon_id"]
+            #  FIX 1: Mouse = Htra1, Human = HTRA1
+            gene_search_symbol = target_upper if species == "human" else target_upper[0] + target_upper[1:].lower()
+            datasets_url = (
+                f"https://api.ncbi.nlm.nih.gov/datasets/v2/gene/symbol/{gene_search_symbol}/taxon/{tax_id}"
+            )
+            print(f"[LOG] Requesting URL: {datasets_url}")
+            response = requests.get(datasets_url, timeout=30)
+            response.raise_for_status()
+            gene_data = response.json()
+
+
+            synonyms: List[str] = []
+            gene_symbol = target_name
+            gene_id = None
+            gene_full_name = ""
+            if "reports" in gene_data and gene_data["reports"]:
+                gene_info = gene_data["reports"][0].get("gene", {})
+                gene_symbol = gene_info.get("symbol") or target_name
+                gene_id = gene_info.get("gene_id")
+                synonyms = gene_info.get("synonyms", [])[:10]
+                gene_full_name = (
+                    gene_info.get("description")
+                    or gene_info.get("full_name")
+                    or ""
+                )
+                print(
+                    f"[LOG] Found gene symbol: {gene_symbol}, Gene ID: {gene_id}, "
+                    f"Synonyms: {synonyms}, Full Name: {gene_full_name}"
+                )
+            else:
+                print(f"[LOG] No gene reports found for {species}")
+
+
+            mesh_term = get_mesh_term_for_species(gene_symbol, species)
+
+
+            gene_metadata[species] = {
+                "gene_symbol": gene_symbol,
+                "gene_id": str(gene_id) if gene_id else None,
+                "synonyms": synonyms,
+                "full_name": gene_full_name,
+                "mesh_term": mesh_term,
+                "taxon": info["taxon_name"],
+                "pmid_count": 0,
+                "total_available": 0,
+            }
+            print(f"[LOG] Metadata stored for {species}: {gene_metadata[species]}")
+        except Exception as e:
+            print(f"[ERROR] Failed to fetch {species} gene data: {str(e)}")
+            mesh_term = get_mesh_term_for_species(target_name, species)
+            gene_metadata[species] = {
+                "gene_symbol": target_name,
+                "gene_id": None,
+                "synonyms": [],
+                "full_name": "",
+                "mesh_term": mesh_term,
+                "taxon": info["taxon_name"],
+                "pmid_count": 0,
+                "total_available": 0,
+            }
+            print(f"[LOG] Fallback metadata stored for {species}: {gene_metadata[species]}")
+
+
+    # STEP 2: Publication type filter
+    article_types = [
+        "Case Reports",
+        "Clinical Study",
+        "Clinical Trial",
+        "Journal Article",
+        "Research Support, N.I.H., Extramural",
+        "Research Support, N.I.H., Intramural",
+        "Research Support, Non-U.S. Gov't",
+        "Review",
+        "Systematic Review",
+    ]
+    article_types_query = "(" + " OR ".join(
+        [f'"{atype}"[Publication Type]' for atype in article_types]
+    ) + ")"
+    print(f"[LOG] Article types filter: {article_types_query}")
+
+
+    all_human_pmids: List[str] = []
+    all_mouse_pmids: List[str] = []
+    literature: List[Dict] = []
+
+
+    # STEP 3: Search PubMed per species
+    for species in ["human", "mouse"]:
+        gene_symbol = gene_metadata[species]["gene_symbol"]
+        synonyms = gene_metadata[species]["synonyms"]
+        gene_full_name = gene_metadata[species].get("full_name", "")
+        mesh_term = gene_metadata[species]["mesh_term"]
+        taxon_name = gene_metadata[species]["taxon"]
+
+
+        if not gene_symbol:
+            print(f"[WARN] No gene symbol found for {species}, skipping PubMed search.")
+            continue
+
+
+        # Target query for target + disease (Title/Abstract)
+        target_parts_ta = [f'"{gene_symbol}"[Title/Abstract]']
+        if gene_full_name:
+            target_parts_ta.append(f'"{gene_full_name}"[Title/Abstract]')
+        target_parts_ta += [f'"{s}"[Title/Abstract]' for s in synonyms]
+        target_parts_ta.append(f'"{mesh_term}"[MeSH Terms]')
+        target_query_ta = "(" + " OR ".join(target_parts_ta) + ")"
+
+
+        # Target-only query (Title)
+        target_parts_title = [f'"{gene_symbol}"[Title]']
+        if gene_full_name:
+            target_parts_title.append(f'"{gene_full_name}"[Title]')
+        target_parts_title += [f'"{s}"[Title]' for s in synonyms]
+        target_parts_title.append(f'"{mesh_term}"[MeSH Terms]')
+        target_query_title = "(" + " OR ".join(target_parts_title) + ")"
+
+
+        print(f"[LOG] PubMed target query (Title/Abstract) for {species}: {target_query_ta}")
+        print(f"[LOG] PubMed target query (Title) for {species}: {target_query_title}")
+
+
+        # TARGET + DISEASE
+        if disease_name and disease_name.lower() != "no-disease":
+            print(f"[LOG] Using TARGET + DISEASE query logic")
+
+
+            # Get disease parents (automatic, includes obesity)
+            disease_parents = get_disease_mesh_parents(disease_name)
+
+
+            disease_parts = [
+                f'"{disease_name}"[MeSH Terms]',
+                f'"{disease_name}"[Other Term]',
+                f'"{disease_name}"[Title/Abstract]',
+            ]
+
+
+            # Parent tree numbers via MeSH hierarchy
+            for parent_tn in disease_parents:
+                disease_parts.append(f"{parent_tn}[MeSH Hierarchy]")
+
+
+            disease_query = "(" + " OR ".join(disease_parts) + ")"
+            final_query = f"({target_query_ta} AND {disease_query} AND {article_types_query})"
+            print(f"[LOG] Disease parents found ({len(disease_parents)}): {disease_parents}")
+        else:
+            # TARGET ONLY
+            print(f"[LOG] Using TARGET-ONLY query logic")
+            final_query = f"({target_query_title} AND {article_types_query})"
+
+
+        print(f"[LOG] Final PubMed query for {species}: {final_query}")
+
+
+        # Execute PubMed search
+        esearch_params = {
+            "db": "pubmed",
+            "term": final_query,
+            "retmode": "json",
+            "retmax": max_results,
+            "sort": "relevance",
+            "datetype": "pdat",
+            "usehistory": "y",
+        }
+        if ncbi_api_key:
+            esearch_params["api_key"] = ncbi_api_key
+
+
+        try:
+            url = base_url + "esearch.fcgi"
+            print(f"[LOG] Sending PubMed esearch request for {species}")
+            response = requests.get(url, params=esearch_params, timeout=30)
+            response.raise_for_status()
+            data = response.json()
+            esearch_result = data.get("esearchresult", {})
+            pmids = esearch_result.get("idlist", [])
+            total_count = int(esearch_result.get("count", 0))
+            print(
+                f"[LOG] PubMed returned {len(pmids)} PMIDs "
+                f"(Total available: {total_count}) for {species}"
+            )
+
+
+            gene_metadata[species]["pmid_count"] = len(pmids)
+            gene_metadata[species]["total_available"] = total_count
+
+
+            if species == "human":
+                all_human_pmids = pmids
+            else:
+                all_mouse_pmids = pmids
+
+
+            for pmid in pmids:
+                literature.append({"PMID": pmid, "taxon": [taxon_name]})
+        except Exception as e:
+            print(f"[ERROR] PubMed search failed for {species}: {str(e)}")
+            gene_metadata[species]["pmid_count"] = 0
+            gene_metadata[species]["total_available"] = 0
+
+
+    combined_pmids = list(set(all_human_pmids + all_mouse_pmids))
+    print(f"[LOG] Combined total unique PMIDs: {len(combined_pmids)}")
+    return combined_pmids, gene_metadata, all_human_pmids, all_mouse_pmids, literature
+
+# ---------------------------------------------------------------------------------------------------
 def extract_article_title(article: ET.Element) -> str:
     """
     Extracts and combines the text from an ArticleTitle element, preserving nested tags like <sub>.
@@ -1930,8 +2182,8 @@ def fetch_and_filter_figures_by_disease_and_pmids(disease: str) -> List[Dict[str
             gene_symbols: List[str] = fetch_gene_symbols_from_figid(figid)
             # Add gene symbols to the figure dictionary
             figure["gene_symbols"] = gene_symbols
-        strapi_result=get_network_biology_strapi(disease_name=disease)
-        filtered_figures.extend(strapi_result)
+        # strapi_result=get_network_biology_strapi(disease_name=disease)
+        # filtered_figures.extend(strapi_result)
     except HTTPException as e:
         raise e
     return filtered_figures
@@ -2617,12 +2869,12 @@ if __name__ == "__main__":
     # with open("rna_seq_updated.json", 'w') as outfile:
     #     json.dump(rna_seq_updated, outfile, indent=4)
     
-    # target_terms_file = "/app/res-immunology-automation/res_immunology_automation/src/target_data/target_terms_patents.json"
-    # target_name = "acvr2b"
-    # query = query = build_query_target(target_name, target_terms_file)
-    # patents = fetch_patents_from_serpapi(query)
-    # with open("target_patents.json", "w") as f:
-    #     json.dump(patents, f, indent=2)
+    target_terms_file = "/app/res-immunology-automation/res_immunology_automation/src/target_data/target_terms_patents.json"
+    target_name = "acvr2b"
+    query = query = build_query_target(target_name, target_terms_file)
+    patents = fetch_patents_from_serpapi(query)
+    with open("target_patents.json", "w") as f:
+        json.dump(patents, f, indent=2)
     # disease_name = "cardiovascular diseases"
     # mesh_major_term="cardiovascular diseases"  # cardiovascular diseases
     # search_pubmed_target(target_name, disease_name, target_terms_file, mesh_major_term)
@@ -2634,6 +2886,4 @@ if __name__ == "__main__":
     # print("time taken: ", end-start)
     # with open("target_pathways.json", "w") as f:
     #     json.dump(pathways, f, indent=2)
-    # get_target_disease_literatures_strapi("Primary progressive multiple sclerosis-test", "HI")
-    search_geo("obesity", True)
     

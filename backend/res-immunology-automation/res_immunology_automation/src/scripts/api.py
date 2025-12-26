@@ -17,7 +17,6 @@ from component_services.disease_profile_services import (
     find_ancestors, find_descendants, 
     extract_data_by_ids, fetch_gtr_records
 )
-from component_services.mirna_services import fetch_mirna_info, get_target_predictions_for_all_locs
 # from component_services.aact_db_client import DBClient
 from ldap3 import Server, Connection, ALL
 import uvicorn
@@ -64,7 +63,7 @@ from utils import format_for_cytoscape, get_efo_id, find_disease_id_by_name, sen
     save_big_response_to_file, \
     get_associated_targets,get_mouse_phenotypes,fetch_all_publications,get_exact_synonyms, \
     get_conver_later_strapi,get_target_indication_pairs_strapi,enrich_disease_pathway_results, \
-    add_pipeline_indication_records,fetch_nct_titles, fetch_nct_data, is_mirna
+    add_pipeline_indication_records,fetch_nct_titles, fetch_nct_data
 from dependencies import get_neo4j_driver
 from target_analyzer import TargetAnalyzer
 from db.database import get_db, engine, Base, SessionLocal
@@ -88,8 +87,8 @@ from component_services.literature_cache_update import update_literature_caches_
 from component_services.evidence_services import build_query, get_geo_data_for_diseases,fetch_mouse_models,\
     fetch_and_filter_figures_by_disease_and_pmids,fetch_mouse_model_data_alliancegenome, fetch_patents_from_serpapi, \
     get_top_10_literature_helper,add_platform_name,add_study_type, add_sample_type, get_mesh_term_for_disease, add_pubmed_info, \
-    build_query_target, add_mapped_diseases, get_target_disease_literatures_strapi
-from component_services.disease_target_profile_llm import disease_target_descriptor
+    build_query_target, add_mapped_diseases
+from component_services.disease_profile_llm import disease_interpreter
 from component_services.target_services import find_matching_screens_for_target,fetch_subcellular_locations
 from fastapi.testclient import TestClient
 from fastapi.security import OAuth2PasswordRequestForm
@@ -103,7 +102,7 @@ from component_services.excel_export import process_data_and_return_file_rna,pro
     process_mouse_studies,process_patent_data,process_model_studies,process_target_pipeline, \
     process_cover_letter_list_excel, tsv_to_json, process_gwas_excel, process_gtr_excel, \
     process_kol_excel,process_pag_excel, process_site_investigators_excel,process_literature_excel, \
-    process_patientStories_excel,process_target_literature_excel,process_mirna_prediction_excel
+    process_patientStories_excel,process_target_literature_excel
 from fastapi.responses import FileResponse
 from cache_results import cache_all_data
 from component_services.genomics_services import fetch_pgs_data, fetch_ppm_from_pgs_results
@@ -134,9 +133,6 @@ from component_services.ollama_llm_client import LLMClient
 from component_services import drug_extraction
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-from fastapi import Request
-from fastapi.responses import HTMLResponse
-from urllib.parse import unquote
 
 app = FastAPI()
 
@@ -343,13 +339,6 @@ async def download_file(file_path: str):
     else:
         raise HTTPException(status_code=404, detail="File not found")
 
-@app.get("/ts")
-async def redirect_to_targetscan(url: str):
-    from fastapi.responses import HTMLResponse
-    decoded = unquote(url)
-    return HTMLResponse(f"""
-    <script>window.location.href = "{decoded}"</script>
-    """)
 
 #################################### Build Dossier ##############################################
 
@@ -576,137 +565,36 @@ async def get_target_details(request: TargetOnlyRequest, redis: Redis = Depends(
         print("Returning redis cached response")
         return cached_response_redis
 
-    try:
-        if is_mirna(target):
-            llm_response = disease_target_descriptor(input_var=target, input_type="target")
-            taxonomy = {
-                "Taxonomic Identifier": 9606,
-                "Organism": "Homo sapiens (Human)",
-                "Taxonomic Lineage": [
-                    "Eukaryota",
-                    "Metazoa",
-                    "Chordata",
-                    "Craniata",
-                    "Vertebrata",
-                    "Euteleostomi",
-                    "Mammalia",
-                    "Eutheria",
-                    "Euarchontoglires",
-                    "Primates",
-                    "Haplorrhini",
-                    "Catarrhini",
-                    "Hominidae",
-                    "Homo"
-                ]
-            }
-            target_input = target
-            if '-' not in target:
-                target_input = target.replace("mir", "mir-")
-            mir_info = fetch_mirna_info(target_input.lower())
-            analyzer = TargetAnalyzer(target)
-
-            response = {
-                "summary_and_characteristics": llm_response,
-                "taxonomy": taxonomy,
-                "hgnc_id": analyzer.hgnc_id,
-                "ensembl_id": analyzer.ensembl_id,
-                **mir_info
-            }
-
-        else:
-            analyzer = TargetAnalyzer(target)
-            introduction = analyzer.get_target_introduction()
-            description = analyzer.get_target_description()
-            taxonomy = analyzer.get_target_introduction()
-            parsed_introduction = None
-            if introduction:
-                parsed_introduction = parse_target_introduction(introduction)
-            
-            parsed_description = None
-            if description:
-                parsed_description = parse_target_description(description)
-            
-            parsed_taxonomy = None
-            if taxonomy:
-                parsed_taxonomy = parse_taxonomy(taxonomy)
-
-            target_details = {
-                "ensembl_id": analyzer.ensembl_id,
-                "hgnc_id": analyzer.hgnc_id,
-                "uniprot_id": analyzer.uniprot_id
-            }
-            response = {
-                "target_details": target_details,
-                "introduction": parsed_introduction,
-                "summary_and_characteristics": parsed_description,
-                "taxonomy": parsed_taxonomy,
-            }
-            
-        await set_cached_response(redis, key, response)
-
-        if target_record is not None:
-            cached_responses = load_response_from_file(cached_file_path)
-        else:
-            cached_responses = {}
-
-        cached_responses[f"{endpoint}"] = response
-
-        if target_record is None:
-            save_response_to_file(file_path, cached_responses)
-            new_record = Target(id=target, file_path=file_path)  # Create a new instance of the identified model
-            db.add(new_record)  # Add the new record to the session
-            db.commit()  # Commit the transaction to save the record to the database
-            db.refresh(new_record)  # Refresh the instance to reflect any changes from the DB (like auto-generated
-            # fields)
-            print(f"Record with ID {target} added to the target table.")
-        else:
-            save_response_to_file(cached_file_path, cached_responses)
-
-        return response
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/target-profile/mir-target-predictions/", tags=["Target Profile"])
-async def get_mir_target_predictions(request: TargetOnlyRequest, redis: Redis = Depends(get_redis),
-                             db: Session = Depends(get_db)):
-    target: str = request.target.strip().lower()
-    
-    key: str = f"/target-profile/mir-target-predictions/:{target}"
-    endpoint: str = "/target-profile/mir-target-predictions/"
-
-    # Directory to store the cached JSON file
-    cache_dir: str = "cached_data_json/target"
-    os.makedirs(cache_dir, exist_ok=True)  # Ensure the directory exists
-
-    # File path for the JSON response
-    file_path: str = os.path.join(cache_dir, f"{target}.json")
-
-    target_record = db.query(Target).filter_by(id=target).first()
-    # 1. Check if the cached JSON file exists
-    if target_record is not None:
-        cached_file_path: str = target_record.file_path
-        print(f"Loading cached response from file: {cached_file_path}")
-        cached_responses: Dict = load_response_from_file(cached_file_path)
-
-        # Check if the endpoint response exists in the cached data
-        if f"{endpoint}" in cached_responses:
-            print(f"Returning cached response from file: {cached_file_path}")
-            return cached_responses[f"{endpoint}"]
-
-    cached_response_redis = await get_cached_response(redis, key)
-    if cached_response_redis:
-        print("Returning redis cached response")
-        return cached_response_redis
+    analyzer = TargetAnalyzer(target)
 
     try:
-        target_input = target
-        if '-' not in target:
-            target_input = target.replace("mir", "mir-")
-        predictions = get_target_predictions_for_all_locs(target_input)
-        response = {
-            "mirna_target_predictions": predictions
+        introduction = analyzer.get_target_introduction()
+        description = analyzer.get_target_description()
+        taxonomy = analyzer.get_target_introduction()
+
+        parsed_introduction = None
+        if introduction:
+            parsed_introduction = parse_target_introduction(introduction)
+        
+        parsed_description = None
+        if description:
+            parsed_description = parse_target_description(description)
+        
+        parsed_taxonomy = None
+        if taxonomy:
+            parsed_taxonomy = parse_taxonomy(taxonomy)
+
+        target_details = {
+            "ensembl_id": analyzer.ensembl_id,
+            "hgnc_id": analyzer.hgnc_id,
+            "uniprot_id": analyzer.uniprot_id
         }
-
+        response = {
+            "target_details": target_details,
+            "introduction": parsed_introduction,
+            "summary_and_characteristics": parsed_description,
+            "taxonomy": parsed_taxonomy,
+        }
         await set_cached_response(redis, key, response)
 
         if target_record is not None:
@@ -730,6 +618,7 @@ async def get_mir_target_predictions(request: TargetOnlyRequest, redis: Redis = 
         return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/target-profile/ontology/", tags=["Target Profile"])
 async def get_ontology(request: TargetOnlyRequest, redis: Redis = Depends(get_redis), db: Session = Depends(get_db)):
@@ -2234,50 +2123,155 @@ async def get_patient_advocacy_group(request: DiseasesRequest):
 
 #################################### evidence page ##############################################
 
+# @app.post("/evidence/target-literature/", tags=["Evidence"])
+# async def get_evidence_target_literature(request: TargetRequest,
+#                                   db: Session = Depends(get_db),
+#                                   build_cache: bool = False
+#     ):
+#     diseases: List[str] = request.diseases
+#     if len(diseases):
+#         diseases = [s.strip().lower().replace(" ", "_") for s in diseases]
+#     else:
+#         diseases = ["no-disease"]
+#     target=request.target.strip().lower()
+
+#     # Generate a cache key for the request using target and disease list
+#     endpoint: str = "/evidence/target-literature/"
+
+#     # Directory to store the cached JSON file
+#     cache_dir: str = "cached_data_json/target_disease"
+#     os.makedirs(cache_dir, exist_ok=True)  # Ensure the directory exists
+
+#     cached_diseases: Set[str] = set()
+#     cached_data: Dict[str,Any] = {}
+#     for disease in diseases:
+#         target_disease_record = db.query(TargetDisease).filter_by(id=f"{target}-{disease}").first()
+#         # 1. Check if the cached JSON file exists
+#         if target_disease_record is not None:
+#             cached_file_path: str = target_disease_record.file_path
+#             logger.info(f"Loading cached response from file: {cached_file_path}")
+#             cached_responses: Dict = load_response_from_file(cached_file_path)
+
+#             # Check if the endpoint response exists in the cached data
+#             if f"{endpoint}" in cached_responses:
+#                 cached_diseases.add(disease)
+#                 logger.info(f"Returning cached response from file: {cached_file_path}")
+#                 cached_data[disease.replace("_"," ")]=cached_responses[f"{endpoint}"]
+
+#     # filtering diseases whose response is not present in the json file
+#     filtered_diseases = [disease for disease in diseases if disease not in cached_diseases]
+
+#     if len(filtered_diseases) == 0:  # all disease already present in the json file
+#         logger.info("All diseases already present in cached json files,returning cached response")
+#         return cached_data
+
+#     logger.info(f"filtered diseases: { filtered_diseases}")
+#     # Check if cached response exists in Redis
+#     target_terms_file: str = "../target_data/target_terms.json"
+
+#     try:
+#         if build_cache == True:
+            
+#             if is_rate_limited():
+#                 remaining_time = int(rate_limited_until - time.time())
+#                 raise HTTPException(status_code=429, detail=f"Rate limit in effect. Try again after {remaining_time} seconds.")
+        
+#             for disease in filtered_diseases:
+                
+#                 target_disease_record = db.query(TargetDisease).filter_by(id=f"{target}-{disease}").first()
+#                 file_path: str = os.path.join(cache_dir, f"{target}-{disease}.json")
+
+#                 # now add the response of each of the disease into lookup table.
+#                 if target_disease_record is not None:
+#                     cached_file_path: str = target_disease_record.file_path
+#                     cached_responses = load_response_from_file(cached_file_path)
+#                 else:
+#                     cached_responses = {}
+                
+#                 pmids: List[str]=[]
+#                 mesh_term = get_mesh_term_for_disease(disease.replace("_"," "))
+#                 pmids=search_pubmed_target(target,disease.replace("_"," "),target_terms_file,mesh_term)
+#                 print("pmids: ",len(pmids))
+#                 logger.info("Fecthing literature metadata")
+#                 all_literature_details: List[Dict[str,Any]] = fetch_literature_details_in_batches(disease.replace("_"," "),pmids)
+#                 print("all_literature_details: ",len(all_literature_details))
+                
+#                 if disease != "no-disease":
+#                     # Map the diseases of each article given disease/disease area
+#                     logger.info("Annotating each article with diseases of given disease area")
+#                     all_literature_details = generate_mapped_diseases_for_disease_area(disease.replace("_"," "), all_literature_details)
+#                 cached_data[disease.replace("_"," ")] = {"literature": all_literature_details}
+#                 cached_responses[f"{endpoint}"]={"literature": all_literature_details}
+
+#                 if target_disease_record is None:
+#                     save_response_to_file(file_path, cached_responses)
+#                     new_record = TargetDisease(id=f"{target}-{disease}", file_path=file_path)  # Create a new instance of the identified model
+#                     db.add(new_record)  # Add the new record to the session
+#                     db.commit()  # Commit the transaction to save the record to the database
+#                     db.refresh(new_record)  # Refresh the instance to reflect any changes from the DB (like auto-generated
+#                     # fields)
+#                     print(f"Record with ID {target}-{disease} added to the target-disease table.")
+#                 else:
+#                     save_response_to_file(cached_file_path, cached_responses)
+
+#         return cached_data
+#     except Exception as e:
+#         status_code = getattr(e, "status_code", None)
+#         if status_code == 429:
+#             set_rate_limit(RATE_LIMIT)
+#             raise e
+#         raise HTTPException(status_code=500, detail=str(e))
+
+
+
 @app.post("/evidence/target-literature/", tags=["Evidence"])
-async def get_evidence_target_literature(request: TargetRequest,
-                                  db: Session = Depends(get_db),
-                                  build_cache: bool = False
-    ):
-    diseases: List[str] = request.diseases
+async def get_evidence_target_literature(
+    request: TargetRequest,
+    db: Session = Depends(get_db),
+    build_cache: bool = False
+):
+    # ✅ Handle null or empty diseases properly
+    diseases = request.diseases or []
+    diseases = [d for d in diseases if d and d.lower() != "null"]
+
     if len(diseases):
         diseases = [s.strip().lower().replace(" ", "_") for s in diseases]
     else:
         diseases = ["no-disease"]
-    target=request.target.strip().lower()
 
-    # Generate a cache key for the request using target and disease list
+    target = request.target.strip()
+
     endpoint: str = "/evidence/target-literature/"
-
-    # Directory to store the cached JSON file
     cache_dir: str = "cached_data_json/target_disease"
-    os.makedirs(cache_dir, exist_ok=True)  # Ensure the directory exists
+    os.makedirs(cache_dir, exist_ok=True)
 
     cached_diseases: Set[str] = set()
-    cached_data: Dict[str,Any] = {}
+    cached_data: Dict[str, Any] = {}
+    
     for disease in diseases:
-        target_disease_record = db.query(TargetDisease).filter_by(id=f"{target}-{disease}").first()
-        # 1. Check if the cached JSON file exists
+        target_lower = target.lower()
+        target_disease_record = db.query(TargetDisease).filter_by(id=f"{target_lower}-{disease}").first()
+        
         if target_disease_record is not None:
             cached_file_path: str = target_disease_record.file_path
             logger.info(f"Loading cached response from file: {cached_file_path}")
             cached_responses: Dict = load_response_from_file(cached_file_path)
 
-            # Check if the endpoint response exists in the cached data
             if f"{endpoint}" in cached_responses:
                 cached_diseases.add(disease)
                 logger.info(f"Returning cached response from file: {cached_file_path}")
-                cached_data[disease.replace("_"," ")]=cached_responses[f"{endpoint}"]
+                cached_response_data = cached_responses[f"{endpoint}"]
+                cached_data[disease.replace("_", " ")] = cached_response_data
+                print(f"[DEBUG] Retrieved from cache: {cached_response_data.keys()}")
 
-    # filtering diseases whose response is not present in the json file
     filtered_diseases = [disease for disease in diseases if disease not in cached_diseases]
 
-    if len(filtered_diseases) == 0:  # all disease already present in the json file
-        logger.info("All diseases already present in cached json files,returning cached response")
+    if len(filtered_diseases) == 0:
+        logger.info("All diseases already present in cached json files, returning cached response")
+        print(f"[DEBUG] Final cached_data keys: {list(cached_data.keys())}")
         return cached_data
 
-    logger.info(f"filtered diseases: { filtered_diseases}")
-    # Check if cached response exists in Redis
+    logger.info(f"filtered diseases: {filtered_diseases}")
     target_terms_file: str = "../target_data/target_terms.json"
 
     try:
@@ -2288,49 +2282,69 @@ async def get_evidence_target_literature(request: TargetRequest,
                 raise HTTPException(status_code=429, detail=f"Rate limit in effect. Try again after {remaining_time} seconds.")
         
             for disease in filtered_diseases:
-                
-                target_disease_record = db.query(TargetDisease).filter_by(id=f"{target}-{disease}").first()
-                file_path: str = os.path.join(cache_dir, f"{target}-{disease}.json")
+                target_lower = target.lower()
+                target_disease_record = db.query(TargetDisease).filter_by(id=f"{target_lower}-{disease}").first()
+                file_path: str = os.path.join(cache_dir, f"{target_lower}-{disease}.json")
 
-                # now add the response of each of the disease into lookup table.
                 if target_disease_record is not None:
                     cached_file_path: str = target_disease_record.file_path
                     cached_responses = load_response_from_file(cached_file_path)
                 else:
                     cached_responses = {}
                 
-                pmids: List[str]=[]
-                mesh_term = get_mesh_term_for_disease(disease.replace("_"," "))
-                pmids=search_pubmed_target(target,disease.replace("_"," "),target_terms_file,mesh_term)
-                print("pmids from query: ",len(pmids))
-                # Fetch pmids from strapi
-                print("Fetching PMIDs from Strapi")
-                strapi_pmids = get_target_disease_literatures_strapi(disease.replace("_"," "), target)
-                pmids.extend(strapi_pmids)
-                print("Total pmids: ",len(pmids))
-                logger.info("Fecthing literature metadata")
-                all_literature_details: List[Dict[str,Any]] = fetch_literature_details_in_batches(disease.replace("_"," "),pmids)
-                print("all_literature_details: ",len(all_literature_details))
+                mesh_term = get_mesh_term_for_disease(disease.replace("_", " "))
+                
+                # ← CHANGE 1: Capture human_pmids and mouse_pmids
+                pmids, gene_metadata, human_pmids, mouse_pmids, literature_list = search_pubmed_target(target, disease.replace("_", " "), target_terms_file, mesh_term)
+                
+                print("pmids: ", len(pmids))
+                print("gene_metadata: ", gene_metadata)
+                
+                logger.info("Fetching literature metadata")
+                all_literature_details: List[Dict[str, Any]] = fetch_literature_details_in_batches(disease.replace("_", " "), pmids)
+                print("all_literature_details: ", len(all_literature_details))
+                
+                # ← CHANGE 2: Convert to sets for fast lookup
+                human_pmids_set = set(human_pmids)
+                mouse_pmids_set = set(mouse_pmids)
+                
+                # ← CHANGE 3: Annotate each article with taxon
+                for article in all_literature_details:
+                    pmid = article.get('PMID')
+                    taxons = []
+                    
+                    if pmid in human_pmids_set:
+                        taxons.append("Homo sapiens")
+                    if pmid in mouse_pmids_set:
+                        taxons.append("Mus musculus")
+                    
+                    article['taxon'] = taxons
                 
                 if disease != "no-disease":
-                    # Map the diseases of each article given disease/disease area
                     logger.info("Annotating each article with diseases of given disease area")
-                    all_literature_details = generate_mapped_diseases_for_disease_area(disease.replace("_"," "), all_literature_details)
-                cached_data[disease.replace("_"," ")] = {"literature": all_literature_details}
-                cached_responses[f"{endpoint}"]={"literature": all_literature_details}
+                    all_literature_details = generate_mapped_diseases_for_disease_area(disease.replace("_", " "), all_literature_details)
+                
+                # Put gene_metadata FIRST
+                response_data = {
+                    "gene_metadata": gene_metadata,
+                    "literature": all_literature_details
+                }
+                
+                cached_data[disease.replace("_", " ")] = response_data
+                cached_responses[f"{endpoint}"] = response_data
 
                 if target_disease_record is None:
                     save_response_to_file(file_path, cached_responses)
-                    new_record = TargetDisease(id=f"{target}-{disease}", file_path=file_path)  # Create a new instance of the identified model
-                    db.add(new_record)  # Add the new record to the session
-                    db.commit()  # Commit the transaction to save the record to the database
-                    db.refresh(new_record)  # Refresh the instance to reflect any changes from the DB (like auto-generated
-                    # fields)
-                    print(f"Record with ID {target}-{disease} added to the target-disease table.")
+                    new_record = TargetDisease(id=f"{target_lower}-{disease}", file_path=file_path)
+                    db.add(new_record)
+                    db.commit()
+                    db.refresh(new_record)
+                    print(f"Record with ID {target_lower}-{disease} added to the target-disease table.")
                 else:
                     save_response_to_file(cached_file_path, cached_responses)
-
+        
         return cached_data
+            
     except Exception as e:
         status_code = getattr(e, "status_code", None)
         if status_code == 429:
@@ -2644,7 +2658,7 @@ async def get_disease_pathway(request: DiseasesRequest,
 
     if len(filtered_diseases) == 0:  # all disease already present in the json file
         print("All diseases already present in cached json files,returning cached response")
-        # cached_data=enrich_disease_pathway_results(cached_data)
+        cached_data=enrich_disease_pathway_results(cached_data)
         return cached_data
 
     print("filtered diseases: ", filtered_diseases)
@@ -2676,7 +2690,7 @@ async def get_disease_pathway(request: DiseasesRequest,
                     print(f"Record with ID {disease} added to the disease table.")
                 else:
                     save_response_to_file(cached_file_path, cached_responses)
-            # cached_data=enrich_disease_pathway_results(cached_data)    
+            cached_data=enrich_disease_pathway_results(cached_data)    
         return cached_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -3377,7 +3391,8 @@ async def search_patents(request: TargetRequest, redis: Redis = Depends(get_redi
                 print(query)
 
                 # with pagination
-                patents = fetch_patents_from_serpapi(query)
+                patents = fetch_patents_from_serpapi(target)
+
                     
                 cached_data[disease.replace("_", " ")] = {"results": patents}
                 cached_responses[f"{endpoint}"] = {"results": patents}
@@ -3469,7 +3484,7 @@ async def get_functional_genomics(request: TargetOnlyRequest, redis: Redis = Dep
 semaphore = asyncio.Semaphore(1)
 @app.post("/evidence/rna-sequence-semaphore/", tags=["Evidence"])
 async def get_rna_sequence_semaphore(
-        request: TargetRequest,  # Pydantic model that contains the target and diseases list
+        request: DiseasesRequest,  # Pydantic model that contains the target and diseases list
         redis: Redis = Depends(get_redis),  # Redis dependency for caching
         db: Session = Depends(get_db),
         build_cache: bool = False
@@ -3485,7 +3500,7 @@ async def get_rna_sequence_semaphore(
 
 @app.post("/evidence/rna-sequence/", tags=["Evidence"])
 async def get_rna_sequence(
-        request: TargetRequest,  # Pydantic model that contains the target and diseases list
+        request: DiseasesRequest,  # Pydantic model that contains the target and diseases list
         redis: Redis = Depends(get_redis),  # Redis dependency for caching
         db: Session = Depends(get_db),
         build_cache: bool = False
@@ -3493,20 +3508,16 @@ async def get_rna_sequence(
     """
     Fetches RNA sequence data for list of diseases.
     """
-    target : str = request.target.strip().lower()
     diseases: List[str] = request.diseases
     diseases = [s.strip().lower().replace(" ", "_") for s in diseases]
     diseases_str = "-".join(diseases)
 
     # Generate a cache key for the request using target and disease list
     key: str = f"/evidence/rna-sequence/:{diseases_str}"
-    cache_dir: str = "cached_data_json/disease"
     endpoint: str = "/evidence/rna-sequence/"
-    if is_mirna(target):
-        key: str = f"/evidence/rna-sequence/mirna:{diseases_str}"
-        endpoint: str = "/evidence/rna-sequence-mirna/"
-   
+
     # Directory to store the cached JSON file
+    cache_dir: str = "cached_data_json/disease"
     os.makedirs(cache_dir, exist_ok=True)  # Ensure the directory exists
 
     cached_diseases: Set[str] = set()
@@ -3549,7 +3560,7 @@ async def get_rna_sequence(
                 remaining_time = int(rate_limited_until - time.time())
                 raise HTTPException(status_code=429, detail=f"Rate limit in effect. Try again after {remaining_time} seconds.")
         
-            response: dict = get_geo_data_for_diseases(filtered_diseases, is_mirna(target))
+            response: dict = get_geo_data_for_diseases(filtered_diseases)
             response=add_platform_name(response)
             response=add_study_type(response)
             response=add_sample_type(response)
@@ -4878,7 +4889,7 @@ async def get_diseases_profiles_llm(
                     cached_responses = {}
 
                 # Get LLM interpretation for disease
-                disease_data = disease_target_descriptor(input_var=disease.replace("_", " "), input_type="disease")
+                disease_data = disease_interpreter(disease_name=disease.replace("_", " "))
                 cached_data[disease.replace("_", " ")] = disease_data
                 cached_responses[f"{endpoint}"] = disease_data
 
@@ -5266,16 +5277,6 @@ async def get_excel_export(request: ExcelExportRequest):
             json_data=response.json()
             file_path = process_target_pipeline(json_data)
             return FileResponse(file_path, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename="target_pipeline_excel.xlsx") 
-        elif endpoint=="/target-profile/mir-target-predictions/":
-            request_data = TargetOnlyRequest(target=target)
-            # Make the POST request to the internal API endpoint
-            response = client.post("/target-profile/mir-target-predictions/", json=request_data.dict())
-            if response.status_code != 200:
-                raise HTTPException(status_code=response.status_code, detail=response.json())
-            json_data=response.json()
-            file_path = process_mirna_prediction_excel(json_data)
-            return FileResponse(file_path, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename="predictedGeneTarget.xlsx") 
-        
         elif endpoint=="/target-indication-pairs":
             request_data = DiseasesRequest(diseases=filtered_diseases)
             # Make the POST request to the internal API endpoint
@@ -5439,8 +5440,8 @@ def cache_data():
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000, workers=1)
-
-@app.post("/market-intelligence/patient-stories/", tags=["Market Intelligence"])
+# market-intelligence/patient-stories/
+@app.post("/", tags=["Market Intelligence"])
 async def get_patient_stories(request: DiseasesRequest, redis: Redis = Depends(get_redis),
                   db: Session = Depends(get_db)):
     diseases: List[str] = request.diseases
